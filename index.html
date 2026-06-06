@@ -173,4 +173,163 @@
 
         /* 2. MOBILES EM HORIZONTAL (Landscape) */
         @media (orientation: landscape) {
-            header
+            header { padding: 6px 20px; }
+            .sub-header { padding: 4px 20px; }
+            
+            main {
+                align-items: center;
+                padding: 5px 20px;
+            }
+            .game-wrapper {
+                grid-template-columns: repeat(5, 1fr); 
+                gap: 12px;
+            }
+            .game-card {
+                aspect-ratio: 1 / 0.98; /* Compacto para garantir que cabe com o footer fixo */
+                padding: 6px;
+                border-radius: 16px;
+            }
+            .card-img-container {
+                height: 64%;
+                border-radius: 12px;
+                margin-bottom: 2px;
+            }
+            .game-card h2 { 
+                font-size: clamp(0.7rem, 2vw, 0.9rem);
+                margin-bottom: 1px;
+            }
+            .game-card:last-child:nth-child(odd) {
+                grid-column: span 1;
+                width: 100%;
+                justify-self: auto;
+            }
+        }
+
+        /* 3. ECRÃS GRANDES (Desktop) */
+        @media (min-width: 1024px) {
+            header { padding: 15px 20px; }
+            .sub-header { padding: 12px 20px; }
+            main { padding: 25px; }
+            .game-wrapper { gap: 24px; }
+            .game-card {
+                aspect-ratio: 1 / 1.15;
+                padding: 16px;
+                border-radius: 28px;
+                border: 5px solid #fff;
+            }
+            .card-img-container {
+                height: 74%;
+                border-radius: 20px;
+                margin-bottom: 10px;
+            }
+            .game-card h2 { font-size: 1.15rem; margin-bottom: 4px; }
+        }
+
+        /* Efeitos Interativos */
+        .game-card:hover {
+            transform: scale(1.04) translateY(-3px);
+        }
+        .game-card:active {
+            transform: scale(0.98);
+        }
+
+        /* FOOTER FOCADO NA VISIBILIDADE CONSTANTE */
+        footer { 
+            padding: 10px 20px; 
+            text-align: center; 
+            color: var(--text-grey); 
+            font-size: 0.72rem; 
+            font-weight: 700; 
+            flex-shrink: 0; /* Força o footer a reter o seu tamanho e nunca sumir */
+            background: rgba(255, 255, 255, 0.4); 
+            border-top: 1px solid rgba(0,0,0,0.02);
+            width: 100%;
+            z-index: 10;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-center">
+            <img id="header-icon" src="" alt="Logo">
+            <div class="title-group">
+                <div class="title-main">
+                    <span id="txt-titulo1"></span> 
+                    <span id="txt-titulo2"></span>
+                </div>
+                <span id="txt-subtitulo" class="title-sub"></span>
+            </div>
+        </div>
+    </header>
+
+    <div class="sub-header">
+        <div id="txt-intro" class="intro-text"></div>
+    </div>
+
+    <main>
+        <div class="game-wrapper" id="gamesGrid"></div>
+    </main>
+
+    <footer id="txt-rodape"></footer>
+
+    <script src="dados.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (typeof JOGO_CONFIG !== 'undefined') {
+                const config = JOGO_CONFIG;
+
+                // SISTEMA BLINDADO CONTRA ERROS (Suporta os dois tipos de dados.js)
+                const textos = config.textos || config.conteudo || {};
+                
+                document.getElementById('txt-titulo1').textContent = textos.tituloLinha1 || textos.t1 || "MUNDO";
+                document.getElementById('txt-titulo2').textContent = textos.tituloLinha2 || textos.t2 || "DOS JOGOS";
+                document.getElementById('txt-subtitulo').textContent = textos.subtitulo || textos.sub || "";
+                document.getElementById('txt-intro').textContent = textos.intro || "";
+                document.getElementById('txt-rodape').innerHTML = textos.rodape || "";
+                
+                // Mapeamento blindado para os caminhos de pastas de ícones
+                const pathMenu = config.caminhoIconsMenu || config.caminhoIcons || "";
+                const pathJogos = config.caminhoIconsJogos || config.caminhoIcons || "";
+                
+                // Resolução do logo do cabeçalho
+                const logoNome = config.iconesMenu?.logo || (config.tema?.voltarMobile ? config.tema.voltarMobile : "logo.png");
+                document.getElementById('header-icon').src = pathMenu + logoNome;
+
+                const grid = document.getElementById('gamesGrid');
+                const lista = config.listaJogos || config.categorias || [];
+
+                lista.forEach(jogo => {
+                    const card = document.createElement('a');
+                    card.className = 'game-card';
+                    card.href = jogo.link || "#";
+                    
+                    // Resolução da cor de fundo dinâmica de cada cartão
+                    let corFundo = "#5ba4e5"; // Fallback azul por segurança se falhar
+                    if (config.temaCores && config.temaCores[jogo.tema]) {
+                        corFundo = config.temaCores[jogo.tema].fundo;
+                    } else if (config.tema?.corCard) {
+                        corFundo = config.tema.corCard;
+                    }
+                    
+                    card.style.backgroundColor = corFundo;
+                    card.style.boxShadow = `0 12px 28px -8px ${corFundo}aa`;
+
+                    // Resolução do ícone interno do cartão
+                    const iconName = jogo.icon || jogo.icone || "default.png";
+
+                    card.innerHTML = `
+                        <div class="card-img-container" style="background-color: rgba(255,255,255,0.25)">
+                            <img src="${pathJogos}${iconName}" alt="${jogo.nome}">
+                        </div>
+                        <h2>${jogo.nome}</h2>
+                    `;
+                    grid.appendChild(card);
+                });
+            } else {
+                console.error("Erro: O arquivo 'dados.js' não pôde ser lido.");
+            }
+        });
+    </script>
+</body>
+</html>
