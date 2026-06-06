@@ -24,7 +24,7 @@
             width: 100%; 
             display: flex; 
             flex-direction: column;
-            overflow: hidden; /* Remove barras indesejadas */
+            overflow: hidden;
             -webkit-font-smoothing: antialiased;
             
             -ms-overflow-style: none;  
@@ -154,7 +154,7 @@
                 gap: 16px;
             }
             .game-card {
-                aspect-ratio: 1 / 1.12; /* Ajuste preciso da proporção */
+                aspect-ratio: 1 / 1.12; 
                 padding: 12px;
             }
             .card-img-container {
@@ -165,7 +165,7 @@
                 font-size: clamp(0.85rem, 3.8vw, 1.05rem);
                 margin-bottom: 2px;
             }
-            /* Alinhamento perfeito do 5º cartão em baixo */
+            /* Alinhamento do 5º cartão em baixo */
             .game-card:last-child:nth-child(odd) {
                 grid-column: span 2;
                 width: calc(50% - 8px);
@@ -183,11 +183,11 @@
                 padding: 10px 20px;
             }
             .game-wrapper {
-                grid-template-columns: repeat(5, 1fr); /* Os 5 obrigatoriamente em linha */
+                grid-template-columns: repeat(5, 1fr); 
                 gap: 14px;
             }
             .game-card {
-                aspect-ratio: 1 / 1.02; /* Mais achatado para não ultrapassar a altura do ecrã */
+                aspect-ratio: 1 / 1.02; 
                 padding: 8px;
                 border-radius: 18px;
             }
@@ -274,12 +274,60 @@
     <script src="dados.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            // Verificação de segurança para garantir que o dados.js carregou com sucesso
             if (typeof JOGO_CONFIG !== 'undefined') {
                 const config = JOGO_CONFIG;
 
-                document.getElementById('txt-titulo1').textContent = config.textos.tituloLinha1;
-                document.getElementById('txt-titulo2').textContent = config.textos.tituloLinha2;
-                document.getElementById('txt-subtitulo').textContent = config.textos.subtitulo;
-                document.getElementById('txt-intro').textContent = config.textos.intro;
-                document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
-                document.getElementById('header-
+                // CORREÇÃO DOS CAMPOS MESTRE: Mapeamento direto com base no dados.js
+                document.getElementById('txt-titulo1').textContent = config.conteudo?.t1 || "MUNDO";
+                document.getElementById('txt-titulo2').textContent = config.conteudo?.t2 || "DOS JOGOS";
+                document.getElementById('txt-subtitulo').textContent = config.conteudo?.sub || "Atividades";
+                
+                // Texto introdutório opcional ou padrão caso não exista no objeto
+                document.getElementById('txt-intro').textContent = config.conteudo?.intro || "Escolhe um jogo para começar a aprender a brincar!";
+                document.getElementById('txt-rodape').innerHTML = config.conteudo?.rodape || "&copy; Recursos Digitais Covão";
+                
+                // Aplica dinamicamente o ícone do cabeçalho
+                const logoImg = document.getElementById('header-icon');
+                if (config.tema?.voltarMobile) {
+                    logoImg.src = config.caminhoIcons + config.tema.voltarMobile;
+                } else {
+                    logoImg.src = config.caminhoIcons + "logo.png"; // Fallback seguro
+                }
+
+                // Injeção e criação dos 5 cartões de atividades
+                const grid = document.getElementById('gamesGrid');
+                
+                // Nota: Garantir que 'listaJogos' ou 'categorias' do respetivo nível é iterada
+                const ativs = config.listaJogos || config.categorias || [];
+                
+                ativs.forEach(jogo => {
+                    const card = document.createElement('a');
+                    card.className = 'game-card';
+                    
+                    // Constrói o link injetando as variáveis ativas da URL para não perder o progresso
+                    card.href = jogo.link || `jogo.html?ano=${config.ano}&area=${config.area}&jogo=${jogo.id}`;
+                    
+                    // Aplica as cores padrão identificadas no tema ativo
+                    const corFundoCard = config.tema?.corCard || "#5ba4e5";
+                    card.style.backgroundColor = corFundoCard;
+                    card.style.boxShadow = `0 12px 28px -8px ${corFundoCard}aa`;
+
+                    // Caminho dinâmico para carregar o ícone próprio daquela atividade
+                    const caminhoIcone = config.caminhoIcons + (jogo.icon || jogo.icone || "default.png");
+
+                    card.innerHTML = `
+                        <div class="card-img-container" style="background-color: rgba(255,255,255,0.25)">
+                            <img src="${caminhoIcone}" alt="${jogo.nome}">
+                        </div>
+                        <h2>${jogo.nome}</h2>
+                    `;
+                    grid.appendChild(card);
+                });
+            } else {
+                console.error("Erro fatal: O ficheiro 'dados.js' não foi encontrado ou falhou ao carregar.");
+            }
+        });
+    </script>
+</body>
+</html>
