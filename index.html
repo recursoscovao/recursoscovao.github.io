@@ -19,13 +19,22 @@
         body { 
             background: var(--body-bg);
             background-image: radial-gradient(#d1d8e0 1px, transparent 1px);
-            background-size: 30px 30px; /* Textura de pontos subtil */
+            background-size: 30px 30px;
             min-height: 100vh;
             width: 100%; 
             display: flex; 
             flex-direction: column;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            
+            /* Oculta a barra de scroll no IE, Edge e Firefox */
+            -ms-overflow-style: none;  
+            scrollbar-width: none;  
+        }
+
+        /* Oculta a barra de scroll no Chrome, Safari e Opera */
+        body::-webkit-scrollbar {
+            display: none;
         }
 
         /* HEADER */
@@ -54,8 +63,8 @@
         
         .title-group { display: flex; flex-direction: column; }
         .title-main { font-weight: 900; font-size: clamp(1.2rem, 4.5vw, 1.8rem); text-transform: uppercase; line-height: 1; }
-        #txt-titulo1 { color: #d63031; } /* Vermelho Mundo */
-        #txt-titulo2 { color: #b2bec3; } /* Cinza Jogos */
+        #txt-titulo1 { color: #d63031; } 
+        #txt-titulo2 { color: #b2bec3; } 
         .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.65rem, 2.5vw, 0.9rem); margin-top: 4px; }
 
         /* SUB-HEADER / INTRO */
@@ -67,6 +76,7 @@
             padding: 12px 20px; 
             margin-bottom: 5px;
             border-bottom: 1px solid rgba(0,0,0,0.02);
+            flex-shrink: 0;
         }
         .intro-text { color: var(--text-grey); font-size: clamp(0.85rem, 3.5vw, 1.1rem); font-weight: 800; }
 
@@ -74,22 +84,22 @@
         main { 
             flex: 1; 
             display: flex;
-            align-items: center; 
+            align-items: center; /* Centraliza verticalmente os 5 cartões se sobrarem margens */
             justify-content: center;
-            padding: 20px;
+            padding: 15px;
             width: 100%;
         }
 
         .game-wrapper { 
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Mobile Padrão: 2 colunas */
+            grid-template-columns: repeat(2, 1fr); /* 2 colunas no mobile vertical */
             gap: 15px;
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        /* CARD STYLE (RESPONSIVO COM ASPECT-RATIO) */
+        /* CARD STYLE INDIVIDUAL */
         .game-card { 
             position: relative;
             border-radius: 24px; 
@@ -102,48 +112,48 @@
             justify-content: space-between;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
             border: 4px solid #fff;
-            aspect-ratio: 1 / 1.15;
+            aspect-ratio: 1 / 1.12; /* Proporção ideal para preencher sem esticar */
             width: 100%;
         }
 
-        /* Correção para o último card no Mobile se o número total for ímpar */
+        /* O truque dos 5 cartões: o último (5º) fica centrado sozinho na linha de baixo */
         .game-card:last-child:nth-child(odd) {
             grid-column: span 2;
-            width: calc(50% - 7.5px);
-            justify-self: center;
+            width: calc(50% - 7.5px); /* Fica exatamente do tamanho dos outros */
+            justify-self: center; /* Centraliza na terceira linha */
         }
 
         /* Container Interno da Imagem */
         .card-img-container { 
             width: 100%;
-            height: 72%;
+            height: 70%;
             display: flex; 
             align-items: center; 
             justify-content: center; 
             border-radius: 18px; 
             background: rgba(255, 255, 255, 0.3);
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             overflow: hidden;
         }
         
         .card-img-container img { 
-            max-height: 80%; 
-            max-width: 80%; 
+            max-height: 85%; 
+            max-width: 85%; 
             object-fit: contain;
             filter: drop-shadow(0 6px 12px rgba(0,0,0,0.08));
         }
 
         .game-card h2 { 
             color: white; 
-            font-size: clamp(0.8rem, 3.5vw, 1.15rem); 
+            font-size: clamp(0.85rem, 3.8vw, 1.1rem); 
             font-weight: 900; 
-            margin-bottom: 4px;
+            margin-bottom: 2px;
             text-align: center;
             text-transform: uppercase;
             width: 100%;
             white-space: nowrap;
             overflow: hidden;
-            text-overflow: ellipsis; /* Evita que títulos longos quebrem o card */
+            text-overflow: ellipsis;
         }
 
         /* Efeitos Interativos */
@@ -165,36 +175,20 @@
             flex-shrink: 0;
         }
 
-        /* === MEDIA QUERIES PARA RESPONSIVIDADE FLUIDA === */
-
-        /* Tablets Horizontais / Ecrãs Pequenos (3 colunas) */
-        @media (min-width: 550px) {
-            .game-wrapper { 
-                grid-template-columns: repeat(3, 1fr);
-                gap: 20px;
-            }
-            .game-card { padding: 15px; border-radius: 28px; }
-            .game-card:last-child:nth-child(odd) {
-                grid-column: span 1;
-                width: 100%;
-            }
-        }
-
-        /* Laptops e Tablets Grandes (4 colunas) */
-        @media (min-width: 850px) {
-            .game-wrapper { 
-                grid-template-columns: repeat(4, 1fr);
-                gap: 20px;
-            }
-        }
-
-        /* Desktop Computadores de Secretária (5 colunas) */
-        @media (min-width: 1100px) {
+        /* === ADAPTAÇÃO PARA COMPUTADORES E TABLETS (TODOS EM LINHA) === */
+        @media (min-width: 650px) {
+            /* Como são apenas 5 cartões, em ecrãs maiores ficam todos os 5 alinhados na horizontal */
             .game-wrapper { 
                 grid-template-columns: repeat(5, 1fr); 
-                gap: 25px;
+                gap: 20px; 
             }
-            .game-card h2 { font-size: 1.2rem; }
+            .game-card { padding: 15px; border-radius: 28px; }
+            /* Desativa a regra de centralização mobile nos ecrãs grandes */
+            .game-card:last-child:nth-child(odd) { 
+                grid-column: span 1; 
+                width: 100%; 
+            }
+            .game-card h2 { font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -243,9 +237,8 @@
                     card.className = 'game-card';
                     card.href = jogo.link;
                     
-                    // Aplica cores e sombra dinâmica (Glow)
                     card.style.backgroundColor = tema.fundo;
-                    card.style.boxShadow = `0 12px 28px -8px ${tema.fundo}aa`; // Sombra calibrada
+                    card.style.boxShadow = `0 12px 28px -8px ${tema.fundo}aa`;
 
                     card.innerHTML = `
                         <div class="card-img-container" style="background-color: rgba(255,255,255,0.25)">
