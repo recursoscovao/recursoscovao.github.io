@@ -40,7 +40,7 @@
         /* HEADER */
         header { 
             background: var(--header-bg); 
-            padding: 15px 20px; 
+            padding: 10px 20px; 
             flex-shrink: 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             z-index: 10;
@@ -56,16 +56,16 @@
         }
 
         #header-icon { 
-            height: clamp(45px, 7vw, 60px); 
+            height: clamp(35px, 6vw, 55px); 
             width: auto; 
             object-fit: contain;
         }
         
         .title-group { display: flex; flex-direction: column; }
-        .title-main { font-weight: 900; font-size: clamp(1.2rem, 4.5vw, 1.8rem); text-transform: uppercase; line-height: 1; }
+        .title-main { font-weight: 900; font-size: clamp(1.1rem, 4vw, 1.7rem); text-transform: uppercase; line-height: 1; }
         #txt-titulo1 { color: #d63031; } 
         #txt-titulo2 { color: #b2bec3; } 
-        .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.65rem, 2.5vw, 0.9rem); margin-top: 4px; }
+        .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.6rem, 2.2vw, 0.85rem); margin-top: 2px; }
 
         /* SUB-HEADER / INTRO */
         .sub-header { 
@@ -73,18 +73,18 @@
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
             text-align: center; 
-            padding: 12px 20px; 
+            padding: 8px 20px; 
             margin-bottom: 5px;
             border-bottom: 1px solid rgba(0,0,0,0.02);
             flex-shrink: 0;
         }
-        .intro-text { color: var(--text-grey); font-size: clamp(0.85rem, 3.5vw, 1.1rem); font-weight: 800; }
+        .intro-text { color: var(--text-grey); font-size: clamp(0.8rem, 3vw, 1rem); font-weight: 800; }
 
         /* CONTENT CONTAINER */
         main { 
             flex: 1; 
             display: flex;
-            align-items: center; /* Centraliza verticalmente os 5 cartões se sobrarem margens */
+            align-items: center; 
             justify-content: center;
             padding: 15px;
             width: 100%;
@@ -92,47 +92,96 @@
 
         .game-wrapper { 
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* 2 colunas no mobile vertical */
-            gap: 15px;
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
         }
 
-        /* CARD STYLE INDIVIDUAL */
+        /* ========================================================= */
+        /* MODOS DE VISUALIZAÇÃO (PORTRAIT VS LANDSCAPE)             */
+        /* ========================================================= */
+
+        /* 1. MODO VERTICAL PADRÃO (Telemóvel em pé) */
+        @media (orientation: portrait) {
+            .game-wrapper {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 12px;
+            }
+            .game-card {
+                aspect-ratio: 1 / 1.15;
+            }
+            /* O 5º cartão fica centrado na linha de baixo */
+            .game-card:last-child:nth-child(odd) {
+                grid-column: span 2;
+                width: calc(50% - 6px);
+                justify-self: center;
+            }
+        }
+
+        /* 2. MODO HORIZONTAL (Telemóveis deitados, Tablets e Desktops) */
+        @media (orientation: landscape) or (min-width: 768px) {
+            .game-wrapper {
+                grid-template-columns: repeat(5, 1fr); /* FORÇA OS 5 EM LINHA */
+                gap: 15px;
+            }
+            .game-card {
+                /* Em ecrãs deitados de telemóvel, reduzimos ligeiramente a proporção */
+                /* para que caibam perfeitamente na altura do ecrã sem forçar scroll */
+                aspect-ratio: 1 / 1.05; 
+                padding: 10px;
+            }
+            .game-card:last-child:nth-child(odd) {
+                grid-column: span 1;
+                width: 100%;
+                justify-self: auto;
+            }
+            .game-card h2 {
+                font-size: clamp(0.75rem, 2vw, 1.15rem) !important;
+            }
+            .card-img-container {
+                height: 68% !important;
+            }
+        }
+
+        /* COMPENSAÇÃO PARA ECRÃS GRANDES (DESKTOP) */
+        @media (min-width: 1024px) {
+            .game-wrapper {
+                gap: 25px;
+            }
+            .game-card {
+                aspect-ratio: 1 / 1.12;
+                padding: 15px;
+                border-radius: 28px;
+            }
+            .card-img-container {
+                height: 72% !important;
+            }
+        }
+
+        /* CARD STYLE BASE */
         .game-card { 
             position: relative;
-            border-radius: 24px; 
+            border-radius: 20px; 
             background: white;
             text-decoration: none; 
-            padding: 12px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: space-between;
             transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
             border: 4px solid #fff;
-            aspect-ratio: 1 / 1.12; /* Proporção ideal para preencher sem esticar */
             width: 100%;
-        }
-
-        /* O truque dos 5 cartões: o último (5º) fica centrado sozinho na linha de baixo */
-        .game-card:last-child:nth-child(odd) {
-            grid-column: span 2;
-            width: calc(50% - 7.5px); /* Fica exatamente do tamanho dos outros */
-            justify-self: center; /* Centraliza na terceira linha */
         }
 
         /* Container Interno da Imagem */
         .card-img-container { 
             width: 100%;
-            height: 70%;
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            border-radius: 18px; 
+            border-radius: 16px; 
             background: rgba(255, 255, 255, 0.3);
-            margin-bottom: 6px;
+            margin-bottom: 4px;
             overflow: hidden;
         }
         
@@ -145,7 +194,7 @@
 
         .game-card h2 { 
             color: white; 
-            font-size: clamp(0.85rem, 3.8vw, 1.1rem); 
+            font-size: clamp(0.8rem, 3.5vw, 1.05rem); 
             font-weight: 900; 
             margin-bottom: 2px;
             text-align: center;
@@ -167,28 +216,12 @@
 
         /* FOOTER */
         footer { 
-            padding: 15px 20px; 
+            padding: 10px 20px; 
             text-align: center; 
             color: var(--text-grey); 
             font-size: 0.75rem; 
             font-weight: 700; 
             flex-shrink: 0;
-        }
-
-        /* === ADAPTAÇÃO PARA COMPUTADORES E TABLETS (TODOS EM LINHA) === */
-        @media (min-width: 650px) {
-            /* Como são apenas 5 cartões, em ecrãs maiores ficam todos os 5 alinhados na horizontal */
-            .game-wrapper { 
-                grid-template-columns: repeat(5, 1fr); 
-                gap: 20px; 
-            }
-            .game-card { padding: 15px; border-radius: 28px; }
-            /* Desativa a regra de centralização mobile nos ecrãs grandes */
-            .game-card:last-child:nth-child(odd) { 
-                grid-column: span 1; 
-                width: 100%; 
-            }
-            .game-card h2 { font-size: 1.1rem; }
         }
     </style>
 </head>
