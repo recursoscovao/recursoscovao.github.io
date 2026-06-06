@@ -18,8 +18,8 @@
         
         html, body {
             height: 100vh;
-            height: -webkit-fill-available; /* Ajuste para browsers iOS mobile */
-            overflow: hidden; /* Proíbe qualquer tipo de scroll */
+            height: -webkit-fill-available;
+            overflow: hidden; /* Zero scroll tolerado */
         }
 
         body { 
@@ -39,7 +39,7 @@
             display: none;
         }
 
-        /* HEADER (Tamanho fixo, nunca encolhe) */
+        /* HEADER */
         header { 
             background: var(--header-bg); 
             padding: 10px 20px; 
@@ -69,7 +69,7 @@
         #txt-titulo2 { color: #b2bec3; } 
         .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.6rem, 2vw, 0.8rem); margin-top: 2px; }
 
-        /* SUB-HEADER / INTRO (Fixo, nunca encolhe) */
+        /* SUB-HEADER / INTRO */
         .sub-header { 
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(5px);
@@ -81,7 +81,7 @@
         }
         .intro-text { color: var(--text-grey); font-size: clamp(0.8rem, 3vw, 0.95rem); font-weight: 800; }
 
-        /* AREA CENTRAL (Absorve o espaço restante perfeitamente) */
+        /* AREA CENTRAL */
         main { 
             flex: 1; 
             display: flex;
@@ -89,13 +89,12 @@
             justify-content: center;
             padding: 10px 15px;
             width: 100%;
-            overflow: hidden; /* Garante zero scroll interno */
+            overflow: hidden;
         }
 
         .game-wrapper { 
             display: grid;
             width: 100%;
-            max-width: 1200px;
             margin: 0 auto;
         }
 
@@ -144,74 +143,79 @@
         }
 
         /* ========================================================= */
-        /* DINÂMICA SEM SCROLL POR ORIENTAÇÃO                        */
+        /* AJUSTES FINOS DE TAMANHO E ORIENTAÇÃO                     */
         /* ========================================================= */
 
-        /* 1. DISPOSITIVOS EM VERTICAL (Portrait Mobile) */
+        /* 1. MOBILES EM VERTICAL (Portrait) - Cartões um pouco mais pequenos */
         @media (orientation: portrait) {
             .game-wrapper {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 12px;
+                gap: 14px;
+                max-width: 340px; /* Reduz ligeiramente a largura total da grelha para encolher os cartões */
             }
             .game-card {
-                aspect-ratio: 1 / 1.1; 
+                aspect-ratio: 1 / 1.05; /* Proporção ligeiramente reduzida */
                 padding: 10px;
             }
             .card-img-container {
-                height: 70%;
-                margin-bottom: 6px;
+                height: 68%;
+                margin-bottom: 4px;
             }
             .game-card h2 { 
-                font-size: clamp(0.75rem, 3.5vw, 0.95rem);
+                font-size: clamp(0.75rem, 3.2vw, 0.9rem);
                 margin-bottom: 2px;
             }
-            /* O 5º cartão fica perfeitamente centrado e idêntico aos outros */
             .game-card:last-child:nth-child(odd) {
                 grid-column: span 2;
-                width: calc(50% - 6px);
+                width: calc(50% - 7px);
                 justify-self: center;
             }
         }
 
-        /* 2. DISPOSITIVOS EM HORIZONTAL (Landscape Mobile & Tablets) */
+        /* 2. MOBILES EM HORIZONTAL (Landscape) - Menos largos e mais simétricos */
         @media (orientation: landscape) {
             header { padding: 4px 20px; }
             .sub-header { padding: 4px 20px; }
             main { padding: 5px 15px; }
             
             .game-wrapper {
-                grid-template-columns: repeat(5, 1fr); /* Força todos os 5 alinhados na horizontal */
-                gap: 10px;
+                grid-template-columns: repeat(5, 1fr); 
+                gap: 12px;
+                max-width: 850px; /* Controla o estiramento horizontal */
+                justify-content: center;
             }
             .game-card {
-                aspect-ratio: 1 / 0.88; /* Mais horizontal para encaixar na baixa altura do telemóvel deitado */
+                aspect-ratio: 1 / 1.05; /* Deixam de ser retângulos deitados e ficam proporcionais */
+                max-width: 140px; /* Ajuste cirúrgico para não ficarem muito largos */
                 padding: 6px;
                 border-radius: 14px;
+                justify-self: center;
             }
             .card-img-container {
-                height: 62%;
+                height: 65%;
                 border-radius: 10px;
                 margin-bottom: 2px;
             }
             .game-card h2 { 
-                font-size: clamp(0.65rem, 1.8vw, 0.85rem);
+                font-size: clamp(0.65rem, 1.6vw, 0.85rem);
                 margin-bottom: 1px;
             }
             .game-card:last-child:nth-child(odd) {
                 grid-column: span 1;
                 width: 100%;
-                justify-self: auto;
+                justify-self: center;
             }
         }
 
-        /* 3. COMPUTADORES E ECRÃS GRANDES (Desktop) */
+        /* 3. DESKTOPS / ECRÃS GRANDES */
         @media (min-width: 1024px) {
             header { padding: 12px 20px; }
             .sub-header { padding: 10px 20px; }
             main { padding: 20px; }
-            .game-wrapper { gap: 20px; }
+            .game-wrapper { gap: 20px; max-width: 1100px; }
             .game-card {
                 aspect-ratio: 1 / 1.12;
+                max-width: none;
                 padding: 14px;
                 border-radius: 24px;
             }
@@ -231,14 +235,14 @@
             transform: scale(0.98);
         }
 
-        /* FOOTER (Fixo em baixo, nunca desaparece) */
+        /* FOOTER FIXO CONSTANTE */
         footer { 
             padding: 8px 20px; 
             text-align: center; 
             color: var(--text-grey); 
             font-size: 0.7rem; 
             font-weight: 700; 
-            flex-shrink: 0; /* Impede totalmente o footer de ser comprimido ou empurrado */
+            flex-shrink: 0; 
             background: rgba(255, 255, 255, 0.4); 
             border-top: 1px solid rgba(0,0,0,0.02);
             width: 100%;
