@@ -13,138 +13,188 @@
             --text-grey: #636e72;
         }
 
-        /* Fundo com textura de pontos e gradiente */
+        /* Reset e Base Responsiva */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
         body { 
             background: var(--body-bg);
             background-image: radial-gradient(#d1d8e0 1px, transparent 1px);
             background-size: 30px 30px; /* Textura de pontos subtil */
-            height: 100dvh; 
-            width: 100vw; 
+            min-height: 100vh;
+            width: 100%; 
             display: flex; 
             flex-direction: column;
             overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
         }
 
         /* HEADER */
         header { 
             background: var(--header-bg); 
-            padding: 15px; 
+            padding: 15px 20px; 
             flex-shrink: 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             z-index: 10;
         }
         
-        .header-center { display: flex; align-items: center; justify-content: center; gap: 15px; }
-        #header-icon { height: clamp(40px, 8vw, 60px); width: auto; }
+        .header-center { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 15px; 
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        #header-icon { 
+            height: clamp(45px, 7vw, 60px); 
+            width: auto; 
+            object-fit: contain;
+        }
         
         .title-group { display: flex; flex-direction: column; }
-        .title-main { font-weight: 900; font-size: clamp(1.1rem, 5vw, 1.8rem); text-transform: uppercase; line-height: 0.9; }
+        .title-main { font-weight: 900; font-size: clamp(1.2rem, 4.5vw, 1.8rem); text-transform: uppercase; line-height: 1; }
         #txt-titulo1 { color: #d63031; } /* Vermelho Mundo */
         #txt-titulo2 { color: #b2bec3; } /* Cinza Jogos */
-        .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.6rem, 3vw, 0.9rem); margin-top: 4px; }
+        .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.65rem, 2.5vw, 0.9rem); margin-top: 4px; }
 
         /* SUB-HEADER / INTRO */
         .sub-header { 
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(5px);
+            -webkit-backdrop-filter: blur(5px);
             text-align: center; 
-            padding: 12px; 
-            margin-bottom: 10px;
+            padding: 12px 20px; 
+            margin-bottom: 5px;
+            border-bottom: 1px solid rgba(0,0,0,0.02);
         }
-        .intro-text { color: var(--text-grey); font-size: clamp(0.85rem, 4vw, 1.1rem); font-weight: 800; }
+        .intro-text { color: var(--text-grey); font-size: clamp(0.85rem, 3.5vw, 1.1rem); font-weight: 800; }
 
-        /* GRID DE JOGOS */
+        /* CONTENT CONTAINER */
         main { 
             flex: 1; 
             display: flex;
             align-items: center; 
             justify-content: center;
             padding: 20px;
+            width: 100%;
         }
 
         .game-wrapper { 
             display: grid;
-            grid-template-columns: repeat(2, 1fr); /* Mobile: 2 colunas */
-            gap: 20px;
+            grid-template-columns: repeat(2, 1fr); /* Mobile Padrão: 2 colunas */
+            gap: 15px;
             width: 100%;
             max-width: 1200px;
+            margin: 0 auto;
         }
 
-        /* CARD STYLE (BASEADO NA IMAGEM) */
+        /* CARD STYLE (RESPONSIVO COM ASPECT-RATIO) */
         .game-card { 
             position: relative;
-            border-radius: 30px; 
+            border-radius: 24px; 
             background: white;
             text-decoration: none; 
-            padding: 15px; 
+            padding: 12px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: space-between;
-            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
             border: 4px solid #fff;
-            aspect-ratio: 1 / 1.1;
+            aspect-ratio: 1 / 1.15;
+            width: 100%;
         }
 
-        /* Estilo para o último card no mobile (centrado se for ímpar) */
+        /* Correção para o último card no Mobile se o número total for ímpar */
         .game-card:last-child:nth-child(odd) {
             grid-column: span 2;
-            width: calc(50% - 10px);
+            width: calc(50% - 7.5px);
             justify-self: center;
         }
 
-        /* Container da Imagem Interno */
+        /* Container Interno da Imagem */
         .card-img-container { 
             width: 100%;
-            height: 75%;
+            height: 72%;
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            border-radius: 20px; 
-            background: rgba(255, 255, 255, 0.3); /* Será sobreposto via JS */
-            margin-bottom: 10px;
+            border-radius: 18px; 
+            background: rgba(255, 255, 255, 0.3);
+            margin-bottom: 8px;
+            overflow: hidden;
         }
         
         .card-img-container img { 
             max-height: 80%; 
             max-width: 80%; 
             object-fit: contain;
-            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.08));
         }
 
         .game-card h2 { 
             color: white; 
-            font-size: clamp(0.9rem, 4vw, 1.3rem); 
+            font-size: clamp(0.8rem, 3.5vw, 1.15rem); 
             font-weight: 900; 
-            margin-bottom: 5px;
+            margin-bottom: 4px;
+            text-align: center;
+            text-transform: uppercase;
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis; /* Evita que títulos longos quebrem o card */
         }
 
-        /* HOVER E EFEITO GLOW */
+        /* Efeitos Interativos */
         .game-card:hover {
-            transform: scale(1.05) translateY(-5px);
+            transform: scale(1.04) translateY(-4px);
+        }
+
+        .game-card:active {
+            transform: scale(0.98);
         }
 
         /* FOOTER */
         footer { 
-            padding: 15px; 
+            padding: 15px 20px; 
             text-align: center; 
             color: var(--text-grey); 
             font-size: 0.75rem; 
             font-weight: 700; 
+            flex-shrink: 0;
         }
 
-        /* TABLET E DESKTOP (5 EM LINHA) */
-        @media (min-width: 900px) {
+        /* === MEDIA QUERIES PARA RESPONSIVIDADE FLUIDA === */
+
+        /* Tablets Horizontais / Ecrãs Pequenos (3 colunas) */
+        @media (min-width: 550px) {
             .game-wrapper { 
-                grid-template-columns: repeat(5, 1fr); /* 5 cards em linha */
-                gap: 25px;
+                grid-template-columns: repeat(3, 1fr);
+                gap: 20px;
             }
+            .game-card { padding: 15px; border-radius: 28px; }
             .game-card:last-child:nth-child(odd) {
                 grid-column: span 1;
                 width: 100%;
             }
+        }
+
+        /* Laptops e Tablets Grandes (4 colunas) */
+        @media (min-width: 850px) {
+            .game-wrapper { 
+                grid-template-columns: repeat(4, 1fr);
+                gap: 20px;
+            }
+        }
+
+        /* Desktop Computadores de Secretária (5 colunas) */
+        @media (min-width: 1100px) {
+            .game-wrapper { 
+                grid-template-columns: repeat(5, 1fr); 
+                gap: 25px;
+            }
+            .game-card h2 { font-size: 1.2rem; }
         }
     </style>
 </head>
@@ -195,7 +245,7 @@
                     
                     // Aplica cores e sombra dinâmica (Glow)
                     card.style.backgroundColor = tema.fundo;
-                    card.style.boxShadow = `0 15px 35px -10px ${tema.fundo}88`; // Glow suave
+                    card.style.boxShadow = `0 12px 28px -8px ${tema.fundo}aa`; // Sombra calibrada
 
                     card.innerHTML = `
                         <div class="card-img-container" style="background-color: rgba(255,255,255,0.25)">
