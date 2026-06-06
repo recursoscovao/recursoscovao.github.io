@@ -20,11 +20,11 @@
             background: var(--body-bg);
             background-image: radial-gradient(#d1d8e0 1px, transparent 1px);
             background-size: 30px 30px;
-            min-height: 100vh;
+            height: 100vh; /* Força a altura exata do ecrã do dispositivo */
             width: 100%; 
             display: flex; 
             flex-direction: column;
-            overflow: hidden; /* Tranca o ecrã para evitar barras de scroll */
+            overflow: hidden; /* Tranca completamente qualquer scroll no ecrã */
             -webkit-font-smoothing: antialiased;
             
             -ms-overflow-style: none;  
@@ -39,7 +39,7 @@
         header { 
             background: var(--header-bg); 
             padding: 12px 20px; 
-            flex-shrink: 0;
+            flex-shrink: 0; /* Impede o header de encolher */
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             z-index: 10;
         }
@@ -73,13 +73,13 @@
             text-align: center; 
             padding: 10px 20px; 
             border-bottom: 1px solid rgba(0,0,0,0.02);
-            flex-shrink: 0;
+            flex-shrink: 0; /* Impede a introdução de encolher */
         }
         .intro-text { color: var(--text-grey); font-size: clamp(0.85rem, 3.5vw, 1rem); font-weight: 800; }
 
         /* CONTENT CONTAINER */
         main { 
-            flex: 1; 
+            flex: 1; /* Ocupa dinamicamente todo o espaço restante do ecrã */
             display: flex;
             align-items: center; 
             justify-content: center;
@@ -146,8 +146,7 @@
         /* 1. MOBILES EM VERTICAL (Portrait) */
         @media (orientation: portrait) {
             main {
-                align-items: flex-start;
-                padding-top: 25px;
+                align-items: center; /* Centraliza a grid verticalmente no espaço livre */
             }
             .game-wrapper {
                 grid-template-columns: repeat(2, 1fr);
@@ -165,7 +164,6 @@
                 font-size: clamp(0.85rem, 3.8vw, 1.05rem);
                 margin-bottom: 2px;
             }
-            /* O 5º cartão fica perfeitamente centrado com tamanho simétrico */
             .game-card:last-child:nth-child(odd) {
                 grid-column: span 2;
                 width: calc(50% - 8px);
@@ -175,140 +173,4 @@
 
         /* 2. MOBILES EM HORIZONTAL (Landscape) */
         @media (orientation: landscape) {
-            header { padding: 6px 20px; }
-            .sub-header { padding: 6px 20px; }
-            
-            main {
-                align-items: center;
-                padding: 10px 20px;
-            }
-            .game-wrapper {
-                grid-template-columns: repeat(5, 1fr); /* Alinha todos os 5 horizontalmente */
-                gap: 14px;
-            }
-            .game-card {
-                aspect-ratio: 1 / 1.02; /* Ajustado para caber no ecrã sem scroll horizontal/vertical */
-                padding: 8px;
-                border-radius: 18px;
-            }
-            .card-img-container {
-                height: 66%;
-                border-radius: 14px;
-                margin-bottom: 4px;
-            }
-            .game-card h2 { 
-                font-size: clamp(0.75rem, 2vw, 0.95rem);
-                margin-bottom: 1px;
-            }
-            .game-card:last-child:nth-child(odd) {
-                grid-column: span 1;
-                width: 100%;
-                justify-self: auto;
-            }
-        }
-
-        /* 3. ECRÃS GRANDES (Desktop) */
-        @media (min-width: 1024px) {
-            header { padding: 15px 20px; }
-            .sub-header { padding: 12px 20px; }
-            main { padding: 25px; }
-            .game-wrapper { gap: 24px; }
-            .game-card {
-                aspect-ratio: 1 / 1.15;
-                padding: 16px;
-                border-radius: 28px;
-                border: 5px solid #fff;
-            }
-            .card-img-container {
-                height: 74%;
-                border-radius: 20px;
-                margin-bottom: 10px;
-            }
-            .game-card h2 { font-size: 1.15rem; margin-bottom: 4px; }
-        }
-
-        /* Efeitos Interativos */
-        .game-card:hover {
-            transform: scale(1.04) translateY(-3px);
-        }
-        .game-card:active {
-            transform: scale(0.98);
-        }
-
-        /* FOOTER */
-        footer { 
-            padding: 8px 20px; 
-            text-align: center; 
-            color: var(--text-grey); 
-            font-size: 0.72rem; 
-            font-weight: 700; 
-            flex-shrink: 0;
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <div class="header-center">
-            <img id="header-icon" src="" alt="Logo">
-            <div class="title-group">
-                <div class="title-main">
-                    <span id="txt-titulo1"></span> 
-                    <span id="txt-titulo2"></span>
-                </div>
-                <span id="txt-subtitulo" class="title-sub"></span>
-            </div>
-        </div>
-    </header>
-
-    <div class="sub-header">
-        <div id="txt-intro" class="intro-text"></div>
-    </div>
-
-    <main>
-        <div class="game-wrapper" id="gamesGrid"></div>
-    </main>
-
-    <footer id="txt-rodape"></footer>
-
-    <script src="dados.js"></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            if (typeof JOGO_CONFIG !== 'undefined') {
-                const config = JOGO_CONFIG;
-
-                // Restauro exato dos mapeamentos de texto iniciais
-                document.getElementById('txt-titulo1').textContent = config.textos.tituloLinha1;
-                document.getElementById('txt-titulo2').textContent = config.textos.tituloLinha2;
-                document.getElementById('txt-subtitulo').textContent = config.textos.subtitulo;
-                document.getElementById('txt-intro').textContent = config.textos.intro;
-                document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
-                
-                // Restauro exato do caminho e carregamento do logo
-                document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu.logo;
-
-                const grid = document.getElementById('gamesGrid');
-                config.listaJogos.forEach(jogo => {
-                    // Restauro exato das cores e do sistema dinâmico de Glow (Sombra)
-                    const tema = config.temaCores[jogo.tema];
-                    const card = document.createElement('a');
-                    card.className = 'game-card';
-                    card.href = jogo.link;
-                    
-                    card.style.backgroundColor = tema.fundo;
-                    card.style.boxShadow = `0 12px 28px -8px ${tema.fundo}aa`;
-
-                    // Restauro exato do caminho dinâmico para os ícones dos jogos
-                    card.innerHTML = `
-                        <div class="card-img-container" style="background-color: rgba(255,255,255,0.25)">
-                            <img src="${config.caminhoIconsJogos}${jogo.icon}" alt="${jogo.nome}">
-                        </div>
-                        <h2>${jogo.nome}</h2>
-                    `;
-                    grid.appendChild(card);
-                });
-            }
-        });
-    </script>
-</body>
-</html>
+            header
