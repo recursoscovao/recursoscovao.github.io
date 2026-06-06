@@ -13,18 +13,22 @@
             --text-grey: #636e72;
         }
 
-        /* Reset e Base */
+        /* Reset e Bloqueio Total de Scroll */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
+        html, body {
+            height: 100vh;
+            height: -webkit-fill-available; /* Ajuste para browsers iOS mobile */
+            overflow: hidden; /* Proíbe qualquer tipo de scroll */
+        }
+
         body { 
             background: var(--body-bg);
             background-image: radial-gradient(#d1d8e0 1px, transparent 1px);
             background-size: 30px 30px;
-            height: 100vh; /* Força a altura exata do ecrã do dispositivo */
             width: 100%; 
             display: flex; 
             flex-direction: column;
-            overflow: hidden; /* Tranca completamente qualquer scroll no ecrã */
             -webkit-font-smoothing: antialiased;
             
             -ms-overflow-style: none;  
@@ -35,11 +39,11 @@
             display: none;
         }
 
-        /* HEADER */
+        /* HEADER (Tamanho fixo, nunca encolhe) */
         header { 
             background: var(--header-bg); 
-            padding: 12px 20px; 
-            flex-shrink: 0; /* Impede o header de encolher */
+            padding: 10px 20px; 
+            flex-shrink: 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             z-index: 10;
         }
@@ -54,38 +58,38 @@
         }
 
         #header-icon { 
-            height: clamp(40px, 6vw, 55px); 
+            height: clamp(35px, 5vh, 50px); 
             width: auto; 
             object-fit: contain;
         }
         
         .title-group { display: flex; flex-direction: column; }
-        .title-main { font-weight: 900; font-size: clamp(1.2rem, 4.5vw, 1.7rem); text-transform: uppercase; line-height: 1; }
+        .title-main { font-weight: 900; font-size: clamp(1.1rem, 4vw, 1.6rem); text-transform: uppercase; line-height: 1; }
         #txt-titulo1 { color: #d63031; } 
         #txt-titulo2 { color: #b2bec3; } 
-        .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.65rem, 2.5vw, 0.85rem); margin-top: 3px; }
+        .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.6rem, 2vw, 0.8rem); margin-top: 2px; }
 
-        /* SUB-HEADER / INTRO */
+        /* SUB-HEADER / INTRO (Fixo, nunca encolhe) */
         .sub-header { 
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(5px);
             -webkit-backdrop-filter: blur(5px);
             text-align: center; 
-            padding: 10px 20px; 
+            padding: 8px 20px; 
             border-bottom: 1px solid rgba(0,0,0,0.02);
-            flex-shrink: 0; /* Impede a introdução de encolher */
+            flex-shrink: 0;
         }
-        .intro-text { color: var(--text-grey); font-size: clamp(0.85rem, 3.5vw, 1rem); font-weight: 800; }
+        .intro-text { color: var(--text-grey); font-size: clamp(0.8rem, 3vw, 0.95rem); font-weight: 800; }
 
-        /* CONTENT CONTAINER */
+        /* AREA CENTRAL (Absorve o espaço restante perfeitamente) */
         main { 
-            flex: 1; /* Ocupa dinamicamente todo o espaço restante do ecrã */
+            flex: 1; 
             display: flex;
             align-items: center; 
             justify-content: center;
-            padding: 15px;
+            padding: 10px 15px;
             width: 100%;
-            overflow: hidden;
+            overflow: hidden; /* Garante zero scroll interno */
         }
 
         .game-wrapper { 
@@ -98,7 +102,7 @@
         /* CARD STYLE BASE */
         .game-card { 
             position: relative;
-            border-radius: 24px; 
+            border-radius: 20px; 
             background: white;
             text-decoration: none; 
             display: flex; 
@@ -116,16 +120,16 @@
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            border-radius: 18px; 
+            border-radius: 16px; 
             background: rgba(255, 255, 255, 0.3);
             overflow: hidden;
         }
         
         .card-img-container img { 
-            max-height: 82%; 
-            max-width: 82%; 
+            max-height: 80%; 
+            max-width: 80%; 
             object-fit: contain;
-            filter: drop-shadow(0 6px 12px rgba(0,0,0,0.08));
+            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
         }
 
         .game-card h2 { 
@@ -140,62 +144,57 @@
         }
 
         /* ========================================================= */
-        /* ORIENTAÇÕES E RESPONSIVIDADE ASSEGURADA                  */
+        /* DINÂMICA SEM SCROLL POR ORIENTAÇÃO                        */
         /* ========================================================= */
 
-        /* 1. MOBILES EM VERTICAL (Portrait) */
+        /* 1. DISPOSITIVOS EM VERTICAL (Portrait Mobile) */
         @media (orientation: portrait) {
-            main {
-                align-items: center; /* Centraliza a grid verticalmente no espaço livre */
-            }
             .game-wrapper {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 16px;
+                gap: 12px;
             }
             .game-card {
-                aspect-ratio: 1 / 1.12; 
-                padding: 12px;
+                aspect-ratio: 1 / 1.1; 
+                padding: 10px;
             }
             .card-img-container {
-                height: 72%;
-                margin-bottom: 8px;
+                height: 70%;
+                margin-bottom: 6px;
             }
             .game-card h2 { 
-                font-size: clamp(0.85rem, 3.8vw, 1.05rem);
+                font-size: clamp(0.75rem, 3.5vw, 0.95rem);
                 margin-bottom: 2px;
             }
+            /* O 5º cartão fica perfeitamente centrado e idêntico aos outros */
             .game-card:last-child:nth-child(odd) {
                 grid-column: span 2;
-                width: calc(50% - 8px);
+                width: calc(50% - 6px);
                 justify-self: center;
             }
         }
 
-        /* 2. MOBILES EM HORIZONTAL (Landscape) */
+        /* 2. DISPOSITIVOS EM HORIZONTAL (Landscape Mobile & Tablets) */
         @media (orientation: landscape) {
-            header { padding: 6px 20px; }
+            header { padding: 4px 20px; }
             .sub-header { padding: 4px 20px; }
+            main { padding: 5px 15px; }
             
-            main {
-                align-items: center;
-                padding: 5px 20px;
-            }
             .game-wrapper {
-                grid-template-columns: repeat(5, 1fr); 
-                gap: 12px;
+                grid-template-columns: repeat(5, 1fr); /* Força todos os 5 alinhados na horizontal */
+                gap: 10px;
             }
             .game-card {
-                aspect-ratio: 1 / 0.98; /* Compacto para garantir que cabe com o footer fixo */
+                aspect-ratio: 1 / 0.88; /* Mais horizontal para encaixar na baixa altura do telemóvel deitado */
                 padding: 6px;
-                border-radius: 16px;
+                border-radius: 14px;
             }
             .card-img-container {
-                height: 64%;
-                border-radius: 12px;
+                height: 62%;
+                border-radius: 10px;
                 margin-bottom: 2px;
             }
             .game-card h2 { 
-                font-size: clamp(0.7rem, 2vw, 0.9rem);
+                font-size: clamp(0.65rem, 1.8vw, 0.85rem);
                 margin-bottom: 1px;
             }
             .game-card:last-child:nth-child(odd) {
@@ -205,42 +204,41 @@
             }
         }
 
-        /* 3. ECRÃS GRANDES (Desktop) */
+        /* 3. COMPUTADORES E ECRÃS GRANDES (Desktop) */
         @media (min-width: 1024px) {
-            header { padding: 15px 20px; }
-            .sub-header { padding: 12px 20px; }
-            main { padding: 25px; }
-            .game-wrapper { gap: 24px; }
+            header { padding: 12px 20px; }
+            .sub-header { padding: 10px 20px; }
+            main { padding: 20px; }
+            .game-wrapper { gap: 20px; }
             .game-card {
-                aspect-ratio: 1 / 1.15;
-                padding: 16px;
-                border-radius: 28px;
-                border: 5px solid #fff;
+                aspect-ratio: 1 / 1.12;
+                padding: 14px;
+                border-radius: 24px;
             }
             .card-img-container {
-                height: 74%;
-                border-radius: 20px;
-                margin-bottom: 10px;
+                height: 72%;
+                border-radius: 18px;
+                margin-bottom: 8px;
             }
-            .game-card h2 { font-size: 1.15rem; margin-bottom: 4px; }
+            .game-card h2 { font-size: 1.1rem; margin-bottom: 2px; }
         }
 
-        /* Efeitos Interativos */
+        /* Interações */
         .game-card:hover {
-            transform: scale(1.04) translateY(-3px);
+            transform: scale(1.03) translateY(-2px);
         }
         .game-card:active {
             transform: scale(0.98);
         }
 
-        /* FOOTER FOCADO NA VISIBILIDADE CONSTANTE */
+        /* FOOTER (Fixo em baixo, nunca desaparece) */
         footer { 
-            padding: 10px 20px; 
+            padding: 8px 20px; 
             text-align: center; 
             color: var(--text-grey); 
-            font-size: 0.72rem; 
+            font-size: 0.7rem; 
             font-weight: 700; 
-            flex-shrink: 0; /* Força o footer a reter o seu tamanho e nunca sumir */
+            flex-shrink: 0; /* Impede totalmente o footer de ser comprimido ou empurrado */
             background: rgba(255, 255, 255, 0.4); 
             border-top: 1px solid rgba(0,0,0,0.02);
             width: 100%;
@@ -279,7 +277,6 @@
             if (typeof JOGO_CONFIG !== 'undefined') {
                 const config = JOGO_CONFIG;
 
-                // SISTEMA BLINDADO CONTRA ERROS (Suporta os dois tipos de dados.js)
                 const textos = config.textos || config.conteudo || {};
                 
                 document.getElementById('txt-titulo1').textContent = textos.tituloLinha1 || textos.t1 || "MUNDO";
@@ -288,11 +285,9 @@
                 document.getElementById('txt-intro').textContent = textos.intro || "";
                 document.getElementById('txt-rodape').innerHTML = textos.rodape || "";
                 
-                // Mapeamento blindado para os caminhos de pastas de ícones
                 const pathMenu = config.caminhoIconsMenu || config.caminhoIcons || "";
                 const pathJogos = config.caminhoIconsJogos || config.caminhoIcons || "";
                 
-                // Resolução do logo do cabeçalho
                 const logoNome = config.iconesMenu?.logo || (config.tema?.voltarMobile ? config.tema.voltarMobile : "logo.png");
                 document.getElementById('header-icon').src = pathMenu + logoNome;
 
@@ -304,8 +299,7 @@
                     card.className = 'game-card';
                     card.href = jogo.link || "#";
                     
-                    // Resolução da cor de fundo dinâmica de cada cartão
-                    let corFundo = "#5ba4e5"; // Fallback azul por segurança se falhar
+                    let corFundo = "#5ba4e5"; 
                     if (config.temaCores && config.temaCores[jogo.tema]) {
                         corFundo = config.temaCores[jogo.tema].fundo;
                     } else if (config.tema?.corCard) {
@@ -313,9 +307,8 @@
                     }
                     
                     card.style.backgroundColor = corFundo;
-                    card.style.boxShadow = `0 12px 28px -8px ${corFundo}aa`;
+                    card.style.boxShadow = `0 8px 20px -6px ${corFundo}aa`;
 
-                    // Resolução do ícone interno do cartão
                     const iconName = jogo.icon || jogo.icone || "default.png";
 
                     card.innerHTML = `
@@ -326,8 +319,6 @@
                     `;
                     grid.appendChild(card);
                 });
-            } else {
-                console.error("Erro: O arquivo 'dados.js' não pôde ser lido.");
             }
         });
     </script>
