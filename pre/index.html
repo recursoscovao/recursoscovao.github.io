@@ -35,22 +35,58 @@
             letter-spacing: 0.5px;
         }
 
-        .hamburger-btn { font-size: 32px; color: var(--primary-blue); cursor: pointer; padding: 5px; z-index: 3001; }
+        /* BOTÃO HAMBÚRGUER MELHORADO (3D E INTERATIVO) */
+        .hamburger-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 50px;
+            height: 50px;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(176,196,217,0.3);
+            cursor: pointer;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+            z-index: 3001;
+            border: 2px solid rgba(176,196,217,0.15);
+        }
+        .hamburger-container:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 14px rgba(176,196,217,0.5);
+        }
+        .hamburger-container:active {
+            transform: scale(0.95);
+        }
+        .hamburger-btn { 
+            font-size: 22px; 
+            color: var(--primary-blue); 
+        }
         
-        /* VOLTAR - UNIFICADO */
+        /* BOTÃO VOLTAR MELHORADO (ESTILO CÍRCULO 3D COMO O HAMBÚRGUER) */
         .btn-voltar-header { display: none !important; }
         
         .btn-voltar-mobile { 
             display: flex !important; 
             align-items: center; 
+            justify-content: center;
             text-decoration: none; 
-            padding: 5px; 
+            width: 50px;
+            height: 50px;
+            background: #ffffff;
+            border-radius: 50%;
+            box-shadow: 0 4px 10px rgba(176,196,217,0.3);
             z-index: 3001; 
-            transition: transform 0.2s ease;
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+            border: 2px solid rgba(176,196,217,0.15);
         }
-        
-        .btn-voltar-mobile:hover { transform: scale(1.1); }
-        .btn-voltar-mobile img { height: 45px; width: auto; }
+        .btn-voltar-mobile:hover { 
+            transform: scale(1.1); 
+            box-shadow: 0 6px 14px rgba(176,196,217,0.5);
+        }
+        .btn-voltar-mobile:active {
+            transform: scale(0.95);
+        }
+        .btn-voltar-mobile img { height: 24px; width: auto; }
 
         .menu-dropdown { position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 6px; z-index: 3000; }
         .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: white; border-radius: 12px; box-shadow: 2px 4px 10px rgba(0,0,0,0.1); text-decoration: none; color: #5d7082; font-weight: 700; font-size: 0.9rem; min-width: 200px; transition: 0.2s; }
@@ -65,26 +101,28 @@
         .intro-container { text-align: center; margin-bottom: 30px; }
         .intro-container p { color: var(--text-grey); font-weight: 700; font-size: 18px; } 
 
-        /* GRELHA EXPANDIDA (CARTÕES MAIORES) */
+        /* GRELHA CONFIGURADA PARA CARTÕES MAIORES */
         .game-wrapper { 
             width: 100%; 
             max-width: 1100px; 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); /* Aumentado o tamanho mínimo dos cartões */
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); 
             gap: 35px; 
             justify-items: center; 
             padding-bottom: 40px; 
         }
         
+        /* CARTÃO PASSA A TER POSITION RELATIVE PARA REBER O SELO */
         .game-card { 
+            position: relative;
             background: transparent; 
             width: 100%;
-            height: 190px; /* Aumentado proporcionalmente para manter a simetria quadrada */
+            height: 190px; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             text-decoration: none; 
-            transition: transform 0.2s ease; 
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
         }
         
         .game-card:hover { 
@@ -98,7 +136,29 @@
             display: block;
         }
 
-        /* FOOTER CENTRADO E MAIS DISCRETO */
+        /* SELO DO CONTADOR DE JOGADAS (BADGE) */
+        .game-badge {
+            position: absolute;
+            top: 4px;
+            right: 4px;
+            background-color: var(--primary-blue);
+            color: white;
+            font-size: 12px;
+            font-weight: 900;
+            min-width: 28px;
+            height: 28px;
+            padding: 0 6px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+            border: 2px solid white;
+            z-index: 10;
+            pointer-events: none;
+        }
+
+        /* FOOTER CENTRADO E DISCRETO */
         footer { 
             padding: 15px; 
             display: flex;
@@ -108,18 +168,21 @@
             color: var(--text-grey); 
             font-weight: 700; 
             font-size: 0.75rem; 
-            border-top: 1px solid rgba(176, 196, 217, 0.15); /* Linha divisória ainda mais suave */
-            opacity: 0.65; /* Torna o texto do rodapé mais discreto */
+            border-top: 1px solid rgba(176, 196, 217, 0.15); 
+            opacity: 0.65; 
         }
 
         @media (max-width: 650px) { 
             header { height: 80px; padding: 0 15px; }
-            .btn-voltar-mobile img { height: 35px; } 
+            .hamburger-container, .btn-voltar-mobile { width: 42px; height: 42px; }
+            .hamburger-btn { font-size: 18px; }
+            .btn-voltar-mobile img { height: 20px; }
             .logo-text p { font-size: 8px; margin-top: 2px; }
             .logo-text h1 { font-size: 18px; }
             .logo-center img { height: 50px; }
             .game-wrapper { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
-            .game-card { height: 150px; } /* Ajuste de escala para mobile */
+            .game-card { height: 150px; }
+            .game-badge { min-width: 24px; height: 24px; font-size: 10px; top: 2px; right: 2px; }
         }
     </style>
 </head>
@@ -129,7 +192,9 @@
 
     <header>
         <div class="header-left">
-            <i class="fas fa-bars hamburger-btn" onclick="toggleHamburger(event)"></i>
+            <div class="hamburger-container" onclick="toggleHamburger(event)">
+                <i class="fas fa-bars hamburger-btn"></i>
+            </div>
             <div id="dropdownMenu" class="menu-dropdown"></div>
         </div>
         
@@ -185,7 +250,7 @@
             document.getElementById('txt-rodape').innerHTML = info.rodape;
             
             document.getElementById('head-logo').src = pIconsMenu + conf.iconesMenu[conf.anoAtivo];
-            document.getElementById('header-back-mobile').src = pIconsMenu + tema.voltarMobile;
+            document.getElementById('header-back-mobile').src = pIconsMenu + conf.iconesMenu.voltar;
 
             const menuBox = document.getElementById('dropdownMenu');
             menuBox.innerHTML = ''; 
@@ -201,7 +266,7 @@
             btnV.innerHTML = `<img src="${pIconsMenu}${conf.iconesMenu.voltar}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnV);
 
-            // RENDERIZAÇÃO DA GRELHA
+            // RENDERIZAÇÃO DA GRELHA COM O CONTADOR DE JOGADAS
             const grid = document.getElementById('gamesGrid');
             grid.innerHTML = ''; 
             conf.listaJogos.forEach(jogo => {
@@ -209,7 +274,14 @@
                 card.className = 'game-card'; 
                 card.href = jogo.link;
                 card.title = jogo.nome; 
-                card.innerHTML = `<img src="${pIconsJogos}${jogo.icon}" alt="${jogo.nome}">`;
+                
+                // Exibe o selo se houver jogadas registadas e forem superiores a zero
+                let badgeHTML = '';
+                if (jogo.jogadas && jogo.jogadas > 0) {
+                    badgeHTML = `<div class="game-badge">${jogo.jogadas}</div>`;
+                }
+
+                card.innerHTML = `${badgeHTML}<img src="${pIconsJogos}${jogo.icon}" alt="${jogo.nome}">`;
                 grid.appendChild(card);
             });
         }
