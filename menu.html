@@ -154,10 +154,10 @@
         }
 
         /* ========================================================= */
-        /* RESPONSIVIDADE CALIBRADA CIRURGICAMENTE PARA EVITAR SCROLL */
+        /* RESPONSIVIDADE CALIBRADA CIRURGICAMENTE                   */
         /* ========================================================= */
         
-        /* 1. MOBILE VERTICAL (Garante o footer visível a 100% sem scroll) */
+        /* 1. MOBILE VERTICAL (Cartões mais largos, puxados para cima, footer visível) */
         @media (orientation: portrait) {
             header { grid-template-columns: 50px 1fr auto; padding: 0 10px; min-height: 70px; }
             #header-icon { height: 40px; }
@@ -166,35 +166,44 @@
             .sub-header { padding: 6px; }
             .intro-text { font-size: 0.8rem; }
 
+            main { 
+                align-items: flex-start;  /* Puxa todo o conteúdo do wrapper para cima */
+                padding-top: 15px;        /* Margem de respiro controlada no topo */
+            }
+
             .game-wrapper { 
                 flex-direction: column; 
-                justify-content: space-evenly; /* Distribui os cartões equilibradamente */
+                justify-content: flex-start;
                 align-items: center;
-                gap: 8px;                     
-                max-width: 190px;              /* Redução proporcional para manter o formato quadrado perfeito */
-                height: 100%;
-                max-height: 52vh;              /* Altura máxima blindada ocupando apenas metade do ecrã vertical */
+                gap: 14px;                 /* Espaçamento nítido e bonito entre cartões */
+                max-width: 270px;          /* ALARGADO: Cartões mais largos no ecrã do telemóvel */
+                height: auto;
+                max-height: 56vh;          /* Espaço limite rigoroso para trancar scroll */
             }
             .game-card {
-                aspect-ratio: 1 / 1;  
+                aspect-ratio: 1 / 0.85;    /* Proporção retangular horizontal perfeita */
                 flex-direction: column; 
                 justify-content: space-between;
-                padding: 10px;
-                border-radius: 24px;
-                border-width: 3px;
+                padding: 10px 12px;
+                border-radius: 26px;
+                border-width: 3.5px;
             }
             .card-img-container {
                 width: 100%;
-                height: 70%;          
+                height: 68%;          
                 margin-bottom: 0;
-                border-radius: 16px;
+                border-radius: 18px;
+            }
+            .card-img-container img {
+                max-height: 90%;
+                max-width: 90%;
             }
             .game-card h2 { 
-                font-size: 0.9rem;    /* Texto ajustado à nova escala do cartão */
+                font-size: 1.05rem;        /* Texto maior e destacado em maiúsculas */
                 margin-top: 2px;
-                letter-spacing: 0.3px;
+                letter-spacing: 0.5px;
             }
-            footer { padding: 5px; font-size: 0.65rem; }
+            footer { padding: 12px 5px 5px 5px; font-size: 0.65rem; }
         }
 
         /* 2. MOBILE HORIZONTAL E DESKTOP */
