@@ -136,18 +136,18 @@
             display: block;
         }
 
-        /* BADGE DO CONTADOR DINÂMICO */
+        /* BADGE DO CONTADOR GLOBAL CONTIDO NO CANTO */
         .game-badge {
             position: absolute;
             top: 4px;
             right: 4px;
             background-color: var(--primary-blue);
             color: white;
-            font-size: 12px;
+            font-size: 11px;
             font-weight: 900;
             min-width: 28px;
             height: 28px;
-            padding: 0 6px;
+            padding: 0 4px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -181,7 +181,7 @@
             .logo-center img { height: 50px; }
             .game-wrapper { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
             .game-card { height: 150px; }
-            .game-badge { min-width: 24px; height: 24px; font-size: 10px; top: 2px; right: 2px; }
+            .game-badge { min-width: 24px; height: 24px; font-size: 9px; top: 2px; right: 2px; }
         }
     </style>
 </head>
@@ -226,7 +226,10 @@
     <script src="dados.js"></script>
     
     <script>
-        function initUI() {
+        // Nome único da tua app para isolar as contagens de outros sites no servidor público
+        const APP_ID = "pequenos_curiosos_hub";
+
+        async function initUI() {
             if (typeof JOGO_CONFIG === 'undefined' || typeof BIBLIOTECA_TEMAS === 'undefined' || typeof BIBLIOTECA_CONTEUDO === 'undefined') return;
             
             const conf = JOGO_CONFIG;
@@ -265,51 +268,65 @@
             btnV.innerHTML = `<img src="${pIconsMenu}${conf.iconesMenu.voltar}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnV);
 
-            // GERAÇÃO DOS CARTÕES E LEITURA DO LOCALSTORAGE
+            // GERAÇÃO DOS CARTÕES
             const grid = document.getElementById('gamesGrid');
             grid.innerHTML = ''; 
+            
             conf.listaJogos.forEach(jogo => {
                 const card = document.createElement('a'); 
                 card.className = 'game-card'; 
                 card.href = jogo.link;
                 card.title = jogo.nome; 
 
-                // Identificador único para este jogo na memória do navegador
-                const storageKey = `jogadas_${conf.anoAtivo}_${jogo.link}`;
+                // Identificador limpo e seguro para a URL da API remota
+                const gameKey = `${conf.anoAtivo}_${jogo.link.replace(/\//g, '')}`;
                 
-                // Se ainda não existir no localStorage, inicia com o valor definido no dados.js (ou 0)
-                if (localStorage.getItem(storageKey) === null) {
-                    localStorage.setItem(storageKey, jogo.jogadas || 0);
-                }
+                // Cria uma caixa para o badge que será preenchida assim que o servidor responder
+                const badgeId = `badge_${gameKey}`;
+                card.innerHTML = `<div class="game-badge" id="${badgeId}" style="display:none;">0</div><img src="${pIconsJogos}${jogo.icon}" alt="${jogo.nome}">`;
                 
-                const totalJogadas = parseInt(localStorage.getItem(storageKey));
-
-                // Configura o evento de clique para incrementar o contador antes de abrir o link
+                // Trata o evento de clique: envia o incremento para a nuvem e depois avança
                 card.onclick = function(e) {
                     e.preventDefault();
-                    registarJogada(storageKey, jogo.link);
+                    registarJogadaGlobal(gameKey, jogo.link);
                 };
 
-                // Apenas exibe o círculo se o número for maior que zero
-                let badgeHTML = '';
-                if (totalJogadas > 0) {
-                    badgeHTML = `<div class="game-badge">${totalJogadas}</div>`;
-                }
-
-                card.innerHTML = `${badgeHTML}<img src="${pIconsJogos}${jogo.icon}" alt="${jogo.nome}">`;
                 grid.appendChild(card);
+
+                // Vai buscar o valor guardado globalmente na nuvem para este jogo
+                obterContagemGlobal(gameKey, badgeId);
             });
         }
 
-        // FUNÇÃO QUE DETETA O JOGO ABERTO, ADICIONA +1 E REDIRECIONA
-        function registarJogada(storageKey, destino) {
-            let atual = parseInt(localStorage.getItem(storageKey)) || 0;
-            localStorage.setItem(storageKey, atual + 1);
+        // Procura a contagem atualizada na nuvem
+        async function obterContagemGlobal(gameKey, badgeId) {
+            try {
+                // Endpoint público seguro para obter o valor de uma chave
+                const response = await fetch(`https://api.countapi.xyz/get/${APP_ID}/${gameKey}`);
+                if (response.ok) {
+                    const data = await response.json();
+                    const badge = document.getElementById(badgeId);
+                    if (badge && data.value > 0) {
+                        badge.innerText = data.value;
+                        badge.style.display = "flex";
+                    }
+                }
+            } catch (err) {
+                console.log("Erro ao ligar ao servidor de contagem:", err);
+            }
+        }
+
+        // Incrementa +1 na nuvem antes de saltar de página
+        async function registarJogadaGlobal(gameKey, destino) {
+            try {
+                // Dispara o incremento em segundo plano sem travar a navegação do utilizador
+                fetch(`https://api.countapi.xyz/hit/${APP_ID}/${gameKey}`);
+            } catch (err) {
+                console.log(err);
+            }
             
-            // Pequeno delay para garantir que o navegador guarda o dado antes da transição de página
-            setTimeout(() => {
-                window.location.href = destino;
-            }, 50);
+            // Redireciona imediatamente para o jogo
+            window.location.href = destino;
         }
 
         function toggleHamburger(e) {
