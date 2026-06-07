@@ -20,11 +20,11 @@ const JOGO_CONFIG = {
     },
     links: {
         home: "index.html", 
-        pre: "menu.html?ano=pre",
-        ano1: "menu.html?ano=1",
-        ano2: "menu.html?ano=2",
-        ano3: "menu.html?ano=3",
-        ano4: "menu.html?ano=4"
+        pre: "pre/index.html",
+        ano1: "1/index.html",
+        ano2: "2/index.html",
+        ano3: "3/index.html",
+        ano4: "4/index.html"
     },
     temaCores: {
         rosa: { borda: "#FFFFFF", fundo: "#E691A7" },
@@ -34,10 +34,10 @@ const JOGO_CONFIG = {
         roxo: { borda: "#FFFFFF", fundo: "#8A81E6" }
     },
     listaJogos: [
-        { nome: "Pré-Escolar", icon: "iconpre.png", link: "menu.html?ano=pre", tema: "rosa" },
-        { nome: "1º Ano",      icon: "icon1.png",   link: "menu.html?ano=1",   tema: "laranja" },
-        { nome: "2º Ano",      icon: "icon2.png",   link: "menu.html?ano=2",   tema: "verde" },
-        { nome: "3º Ano",      icon: "icon3.png",   link: "menu.html?ano=3",   tema: "azul" },
-        { nome: "4º Ano",      icon: "icon4.png",   link: "menu.html?ano=4",   tema: "roxo" }
+        { nome: "Pré-Escolar", icon: "iconpre.png", link: "pre/", tema: "rosa" },
+        { nome: "1º Ano", icon: "icon1.png", link: "1/", tema: "laranja" },
+        { nome: "2º Ano", icon: "icon2.png", link: "2/", tema: "verde" },
+        { nome: "3º Ano", icon: "icon3.png", link: "3/", tema: "azul" },
+        { nome: "4º Ano", icon: "icon4.png", link: "4/", tema: "roxo" }
     ]
 };
