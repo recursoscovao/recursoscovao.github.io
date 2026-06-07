@@ -11,8 +11,12 @@ const JOGO_CONFIG = {
     },
     
     links: {
-        home: "/jogos", pre: "/jogos/pre", ano1: "/jogos/1", 
-        ano2: "/jogos/2", ano3: "/jogos/3", ano4: "/jogos/4"
+        home: "/",        // Removido "/jogos"
+        pre: "/pre",      // Removido "/jogos"
+        ano1: "/1",       // Removido "/jogos"
+        ano2: "/2",       // Removido "/jogos"
+        ano3: "/3",       // Removido "/jogos"
+        ano4: "/4"        // Removido "/jogos"
     },
     
     listaJogos: [
