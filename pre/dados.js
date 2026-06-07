@@ -16,9 +16,9 @@ const JOGO_CONFIG = {
     },
     
     listaJogos: [
-        { nome: "O meu par?", icon: "encontraopar.png", link: "encontraopar/" },
-        { nome: "Monstro Comilão", icon: "monstrocomilao.png", link: "monstrocomilao/" },
-        { nome: "Colorir", icon: "pinta.png", link: "pinta/" },
+        { nome: "O meu par?", icon: "aaaa.png", link: "encontraopar/" },
+        { nome: "Monstro Comilão", icon: "aaaa.png", link: "monstrocomilao/" },
+        { nome: "Colorir", icon: "aaaa.png", link: "pinta/" },
         { nome: "Não tenho par!", icon: "sem_par.png", link: "sem_par/" },
         { nome: "Sombras Mágicas", icon: "sombrasmagicas.png", link: "sombrasmagicas/" },
         { nome: "Labirinto", icon: "labirinto.png", link: "labirinto/" },
