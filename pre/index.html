@@ -65,22 +65,21 @@
         .intro-container { text-align: center; margin-bottom: 30px; }
         .intro-container p { color: var(--text-grey); font-weight: 700; font-size: 18px; } 
 
-        /* GRELHA CORRIGIDA */
+        /* GRELHA EXPANDIDA (CARTÕES MAIORES) */
         .game-wrapper { 
             width: 100%; 
             max-width: 1100px; 
             display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
-            gap: 30px; 
+            grid-template-columns: repeat(auto-fill, minmax(190px, 1fr)); /* Aumentado o tamanho mínimo dos cartões */
+            gap: 35px; 
             justify-items: center; 
             padding-bottom: 40px; 
         }
         
-        /* Garantimos largura e altura fixas relativas à célula da grelha */
         .game-card { 
             background: transparent; 
             width: 100%;
-            height: 160px; /* Força uma altura estável para o link */
+            height: 190px; /* Aumentado proporcionalmente para manter a simetria quadrada */
             display: flex; 
             align-items: center; 
             justify-content: center; 
@@ -89,15 +88,28 @@
         }
         
         .game-card:hover { 
-            transform: scale(1.05); 
+            transform: scale(1.06); 
         }
         
-        /* Força a imagem a preencher o bloco mantendo a proporção */
         .game-card img { 
             width: 100%; 
             height: 100%; 
             object-fit: contain;
             display: block;
+        }
+
+        /* FOOTER CENTRADO E MAIS DISCRETO */
+        footer { 
+            padding: 15px; 
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-align: center; 
+            color: var(--text-grey); 
+            font-weight: 700; 
+            font-size: 0.75rem; 
+            border-top: 1px solid rgba(176, 196, 217, 0.15); /* Linha divisória ainda mais suave */
+            opacity: 0.65; /* Torna o texto do rodapé mais discreto */
         }
 
         @media (max-width: 650px) { 
@@ -106,8 +118,8 @@
             .logo-text p { font-size: 8px; margin-top: 2px; }
             .logo-text h1 { font-size: 18px; }
             .logo-center img { height: 50px; }
-            .game-wrapper { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 20px; }
-            .game-card { height: 130px; } /* Ajuste de altura para mobile */
+            .game-wrapper { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 20px; }
+            .game-card { height: 150px; } /* Ajuste de escala para mobile */
         }
     </style>
 </head>
