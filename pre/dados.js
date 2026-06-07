@@ -3,31 +3,31 @@ const JOGO_CONFIG = {
     anoAtivo: "pre",      // Escolha: "pre", "ano1", "ano2", "ano3", "ano4"
     
     caminhoIconsMenu: "../icons/", 
-    caminhoIconsJogos: "../icons/ic_jogos_pre/", // Caminho alterado para apontar para a subpasta correta
+    caminhoIconsJogos: "../icons/ic_jogos_pre/", 
     
     iconesMenu: {
         home: "home.png", pre: "iconpre.png", ano1: "icon1.png", 
-        ano2: "icon2.png", ano3: "icon3.png", ano4: "icon4.png", voltar: "seta.png"
+        ano2: "icon2.png", ano3: "icon3.png", ano4: "icon4.png", 
+        voltar: "seta.png"
     },
     
     links: {
-        home: "/",        // Removido "/jogos"
-        pre: "/pre",      // Removido "/jogos"
-        ano1: "/1",       // Removido "/jogos"
-        ano2: "/2",       // Removido "/jogos"
-        ano3: "/3",       // Removido "/jogos"
-        ano4: "/4"        // Removido "/jogos"
+        home: "/",        
+        pre: "/pre",      
+        ano1: "/1",       
+        ano2: "/2",       
+        ano3: "/3",       
+        ano4: "/4"        
     },
     
     listaJogos: [
-        { nome: "O meu par?", icon: "aaaa.png", link: "encontraopar/" },
-        { nome: "Monstro Comilão", icon: "aaaa.png", link: "monstrocomilao/" },
-        { nome: "Colorir", icon: "aaaa.png", link: "pinta/" },
-        { nome: "Não tenho par!", icon: "aaaa.png", link: "sem_par/" },
-        { nome: "Sombras Mágicas", icon: "aaaa.png", link: "sombrasmagicas/" },
-        { nome: "Labirinto", icon: "aaaa.png", link: "labirinto/" },
-        { nome: "Chuva de Letras", icon: "aaaa.png", link: "chuva_letras/" },
-        { nome: "As metades", icon: "aaaa.png", link: "metade/" }
-        // ... adicione os restantes
+        { nome: "As Metades", icon: "metades_peixe.png", link: "metades_peixe/", jogadas: 21 },
+        { nome: "Vamos Contar Metades", icon: "metades_contar.png", link: "metades_contar/", jogadas: 42 },
+        { nome: "Formas Metades", icon: "metades_formas.png", link: "metades_formas/", jogadas: 18 },
+        { nome: "Cores Mágicas Metades", icon: "metades_cores.png", link: "metades_cores/", jogadas: 35 },
+        { nome: "Objetos Metades", icon: "metades_objetos.png", link: "metades_objetos/", jogadas: 28 },
+        { nome: "Transportes Metades", icon: "metades_transportes.png", link: "metades_transportes/", jogadas: 15 },
+        { nome: "Animais Metades", icon: "metades_animais.png", link: "metades_animais/", jogadas: 50 },
+        { nome: "Metades Divertidas", icon: "metades_divertidas.png", link: "metades_divertidas/", jogadas: 22 }
     ]
 };
