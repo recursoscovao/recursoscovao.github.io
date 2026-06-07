@@ -3,7 +3,7 @@ const JOGO_CONFIG = {
     anoAtivo: "pre",      // Escolha: "pre", "ano1", "ano2", "ano3", "ano4"
     
     caminhoIconsMenu: "../icons/", 
-    caminhoIconsJogos: "iconjogos/",
+    caminhoIconsJogos: "../icons/ic_jogos_pre/", // Caminho alterado para apontar para a subpasta correta
     
     iconesMenu: {
         home: "home.png", pre: "iconpre.png", ano1: "icon1.png", 
