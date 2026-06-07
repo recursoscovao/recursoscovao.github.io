@@ -143,7 +143,7 @@
         
         .game-card h2 { font-weight: 900; text-transform: uppercase; text-align: center; }
 
-        /* FOOTER */
+        /* FOOTER GARANTIDO */
         footer { 
             padding: 10px; 
             text-align: center; 
@@ -154,45 +154,50 @@
         }
 
         /* ========================================================= */
-        /* CALIBRAÇÃO DE RESPONSIVIDADE PRECISA                      */
+        /* RESPONSIVIDADE CALIBRADA CIRURGICAMENTE PARA EVITAR SCROLL */
         /* ========================================================= */
         
-        /* 1. MOBILE VERTICAL (Cartões idênticos à foto, uns abaixo dos outros) */
+        /* 1. MOBILE VERTICAL (Garante o footer visível a 100% sem scroll) */
         @media (orientation: portrait) {
-            header { grid-template-columns: 50px 1fr auto; padding: 0 10px; min-height: 75px; }
-            #header-icon { height: 42px; }
-            .title-main { font-size: 1rem; }
-            .btn-voltar-mobile img { height: 35px; }
-            .sub-header { padding: 8px; }
+            header { grid-template-columns: 50px 1fr auto; padding: 0 10px; min-height: 70px; }
+            #header-icon { height: 40px; }
+            .title-main { font-size: 0.95rem; }
+            .btn-voltar-mobile img { height: 32px; }
+            .sub-header { padding: 6px; }
+            .intro-text { font-size: 0.8rem; }
 
             .game-wrapper { 
                 flex-direction: column; 
-                justify-content: center;
+                justify-content: space-evenly; /* Distribui os cartões equilibradamente */
                 align-items: center;
-                gap: 12px;            /* Espaço perfeito para caber os 3 cartões na vertical */
-                max-width: 250px;      /* Largura controlada para mantê-los verticais e elegantes */
+                gap: 8px;                     
+                max-width: 190px;              /* Redução proporcional para manter o formato quadrado perfeito */
                 height: 100%;
+                max-height: 52vh;              /* Altura máxima blindada ocupando apenas metade do ecrã vertical */
             }
             .game-card {
-                aspect-ratio: 1 / 1;  /* Transforma o cartão num quadrado perfeito igual à foto */
+                aspect-ratio: 1 / 1;  
                 flex-direction: column; 
                 justify-content: space-between;
-                padding: 14px;
-                border-radius: 30px;
+                padding: 10px;
+                border-radius: 24px;
+                border-width: 3px;
             }
             .card-img-container {
                 width: 100%;
-                height: 72%;          /* Área do fundo colorido generosa para o boneco */
+                height: 70%;          
                 margin-bottom: 0;
+                border-radius: 16px;
             }
             .game-card h2 { 
-                font-size: 1.15rem;   /* Letras grandes e legíveis na base */
-                margin-top: 4px;
-                letter-spacing: 0.5px;
+                font-size: 0.9rem;    /* Texto ajustado à nova escala do cartão */
+                margin-top: 2px;
+                letter-spacing: 0.3px;
             }
+            footer { padding: 5px; font-size: 0.65rem; }
         }
 
-        /* 2. MOBILE HORIZONTAL E DESKTOP (Lado a lado, formato quadrado) */
+        /* 2. MOBILE HORIZONTAL E DESKTOP */
         @media (orientation: landscape) or (min-width: 768px) {
             header { min-height: 95px; padding: 0 30px; }
             #header-icon { height: 58px; }
