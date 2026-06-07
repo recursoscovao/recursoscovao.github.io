@@ -24,7 +24,7 @@
         html, body { 
             height: 100vh; 
             height: -webkit-fill-available;
-            overflow: hidden; /* Tranca completamente o scroll da página */
+            overflow: hidden; /* Tranca completamente o scroll global da página */
         }
 
         body { 
@@ -114,7 +114,7 @@
         /* --- ÁREA CENTRAL (SEM SCROLL) --- */
         main { 
             flex: 1; 
-            padding: 15px; 
+            padding: 10px 15px; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
@@ -128,16 +128,16 @@
         }
 
         .game-card { 
-            background: white; border-radius: 28px; border: 3px solid #e0eaf2; 
+            background: white; border-radius: 35px; border: 4px solid #e0eaf2; 
             text-decoration: none; padding: 16px; display: flex; flex-direction: column; 
-            align-items: center; box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+            align-items: center; box-shadow: 0 10px 20px rgba(176, 196, 217, 0.4);
             transition: transform 0.2s, box-shadow 0.2s;
             width: 100%;
         }
         
         .card-img-container { 
             width: 100%; display: flex; align-items: center; justify-content: center; 
-            border-radius: 20px; margin-bottom: 12px; min-height: 0;
+            border-radius: 24px; margin-bottom: 12px; min-height: 0;
         }
         .card-img-container img { max-height: 85%; max-width: 85%; object-fit: contain; }
         
@@ -154,36 +154,45 @@
         }
 
         /* ========================================================= */
-        /* CALIBRAÇÃO DE RESPONSIVIDADE (CARTÕES MAIORES E ROBUSTOS) */
+        /* CALIBRAÇÃO DE RESPONSIVIDADE PRECISA                      */
         /* ========================================================= */
         
-        /* 1. MOBILE VERTICAL (Linhas maiores e ícones expandidos) */
+        /* 1. MOBILE VERTICAL (Cartões idênticos à foto, uns abaixo dos outros) */
         @media (orientation: portrait) {
-            header { grid-template-columns: 50px 1fr auto; padding: 0 10px; }
+            header { grid-template-columns: 50px 1fr auto; padding: 0 10px; min-height: 75px; }
             #header-icon { height: 42px; }
             .title-main { font-size: 1rem; }
             .btn-voltar-mobile img { height: 35px; }
+            .sub-header { padding: 8px; }
 
             .game-wrapper { 
                 flex-direction: column; 
-                gap: 15px;            /* Mais espaço entre linhas */
-                max-width: 340px;      /* Ligeiramente mais largo */
-                height: auto;
+                justify-content: center;
+                align-items: center;
+                gap: 12px;            /* Espaço perfeito para caber os 3 cartões na vertical */
+                max-width: 250px;      /* Largura controlada para mantê-los verticais e elegantes */
+                height: 100%;
             }
             .game-card {
-                aspect-ratio: 1 / 0.42; /* Cartão substancialmente mais alto */
-                flex-direction: row; 
-                justify-content: flex-start;
-                gap: 20px;
-                padding: 12px 20px;
+                aspect-ratio: 1 / 1;  /* Transforma o cartão num quadrado perfeito igual à foto */
+                flex-direction: column; 
+                justify-content: space-between;
+                padding: 14px;
+                border-radius: 30px;
             }
             .card-img-container {
-                width: 65px; height: 65px; flex: none; margin-bottom: 0; /* Ícones maiores */
+                width: 100%;
+                height: 72%;          /* Área do fundo colorido generosa para o boneco */
+                margin-bottom: 0;
             }
-            .game-card h2 { font-size: 1.1rem; }
+            .game-card h2 { 
+                font-size: 1.15rem;   /* Letras grandes e legíveis na base */
+                margin-top: 4px;
+                letter-spacing: 0.5px;
+            }
         }
 
-        /* 2. MOBILE HORIZONTAL E DESKTOP (Quadrados grandes e imponentes) */
+        /* 2. MOBILE HORIZONTAL E DESKTOP (Lado a lado, formato quadrado) */
         @media (orientation: landscape) or (min-width: 768px) {
             header { min-height: 95px; padding: 0 30px; }
             #header-icon { height: 58px; }
@@ -194,16 +203,16 @@
                 justify-content: center;
                 align-items: center;
                 gap: 25px; 
-                max-width: 1000px; /* Alargado para dar espaço a cartões maiores */
+                max-width: 1000px; 
                 height: auto;
             }
             .game-card {
-                aspect-ratio: 1 / 1.15; /* Proporção ideal para cartões grandes */
-                max-width: 220px;       /* Aumentado de 150px para 220px! */
+                aspect-ratio: 1 / 1.15; 
+                max-width: 220px;       
                 justify-content: space-between;
                 flex: 1;
             }
-            .game-card:hover { transform: translateY(-8px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
+            .game-card:hover { transform: translateY(-8px); box-shadow: 0 15px 30px rgba(176, 196, 217, 0.6); }
             .game-card h2 { font-size: 1.15rem; }
             .card-img-container { flex: 1; }
         }
@@ -279,8 +288,8 @@
                 document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
                 document.title = config.textos.tituloLinha1 + " " + config.textos.tituloLinha2;
                 
-                const chaveIconeAno = (anoAtivo === "pre") ? "pre" : "ano" + anoAtivo;
-                document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[chaveIconeAno];
+                const staticKey = (anoAtivo === "pre") ? "pre" : "ano" + anoAtivo;
+                document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[staticKey];
                 document.getElementById('icon-voltar-mobile').src = config.caminhoIconsMenu + config.iconesMenu.voltarMobile;
 
                 const menuBox = document.getElementById('dropdownMenu');
