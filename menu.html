@@ -157,7 +157,7 @@
         /* RESPONSIVIDADE CALIBRADA E BLINDADA CONTRA SCROLL          */
         /* ========================================================= */
         
-        /* 1. MOBILE VERTICAL (Ajuste dinâmico milimétrico) */
+        /* 1. MOBILE VERTICAL (Formato exato da imagem: Imagem em cima, Texto embaixo) */
         @media (orientation: portrait) {
             header { grid-template-columns: 50px 1fr auto; padding: 0 10px; min-height: 70px; }
             #header-icon { height: 40px; }
@@ -168,54 +168,50 @@
 
             main { 
                 align-items: flex-start;  
-                padding: 5px 10px; /* Reduzido padding superior para maximizar área útil */
+                padding: 10px 10px; 
             }
 
             .game-wrapper { 
                 flex-direction: column; 
                 justify-content: flex-start;
                 align-items: center;
-                gap: 8px; /* Espaço compacto e fixo entre cartões */
-                width: calc(100vw - 20px); /* 10px de margem em cada lateral */
+                gap: 10px; 
+                width: calc(100vw - 20px); /* Alargado até 10px das margens do ecrã */
                 max-width: 420px;
-                flex: 1; /* Força o container a ocupar exatamente o espaço vertical restante */
+                flex: 1; 
                 height: 100%;
                 overflow: hidden;
             }
             
             .game-card {
-                flex: 1; /* Divide o espaço vertical disponível igualmente pelos 3 cartões */
+                flex: 1; 
                 width: 100%;
-                min-height: 0; /* Permite que o flex shrinking funcione corretamente */
-                flex-direction: row; /* Alinhamento fluido híbrido para prevenir quebras */
-                justify-content: flex-start;
-                align-items: center;
-                padding: 6px 16px;
-                border-radius: 20px;
-                border-width: 3px;
-                gap: 15px;
+                min-height: 0; 
+                flex-direction: column; /* IMAGEM EM CIMA, TEXTO EM BAIXO */
+                justify-content: space-between;
+                padding: 10px 14px;
+                border-radius: 24px;
+                border-width: 3.5px;
             }
             
             .card-img-container {
-                width: 65px; /* Tamanho controlado e responsivo para o ícone */
-                height: calc(100% - 4px); /* Adapta-se perfeitamente à nova altura fluida do cartão */
-                max-height: 65px;
-                aspect-ratio: 1 / 1;
+                width: 100%;
+                height: 68%; /* Mantém o recorde de fundo colorido grande para a ilustração */
                 margin-bottom: 0;
-                border-radius: 14px;
+                border-radius: 18px;
                 flex-shrink: 0;
             }
             
             .card-img-container img {
-                max-height: 80%;
-                max-width: 80%;
+                max-height: 85%;
+                max-width: 85%;
             }
             
             .game-card h2 { 
-                font-size: 1.1rem;        
-                text-align: left;
-                margin-top: 0;
-                letter-spacing: 0.3px;
+                font-size: 1.15rem; /* Título grande e legível em maiúsculas na base */
+                text-align: center;
+                margin-top: 2px;
+                letter-spacing: 0.4px;
             }
             
             footer { padding: 5px; font-size: 0.65rem; }
