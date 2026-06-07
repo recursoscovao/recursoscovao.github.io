@@ -41,7 +41,7 @@
             align-items: center; 
             padding: 0 15px;
             min-height: 85px; 
-            flex-shrink: 0; /* Impede o cabeçalho de achatar */
+            flex-shrink: 0;
             z-index: 2500;
             box-shadow: 0px 4px 15px rgba(176, 196, 217, 0.4);
             position: relative;
@@ -114,7 +114,7 @@
         /* --- ÁREA CENTRAL (SEM SCROLL) --- */
         main { 
             flex: 1; 
-            padding: 10px 15px; 
+            padding: 15px; 
             display: flex; 
             justify-content: center; 
             align-items: center; 
@@ -128,36 +128,36 @@
         }
 
         .game-card { 
-            background: white; border-radius: 25px; border: 2px solid #e0eaf2; 
-            text-decoration: none; padding: 12px; display: flex; flex-direction: column; 
-            align-items: center; box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+            background: white; border-radius: 28px; border: 3px solid #e0eaf2; 
+            text-decoration: none; padding: 16px; display: flex; flex-direction: column; 
+            align-items: center; box-shadow: 0 8px 16px rgba(0,0,0,0.06);
             transition: transform 0.2s, box-shadow 0.2s;
             width: 100%;
         }
         
         .card-img-container { 
             width: 100%; display: flex; align-items: center; justify-content: center; 
-            border-radius: 18px; margin-bottom: 8px; min-height: 0;
+            border-radius: 20px; margin-bottom: 12px; min-height: 0;
         }
-        .card-img-container img { max-height: 80%; max-width: 80%; object-fit: contain; }
+        .card-img-container img { max-height: 85%; max-width: 85%; object-fit: contain; }
         
-        .game-card h2 { font-size: 0.85rem; font-weight: 900; text-transform: uppercase; text-align: center; }
+        .game-card h2 { font-weight: 900; text-transform: uppercase; text-align: center; }
 
-        /* FOOTER GARANTIDO CONSTANTE */
+        /* FOOTER */
         footer { 
             padding: 10px; 
             text-align: center; 
             color: var(--text-grey); 
             font-size: 0.7rem; 
             font-weight: 700; 
-            flex-shrink: 0; /* Impede o rodapé de desaparecer do ecrã */
+            flex-shrink: 0; 
         }
 
         /* ========================================================= */
-        /* CALIBRAÇÃO DE RESPONSIVIDADE SEM SCROLL                   */
+        /* CALIBRAÇÃO DE RESPONSIVIDADE (CARTÕES MAIORES E ROBUSTOS) */
         /* ========================================================= */
         
-        /* 1. MOBILE VERTICAL (Cartões mais pequenos e elegantes) */
+        /* 1. MOBILE VERTICAL (Linhas maiores e ícones expandidos) */
         @media (orientation: portrait) {
             header { grid-template-columns: 50px 1fr auto; padding: 0 10px; }
             #header-icon { height: 42px; }
@@ -166,44 +166,45 @@
 
             .game-wrapper { 
                 flex-direction: column; 
-                gap: 10px; 
-                max-width: 310px; /* Cartões mais estreitos */
+                gap: 15px;            /* Mais espaço entre linhas */
+                max-width: 340px;      /* Ligeiramente mais largo */
                 height: auto;
             }
             .game-card {
-                aspect-ratio: 1 / 0.32; 
+                aspect-ratio: 1 / 0.42; /* Cartão substancialmente mais alto */
                 flex-direction: row; 
                 justify-content: flex-start;
-                gap: 15px;
-                padding: 8px 15px;
+                gap: 20px;
+                padding: 12px 20px;
             }
             .card-img-container {
-                width: 50px; height: 50px; flex: none; margin-bottom: 0;
+                width: 65px; height: 65px; flex: none; margin-bottom: 0; /* Ícones maiores */
             }
+            .game-card h2 { font-size: 1.1rem; }
         }
 
-        /* 2. MOBILE HORIZONTAL E DESKTOP (Menos largos, quadrados perfeitos) */
+        /* 2. MOBILE HORIZONTAL E DESKTOP (Quadrados grandes e imponentes) */
         @media (orientation: landscape) or (min-width: 768px) {
-            header { min-height: 90px; padding: 0 30px; }
-            #header-icon { height: 55px; }
-            .title-main { font-size: 1.4rem; }
+            header { min-height: 95px; padding: 0 30px; }
+            #header-icon { height: 58px; }
+            .title-main { font-size: 1.45rem; }
 
             .game-wrapper { 
                 flex-direction: row; 
                 justify-content: center;
                 align-items: center;
-                gap: 20px; 
-                max-width: 850px; /* Impede o estiramento horizontal exagerado */
+                gap: 25px; 
+                max-width: 1000px; /* Alargado para dar espaço a cartões maiores */
                 height: auto;
             }
             .game-card {
-                aspect-ratio: 1 / 1.05; 
-                max-width: 150px; /* Largura controlada cirurgicamente */
+                aspect-ratio: 1 / 1.15; /* Proporção ideal para cartões grandes */
+                max-width: 220px;       /* Aumentado de 150px para 220px! */
                 justify-content: space-between;
                 flex: 1;
             }
-            .game-card:hover { transform: translateY(-6px); }
-            .game-card h2 { font-size: 0.95rem; }
+            .game-card:hover { transform: translateY(-8px); box-shadow: 0 12px 24px rgba(0,0,0,0.1); }
+            .game-card h2 { font-size: 1.15rem; }
             .card-img-container { flex: 1; }
         }
     </style>
@@ -261,11 +262,9 @@
         window.onload = () => {
             if (typeof MENUS_CONFIG !== 'undefined') {
                 
-                // 1. LER QUAL O ANO SOLICITADO NA URL (Se não houver parametro, assume "1")
                 const urlParams = new URLSearchParams(window.location.search);
                 const anoAtivo = urlParams.get('ano') || "1";
                 
-                // 2. BUSCAR OS DADOS ESPECÍFICOS DO ANO CORRESPONDENTE
                 const config = MENUS_CONFIG[anoAtivo];
 
                 if (!config) {
@@ -273,7 +272,6 @@
                     return;
                 }
                 
-                // Distribuição dinâmica de textos
                 document.getElementById('txt-titulo1').innerText = config.textos.tituloLinha1;
                 document.getElementById('txt-titulo2').innerText = config.textos.tituloLinha2;
                 document.getElementById('txt-subtitulo').innerText = config.textos.subtitulo;
@@ -281,14 +279,10 @@
                 document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
                 document.title = config.textos.tituloLinha1 + " " + config.textos.tituloLinha2;
                 
-                // Identificar o ícone do cabeçalho correto com base no ano ativo
                 const chaveIconeAno = (anoAtivo === "pre") ? "pre" : "ano" + anoAtivo;
                 document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[chaveIconeAno];
-                
-                // Ícone do botão voltar
                 document.getElementById('icon-voltar-mobile').src = config.caminhoIconsMenu + config.iconesMenu.voltarMobile;
 
-                // Montagem do Menu Hambúrguer Dinâmico
                 const menuBox = document.getElementById('dropdownMenu');
                 const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
 
@@ -297,38 +291,4 @@
                         const a = document.createElement('a');
                         a.className = 'menu-item';
                         a.href = config.links[key];
-                        a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
-                        menuBox.appendChild(a);
-                    }
-                });
-
-                // Botão de fechar/voltar no menu hambúrguer
-                const btnVoltarMenu = document.createElement('a');
-                btnVoltarMenu.className = 'menu-item btn-voltar-menu';
-                btnVoltarMenu.href = "javascript:voltarUmNivel()";
-                btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
-                menuBox.appendChild(btnVoltarMenu);
-
-                // Construção das Disciplinas / Jogos na área central
-                const grid = document.getElementById('gamesGrid');
-                config.listaJogos.forEach(jogo => {
-                    const tema = config.temaCores[jogo.tema] || { borda: "#e0eaf2", fundo: "#f8fbff" };
-                    const card = document.createElement('a');
-                    card.className = 'game-card';
-                    card.href = jogo.link;
-                    card.style.borderColor = tema.borda;
-                    
-                    // Define a cor de texto do título do cartão baseando-se na cor da borda do tema
-                    card.innerHTML = `
-                        <div class="card-img-container" style="background-color: ${tema.fundo};">
-                            <img src="${config.caminhoIconsJogos}${jogo.icon}" alt="${jogo.nome}">
-                        </div>
-                        <h2 style="color: ${tema.borda};">${jogo.nome}</h2>
-                    `;
-                    grid.appendChild(card);
-                });
-            }
-        };
-    </script>
-</body>
-</html>
+                        a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key
