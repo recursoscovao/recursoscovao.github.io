@@ -13,240 +13,138 @@
             --text-grey: #636e72;
         }
 
-        /* Reset e Bloqueio Total de Scroll */
+        /* Fundo com textura de pontos e gradiente */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
-        html, body {
-            height: 100vh;
-            height: -webkit-fill-available;
-            overflow: hidden; /* Zero scroll tolerado */
-        }
-
         body { 
             background: var(--body-bg);
             background-image: radial-gradient(#d1d8e0 1px, transparent 1px);
-            background-size: 30px 30px;
-            width: 100%; 
+            background-size: 30px 30px; /* Textura de pontos subtil */
+            height: 100dvh; 
+            width: 100vw; 
             display: flex; 
             flex-direction: column;
-            -webkit-font-smoothing: antialiased;
-            
-            -ms-overflow-style: none;  
-            scrollbar-width: none;  
-        }
-
-        body::-webkit-scrollbar {
-            display: none;
+            overflow-x: hidden;
         }
 
         /* HEADER */
         header { 
             background: var(--header-bg); 
-            padding: 10px 20px; 
+            padding: 15px; 
             flex-shrink: 0;
             box-shadow: 0 4px 20px rgba(0,0,0,0.05);
             z-index: 10;
         }
         
-        .header-center { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            gap: 15px; 
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        #header-icon { 
-            height: clamp(35px, 5vh, 50px); 
-            width: auto; 
-            object-fit: contain;
-        }
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 15px; }
+        #header-icon { height: clamp(40px, 8vw, 60px); width: auto; }
         
         .title-group { display: flex; flex-direction: column; }
-        .title-main { font-weight: 900; font-size: clamp(1.1rem, 4vw, 1.6rem); text-transform: uppercase; line-height: 1; }
-        #txt-titulo1 { color: #d63031; } 
-        #txt-titulo2 { color: #b2bec3; } 
-        .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.6rem, 2vw, 0.8rem); margin-top: 2px; }
+        .title-main { font-weight: 900; font-size: clamp(1.1rem, 5vw, 1.8rem); text-transform: uppercase; line-height: 0.9; }
+        #txt-titulo1 { color: #d63031; } /* Vermelho Mundo */
+        #txt-titulo2 { color: #b2bec3; } /* Cinza Jogos */
+        .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.6rem, 3vw, 0.9rem); margin-top: 4px; }
 
         /* SUB-HEADER / INTRO */
         .sub-header { 
             background: rgba(255, 255, 255, 0.6);
             backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
             text-align: center; 
-            padding: 8px 20px; 
-            border-bottom: 1px solid rgba(0,0,0,0.02);
-            flex-shrink: 0;
+            padding: 12px; 
+            margin-bottom: 10px;
         }
-        .intro-text { color: var(--text-grey); font-size: clamp(0.8rem, 3vw, 0.95rem); font-weight: 800; }
+        .intro-text { color: var(--text-grey); font-size: clamp(0.85rem, 4vw, 1.1rem); font-weight: 800; }
 
-        /* AREA CENTRAL */
+        /* GRID DE JOGOS */
         main { 
             flex: 1; 
             display: flex;
             align-items: center; 
             justify-content: center;
-            padding: 10px 15px;
-            width: 100%;
-            overflow: hidden;
+            padding: 20px;
         }
 
         .game-wrapper { 
             display: grid;
+            grid-template-columns: repeat(2, 1fr); /* Mobile: 2 colunas */
+            gap: 20px;
             width: 100%;
-            margin: 0 auto;
+            max-width: 1200px;
         }
 
-        /* CARD STYLE BASE */
+        /* CARD STYLE (BASEADO NA IMAGEM) */
         .game-card { 
             position: relative;
-            border-radius: 20px; 
+            border-radius: 30px; 
             background: white;
             text-decoration: none; 
+            padding: 15px; 
             display: flex; 
             flex-direction: column; 
             align-items: center; 
             justify-content: space-between;
-            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
             border: 4px solid #fff;
-            width: 100%;
+            aspect-ratio: 1 / 1.1;
         }
 
-        /* Container Interno da Imagem */
+        /* Estilo para o último card no mobile (centrado se for ímpar) */
+        .game-card:last-child:nth-child(odd) {
+            grid-column: span 2;
+            width: calc(50% - 10px);
+            justify-self: center;
+        }
+
+        /* Container da Imagem Interno */
         .card-img-container { 
             width: 100%;
+            height: 75%;
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            border-radius: 16px; 
-            background: rgba(255, 255, 255, 0.3);
-            overflow: hidden;
+            border-radius: 20px; 
+            background: rgba(255, 255, 255, 0.3); /* Será sobreposto via JS */
+            margin-bottom: 10px;
         }
         
         .card-img-container img { 
             max-height: 80%; 
             max-width: 80%; 
             object-fit: contain;
-            filter: drop-shadow(0 4px 8px rgba(0,0,0,0.08));
+            filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
         }
 
         .game-card h2 { 
             color: white; 
+            font-size: clamp(0.9rem, 4vw, 1.3rem); 
             font-weight: 900; 
-            text-align: center;
-            text-transform: uppercase;
-            width: 100%;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            margin-bottom: 5px;
         }
 
-        /* ========================================================= */
-        /* AJUSTES FINOS DE TAMANHO E ORIENTAÇÃO                     */
-        /* ========================================================= */
-
-        /* 1. MOBILES EM VERTICAL (Portrait) - Cartões um pouco mais pequenos */
-        @media (orientation: portrait) {
-            .game-wrapper {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 14px;
-                max-width: 340px; /* Reduz ligeiramente a largura total da grelha para encolher os cartões */
-            }
-            .game-card {
-                aspect-ratio: 1 / 1.05; /* Proporção ligeiramente reduzida */
-                padding: 10px;
-            }
-            .card-img-container {
-                height: 68%;
-                margin-bottom: 4px;
-            }
-            .game-card h2 { 
-                font-size: clamp(0.75rem, 3.2vw, 0.9rem);
-                margin-bottom: 2px;
-            }
-            .game-card:last-child:nth-child(odd) {
-                grid-column: span 2;
-                width: calc(50% - 7px);
-                justify-self: center;
-            }
+        /* HOVER E EFEITO GLOW */
+        .game-card:hover {
+            transform: scale(1.05) translateY(-5px);
         }
 
-        /* 2. MOBILES EM HORIZONTAL (Landscape) - Menos largos e mais simétricos */
-        @media (orientation: landscape) {
-            header { padding: 4px 20px; }
-            .sub-header { padding: 4px 20px; }
-            main { padding: 5px 15px; }
-            
-            .game-wrapper {
-                grid-template-columns: repeat(5, 1fr); 
-                gap: 12px;
-                max-width: 850px; /* Controla o estiramento horizontal */
-                justify-content: center;
-            }
-            .game-card {
-                aspect-ratio: 1 / 1.05; /* Deixam de ser retângulos deitados e ficam proporcionais */
-                max-width: 140px; /* Ajuste cirúrgico para não ficarem muito largos */
-                padding: 6px;
-                border-radius: 14px;
-                justify-self: center;
-            }
-            .card-img-container {
-                height: 65%;
-                border-radius: 10px;
-                margin-bottom: 2px;
-            }
-            .game-card h2 { 
-                font-size: clamp(0.65rem, 1.6vw, 0.85rem);
-                margin-bottom: 1px;
+        /* FOOTER */
+        footer { 
+            padding: 15px; 
+            text-align: center; 
+            color: var(--text-grey); 
+            font-size: 0.75rem; 
+            font-weight: 700; 
+        }
+
+        /* TABLET E DESKTOP (5 EM LINHA) */
+        @media (min-width: 900px) {
+            .game-wrapper { 
+                grid-template-columns: repeat(5, 1fr); /* 5 cards em linha */
+                gap: 25px;
             }
             .game-card:last-child:nth-child(odd) {
                 grid-column: span 1;
                 width: 100%;
-                justify-self: center;
             }
-        }
-
-        /* 3. DESKTOPS / ECRÃS GRANDES */
-        @media (min-width: 1024px) {
-            header { padding: 12px 20px; }
-            .sub-header { padding: 10px 20px; }
-            main { padding: 20px; }
-            .game-wrapper { gap: 20px; max-width: 1100px; }
-            .game-card {
-                aspect-ratio: 1 / 1.12;
-                max-width: none;
-                padding: 14px;
-                border-radius: 24px;
-            }
-            .card-img-container {
-                height: 72%;
-                border-radius: 18px;
-                margin-bottom: 8px;
-            }
-            .game-card h2 { font-size: 1.1rem; margin-bottom: 2px; }
-        }
-
-        /* Interações */
-        .game-card:hover {
-            transform: scale(1.03) translateY(-2px);
-        }
-        .game-card:active {
-            transform: scale(0.98);
-        }
-
-        /* FOOTER FIXO CONSTANTE */
-        footer { 
-            padding: 8px 20px; 
-            text-align: center; 
-            color: var(--text-grey); 
-            font-size: 0.7rem; 
-            font-weight: 700; 
-            flex-shrink: 0; 
-            background: rgba(255, 255, 255, 0.4); 
-            border-top: 1px solid rgba(0,0,0,0.02);
-            width: 100%;
-            z-index: 10;
         }
     </style>
 </head>
@@ -281,43 +179,27 @@
             if (typeof JOGO_CONFIG !== 'undefined') {
                 const config = JOGO_CONFIG;
 
-                const textos = config.textos || config.conteudo || {};
-                
-                document.getElementById('txt-titulo1').textContent = textos.tituloLinha1 || textos.t1 || "MUNDO";
-                document.getElementById('txt-titulo2').textContent = textos.tituloLinha2 || textos.t2 || "DOS JOGOS";
-                document.getElementById('txt-subtitulo').textContent = textos.subtitulo || textos.sub || "";
-                document.getElementById('txt-intro').textContent = textos.intro || "";
-                document.getElementById('txt-rodape').innerHTML = textos.rodape || "";
-                
-                const pathMenu = config.caminhoIconsMenu || config.caminhoIcons || "";
-                const pathJogos = config.caminhoIconsJogos || config.caminhoIcons || "";
-                
-                const logoNome = config.iconesMenu?.logo || (config.tema?.voltarMobile ? config.tema.voltarMobile : "logo.png");
-                document.getElementById('header-icon').src = pathMenu + logoNome;
+                document.getElementById('txt-titulo1').textContent = config.textos.tituloLinha1;
+                document.getElementById('txt-titulo2').textContent = config.textos.tituloLinha2;
+                document.getElementById('txt-subtitulo').textContent = config.textos.subtitulo;
+                document.getElementById('txt-intro').textContent = config.textos.intro;
+                document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
+                document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu.logo;
 
                 const grid = document.getElementById('gamesGrid');
-                const lista = config.listaJogos || config.categorias || [];
-
-                lista.forEach(jogo => {
+                config.listaJogos.forEach(jogo => {
+                    const tema = config.temaCores[jogo.tema];
                     const card = document.createElement('a');
                     card.className = 'game-card';
-                    card.href = jogo.link || "#";
+                    card.href = jogo.link;
                     
-                    let corFundo = "#5ba4e5"; 
-                    if (config.temaCores && config.temaCores[jogo.tema]) {
-                        corFundo = config.temaCores[jogo.tema].fundo;
-                    } else if (config.tema?.corCard) {
-                        corFundo = config.tema.corCard;
-                    }
-                    
-                    card.style.backgroundColor = corFundo;
-                    card.style.boxShadow = `0 8px 20px -6px ${corFundo}aa`;
-
-                    const iconName = jogo.icon || jogo.icone || "default.png";
+                    // Aplica cores e sombra dinâmica (Glow)
+                    card.style.backgroundColor = tema.fundo;
+                    card.style.boxShadow = `0 15px 35px -10px ${tema.fundo}88`; // Glow suave
 
                     card.innerHTML = `
                         <div class="card-img-container" style="background-color: rgba(255,255,255,0.25)">
-                            <img src="${pathJogos}${iconName}" alt="${jogo.nome}">
+                            <img src="${config.caminhoIconsJogos}${jogo.icon}" alt="${jogo.nome}">
                         </div>
                         <h2>${jogo.nome}</h2>
                     `;
