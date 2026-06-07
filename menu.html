@@ -291,4 +291,35 @@
                         const a = document.createElement('a');
                         a.className = 'menu-item';
                         a.href = config.links[key];
-                        a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key
+                        a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
+                        menuBox.appendChild(a);
+                    }
+                });
+
+                const btnVoltarMenu = document.createElement('a');
+                btnVoltarMenu.className = 'menu-item btn-voltar-menu';
+                btnVoltarMenu.href = "javascript:voltarUmNivel()";
+                btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
+                menuBox.appendChild(btnVoltarMenu);
+
+                const grid = document.getElementById('gamesGrid');
+                config.listaJogos.forEach(jogo => {
+                    const tema = config.temaCores[jogo.tema] || { borda: "#e0eaf2", fundo: "#f8fbff" };
+                    const card = document.createElement('a');
+                    card.className = 'game-card';
+                    card.href = jogo.link;
+                    card.style.borderColor = tema.borda;
+                    
+                    card.innerHTML = `
+                        <div class="card-img-container" style="background-color: ${tema.fundo};">
+                            <img src="${config.caminhoIconsJogos}${jogo.icon}" alt="${jogo.nome}">
+                        </div>
+                        <h2 style="color: ${tema.borda};">${jogo.nome}</h2>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        };
+    </script>
+</body>
+</html>
