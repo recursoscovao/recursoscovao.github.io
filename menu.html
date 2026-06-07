@@ -33,7 +33,7 @@
             flex-direction: column; 
         }
 
-        /* --- HEADER --- */
+        /* --- HEADER (Padrão/Desktop) --- */
         header { 
             background: var(--header-bg);
             display: grid;
@@ -76,7 +76,7 @@
             margin-top: 4px; 
         }
 
-        /* --- BOTÃO VOLTAR UNIFICADO --- */
+        /* --- BOTÃO VOLTAR --- */
         .btn-voltar-mobile { 
             display: flex; 
             align-items: center; 
@@ -111,7 +111,7 @@
         }
         .intro-text { color: #5d7082; font-size: 0.9rem; font-weight: 700; }
 
-        /* --- ÁREA CENTRAL (SEM SCROLL) --- */
+        /* --- ÁREA CENTRAL --- */
         main { 
             flex: 1; 
             padding: 10px 15px; 
@@ -157,7 +157,7 @@
         /* RESPONSIVIDADE CALIBRADA E BLINDADA CONTRA SCROLL          */
         /* ========================================================= */
         
-        /* 1. MOBILE VERTICAL (Formato exato da imagem: Imagem em cima, Texto embaixo) */
+        /* 1. MOBILE VERTICAL (Retrato) */
         @media (orientation: portrait) {
             header { grid-template-columns: 50px 1fr auto; padding: 0 10px; min-height: 70px; }
             #header-icon { height: 40px; }
@@ -176,7 +176,7 @@
                 justify-content: flex-start;
                 align-items: center;
                 gap: 10px; 
-                width: calc(100vw - 20px); /* Alargado até 10px das margens do ecrã */
+                width: calc(100vw - 20px); 
                 max-width: 420px;
                 flex: 1; 
                 height: 100%;
@@ -187,7 +187,7 @@
                 flex: 1; 
                 width: 100%;
                 min-height: 0; 
-                flex-direction: column; /* IMAGEM EM CIMA, TEXTO EM BAIXO */
+                flex-direction: column; 
                 justify-content: space-between;
                 padding: 10px 14px;
                 border-radius: 24px;
@@ -196,7 +196,7 @@
             
             .card-img-container {
                 width: 100%;
-                height: 68%; /* Mantém o recorde de fundo colorido grande para a ilustração */
+                height: 68%; 
                 margin-bottom: 0;
                 border-radius: 18px;
                 flex-shrink: 0;
@@ -208,7 +208,7 @@
             }
             
             .game-card h2 { 
-                font-size: 1.15rem; /* Título grande e legível em maiúsculas na base */
+                font-size: 1.15rem; 
                 text-align: center;
                 margin-top: 2px;
                 letter-spacing: 0.4px;
@@ -217,8 +217,67 @@
             footer { padding: 5px; font-size: 0.65rem; }
         }
 
-        /* 2. MOBILE HORIZONTAL E DESKTOP */
-        @media (orientation: landscape) or (min-width: 768px) {
+        /* 2. MOBILE HORIZONTAL (Landscape Otimizado) */
+        @media (orientation: landscape) and (max-height: 500px) {
+            header { 
+                min-height: 55px; /* Super compacto na vertical */
+                padding: 0 15px; 
+                grid-template-columns: 45px 1fr auto;
+            }
+            #header-icon { height: 32px; }
+            .title-main { font-size: 0.95rem; }
+            .title-sub { font-size: 8px; margin-top: 1px; }
+            .btn-voltar-mobile img { height: 32px; }
+            .hamburger-btn { font-size: 24px; }
+
+            /* Remove a faixa de texto para libertar espaço precioso */
+            .sub-header { display: none !important; }
+
+            main { 
+                padding: 8px 15px; 
+                align-items: center;
+            }
+
+            .game-wrapper { 
+                flex-direction: row; 
+                justify-content: center;
+                align-items: stretch; /* Estica os cartões de forma igual na altura */
+                gap: 15px; 
+                max-width: 680px; 
+                height: 100%;
+                flex: 1;
+            }
+            
+            .game-card {
+                flex: 1;
+                max-width: 180px;
+                flex-direction: column;
+                justify-content: space-between;
+                padding: 8px;
+                border-radius: 20px;
+                border-width: 3px;
+                box-shadow: 0 4px 10px rgba(176, 196, 217, 0.3);
+            }
+            
+            .card-img-container { 
+                flex: 1;
+                width: 100%;
+                margin-bottom: 4px;
+                border-radius: 14px;
+            }
+            .card-img-container img { max-height: 75%; max-width: 75%; }
+            
+            .game-card h2 { 
+                font-size: 0.85rem; 
+                line-height: 1.1;
+                padding-bottom: 2px;
+            }
+            
+            footer { padding: 3px; font-size: 0.6rem; }
+        }
+
+        /* 3. DESKTOP OU TABLETS GRANDES (Landscape Padrão) */
+        @media (min-width: 768px) and (min-height: 501px) {
             header { min-height: 95px; padding: 0 30px; }
             #header-icon { height: 58px; }
             .title-main { font-size: 1.45rem; }
