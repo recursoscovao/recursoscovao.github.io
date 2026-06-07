@@ -1,1 +1,507 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Menu de Jogos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* ==========================================================================
+           1. VARIÁVEIS GLOBAIS E REGRAS BASE
+           ========================================================================== */
+        :root {
+            --cor-pagina: #e9f0f8;
+            --cor-primaria: #5ba4e5;
+            --cor-escura: #3d7db8;
+            --cor-texto: #5d7082;
+            --cor-branca: #ffffff;
+            --cor-menu-hover: #f1f5f9;
+            --fonte-global: 'Fredoka', sans-serif;
+        }
 
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: var(--fonte-global);
+            background-color: var(--cor-pagina);
+            color: var(--cor-texto);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            transition: background-color 0.3s ease, color 0.3s ease;
+        }
+
+        /* ==========================================================================
+           2. HEADER E ESTRUTURA DE TOPO
+           ========================================================================== */
+        header {
+            background-color: var(--cor-branca);
+            padding: 15px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-esquerda {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        /* Ícone dinâmico do ano antes do título */
+        .icon-ano-header {
+            width: 50px;
+            height: 50px;
+            object-fit: contain;
+        }
+
+        .titulo-marca {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--cor-primaria);
+            line-height: 1.1;
+        }
+
+        .titulo-marca span {
+            color: var(--cor-texto);
+        }
+
+        /* ==========================================================================
+           3. BOTÃO VOLTAR EM 3D
+           ========================================================================== */
+        .btn-voltar-3d {
+            position: relative;
+            background: var(--cor-escura);
+            border-radius: 12px;
+            padding: 0;
+            border: none;
+            cursor: pointer;
+            outline-offset: 4px;
+            transition: filter 250ms;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        .btn-voltar-3d .camada-frente {
+            display: block;
+            padding: 10px 22px;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            background: var(--cor-primaria);
+            color: white;
+            transform: translateY(-4px);
+            transition: transform 250ms cubic-bezier(.3, .7, .4, 1);
+        }
+
+        .btn-voltar-3d:hover {
+            filter: brightness(110%);
+        }
+
+        .btn-voltar-3d:hover .camada-frente {
+            transform: translateY(-6px);
+            transition: transform 34ms;
+        }
+
+        .btn-voltar-3d:active .camada-frente {
+            transform: translateY(-2px);
+            transition: transform 34ms;
+        }
+
+        /* ==========================================================================
+           4. MENU HAMBÚRGUER (TODOS OS ANOS)
+           ========================================================================== */
+        .menu-hamburger-container {
+            position: relative;
+        }
+
+        .btn-hamburger {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            z-index: 110;
+        }
+
+        .btn-hamburger div {
+            width: 30px;
+            height: 4px;
+            background-color: var(--cor-primaria);
+            border-radius: 2px;
+            transition: all 0.3s ease;
+        }
+
+        /* Animação do botão aberto */
+        .btn-hamburger.aberto .linha1 {
+            transform: rotate(-45deg) translate(-7px, 7px);
+        }
+        .btn-hamburger.aberto .linha2 {
+            opacity: 0;
+        }
+        .btn-hamburger.aberto .linha3 {
+            transform: rotate(45deg) translate(-7px, -7px);
+        }
+
+        .menu-dropdown {
+            position: absolute;
+            top: 100%;
+            right: 0;
+            background-color: var(--cor-branca);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+            border-radius: 16px;
+            width: 220px;
+            padding: 10px 0;
+            display: none;
+            margin-top: 15px;
+            z-index: 105;
+            animation: entradaSuave 0.2s ease-out forwards;
+        }
+
+        @keyframes entradaSuave {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .menu-dropdown.ativo {
+            display: block;
+        }
+
+        .menu-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 20px;
+            color: var(--cor-texto);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            transition: background-color 0.2s ease;
+        }
+
+        .menu-dropdown a:hover {
+            background-color: var(--cor-menu-hover);
+            color: var(--cor-primaria);
+        }
+
+        .menu-dropdown a img {
+            width: 24px;
+            height: 24px;
+            object-fit: contain;
+        }
+
+        /* ==========================================================================
+           5. CONTEÚDO PRINCIPAL E GRELHA DE JOGOS
+           ========================================================================== */
+        main {
+            flex-grow: 1;
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .seccao-introducao {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .subtitulo-area {
+            font-size: 20px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            color: var(--cor-texto);
+            opacity: 0.8;
+        }
+
+        .texto-intro {
+            font-size: 18px;
+            max-width: 600px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+
+        /* Grelha adaptável de Cards dos Jogos */
+        .grelha-jogos {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 30px;
+            padding: 10px;
+        }
+
+        .card-jogo {
+            background-color: var(--cor-branca);
+            border-radius: 24px;
+            padding: 25px;
+            text-align: center;
+            text-decoration: none;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.04);
+            border: 3px solid transparent;
+            transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-jogo:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+            border-color: var(--cor-primaria);
+        }
+
+        .card-jogo img {
+            width: 110px;
+            height: 110px;
+            object-fit: contain;
+            margin-bottom: 20px;
+            transition: transform 0.3s ease;
+        }
+
+        .card-jogo:hover img {
+            transform: scale(1.08);
+        }
+
+        .card-jogo h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--cor-texto);
+            line-height: 1.2;
+        }
+
+        /* ==========================================================================
+           6. RODAPÉ PERSONALIZADO
+           ========================================================================== */
+        footer {
+            background-color: var(--cor-branca);
+            text-align: center;
+            padding: 20px;
+            font-size: 15px;
+            font-weight: 600;
+            box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.03);
+            margin-top: auto;
+        }
+
+        /* ==========================================================================
+           7. ADAPTAÇÃO MOBILE REFORÇADA
+           ========================================================================== */
+        @media (max-width: 768px) {
+            header {
+                padding: 12px 20px;
+            }
+
+            .titulo-marca {
+                font-size: 22px;
+            }
+
+            .icon-ano-header {
+                width: 40px;
+                height: 40px;
+            }
+
+            /* O botão 3D desaparece em mobile e passa a imagem do tema */
+            .btn-voltar-3d {
+                display: none;
+            }
+
+            .btn-voltar-mobile {
+                display: block !important;
+                width: 44px;
+                height: 44px;
+                object-fit: contain;
+                cursor: pointer;
+            }
+
+            main {
+                padding: 25px 15px;
+            }
+
+            .subtitulo-area {
+                font-size: 18px;
+            }
+
+            .texto-intro {
+                font-size: 16px;
+            }
+
+            .grelha-jogos {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+                gap: 15px;
+            }
+
+            .card-jogo {
+                padding: 15px;
+                border-radius: 20px;
+            }
+
+            .card-jogo img {
+                width: 80px;
+                height: 80px;
+                margin-bottom: 12px;
+            }
+
+            .card-jogo h3 {
+                font-size: 16px;
+            }
+        }
+
+        /* Elemento escondido por defeito em Desktop */
+        .btn-voltar-mobile {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-esquerda">
+            <img id="iconAnoAtual" src="icons/home.png" alt="Ícone Ano" class="icon-ano-header">
+            <h1 class="titulo-marca" id="tituloDinamico">Pequenos <span>Recursos</span></h1>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <a href="index.html" class="btn-voltar-3d">
+                <span class="camada-frente">Voltar</span>
+            </a>
+
+            <a href="index.html">
+                <img id="btnVoltarMobile" src="icons/voltar_az.png" alt="Voltar" class="btn-voltar-mobile">
+            </a>
+
+            <div class="menu-hamburger-container">
+                <button class="btn-hamburger" id="hamburgerBtn" aria-label="Abrir Menu">
+                    <div class="linha1"></div>
+                    <div class="linha2"></div>
+                    <div class="linha3"></div>
+                </button>
+                <nav class="menu-dropdown" id="dropdownMenu">
+                    <a href="index.html"><img id="menuIconHome" src="icons/home.png" alt="Início"> Início</a>
+                    <a href="menuareas.html?ano=pre&area=pre"><img id="menuIconPre" src="icons/iconpre.png" alt="Pré"> Pré-Escolar</a>
+                    <a href="menuareas.html?ano=ano1&area=portugues"><img id="menuIcon1" src="icons/icon1.png" alt="1º Ano"> 1º Ano</a>
+                    <a href="menuareas.html?ano=ano2&area=portugues"><img id="menuIcon2" src="icons/icon2.png" alt="2º Ano"> 2º Ano</a>
+                    <a href="menuareas.html?ano=ano3&area=portugues"><img id="menuIcon3" src="icons/icon3.png" alt="3º Ano"> 3º Ano</a>
+                    <a href="menuareas.html?ano=ano4&area=portugues"><img id="menuIcon4" src="icons/icon4.png" alt="4º Ano"> 4º Ano</a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="seccao-introducao">
+            <p class="subtitulo-area" id="subtituloArea">Disciplina | Ciclo</p>
+            <p class="texto-intro" id="textoIntroducao">Carregando as melhores atividades...</p>
+        </div>
+
+        <div class="grelha-jogos" id="grelhaJogos"></div>
+    </main>
+
+    <footer id="rodapePagina">&copy; Recursos Educativos</footer>
+
+    <script src="menuareas.js"></script>
+    
+    <script>
+        /* ==========================================================================
+           8. LÓGICA DE CAPTURA DE PARÂMETROS E RENDERIZAÇÃO DINÂMICA
+           ========================================================================== */
+        document.addEventListener("DOMContentLoaded", () => {
+            // 1. Capturar variáveis via URL (?ano=ano1&area=portugues)
+            const parametros = new URLSearchParams(window.location.search);
+            const anoSelecionado = parametros.get("ano") || "ano1";
+            const areaSelecionada = parametros.get("area") || "portugues";
+
+            // 2. Extrair dados correspondentes dos objetos do menuareas.js
+            const dadosTema = BIBLIOTECA_TEMAS[areaSelecionada] || BIBLIOTECA_TEMAS["portugues"];
+            const dadosConteudo = (BIBLIOTECA_CONTEUDO[anoSelecionado] && BIBLIOTECA_CONTEUDO[anoSelecionado][areaSelecionada]) 
+                                  ? BIBLIOTECA_CONTEUDO[anoSelecionado][areaSelecionada] 
+                                  : BIBLIOTECA_CONTEUDO["ano1"]["portugues"];
+            const listagemJogos = (JOGOS_POR_ANO[anoSelecionado] && JOGOS_POR_ANO[anoSelecionado][areaSelecionada])
+                                  ? JOGOS_POR_ANO[anoSelecionado][areaSelecionada]
+                                  : [];
+
+            // 3. Aplicar Estilos Visuais e Cores do Tema Dinamicamente
+            document.documentElement.style.setProperty('--cor-pagina', dadosTema.corPagina);
+            document.documentElement.style.setProperty('--cor-primaria', dadosTema.corPrimaria);
+            document.documentElement.style.setProperty('--cor-escura', dadosTema.corEscura);
+            document.documentElement.style.setProperty('--cor-texto', dadosTema.corTexto);
+
+            // Atualizar imagens fixas com base no prefixo da pasta base de "icons/"
+            document.getElementById("btnVoltarMobile").src = `icons/${dadosTema.voltarMobile}`;
+            
+            // Definir ícone dinâmico do ano ativo na barra de navegação superior
+            const chaveIconeAno = anoSelecionado; 
+            document.getElementById("iconAnoAtual").src = `icons/${dadosTema.iconesAnos[chaveIconeAno]}`;
+
+            // Garantir que os ícones dentro do menu hambúrguer também herdam os caminhos certos da raiz
+            document.getElementById("menuIconHome").src = `icons/${dadosTema.iconesAnos.home}`;
+            document.getElementById("menuIconPre").src = `icons/${dadosTema.iconesAnos.pre}`;
+            document.getElementById("menuIcon1").src = `icons/${dadosTema.iconesAnos.ano1}`;
+            document.getElementById("menuIcon2").src = `icons/${dadosTema.iconesAnos.ano2}`;
+            document.getElementById("menuIcon3").src = `icons/${dadosTema.iconesAnos.ano3}`;
+            document.getElementById("menuIcon4").src = `icons/${dadosTema.iconesAnos.ano4}`;
+
+            // 4. Injetar Textos de Identidade Visual
+            document.getElementById("tituloDinamico").innerHTML = `${dadosConteudo.t1} <span>${dadosConteudo.t2}</span>`;
+            document.getElementById("subtituloArea").textContent = dadosConteudo.sub;
+            document.getElementById("textoIntroducao").textContent = dadosConteudo.intro;
+            document.getElementById("rodapePagina").innerHTML = dadosConteudo.rodape;
+
+            // 5. Renderizar a Grelha de Jogos com os Caminhos de Ícones das Subpastas
+            const containerGrelha = document.getElementById("grelhaJogos");
+            containerGrelha.innerHTML = ""; // Limpar carregamento anterior
+
+            if (listagemJogos.length === 0) {
+                containerGrelha.innerHTML = `<p style="grid-column: 1/-1; text-align: center; font-size: 18px; font-weight: 600;">Brevemente serão adicionados jogos para esta área!</p>`;
+            } else {
+                listagemJogos.forEach(jogo => {
+                    const card = document.createElement("a");
+                    card.href = jogo.link;
+                    card.className = "card-jogo";
+                    
+                    // Nota: O prefixo "icons/" é adicionado aqui automaticamente à frente do caminho mapeado ("jogos/ano1/...")
+                    card.innerHTML = `
+                        <img src="icons/${jogo.icon}" alt="${jogo.nome}">
+                        <h3>${jogo.nome}</h3>
+                    `;
+                    containerGrelha.appendChild(card);
+                });
+            }
+
+            // ==========================================================================
+            // LÓGICA DE CONTROLO DO MENU HAMBÚRGUER
+            // ==========================================================================
+            const hamburgerBtn = document.getElementById("hamburgerBtn");
+            const dropdownMenu = document.getElementById("dropdownMenu");
+
+            hamburgerBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                hamburgerBtn.classList.toggle("aberto");
+                dropdownMenu.classList.toggle("ativo");
+            });
+
+            // Fechar o menu dropdown se clicar em qualquer outro lado do ecrã
+            document.addEventListener("click", () => {
+                if (dropdownMenu.classList.contains("ativo")) {
+                    hamburgerBtn.classList.remove("aberto");
+                    dropdownMenu.classList.remove("ativo");
+                }
+            });
+        });
+    </script>
+</body>
+</html>
