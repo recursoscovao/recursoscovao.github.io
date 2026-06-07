@@ -35,7 +35,7 @@
             letter-spacing: 0.5px;
         }
 
-        /* BOTÃO HAMBÚRGUER MELHORADO (3D E INTERATIVO) */
+        /* BOTÃO HAMBÚRGUER (ESTILO INTERATIVO 3D) */
         .hamburger-container {
             display: flex;
             align-items: center;
@@ -62,7 +62,7 @@
             color: var(--primary-blue); 
         }
         
-        /* BOTÃO VOLTAR MELHORADO (ESTILO CÍRCULO 3D COMO O HAMBÚRGUER) */
+        /* BOTÃO VOLTAR (ESTILO INTERATIVO 3D) */
         .btn-voltar-header { display: none !important; }
         
         .btn-voltar-mobile { 
@@ -101,7 +101,7 @@
         .intro-container { text-align: center; margin-bottom: 30px; }
         .intro-container p { color: var(--text-grey); font-weight: 700; font-size: 18px; } 
 
-        /* GRELHA CONFIGURADA PARA CARTÕES MAIORES */
+        /* GRELHA DO PRE-ESCOLAR */
         .game-wrapper { 
             width: 100%; 
             max-width: 1100px; 
@@ -112,7 +112,6 @@
             padding-bottom: 40px; 
         }
         
-        /* CARTÃO PASSA A TER POSITION RELATIVE PARA REBER O SELO */
         .game-card { 
             position: relative;
             background: transparent; 
@@ -123,6 +122,7 @@
             justify-content: center; 
             text-decoration: none; 
             transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275); 
+            cursor: pointer;
         }
         
         .game-card:hover { 
@@ -136,7 +136,7 @@
             display: block;
         }
 
-        /* SELO DO CONTADOR DE JOGADAS (BADGE) */
+        /* BADGE DO CONTADOR DINÂMICO */
         .game-badge {
             position: absolute;
             top: 4px;
@@ -158,7 +158,6 @@
             pointer-events: none;
         }
 
-        /* FOOTER CENTRADO E DISCRETO */
         footer { 
             padding: 15px; 
             display: flex;
@@ -266,7 +265,7 @@
             btnV.innerHTML = `<img src="${pIconsMenu}${conf.iconesMenu.voltar}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnV);
 
-            // RENDERIZAÇÃO DA GRELHA COM O CONTADOR DE JOGADAS
+            // GERAÇÃO DOS CARTÕES E LEITURA DO LOCALSTORAGE
             const grid = document.getElementById('gamesGrid');
             grid.innerHTML = ''; 
             conf.listaJogos.forEach(jogo => {
@@ -274,16 +273,43 @@
                 card.className = 'game-card'; 
                 card.href = jogo.link;
                 card.title = jogo.nome; 
+
+                // Identificador único para este jogo na memória do navegador
+                const storageKey = `jogadas_${conf.anoAtivo}_${jogo.link}`;
                 
-                // Exibe o selo se houver jogadas registadas e forem superiores a zero
+                // Se ainda não existir no localStorage, inicia com o valor definido no dados.js (ou 0)
+                if (localStorage.getItem(storageKey) === null) {
+                    localStorage.setItem(storageKey, jogo.jogadas || 0);
+                }
+                
+                const totalJogadas = parseInt(localStorage.getItem(storageKey));
+
+                // Configura o evento de clique para incrementar o contador antes de abrir o link
+                card.onclick = function(e) {
+                    e.preventDefault();
+                    registarJogada(storageKey, jogo.link);
+                };
+
+                // Apenas exibe o círculo se o número for maior que zero
                 let badgeHTML = '';
-                if (jogo.jogadas && jogo.jogadas > 0) {
-                    badgeHTML = `<div class="game-badge">${jogo.jogadas}</div>`;
+                if (totalJogadas > 0) {
+                    badgeHTML = `<div class="game-badge">${totalJogadas}</div>`;
                 }
 
                 card.innerHTML = `${badgeHTML}<img src="${pIconsJogos}${jogo.icon}" alt="${jogo.nome}">`;
                 grid.appendChild(card);
             });
+        }
+
+        // FUNÇÃO QUE DETETA O JOGO ABERTO, ADICIONA +1 E REDIRECIONA
+        function registarJogada(storageKey, destino) {
+            let atual = parseInt(localStorage.getItem(storageKey)) || 0;
+            localStorage.setItem(storageKey, atual + 1);
+            
+            // Pequeno delay para garantir que o navegador guarda o dado antes da transição de página
+            setTimeout(() => {
+                window.location.href = destino;
+            }, 50);
         }
 
         function toggleHamburger(e) {
