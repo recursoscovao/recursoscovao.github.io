@@ -1,1 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Carregando...</title>
+    
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --header-bg: #fbfdff;    
+            --sub-header-bg: #ffffff; 
+            --body-bg: #e9f1f8;       
+            --primary-blue: #5ba4e5;
+            --primary-dark: #3d7db8; 
+            --text-grey: #7a8b9a;
+            --sub-titulo-cor: #7A8B9A;
+        }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        html, body { 
+            height: 100vh; 
+            height: -webkit-fill-available;
+            overflow: hidden; /* Tranca completamente o scroll da página */
+        }
+
+        body { 
+            background-color: var(--body-bg); 
+            display: flex; 
+            flex-direction: column; 
+        }
+
+        /* --- HEADER --- */
+        header { 
+            background: var(--header-bg);
+            display: grid;
+            grid-template-columns: 60px 1fr auto;
+            align-items: center; 
+            padding: 0 15px;
+            min-height: 85px; 
+            flex-shrink: 0; /* Impede o cabeçalho de achatar */
+            z-index: 2500;
+            box-shadow: 0px 4px 15px rgba(176, 196, 217, 0.4);
+            position: relative;
+        }
+
+        .hamburger-btn { 
+            font-size: 32px; 
+            color: var(--primary-blue); 
+            cursor: pointer; 
+            background: none; border: none;
+            padding: 5px; display: flex; align-items: center;
+        }
+
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 8px; }
+        #header-icon { height: 50px; width: auto; object-fit: contain; }
+        
+        .title-group { display: flex; flex-direction: column; justify-content: center; }
+        
+        .title-main { 
+            font-weight: 900; 
+            font-size: 1.15rem; 
+            text-transform: uppercase; 
+            display: flex; 
+            flex-direction: column; 
+            line-height: 0.9; 
+        }
+        .title-sub { 
+            color: var(--sub-titulo-cor); 
+            font-weight: 700; 
+            font-size: 9px; 
+            text-transform: uppercase; 
+            margin-top: 4px; 
+        }
+
+        /* --- BOTÃO VOLTAR UNIFICADO --- */
+        .btn-voltar-mobile { 
+            display: flex; 
+            align-items: center; 
+            cursor: pointer; 
+            text-decoration: none;
+            transition: transform 0.2s ease;
+        }
+        .btn-voltar-mobile:hover { transform: scale(1.1); }
+        .btn-voltar-mobile img { height: 45px; width: auto; }
+
+        /* --- MENU DROPDOWN --- */
+        .menu-dropdown { 
+            position: absolute; top: 75px; left: 15px; display: none; 
+            flex-direction: column; gap: 8px; z-index: 3000; 
+        }
+        .menu-item { 
+            display: flex; align-items: center; gap: 12px; padding: 12px 18px; 
+            background: white; border-radius: 15px; box-shadow: 2px 4px 10px rgba(0,0,0,0.1);
+            text-decoration: none; color: #5d7082; font-weight: 700; font-size: 0.9rem; min-width: 200px;
+        }
+        .menu-item:hover { background: var(--primary-blue); color: white; }
+        .menu-item img { height: 22px; width: 22px; object-fit: contain; }
+        .menu-item.btn-voltar-menu { background: var(--primary-blue); color: white; }
+        .menu-item.btn-voltar-menu img { filter: brightness(0) invert(1); }
+
+        /* --- SUB-HEADER --- */
+        .sub-header {
+            background: var(--sub-header-bg); text-align: center; padding: 12px;
+            border-bottom-left-radius: 50% 20px; border-bottom-right-radius: 50% 20px;
+            box-shadow: 0px 5px 15px rgba(0,0,0,0.03); flex-shrink: 0;
+            z-index: 5;
+        }
+        .intro-text { color: #5d7082; font-size: 0.9rem; font-weight: 700; }
+
+        /* --- ÁREA CENTRAL (SEM SCROLL) --- */
+        main { 
+            flex: 1; 
+            padding: 10px 15px; 
+            display: flex; 
+            justify-content: center; 
+            align-items: center; 
+            overflow: hidden; 
+        }
+        
+        .game-wrapper { 
+            display: flex; 
+            width: 100%; 
+            margin: 0 auto;
+        }
+
+        .game-card { 
+            background: white; border-radius: 25px; border: 2px solid #e0eaf2; 
+            text-decoration: none; padding: 12px; display: flex; flex-direction: column; 
+            align-items: center; box-shadow: 0 6px 12px rgba(0,0,0,0.05);
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+        }
+        
+        .card-img-container { 
+            width: 100%; display: flex; align-items: center; justify-content: center; 
+            border-radius: 18px; margin-bottom: 8px; min-height: 0;
+        }
+        .card-img-container img { max-height: 80%; max-width: 80%; object-fit: contain; }
+        
+        .game-card h2 { font-size: 0.85rem; font-weight: 900; text-transform: uppercase; text-align: center; }
+
+        /* FOOTER GARANTIDO CONSTANTE */
+        footer { 
+            padding: 10px; 
+            text-align: center; 
+            color: var(--text-grey); 
+            font-size: 0.7rem; 
+            font-weight: 700; 
+            flex-shrink: 0; /* Impede o rodapé de desaparecer do ecrã */
+        }
+
+        /* ========================================================= */
+        /* CALIBRAÇÃO DE RESPONSIVIDADE SEM SCROLL                   */
+        /* ========================================================= */
+        
+        /* 1. MOBILE VERTICAL (Cartões mais pequenos e elegantes) */
+        @media (orientation: portrait) {
+            header { grid-template-columns: 50px 1fr auto; padding: 0 10px; }
+            #header-icon { height: 42px; }
+            .title-main { font-size: 1rem; }
+            .btn-voltar-mobile img { height: 35px; }
+
+            .game-wrapper { 
+                flex-direction: column; 
+                gap: 10px; 
+                max-width: 310px; /* Cartões mais estreitos */
+                height: auto;
+            }
+            .game-card {
+                aspect-ratio: 1 / 0.32; 
+                flex-direction: row; 
+                justify-content: flex-start;
+                gap: 15px;
+                padding: 8px 15px;
+            }
+            .card-img-container {
+                width: 50px; height: 50px; flex: none; margin-bottom: 0;
+            }
+        }
+
+        /* 2. MOBILE HORIZONTAL E DESKTOP (Menos largos, quadrados perfeitos) */
+        @media (orientation: landscape) or (min-width: 768px) {
+            header { min-height: 90px; padding: 0 30px; }
+            #header-icon { height: 55px; }
+            .title-main { font-size: 1.4rem; }
+
+            .game-wrapper { 
+                flex-direction: row; 
+                justify-content: center;
+                align-items: center;
+                gap: 20px; 
+                max-width: 850px; /* Impede o estiramento horizontal exagerado */
+                height: auto;
+            }
+            .game-card {
+                aspect-ratio: 1 / 1.05; 
+                max-width: 150px; /* Largura controlada cirurgicamente */
+                justify-content: space-between;
+                flex: 1;
+            }
+            .game-card:hover { transform: translateY(-6px); }
+            .game-card h2 { font-size: 0.95rem; }
+            .card-img-container { flex: 1; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="header-left">
+            <button class="hamburger-btn" onclick="toggleMenu(event)">
+                <i class="fas fa-bars"></i>
+            </button>
+            <div id="dropdownMenu" class="menu-dropdown"></div>
+        </div>
+
+        <div class="header-center">
+            <img id="header-icon" src="" alt="Logo">
+            <div class="title-group">
+                <div class="title-main">
+                    <span id="txt-titulo1" style="color: var(--primary-blue);"></span> 
+                    <span id="txt-titulo2" style="color: #a5b4c4;"></span>
+                </div>
+                <span id="txt-subtitulo" class="title-sub"></span>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <a href="javascript:voltarUmNivel()" class="btn-voltar-mobile">
+                <img id="icon-voltar-mobile" src="" alt="Voltar">
+            </a>
+        </div>
+    </header>
+
+    <div class="sub-header">
+        <div id="txt-intro" class="intro-text"></div>
+    </div>
+
+    <main>
+        <div class="game-wrapper" id="gamesGrid"></div>
+    </main>
+
+    <footer id="txt-rodape"></footer>
+
+    <script src="dadosmenusanos.js"></script>
+    <script>
+        function voltarUmNivel() { window.location.href = "index.html"; }
+
+        function toggleMenu(e) {
+            if(e) e.stopPropagation();
+            const menu = document.getElementById('dropdownMenu');
+            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
+        }
+        
+        window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
+
+        window.onload = () => {
+            if (typeof MENUS_CONFIG !== 'undefined') {
+                
+                // 1. LER QUAL O ANO SOLICITADO NA URL (Se não houver parametro, assume "1")
+                const urlParams = new URLSearchParams(window.location.search);
+                const anoAtivo = urlParams.get('ano') || "1";
+                
+                // 2. BUSCAR OS DADOS ESPECÍFICOS DO ANO CORRESPONDENTE
+                const config = MENUS_CONFIG[anoAtivo];
+
+                if (!config) {
+                    console.error("Configuração não encontrada para o ano: " + anoAtivo);
+                    return;
+                }
+                
+                // Distribuição dinâmica de textos
+                document.getElementById('txt-titulo1').innerText = config.textos.tituloLinha1;
+                document.getElementById('txt-titulo2').innerText = config.textos.tituloLinha2;
+                document.getElementById('txt-subtitulo').innerText = config.textos.subtitulo;
+                document.getElementById('txt-intro').innerText = config.textos.intro;
+                document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
+                document.title = config.textos.tituloLinha1 + " " + config.textos.tituloLinha2;
+                
+                // Identificar o ícone do cabeçalho correto com base no ano ativo
+                const chaveIconeAno = (anoAtivo === "pre") ? "pre" : "ano" + anoAtivo;
+                document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[chaveIconeAno];
+                
+                // Ícone do botão voltar
+                document.getElementById('icon-voltar-mobile').src = config.caminhoIconsMenu + config.iconesMenu.voltarMobile;
+
+                // Montagem do Menu Hambúrguer Dinâmico
+                const menuBox = document.getElementById('dropdownMenu');
+                const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
+
+                Object.keys(config.links).forEach(key => {
+                    if(config.links[key]) {
+                        const a = document.createElement('a');
+                        a.className = 'menu-item';
+                        a.href = config.links[key];
+                        a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
+                        menuBox.appendChild(a);
+                    }
+                });
+
+                // Botão de fechar/voltar no menu hambúrguer
+                const btnVoltarMenu = document.createElement('a');
+                btnVoltarMenu.className = 'menu-item btn-voltar-menu';
+                btnVoltarMenu.href = "javascript:voltarUmNivel()";
+                btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
+                menuBox.appendChild(btnVoltarMenu);
+
+                // Construção das Disciplinas / Jogos na área central
+                const grid = document.getElementById('gamesGrid');
+                config.listaJogos.forEach(jogo => {
+                    const tema = config.temaCores[jogo.tema] || { borda: "#e0eaf2", fundo: "#f8fbff" };
+                    const card = document.createElement('a');
+                    card.className = 'game-card';
+                    card.href = jogo.link;
+                    card.style.borderColor = tema.borda;
+                    
+                    // Define a cor de texto do título do cartão baseando-se na cor da borda do tema
+                    card.innerHTML = `
+                        <div class="card-img-container" style="background-color: ${tema.fundo};">
+                            <img src="${config.caminhoIconsJogos}${jogo.icon}" alt="${jogo.nome}">
+                        </div>
+                        <h2 style="color: ${tema.borda};">${jogo.nome}</h2>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        };
+    </script>
+</body>
+</html>
