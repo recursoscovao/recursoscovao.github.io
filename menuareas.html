@@ -376,11 +376,11 @@
         </div>
 
         <div style="display: flex; align-items: center; gap: 20px;">
-            <a href="index.html" class="btn-voltar-3d">
+            <a href="javascript:history.back()" class="btn-voltar-3d">
                 <span class="camada-frente">Voltar</span>
             </a>
 
-            <a href="index.html">
+            <a href="javascript:history.back()">
                 <img id="btnVoltarMobile" src="icons/voltar_az.png" alt="Voltar" class="btn-voltar-mobile">
             </a>
 
@@ -420,34 +420,36 @@
            8. LÓGICA DE CAPTURA DE PARÂMETROS E RENDERIZAÇÃO DINÂMICA
            ========================================================================== */
         document.addEventListener("DOMContentLoaded", () => {
-            // 1. Capturar variáveis via URL (?ano=ano1&area=portugues)
             const parametros = new URLSearchParams(window.location.search);
             const anoSelecionado = parametros.get("ano") || "ano1";
             const areaSelecionada = parametros.get("area") || "portugues";
 
-            // 2. Extrair dados correspondentes dos objetos do menuareas.js
+            // Procurar o tema. Se não encontrar, assume o padrão de português
             const dadosTema = BIBLIOTECA_TEMAS[areaSelecionada] || BIBLIOTECA_TEMAS["portugues"];
+            
+            // Procurar os textos do conteúdo estruturado
             const dadosConteudo = (BIBLIOTECA_CONTEUDO[anoSelecionado] && BIBLIOTECA_CONTEUDO[anoSelecionado][areaSelecionada]) 
                                   ? BIBLIOTECA_CONTEUDO[anoSelecionado][areaSelecionada] 
                                   : BIBLIOTECA_CONTEUDO["ano1"]["portugues"];
+            
+            // Procurar a lista de jogos mapeada
             const listagemJogos = (JOGOS_POR_ANO[anoSelecionado] && JOGOS_POR_ANO[anoSelecionado][areaSelecionada])
                                   ? JOGOS_POR_ANO[anoSelecionado][areaSelecionada]
                                   : [];
 
-            // 3. Aplicar Estilos Visuais e Cores do Tema Dinamicamente
+            // Aplicar propriedades CSS baseadas nas chaves dinâmicas encontradas
             document.documentElement.style.setProperty('--cor-pagina', dadosTema.corPagina);
             document.documentElement.style.setProperty('--cor-primaria', dadosTema.corPrimaria);
             document.documentElement.style.setProperty('--cor-escura', dadosTema.corEscura);
             document.documentElement.style.setProperty('--cor-texto', dadosTema.corTexto);
 
-            // Atualizar imagens fixas com base no prefixo da pasta base de "icons/"
+            // Atualizar o botão físico voltar na versão mobile
             document.getElementById("btnVoltarMobile").src = `icons/${dadosTema.voltarMobile}`;
             
-            // Definir ícone dinâmico do ano ativo na barra de navegação superior
-            const chaveIconeAno = anoSelecionado; 
-            document.getElementById("iconAnoAtual").src = `icons/${dadosTema.iconesAnos[chaveIconeAno]}`;
+            // Atualizar ícone do Ano Ativo no painel superior
+            document.getElementById("iconAnoAtual").src = `icons/${dadosTema.iconesAnos[anoSelecionado] || dadosTema.iconesAnos.home}`;
 
-            // Garantir que os ícones dentro do menu hambúrguer também herdam os caminhos certos da raiz
+            // Sincronizar todos os ícones do menu Hambúrguer
             document.getElementById("menuIconHome").src = `icons/${dadosTema.iconesAnos.home}`;
             document.getElementById("menuIconPre").src = `icons/${dadosTema.iconesAnos.pre}`;
             document.getElementById("menuIcon1").src = `icons/${dadosTema.iconesAnos.ano1}`;
@@ -455,15 +457,15 @@
             document.getElementById("menuIcon3").src = `icons/${dadosTema.iconesAnos.ano3}`;
             document.getElementById("menuIcon4").src = `icons/${dadosTema.iconesAnos.ano4}`;
 
-            // 4. Injetar Textos de Identidade Visual
+            // Inserir os textos nas respetivas tags informativas
             document.getElementById("tituloDinamico").innerHTML = `${dadosConteudo.t1} <span>${dadosConteudo.t2}</span>`;
             document.getElementById("subtituloArea").textContent = dadosConteudo.sub;
             document.getElementById("textoIntroducao").textContent = dadosConteudo.intro;
             document.getElementById("rodapePagina").innerHTML = dadosConteudo.rodape;
 
-            // 5. Renderizar a Grelha de Jogos com os Caminhos de Ícones das Subpastas
+            // Construir dinamicamente a listagem de jogos na janela de visualização
             const containerGrelha = document.getElementById("grelhaJogos");
-            containerGrelha.innerHTML = ""; // Limpar carregamento anterior
+            containerGrelha.innerHTML = "";
 
             if (listagemJogos.length === 0) {
                 containerGrelha.innerHTML = `<p style="grid-column: 1/-1; text-align: center; font-size: 18px; font-weight: 600;">Brevemente serão adicionados jogos para esta área!</p>`;
@@ -472,8 +474,6 @@
                     const card = document.createElement("a");
                     card.href = jogo.link;
                     card.className = "card-jogo";
-                    
-                    // Nota: O prefixo "icons/" é adicionado aqui automaticamente à frente do caminho mapeado ("jogos/ano1/...")
                     card.innerHTML = `
                         <img src="icons/${jogo.icon}" alt="${jogo.nome}">
                         <h3>${jogo.nome}</h3>
@@ -482,9 +482,7 @@
                 });
             }
 
-            // ==========================================================================
-            // LÓGICA DE CONTROLO DO MENU HAMBÚRGUER
-            // ==========================================================================
+            // Controlo UI/UX para abrir/fechar o Menu Dropdown Hambúrguer
             const hamburgerBtn = document.getElementById("hamburgerBtn");
             const dropdownMenu = document.getElementById("dropdownMenu");
 
@@ -494,7 +492,6 @@
                 dropdownMenu.classList.toggle("ativo");
             });
 
-            // Fechar o menu dropdown se clicar em qualquer outro lado do ecrã
             document.addEventListener("click", () => {
                 if (dropdownMenu.classList.contains("ativo")) {
                     hamburgerBtn.classList.remove("aberto");
