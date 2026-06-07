@@ -37,8 +37,8 @@
 
         .hamburger-btn { font-size: 32px; color: var(--primary-blue); cursor: pointer; padding: 5px; z-index: 3001; }
         
-        /* VOLTAR - UNIFICADO: Agora usa sempre o estilo de ícone mobile */
-        .btn-voltar-header { display: none !important; } /* Esconde a versão antiga de texto */
+        /* VOLTAR - UNIFICADO */
+        .btn-voltar-header { display: none !important; }
         
         .btn-voltar-mobile { 
             display: flex !important; 
@@ -65,21 +65,37 @@
         .intro-container { text-align: center; margin-bottom: 30px; }
         .intro-container p { color: var(--text-grey); font-weight: 700; font-size: 18px; } 
 
-        .game-wrapper { width: 100%; max-width: 1100px; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 25px; justify-items: center; padding-bottom: 40px; }
-        .game-card { background: #ffffff; width: 100%; max-width: 170px; min-height: 160px; border-radius: 30px; box-shadow: 0 8px 20px rgba(176,196,217,0.3); display: flex; flex-direction: column; align-items: center; text-decoration: none; padding: 18px; text-align: center; transition: all 0.2s ease; border: 2px solid white; }
-        .game-card:hover { transform: translateY(-5px); border-color: var(--primary-blue); }
-        .card-img-container { width: 100%; height: 90px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
-        .card-img-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        
-        .game-card h2 { 
-            color: var(--primary-blue); 
-            font-size: 0.75rem; 
-            font-weight: 900; 
-            margin-top: auto; 
-            text-transform: uppercase; 
+        /* GRELHA E CARTÕES DE JOGO REESTRUTURADOS */
+        .game-wrapper { 
+            width: 100%; 
+            max-width: 1100px; 
+            display: grid; 
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr)); 
+            gap: 30px; 
+            justify-items: center; 
+            padding-bottom: 40px; 
         }
-
-        footer { padding: 15px; text-align: center; color: var(--text-grey); font-weight: 700; font-size: 0.8rem; border-top: 1px solid rgba(176,196,217,0.3); }
+        
+        .game-card { 
+            background: transparent; 
+            width: 100%; 
+            aspect-ratio: 1 / 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            text-decoration: none; 
+            transition: transform 0.2s ease; 
+        }
+        
+        .game-card:hover { 
+            transform: scale(1.05); 
+        }
+        
+        .game-card img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; 
+        }
 
         @media (max-width: 650px) { 
             header { height: 80px; padding: 0 15px; }
@@ -87,8 +103,7 @@
             .logo-text p { font-size: 8px; margin-top: 2px; }
             .logo-text h1 { font-size: 18px; }
             .logo-center img { height: 50px; }
-            .game-wrapper { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
-            .game-card h2 { font-size: 0.7rem; }
+            .game-wrapper { grid-template-columns: repeat(auto-fill, minmax(130px, 1fr)); gap: 20px; }
         }
     </style>
 </head>
@@ -112,7 +127,6 @@
         </div>
 
         <div class="header-right">
-            <!-- Agora apenas este link é utilizado para o botão voltar -->
             <a href="../" id="link-voltar-mobile" class="btn-voltar-mobile">
                 <img id="header-back-mobile" src="" alt="Voltar">
             </a>
@@ -155,7 +169,6 @@
             document.getElementById('txt-rodape').innerHTML = info.rodape;
             
             document.getElementById('head-logo').src = pIconsMenu + conf.iconesMenu[conf.anoAtivo];
-            // O botão de voltar agora recebe o ícone colorido definido em biblioteca.js -> voltarMobile
             document.getElementById('header-back-mobile').src = pIconsMenu + tema.voltarMobile;
 
             const menuBox = document.getElementById('dropdownMenu');
@@ -172,11 +185,15 @@
             btnV.innerHTML = `<img src="${pIconsMenu}${conf.iconesMenu.voltar}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnV);
 
+            // GERAÇÃO RENDERIZADA APENAS COM A IMAGEM DO ICON
             const grid = document.getElementById('gamesGrid');
             grid.innerHTML = ''; 
             conf.listaJogos.forEach(jogo => {
-                const card = document.createElement('a'); card.className = 'game-card'; card.href = jogo.link;
-                card.innerHTML = `<div class="card-img-container"><img src="${pIconsJogos}${jogo.icon}"></div><h2>${jogo.nome}</h2>`;
+                const card = document.createElement('a'); 
+                card.className = 'game-card'; 
+                card.href = jogo.link;
+                card.title = jogo.nome; // Mantém o nome oculto acessível para ferramentas de acessibilidade e leitura
+                card.innerHTML = `<img src="${pIconsJogos}${jogo.icon}" alt="${jogo.nome}">`;
                 grid.appendChild(card);
             });
         }
