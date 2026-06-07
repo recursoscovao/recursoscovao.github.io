@@ -12,7 +12,7 @@ const BIBLIOTECA_TEMAS = {
         corPagina: "#e8f9f4", 
         corPrimaria: "#45cfa8", 
         corEscura: "#2ba886", 
-        corTexto: "#45cfa8", 
+        corTexto: "#2ba886", 
         voltarMobile: "voltar_vr.png",
         iconesAnos: { home: "home.png", pre: "iconpre.png", ano1: "icon1.png", ano2: "icon2.png", ano3: "icon3.png", ano4: "icon4.png" }
     },
@@ -61,7 +61,7 @@ const BIBLIOTECA_CONTEUDO = {
     }
 };
 
-// LISTAGEM INDIVIDUAL DE JOGOS DIRECIONADOS PARA AS SUBPASTAS FÍSICAS (Ex: 1/pt/, 1/em/)
+// LISTAGEM INDIVIDUAL DE JOGOS DIRECIONADOS PARA AS SUBPASTAS FÍSICAS
 const JOGOS_POR_ANO = {
     "pre": {
         "pre": [
