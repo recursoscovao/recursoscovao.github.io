@@ -157,7 +157,7 @@
         /* RESPONSIVIDADE CALIBRADA CIRURGICAMENTE                   */
         /* ========================================================= */
         
-        /* 1. MOBILE VERTICAL (Cartões mais largos, puxados para cima, footer visível) */
+        /* 1. MOBILE VERTICAL (Largura máxima com 10px de margem lateral e altura reduzida) */
         @media (orientation: portrait) {
             header { grid-template-columns: 50px 1fr auto; padding: 0 10px; min-height: 70px; }
             #header-icon { height: 40px; }
@@ -167,43 +167,49 @@
             .intro-text { font-size: 0.8rem; }
 
             main { 
-                align-items: flex-start;  /* Puxa todo o conteúdo do wrapper para cima */
-                padding-top: 15px;        /* Margem de respiro controlada no topo */
+                align-items: flex-start;  
+                padding: 10px 10px;       /* Reduzido para 10px nas laterais */
             }
 
             .game-wrapper { 
                 flex-direction: column; 
                 justify-content: flex-start;
                 align-items: center;
-                gap: 14px;                 /* Espaçamento nítido e bonito entre cartões */
-                max-width: 270px;          /* ALARGADO: Cartões mais largos no ecrã do telemóvel */
+                gap: 10px;                /* Espaço otimizado para compactar a altura total */
+                width: calc(100vw - 20px);/* Estica até ficar exatamente a 10px das bordas laterais */
+                max-width: 400px;         /* Limite elegante para ecrãs maiores de telemóvel */
                 height: auto;
-                max-height: 56vh;          /* Espaço limite rigoroso para trancar scroll */
+                max-height: 56vh;         
             }
+            
             .game-card {
-                aspect-ratio: 1 / 0.85;    /* Proporção retangular horizontal perfeita */
+                aspect-ratio: 1 / 0.58;   /* Proporção ajustada! Ficam mais largos e mais baixos na altura */
                 flex-direction: column; 
                 justify-content: space-between;
-                padding: 10px 12px;
-                border-radius: 26px;
-                border-width: 3.5px;
+                padding: 8px 12px;
+                border-radius: 22px;
+                border-width: 3px;
             }
+            
             .card-img-container {
                 width: 100%;
                 height: 68%;          
                 margin-bottom: 0;
-                border-radius: 18px;
+                border-radius: 16px;
             }
+            
             .card-img-container img {
-                max-height: 90%;
-                max-width: 90%;
+                max-height: 85%;
+                max-width: 85%;
             }
+            
             .game-card h2 { 
-                font-size: 1.05rem;        /* Texto maior e destacado em maiúsculas */
-                margin-top: 2px;
+                font-size: 1rem;        
+                margin-top: 1px;
                 letter-spacing: 0.5px;
             }
-            footer { padding: 12px 5px 5px 5px; font-size: 0.65rem; }
+            
+            footer { padding: 8px 5px 5px 5px; font-size: 0.65rem; }
         }
 
         /* 2. MOBILE HORIZONTAL E DESKTOP */
