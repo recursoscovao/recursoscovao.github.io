@@ -143,7 +143,7 @@
         
         .game-card h2 { font-weight: 900; text-transform: uppercase; text-align: center; }
 
-        /* FOOTER GARANTIDO */
+        /* FOOTER */
         footer { 
             padding: 10px; 
             text-align: center; 
@@ -154,10 +154,10 @@
         }
 
         /* ========================================================= */
-        /* RESPONSIVIDADE CALIBRADA CIRURGICAMENTE                   */
+        /* RESPONSIVIDADE CALIBRADA E BLINDADA CONTRA SCROLL          */
         /* ========================================================= */
         
-        /* 1. MOBILE VERTICAL (Largura máxima com 10px de margem lateral e altura reduzida) */
+        /* 1. MOBILE VERTICAL (Ajuste dinâmico milimétrico) */
         @media (orientation: portrait) {
             header { grid-template-columns: 50px 1fr auto; padding: 0 10px; min-height: 70px; }
             #header-icon { height: 40px; }
@@ -168,48 +168,57 @@
 
             main { 
                 align-items: flex-start;  
-                padding: 10px 10px;       /* Reduzido para 10px nas laterais */
+                padding: 5px 10px; /* Reduzido padding superior para maximizar área útil */
             }
 
             .game-wrapper { 
                 flex-direction: column; 
                 justify-content: flex-start;
                 align-items: center;
-                gap: 10px;                /* Espaço otimizado para compactar a altura total */
-                width: calc(100vw - 20px);/* Estica até ficar exatamente a 10px das bordas laterais */
-                max-width: 400px;         /* Limite elegante para ecrãs maiores de telemóvel */
-                height: auto;
-                max-height: 56vh;         
+                gap: 8px; /* Espaço compacto e fixo entre cartões */
+                width: calc(100vw - 20px); /* 10px de margem em cada lateral */
+                max-width: 420px;
+                flex: 1; /* Força o container a ocupar exatamente o espaço vertical restante */
+                height: 100%;
+                overflow: hidden;
             }
             
             .game-card {
-                aspect-ratio: 1 / 0.58;   /* Proporção ajustada! Ficam mais largos e mais baixos na altura */
-                flex-direction: column; 
-                justify-content: space-between;
-                padding: 8px 12px;
-                border-radius: 22px;
+                flex: 1; /* Divide o espaço vertical disponível igualmente pelos 3 cartões */
+                width: 100%;
+                min-height: 0; /* Permite que o flex shrinking funcione corretamente */
+                flex-direction: row; /* Alinhamento fluido híbrido para prevenir quebras */
+                justify-content: flex-start;
+                align-items: center;
+                padding: 6px 16px;
+                border-radius: 20px;
                 border-width: 3px;
+                gap: 15px;
             }
             
             .card-img-container {
-                width: 100%;
-                height: 68%;          
+                width: 65px; /* Tamanho controlado e responsivo para o ícone */
+                height: calc(100% - 4px); /* Adapta-se perfeitamente à nova altura fluida do cartão */
+                max-height: 65px;
+                aspect-ratio: 1 / 1;
                 margin-bottom: 0;
-                border-radius: 16px;
+                border-radius: 14px;
+                flex-shrink: 0;
             }
             
             .card-img-container img {
-                max-height: 85%;
-                max-width: 85%;
+                max-height: 80%;
+                max-width: 80%;
             }
             
             .game-card h2 { 
-                font-size: 1rem;        
-                margin-top: 1px;
-                letter-spacing: 0.5px;
+                font-size: 1.1rem;        
+                text-align: left;
+                margin-top: 0;
+                letter-spacing: 0.3px;
             }
             
-            footer { padding: 8px 5px 5px 5px; font-size: 0.65rem; }
+            footer { padding: 5px; font-size: 0.65rem; }
         }
 
         /* 2. MOBILE HORIZONTAL E DESKTOP */
