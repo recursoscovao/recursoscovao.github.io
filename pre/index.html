@@ -79,7 +79,7 @@
         .menu-item:hover { background: var(--primary-blue); color: white; }
         .menu-item img { height: 22px; width: 22px; object-fit: contain; }
         
-        /* ITEM VOLTAR DO HAMBÚRGUER (EM TOM AZUL) */
+        /* ITEM VOLTAR DO HAMBÚRGUER */
         .menu-item-voltar { background: var(--primary-blue) !important; color: white !important; }
         .menu-item-voltar img { filter: brightness(0) invert(1); }
 
@@ -204,7 +204,8 @@
     <script src="dados.js"></script>
     
     <script>
-        const APP_ID = "pequenos_curiosos_hub";
+        // Espaço de identificação exclusivo para o teu projeto na CounterAPI
+        const NAMESPACE = "pequenos_curiosos_hub_v2";
 
         function initUI() {
             if (typeof JOGO_CONFIG === 'undefined' || typeof BIBLIOTECA_TEMAS === 'undefined' || typeof BIBLIOTECA_CONTEUDO === 'undefined') return;
@@ -229,8 +230,6 @@
             document.getElementById('txt-rodape').innerHTML = info.rodape;
             
             document.getElementById('head-logo').src = pIconsMenu + conf.iconesMenu[conf.anoAtivo];
-            
-            // Botão Principal do Header recebe voltar_rs.png
             document.getElementById('header-back-mobile').src = pIconsMenu + conf.iconesMenu.voltar;
 
             const menuBox = document.getElementById('dropdownMenu');
@@ -244,14 +243,13 @@
                 }
             });
             
-            // Botão Voltar do Menu Hamburguer recebe a seta.png (voltarMenu)
             const btnV = document.createElement('a'); 
             btnV.className = 'menu-item menu-item-voltar'; 
             btnV.href = "../"; 
             btnV.innerHTML = `<img src="${pIconsMenu}${conf.iconesMenu.voltarMenu}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnV);
 
-            // MONTAGEM DOS JOGOS E CONTADORES
+            // GERAÇÃO DA GRELHA
             const grid = document.getElementById('gamesGrid');
             grid.innerHTML = ''; 
             
@@ -264,6 +262,7 @@
                 card.href = jogo.link;
                 card.title = jogo.nome; 
 
+                // Substitui barras para gerar uma chave alfa-numérica válida
                 const gameKey = `${conf.anoAtivo}_${jogo.link.replace(/\//g, '')}`;
                 const numberId = `num_${gameKey}`;
                 
@@ -282,37 +281,43 @@
                 itemContainer.appendChild(counterLabel);
                 grid.appendChild(itemContainer);
 
+                // Vai buscar os dados globais em tempo real à CounterAPI
                 atualizarVisualContador(gameKey, numberId, jogo.jogadas || 0);
             });
         }
 
+        // Vai buscar o valor atualizado e global ao servidor CounterAPI
         async function atualizarVisualContador(gameKey, numberId, valorInicial) {
             const txtNum = document.getElementById(numberId);
             if (!txtNum) return;
 
             const localKey = `backup_${gameKey}`;
-            let valorAtual = parseInt(localStorage.getItem(localKey)) || valorInicial;
-            txtNum.innerText = valorAtual;
+            let valorLocal = parseInt(localStorage.getItem(localKey)) || valorInicial;
+            txtNum.innerText = valorLocal;
 
             try {
-                const response = await fetch(`https://api.countapi.xyz/get/${APP_ID}/${gameKey}`);
+                const response = await fetch(`https://api.counterapi.dev/v1/v1/${NAMESPACE}/${gameKey}`);
                 if (response.ok) {
                     const data = await response.json();
-                    if (data.value) {
-                        txtNum.innerText = data.value;
-                        localStorage.setItem(localKey, data.value);
+                    if (data && data.count !== undefined) {
+                        txtNum.innerText = data.count;
+                        localStorage.setItem(localKey, data.count);
                     }
                 }
-            } catch (err) {}
+            } catch (err) {
+                console.log("Servidor em cache local devido à rede.");
+            }
         }
 
+        // Incrementa +1 na nuvem da CounterAPI e redireciona de imediato
         async function registarEAvancar(gameKey, destino) {
             const localKey = `backup_${gameKey}`;
             let atual = parseInt(localStorage.getItem(localKey)) || 0;
             localStorage.setItem(localKey, atual + 1);
 
             try {
-                fetch(`https://api.countapi.xyz/hit/${APP_ID}/${gameKey}`);
+                // Endpoint seguro para incrementar o ID global do jogo
+                await fetch(`https://api.counterapi.dev/v1/v1/${NAMESPACE}/${gameKey}/up`);
             } catch (err) {}
             
             window.location.href = destino;
