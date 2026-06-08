@@ -57,24 +57,29 @@
         .hamburger-container:active { transform: scale(0.95); }
         .hamburger-btn { font-size: 22px; color: var(--primary-blue); }
         
-        /* BOTÃO VOLTAR 3D */
+        /* BOTÃO VOLTAR DO CABEÇALHO (voltar_rs.png) */
         .btn-voltar-header { display: none !important; }
         .btn-voltar-mobile { 
-            display: flex !important; align-items: center; justify-content: center;
-            text-decoration: none; width: 50px; height: 50px; background: #ffffff;
-            border-radius: 50%; box-shadow: 0 4px 10px rgba(176,196,217,0.3); z-index: 3001; 
-            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
-            border: 2px solid rgba(176,196,217,0.15);
+            display: flex !important; 
+            align-items: center; 
+            justify-content: center;
+            text-decoration: none; 
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 3001;
+            background: transparent;
+            border: none;
         }
-        .btn-voltar-mobile:hover { transform: scale(1.1); box-shadow: 0 6px 14px rgba(176,196,217,0.5); }
+        .btn-voltar-mobile:hover { transform: scale(1.08); }
         .btn-voltar-mobile:active { transform: scale(0.95); }
-        .btn-voltar-mobile img { height: 24px; width: auto; }
+        .btn-voltar-mobile img { height: 52px; width: auto; object-fit: contain; display: block; }
 
         /* MENU DROPDOWN */
         .menu-dropdown { position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 6px; z-index: 3000; }
         .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: white; border-radius: 12px; box-shadow: 2px 4px 10px rgba(0,0,0,0.1); text-decoration: none; color: #5d7082; font-weight: 700; font-size: 0.9rem; min-width: 200px; transition: 0.2s; }
         .menu-item:hover { background: var(--primary-blue); color: white; }
         .menu-item img { height: 22px; width: 22px; object-fit: contain; }
+        
+        /* ITEM VOLTAR DO HAMBÚRGUER (EM TOM AZUL) */
         .menu-item-voltar { background: var(--primary-blue) !important; color: white !important; }
         .menu-item-voltar img { filter: brightness(0) invert(1); }
 
@@ -95,7 +100,7 @@
             padding-bottom: 40px; 
         }
         
-        /* CONTENTOR COMPLETO DO ITEM DO JOGO */
+        /* ITEM COMPLETO DO JOGO */
         .game-item-container {
             display: flex;
             flex-direction: column;
@@ -103,7 +108,7 @@
             width: 100%;
         }
 
-        /* O BOTÃO COMPORTA-SE COMO O CARTÃO ORIGINAL */
+        /* CARTÃO DE JOGO */
         .game-card { 
             background: transparent; 
             width: 100%;
@@ -124,7 +129,7 @@
             margin-top: 10px;
             font-size: 13px;
             font-weight: 700;
-            color: #b05373; /* Tom de rosa baseado no teu título para harmonizar */
+            color: #b05373;
             text-align: center;
             white-space: nowrap;
         }
@@ -145,9 +150,9 @@
 
         @media (max-width: 650px) { 
             header { height: 80px; padding: 0 15px; }
-            .hamburger-container, .btn-voltar-mobile { width: 42px; height: 42px; }
+            .hamburger-container { width: 42px; height: 42px; }
             .hamburger-btn { font-size: 18px; }
-            .btn-voltar-mobile img { height: 20px; }
+            .btn-voltar-mobile img { height: 42px; }
             .logo-text p { font-size: 8px; margin-top: 2px; }
             .logo-text h1 { font-size: 18px; }
             .logo-center img { height: 50px; }
@@ -199,7 +204,6 @@
     <script src="dados.js"></script>
     
     <script>
-        // ID para a contagem remota
         const APP_ID = "pequenos_curiosos_hub";
 
         function initUI() {
@@ -225,6 +229,8 @@
             document.getElementById('txt-rodape').innerHTML = info.rodape;
             
             document.getElementById('head-logo').src = pIconsMenu + conf.iconesMenu[conf.anoAtivo];
+            
+            // Botão Principal do Header recebe voltar_rs.png
             document.getElementById('header-back-mobile').src = pIconsMenu + conf.iconesMenu.voltar;
 
             const menuBox = document.getElementById('dropdownMenu');
@@ -237,11 +243,15 @@
                     menuBox.appendChild(a);
                 }
             });
-            const btnV = document.createElement('a'); btnV.className = 'menu-item menu-item-voltar'; btnV.href = "../"; 
-            btnV.innerHTML = `<img src="${pIconsMenu}${conf.iconesMenu.voltar}"> <span>VOLTAR</span>`;
+            
+            // Botão Voltar do Menu Hamburguer recebe a seta.png (voltarMenu)
+            const btnV = document.createElement('a'); 
+            btnV.className = 'menu-item menu-item-voltar'; 
+            btnV.href = "../"; 
+            btnV.innerHTML = `<img src="${pIconsMenu}${conf.iconesMenu.voltarMenu}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnV);
 
-            // RENDERING DA GRELHA COM O NOVO LAYOUT INFERIOR
+            // MONTAGEM DOS JOGOS E CONTADORES
             const grid = document.getElementById('gamesGrid');
             grid.innerHTML = ''; 
             
@@ -257,36 +267,29 @@
                 const gameKey = `${conf.anoAtivo}_${jogo.link.replace(/\//g, '')}`;
                 const numberId = `num_${gameKey}`;
                 
-                // Monta a imagem dentro do botão
                 card.innerHTML = `<img src="${pIconsJogos}${jogo.icon}" alt="${jogo.nome}">`;
                 
-                // Configuração do clique
                 card.onclick = function(e) {
                     e.preventDefault();
                     registarEAvancar(gameKey, jogo.link);
                 };
 
-                // Cria o texto descritivo logo abaixo do botão
                 const counterLabel = document.createElement('div');
                 counterLabel.className = 'game-counter-text';
                 counterLabel.innerHTML = `Nº de vezes jogado: <span id="${numberId}">0</span>`;
 
-                // Agrupa tudo no container principal da célula
                 itemContainer.appendChild(card);
                 itemContainer.appendChild(counterLabel);
                 grid.appendChild(itemContainer);
 
-                // Carrega o valor inicial (Sincronizado)
                 atualizarVisualContador(gameKey, numberId, jogo.jogadas || 0);
             });
         }
 
-        // Função que lê da API Remota com Fallback seguro para LocalStorage
         async function atualizarVisualContador(gameKey, numberId, valorInicial) {
             const txtNum = document.getElementById(numberId);
             if (!txtNum) return;
 
-            // Define primeiro o valor local para não aparecer vazio
             const localKey = `backup_${gameKey}`;
             let valorAtual = parseInt(localStorage.getItem(localKey)) || valorInicial;
             txtNum.innerText = valorAtual;
@@ -300,12 +303,9 @@
                         localStorage.setItem(localKey, data.value);
                     }
                 }
-            } catch (err) {
-                // Mantém o valor local silenciosamente se a rede falhar
-            }
+            } catch (err) {}
         }
 
-        // Soma +1 globalmente e localmente, depois avança
         async function registarEAvancar(gameKey, destino) {
             const localKey = `backup_${gameKey}`;
             let atual = parseInt(localStorage.getItem(localKey)) || 0;
