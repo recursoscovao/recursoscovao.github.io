@@ -8,6 +8,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+    
     <style>
         :root { 
             --bg-page: #ffffff; --primary-blue: #5ba4e5; --primary-dark: #3d7db8; 
@@ -204,8 +207,14 @@
     <script src="dados.js"></script>
     
     <script>
-        // Nome único e sem símbolos para a CounterAPI
-        const NAMESPACE = "pequenoscuriososhub";
+        // CONFIGURAÇÃO DO REALTIME DATABASE (Ativa Globalmente)
+        const firebaseConfig = {
+            databaseURL: "https://contador-jogos-default-rtdb.europe-west1.firebasedatabase.app/"
+        };
+        
+        // Inicializa o Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
 
         function initUI() {
             if (typeof JOGO_CONFIG === 'undefined' || typeof BIBLIOTECA_TEMAS === 'undefined' || typeof BIBLIOTECA_CONTEUDO === 'undefined') return;
@@ -249,7 +258,7 @@
             btnV.innerHTML = `<img src="${pIconsMenu}${conf.iconesMenu.voltarMenu}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnV);
 
-            // GERAÇÃO DA GRELHA
+            // RENDER DA GRELHA
             const grid = document.getElementById('gamesGrid');
             grid.innerHTML = ''; 
             
@@ -262,8 +271,8 @@
                 card.href = jogo.link;
                 card.title = jogo.nome; 
 
-                // CORREÇÃO: Chave limpa (Apenas minúsculas, sem barras nem underscores)
-                const gameKey = `${conf.anoAtivo}${jogo.link.replace(/[^a-zA-Z0-9]/g, '')}`.toLowerCase();
+                // Identificador único limpo para a árvore de dados da Google
+                const gameKey = `${conf.anoAtivo}_${jogo.link.replace(/[^a-zA-Z0-9]/g, '')}`;
                 const numberId = `num_${gameKey}`;
                 
                 card.innerHTML = `<img src="${pIconsJogos}${jogo.icon}" alt="${jogo.nome}">`;
@@ -281,44 +290,24 @@
                 itemContainer.appendChild(counterLabel);
                 grid.appendChild(itemContainer);
 
-                // Carrega dados da API remota
-                atualizarVisualContador(gameKey, numberId, jogo.jogadas || 0);
+                // Ouve e sincroniza o valor real em tempo real diretamente da Cloud do Firebase
+                database.ref('contadores/' + gameKey).on('value', (snapshot) => {
+                    const valorNuvem = snapshot.val();
+                    document.getElementById(numberId).innerText = (valorNuvem !== null) ? valorNuvem : (jogo.jogadas || 0);
+                });
             });
         }
 
-        // Lê dados globais do servidor
-        async function atualizarVisualContador(gameKey, numberId, valorInicial) {
-            const txtNum = document.getElementById(numberId);
-            if (!txtNum) return;
-
-            const localKey = `backup_${gameKey}`;
-            let valorLocal = parseInt(localStorage.getItem(localKey)) || valorInicial;
-            txtNum.innerText = valorLocal;
-
-            try {
-                const response = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${gameKey}`);
-                if (response.ok) {
-                    const data = await response.json();
-                    if (data && data.count !== undefined) {
-                        txtNum.innerText = data.count;
-                        localStorage.setItem(localKey, data.count);
-                    }
-                }
-            } catch (err) {}
-        }
-
-        // Envia +1 em tempo real para a nuvem
-        async function registarEAvancar(gameKey, destino) {
-            const localKey = `backup_${gameKey}`;
-            let atual = parseInt(localStorage.getItem(localKey)) || 0;
-            localStorage.setItem(localKey, atual + 1);
-
-            try {
-                // Rota padrão do servidor de contagem global (/UP)
-                await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${gameKey}/UP`);
-            } catch (err) {}
+        // Função de transação atómica na Cloud (Incremento preciso mesmo com milhares de cliques em simultâneo)
+        function registarEAvancar(gameKey, destino) {
+            const contadorRef = database.ref('contadores/' + gameKey);
             
-            window.location.href = destino;
+            contadorRef.transaction((valorAtual) => {
+                return (valorAtual || 0) + 1;
+            }, (error, committed) => {
+                // Redireciona logo de seguida para o jogo
+                window.location.href = destino;
+            });
         }
 
         function toggleHamburger(e) {
