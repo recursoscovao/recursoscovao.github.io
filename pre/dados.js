@@ -8,7 +8,8 @@ const JOGO_CONFIG = {
     iconesMenu: {
         home: "home.png", pre: "iconpre.png", ano1: "icon1.png", 
         ano2: "icon2.png", ano3: "icon3.png", ano4: "icon4.png", 
-        voltar: "seta.png"
+        voltar: "voltar_rs.png",    // Botão do cabeçalho
+        voltarMenu: "seta.png"       // Ícone para o interior do menu hambúrguer
     },
     
     links: {
@@ -27,7 +28,7 @@ const JOGO_CONFIG = {
         { nome: "Cores Mágicas Metades", icon: "aaaa.png", link: "metades_cores/", jogadas: 0 },
         { nome: "Objetos Metades", icon: "aaaa.png", link: "metades_objetos/", jogadas: 0 },
         { nome: "Transportes Metades", icon: "aaaa.png", link: "metades_transportes/", jogadas: 0 },
-        { nome: "Animais Metades", icon: "aaaaa.png", link: "metades_animais/", jogadas: 0 },
+        { nome: "Animais Metades", icon: "aaaa.png", link: "metades_animais/", jogadas: 0 },
         { nome: "Metades Divertidas", icon: "aaaa.png", link: "metades_divertidas/", jogadas: 0 }
     ]
 };
