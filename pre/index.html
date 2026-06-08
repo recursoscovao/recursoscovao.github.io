@@ -204,8 +204,8 @@
     <script src="dados.js"></script>
     
     <script>
-        // Espaço de identificação exclusivo para o teu projeto na CounterAPI
-        const NAMESPACE = "pequenos_curiosos_hub_v2";
+        // Nome único e sem símbolos para a CounterAPI
+        const NAMESPACE = "pequenoscuriososhub";
 
         function initUI() {
             if (typeof JOGO_CONFIG === 'undefined' || typeof BIBLIOTECA_TEMAS === 'undefined' || typeof BIBLIOTECA_CONTEUDO === 'undefined') return;
@@ -262,8 +262,8 @@
                 card.href = jogo.link;
                 card.title = jogo.nome; 
 
-                // Substitui barras para gerar uma chave alfa-numérica válida
-                const gameKey = `${conf.anoAtivo}_${jogo.link.replace(/\//g, '')}`;
+                // CORREÇÃO: Chave limpa (Apenas minúsculas, sem barras nem underscores)
+                const gameKey = `${conf.anoAtivo}${jogo.link.replace(/[^a-zA-Z0-9]/g, '')}`.toLowerCase();
                 const numberId = `num_${gameKey}`;
                 
                 card.innerHTML = `<img src="${pIconsJogos}${jogo.icon}" alt="${jogo.nome}">`;
@@ -281,12 +281,12 @@
                 itemContainer.appendChild(counterLabel);
                 grid.appendChild(itemContainer);
 
-                // Vai buscar os dados globais em tempo real à CounterAPI
+                // Carrega dados da API remota
                 atualizarVisualContador(gameKey, numberId, jogo.jogadas || 0);
             });
         }
 
-        // Vai buscar o valor atualizado e global ao servidor CounterAPI
+        // Lê dados globais do servidor
         async function atualizarVisualContador(gameKey, numberId, valorInicial) {
             const txtNum = document.getElementById(numberId);
             if (!txtNum) return;
@@ -296,7 +296,7 @@
             txtNum.innerText = valorLocal;
 
             try {
-                const response = await fetch(`https://api.counterapi.dev/v1/v1/${NAMESPACE}/${gameKey}`);
+                const response = await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${gameKey}`);
                 if (response.ok) {
                     const data = await response.json();
                     if (data && data.count !== undefined) {
@@ -304,20 +304,18 @@
                         localStorage.setItem(localKey, data.count);
                     }
                 }
-            } catch (err) {
-                console.log("Servidor em cache local devido à rede.");
-            }
+            } catch (err) {}
         }
 
-        // Incrementa +1 na nuvem da CounterAPI e redireciona de imediato
+        // Envia +1 em tempo real para a nuvem
         async function registarEAvancar(gameKey, destino) {
             const localKey = `backup_${gameKey}`;
             let atual = parseInt(localStorage.getItem(localKey)) || 0;
             localStorage.setItem(localKey, atual + 1);
 
             try {
-                // Endpoint seguro para incrementar o ID global do jogo
-                await fetch(`https://api.counterapi.dev/v1/v1/${NAMESPACE}/${gameKey}/up`);
+                // Rota padrão do servidor de contagem global (/UP)
+                await fetch(`https://api.counterapi.dev/v1/${NAMESPACE}/${gameKey}/UP`);
             } catch (err) {}
             
             window.location.href = destino;
