@@ -8,9 +8,6 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
     
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
-    
     <style>
         :root { 
             --bg-page: #ffffff; --primary-blue: #5ba4e5; --primary-dark: #3d7db8; 
@@ -127,22 +124,41 @@
         .game-card:hover { transform: scale(1.06); }
         .game-card img { width: 100%; height: 100%; object-fit: contain; display: block; }
 
-        /* TEXTO DO CONTADOR DEBAIXO DO BOTÃO */
-        .game-counter-text {
-            margin-top: 10px;
-            font-size: 13px;
-            font-weight: 700;
-            color: #b05373;
-            text-align: center;
-            white-space: nowrap;
+        /* CONTAINER DA PROGRESSÃO VISUAL */
+        .progress-container {
+            width: 85%;
+            margin-top: 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
         }
-        .game-counter-text span {
-            font-weight: 900;
-            background: rgba(91, 164, 229, 0.15);
-            color: var(--primary-dark);
-            padding: 2px 8px;
-            border-radius: 10px;
-            margin-left: 4px;
+
+        /* BARRA DE PROGRESSO */
+        .progress-bar-bg {
+            width: 100%;
+            height: 10px;
+            background: rgba(176, 196, 217, 0.3);
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: inset 0 1px 3px rgba(0,0,0,0.06);
+        }
+        .progress-bar-fill {
+            height: 100%;
+            width: 0%; 
+            background: #cbd5e1;
+            border-radius: 20px;
+            transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1), background-color 0.4s;
+        }
+
+        /* TEXTO DO ESTADO (SEM CONTADOR NUMÉRICO) */
+        .progress-text {
+            font-size: 12px;
+            font-weight: 800;
+            color: #7a8b9a;
+            text-align: center;
+            letter-spacing: 0.2px;
         }
 
         footer { 
@@ -161,8 +177,9 @@
             .logo-center img { height: 50px; }
             .game-wrapper { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 30px 20px; }
             .game-card { height: 150px; }
-            .game-counter-text { font-size: 11px; margin-top: 6px; }
-            .game-counter-text span { padding: 1px 6px; }
+            .progress-container { width: 90%; margin-top: 8px; }
+            .progress-bar-bg { height: 8px; }
+            .progress-text { font-size: 10px; }
         }
     </style>
 </head>
@@ -207,15 +224,6 @@
     <script src="dados.js"></script>
     
     <script>
-        // CONFIGURAÇÃO DO REALTIME DATABASE (Ativa Globalmente)
-        const firebaseConfig = {
-            databaseURL: "https://contador-jogos-default-rtdb.europe-west1.firebasedatabase.app/"
-        };
-        
-        // Inicializa o Firebase
-        firebase.initializeApp(firebaseConfig);
-        const database = firebase.database();
-
         function initUI() {
             if (typeof JOGO_CONFIG === 'undefined' || typeof BIBLIOTECA_TEMAS === 'undefined' || typeof BIBLIOTECA_CONTEUDO === 'undefined') return;
             
@@ -258,7 +266,7 @@
             btnV.innerHTML = `<img src="${pIconsMenu}${conf.iconesMenu.voltarMenu}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnV);
 
-            // RENDER DA GRELHA
+            // MONTAGEM DOS JOGOS APENAS COM PROGRESSÃO
             const grid = document.getElementById('gamesGrid');
             grid.innerHTML = ''; 
             
@@ -271,43 +279,76 @@
                 card.href = jogo.link;
                 card.title = jogo.nome; 
 
-                // Identificador único limpo para a árvore de dados da Google
-                const gameKey = `${conf.anoAtivo}_${jogo.link.replace(/[^a-zA-Z0-9]/g, '')}`;
-                const numberId = `num_${gameKey}`;
+                const gameKey = `prog_key_${conf.anoAtivo}_${jogo.link.replace(/\//g, '')}`;
                 
                 card.innerHTML = `<img src="${pIconsJogos}${jogo.icon}" alt="${jogo.nome}">`;
                 
                 card.onclick = function(e) {
                     e.preventDefault();
-                    registarEAvancar(gameKey, jogo.link);
+                    registarProgressoEAvancar(gameKey, jogo.link);
                 };
 
-                const counterLabel = document.createElement('div');
-                counterLabel.className = 'game-counter-text';
-                counterLabel.innerHTML = `Nº de vezes jogado: <span id="${numberId}">0</span>`;
+                const progressContainer = document.createElement('div');
+                progressContainer.className = 'progress-container';
+
+                const barBg = document.createElement('div');
+                barBg.className = 'progress-bar-bg';
+
+                const barFill = document.createElement('div');
+                barFill.className = 'progress-bar-fill';
+                barFill.id = `fill_${gameKey}`;
+
+                const textLabel = document.createElement('div');
+                textLabel.className = 'progress-text';
+                textLabel.id = `text_${gameKey}`;
+
+                barBg.appendChild(barFill);
+                progressContainer.appendChild(barBg);
+                progressContainer.appendChild(textLabel);
 
                 itemContainer.appendChild(card);
-                itemContainer.appendChild(counterLabel);
+                itemContainer.appendChild(progressContainer);
                 grid.appendChild(itemContainer);
 
-                // Ouve e sincroniza o valor real em tempo real diretamente da Cloud do Firebase
-                database.ref('contadores/' + gameKey).on('value', (snapshot) => {
-                    const valorNuvem = snapshot.val();
-                    document.getElementById(numberId).innerText = (valorNuvem !== null) ? valorNuvem : (jogo.jogadas || 0);
-                });
+                renderizarProgressoJogo(gameKey, tema.corPrimaria);
             });
         }
 
-        // Função de transação atómica na Cloud (Incremento preciso mesmo com milhares de cliques em simultâneo)
-        function registarEAvancar(gameKey, destino) {
-            const contadorRef = database.ref('contadores/' + gameKey);
+        function renderizarProgressoJogo(gameKey, corTema) {
+            const barFill = document.getElementById(`fill_${gameKey}`);
+            const textLabel = document.getElementById(`text_${gameKey}`);
+            if (!barFill || !textLabel) return;
+
+            const jogadas = parseInt(localStorage.getItem(gameKey)) || 0;
+
+            if (jogadas === 0) {
+                barFill.style.width = "0%";
+                barFill.style.backgroundColor = "#cbd5e1";
+                textLabel.innerText = "Por iniciar";
+                textLabel.style.color = "#7a8b9a";
+            } else if (jogadas === 1) {
+                barFill.style.width = "35%";
+                barFill.style.backgroundColor = corTema;
+                textLabel.innerText = "A Explorar!";
+                textLabel.style.color = corTema;
+            } else if (jogadas === 2) {
+                barFill.style.width = "70%";
+                barFill.style.backgroundColor = corTema;
+                textLabel.innerText = "Quase Concluído!";
+                textLabel.style.color = corTema;
+            } else {
+                barFill.style.width = "100%";
+                barFill.style.backgroundColor = "#eab308"; // Dourado de sucesso
+                textLabel.innerText = "🏆 Completado!";
+                textLabel.style.color = "#ca8a04";
+            }
+        }
+
+        function registarProgressoEAvancar(gameKey, destino) {
+            let jogadasAtuais = parseInt(localStorage.getItem(gameKey)) || 0;
+            localStorage.setItem(gameKey, jogadasAtuais + 1);
             
-            contadorRef.transaction((valorAtual) => {
-                return (valorAtual || 0) + 1;
-            }, (error, committed) => {
-                // Redireciona logo de seguida para o jogo
-                window.location.href = destino;
-            });
+            window.location.href = destino;
         }
 
         function toggleHamburger(e) {
