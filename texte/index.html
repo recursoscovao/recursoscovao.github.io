@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="pt-BR">
+<html lang="pt-PT">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Alfabetolândia - Jornada de 20 Jogos do 1º Ano</title>
+    <title>Alfabetolândia - Jornada de 24 Jogos do 1º Ano</title>
     <!-- Tailwind CSS for modern responsive utility styling -->
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Google Fonts for a playful, readable child-friendly typeface -->
@@ -92,7 +92,7 @@
             <span class="text-4xl">🎒</span>
             <div>
                 <h1 class="font-playful text-3xl text-sky-800 tracking-wider">ALFABETOLÂNDIA</h1>
-                <p class="text-xs font-bold text-sky-600 uppercase tracking-widest">Mega Hub das Letras • Jornada Completa do 1º Ano (20 Jogos)</p>
+                <p class="text-xs font-bold text-sky-600 uppercase tracking-widest">Mega Hub das Letras • Jornada de Alfabetização Completa (24 Jogos)</p>
             </div>
         </div>
         <div class="flex items-center gap-3">
@@ -115,11 +115,11 @@
             <!-- SCREEN 1: LOBBY / JORNADA DE APRENDIZAGEM -->
             <div id="screen-lobby" class="flex-grow flex flex-col justify-between">
                 <div class="text-center my-2 animate-bounce-slow">
-                    <h2 class="font-playful text-3xl text-sky-700">A Sua Jornada das Letras e Gramática!</h2>
-                    <p class="text-slate-600 font-semibold text-sm mt-1">Avance nas fases pedagógicas do 1º ano para se tornar um Super Mestre!</p>
+                    <h2 class="font-playful text-3xl text-sky-700">A Sua Jornada de Língua Portuguesa!</h2>
+                    <p class="text-slate-600 font-semibold text-sm mt-1">Avance nas fases pedagógicas estruturadas do 1º ano para ser o Super Campeão!</p>
                 </div>
 
-                <!-- Structured Pedagogical Roadmap (20 games organized in 8 steps) -->
+                <!-- Structured Pedagogical Roadmap (24 games organized in 9 steps) -->
                 <div class="space-y-6 my-4 overflow-y-auto max-h-[440px] pr-2">
                     
                     <!-- FASE 1: RECONHECIMENTO & GRAFOFONIA -->
@@ -284,22 +284,45 @@
                         </div>
                     </div>
 
-                    <!-- FASE 7: DESAFIOS GRAMATICAIS AVANÇADOS -->
+                    <!-- FASE 7: CASOS ESPECIAIS DE LEITURA (NOVO) -->
                     <div class="border-2 border-emerald-100 rounded-2xl p-4 bg-emerald-50/50">
-                        <span class="bg-emerald-600 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 7: Desafios de Gramática</span>
+                        <span class="bg-emerald-600 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 7: Casos de Leitura (CH, LH, NH, R, RR)</span>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
-                            <div onclick="startSynAntGame()" class="card-wordwall-emerald pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-emerald-800">
+                            <div onclick="startDigraphsGame()" class="card-wordwall-emerald pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-emerald-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">✨</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">16. Dígrafos Mágicos</h3>
+                                    <p class="text-[10px] text-emerald-100">Escolha o dígrafo correto (CH, LH, NH).</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startRRRGame()" class="card-wordwall-lime pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-lime-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">⚡</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">17. Desafio do R e RR</h3>
+                                    <p class="text-[10px] text-lime-100">Escreve-se com R ou com RR?</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 8: DESAFIOS GRAMATICAIS AVANÇADOS -->
+                    <div class="border-2 border-indigo-100 rounded-2xl p-4 bg-indigo-50/50">
+                        <span class="bg-indigo-600 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 8: Desafios de Gramática</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
+                            <div onclick="startSynAntGame()" class="card-wordwall-indigo pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-indigo-800">
                                 <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🔄</div>
                                 <div class="flex-grow">
-                                    <h3 class="font-playful text-base">16. Sinónimos & Antónimos</h3>
-                                    <p class="text-[10px] text-emerald-100">Ache o oposto ou igual das palavras.</p>
+                                    <h3 class="font-playful text-base">18. Sinónimos & Antónimos</h3>
+                                    <p class="text-[10px] text-indigo-100">Ache o oposto ou igual das palavras.</p>
                                 </div>
                                 <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
                             </div>
                             <div onclick="startPluralSingularGame()" class="card-wordwall-lime pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-lime-800">
                                 <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">👥</div>
                                 <div class="flex-grow">
-                                    <h3 class="font-playful text-base">17. Plural & Singular</h3>
+                                    <h3 class="font-playful text-base">19. Plural & Singular</h3>
                                     <p class="text-[10px] text-lime-100">Um ou muitos? Escolha a grafia certa.</p>
                                 </div>
                                 <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
@@ -307,31 +330,47 @@
                             <div onclick="startArticlesGame()" class="card-wordwall-teal pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-teal-800">
                                 <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🏷️</div>
                                 <div class="flex-grow">
-                                    <h3 class="font-playful text-base">18. Artigos Definidos</h3>
+                                    <h3 class="font-playful text-base">20. Artigos Definidos</h3>
                                     <p class="text-[10px] text-teal-100">Complete com: O, A, Os ou As.</p>
                                 </div>
                                 <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
                             </div>
-                            <div onclick="startPunctuationGame()" class="card-wordwall-indigo pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-indigo-800">
+                            <div onclick="startPunctuationGame()" class="card-wordwall-purple pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-purple-800">
                                 <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">💬</div>
                                 <div class="flex-grow">
-                                    <h3 class="font-playful text-base">19. Sinais de Pontuação</h3>
-                                    <p class="text-[10px] text-indigo-100">Termine a frase com . , ? ou !</p>
+                                    <h3 class="font-playful text-base">21. Sinais de Pontuação</h3>
+                                    <p class="text-[10px] text-purple-100">Termine a frase com . , ? ou !</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startGenderGame()" class="card-wordwall-blue pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-blue-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">♀️♂️</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">22. Género Mágico</h3>
+                                    <p class="text-[10px] text-blue-100">Coloque nas cestas: Masculino vs Feminino.</p>
                                 </div>
                                 <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
                             </div>
                         </div>
                     </div>
 
-                    <!-- FASE 8: A ROLETA DO SABER -->
+                    <!-- FASE 9: DESAFIOS FINAIS -->
                     <div class="border-2 border-yellow-100 rounded-2xl p-4 bg-yellow-50/50">
-                        <span class="bg-yellow-600 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 8: Grande Roleta</span>
+                        <span class="bg-yellow-600 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 9: Grandes Desafios Finais</span>
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
                             <div onclick="startWheelQuizGame()" class="card-wordwall-yellow pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-yellow-800">
                                 <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🎡</div>
                                 <div class="flex-grow">
-                                    <h3 class="font-playful text-base">20. Roleta de Imagens</h3>
+                                    <h3 class="font-playful text-base">23. Roleta de Imagens</h3>
                                     <p class="text-[10px] text-yellow-100">Gire a roleta e responda o quiz da figura!</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startClozeGame()" class="card-wordwall-amber pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-amber-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">📖</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">24. Completar História</h3>
+                                    <p class="text-[10px] text-amber-100">Arraste as palavras para preencher o texto.</p>
                                 </div>
                                 <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
                             </div>
@@ -342,7 +381,7 @@
 
                 <!-- Footer tip -->
                 <div class="bg-sky-50 border border-sky-100 rounded-xl p-3 text-center text-xs font-bold text-sky-700">
-                    💡 <span class="font-bold">Dica do Professor:</span> Esta trilha foi planejada para ir do reconhecimento das letras à estrutura gramatical completa do 1º ano!
+                    💡 <span class="font-bold">Dica do Professor:</span> Esta trilha foi planeada para acompanhar o currículo letivo de Português do 1º Ano de ponta a ponta!
                 </div>
             </div>
 
@@ -432,7 +471,6 @@
                 <div class="flex-grow flex flex-col justify-center items-center my-4 relative">
                     <div class="grid grid-cols-3 gap-4 max-w-md w-full" id="ob-boxes-grid"></div>
                     
-                    <!-- NEW QUIZ SELECTION POPUP INSIDE GAME 4 -->
                     <div id="ob-popup" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
                         <div class="bg-white rounded-3xl p-5 border-4 border-amber-400 max-w-md w-full text-center shadow-2xl relative">
                             <h4 class="font-playful text-xl text-amber-700 mb-2" id="ob-popup-title">MISTÉRIO DO PRESENTE!</h4>
@@ -440,7 +478,6 @@
                                 <span class="text-5xl" id="ob-popup-icon">🦒</span>
                                 <p class="font-bold text-slate-700 mt-2 text-sm" id="ob-popup-prompt">Qual a primeira letra?</p>
                             </div>
-                            <!-- Selection dynamic quiz buttons -->
                             <div class="flex flex-col gap-2" id="ob-quiz-choices"></div>
                         </div>
                     </div>
@@ -505,7 +542,7 @@
                 <div class="flex-grow flex flex-col items-center justify-center my-4 gap-6">
                     <div class="flex flex-col items-center bg-teal-50 border border-teal-200 p-4 rounded-2xl">
                         <span id="os-emoji" class="text-6xl mb-2">🐵</span>
-                        <div id="os-word-output" class="flex gap-2 min-h-[45px] p-2 bg-white rounded-xl border border-dashed border-teal-300 w-60 items-center justify-center"></div>
+                        <div id="os-word-output" class="flex gap-2 min-h-[45px] p-2 bg-white rounded-xl border border-dashed border-teal-300 w-60 items-center justify-center font-bold uppercase text-lg text-teal-900"></div>
                     </div>
                     <div id="os-syllable-choices" class="flex gap-2.5 justify-center"></div>
                 </div>
@@ -717,7 +754,58 @@
                 </div>
             </div>
 
-            <!-- SCREEN 17: GAME - SINÓNIMOS & ANTÓNIMOS (NEW) -->
+            <!-- SCREEN 17: GAME - DÍGRAFOS MÁGICOS (CH, LH, NH) (NOVO) -->
+            <div id="screen-digraphs" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-emerald-600">✨ DÍGRAFOS MÁGICOS</h2>
+                        <span class="bg-emerald-100 text-emerald-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Qual dígrafo completa a palavra?</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Questão: <span id="dg-progress" class="text-emerald-600">1/4</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col items-center justify-center my-4 gap-6">
+                    <div class="bg-emerald-50 border-2 border-emerald-200 p-5 rounded-3xl text-center max-w-sm w-full shadow-md flex flex-col items-center">
+                        <span id="dg-emoji" class="text-6xl mb-2">🔑</span>
+                        <h3 class="font-playful text-2xl text-emerald-800 uppercase tracking-widest">
+                            <span class="border-b-4 border-dashed border-emerald-500 text-emerald-600 px-3 mr-1" id="dg-blank-slot">___</span><span id="dg-word-text">AVE</span>
+                        </h3>
+                    </div>
+                    <div class="grid grid-cols-3 gap-3 w-full max-w-md" id="dg-choices"></div>
+                </div>
+            </div>
+
+            <!-- SCREEN 18: GAME - DESAFIO R/RR (NOVO) -->
+            <div id="screen-rrr" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-lime-600">⚡ DESAFIO DO R E RR</h2>
+                        <span class="bg-lime-100 text-lime-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Arraste ou clique na opção correta!</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Questão: <span id="rr-progress" class="text-lime-600">1/4</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col items-center justify-center my-4 gap-6">
+                    <div class="bg-lime-50 border-2 border-lime-200 p-5 rounded-3xl text-center max-w-sm w-full shadow-md flex flex-col items-center">
+                        <span id="rr-emoji" class="text-6xl mb-2">🚗</span>
+                        <h3 class="font-playful text-2xl text-lime-800 uppercase tracking-widest">
+                            CA<span class="border-b-4 border-dashed border-lime-500 text-lime-600 px-3 mx-1" id="rr-blank-slot">___</span>O
+                        </h3>
+                        <p id="rr-hint-desc" class="text-xs text-lime-600 italic mt-2">Meio de transporte rápido</p>
+                    </div>
+                    <div class="flex gap-4 justify-center w-full max-w-xs" id="rr-choices"></div>
+                </div>
+            </div>
+
+            <!-- SCREEN 19: GAME - SINÓNIMOS & ANTÓNIMOS -->
             <div id="screen-syn-ant" class="hidden flex-col justify-between flex-grow h-full">
                 <div class="flex justify-between items-center pb-3 border-b border-slate-100">
                     <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
@@ -740,7 +828,7 @@
                 </div>
             </div>
 
-            <!-- SCREEN 18: GAME - PLURAL & SINGULAR (NEW) -->
+            <!-- SCREEN 20: GAME - PLURAL & SINGULAR -->
             <div id="screen-plural-singular" class="hidden flex-col justify-between flex-grow h-full">
                 <div class="flex justify-between items-center pb-3 border-b border-slate-100">
                     <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
@@ -760,13 +848,13 @@
                         <h3 id="ps-word-display" class="font-playful text-2xl text-lime-800 uppercase tracking-widest mt-3">GATOS</h3>
                     </div>
                     <div class="flex gap-4 justify-center w-full max-w-xs">
-                        <button onclick="checkPluralSingular('singular')" class="bg-white border-4 border-lime-300 hover:border-lime-500 font-playful text-lime-800 px-6 py-3 rounded-2xl shadow-md text-base hover:bg-lime-50 active:scale-95 transition-all w-1/2">SINGULAR</button>
-                        <button onclick="checkPluralSingular('plural')" class="bg-white border-4 border-lime-300 hover:border-lime-500 font-playful text-lime-800 px-6 py-3 rounded-2xl shadow-md text-base hover:bg-lime-50 active:scale-95 transition-all w-1/2">PLURAL</button>
+                        <button onclick="checkPluralSingular('singular')" class="bg-white border-4 border-lime-300 hover:border-lime-500 font-playful text-lime-800 px-6 py-3 rounded-2xl shadow-md text-base hover:bg-lime-50 active:scale-95 transition-all w-1/2 font-bold">SINGULAR</button>
+                        <button onclick="checkPluralSingular('plural')" class="bg-white border-4 border-lime-300 hover:border-lime-500 font-playful text-lime-800 px-6 py-3 rounded-2xl shadow-md text-base hover:bg-lime-50 active:scale-95 transition-all w-1/2 font-bold">PLURAL</button>
                     </div>
                 </div>
             </div>
 
-            <!-- SCREEN 19: GAME - ARTIGOS DEFINIDOS (NEW) -->
+            <!-- SCREEN 21: GAME - ARTIGOS DEFINIDOS -->
             <div id="screen-articles" class="hidden flex-col justify-between flex-grow h-full">
                 <div class="flex justify-between items-center pb-3 border-b border-slate-100">
                     <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
@@ -792,7 +880,7 @@
                 </div>
             </div>
 
-            <!-- SCREEN 20: GAME - SINAIS DE PONTUAÇÃO (NEW) -->
+            <!-- SCREEN 22: GAME - SINAIS DE PONTUAÇÃO -->
             <div id="screen-punctuation" class="hidden flex-col justify-between flex-grow h-full">
                 <div class="flex justify-between items-center pb-3 border-b border-slate-100">
                     <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
@@ -811,21 +899,56 @@
                         <span id="pn-emoji" class="text-5xl mb-1">🎁</span>
                         <h3 class="font-playful text-xl text-indigo-800 leading-relaxed">
                             <span id="pn-sentence-text">Gostas deste brinquedo</span>
-                            <span class="bg-indigo-200 text-indigo-900 border-b-2 border-indigo-500 px-3.5 py-0.5 rounded-lg inline-block ml-1 font-bold" id="pn-sign-slot">?</span>
+                            <span class="bg-indigo-200 text-indigo-900 border-b-2 border-indigo-500 px-3.5 py-0.5 rounded-lg inline-block ml-1 font-bold animate-pulse" id="pn-sign-slot">?</span>
                         </h3>
                     </div>
                     <div class="flex gap-4 justify-center" id="pn-choices"></div>
                 </div>
             </div>
 
-            <!-- SCREEN 21: GAME - ROLETA DE IMAGENS QUIZ (NEW) -->
+            <!-- SCREEN 23: GAME - GÉNERO MÁGICO (O / A) (NOVO) -->
+            <div id="screen-gender" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-blue-600">♀️♂️ GÉNERO MÁGICO</h2>
+                        <span class="bg-blue-100 text-blue-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Arruma as palavras nas cestas adequadas</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Placar: <span id="gd-score" class="text-emerald-500">0/6</span></div>
+                    </div>
+                </div>
+                <div class="my-3 flex flex-col justify-between flex-grow">
+                    <div class="bg-slate-100 p-2.5 rounded-xl min-h-[60px] flex justify-center items-center gap-2 flex-wrap border-2 border-dashed border-slate-300" id="gd-items-source"></div>
+                    <div class="grid grid-cols-2 gap-4 mt-3">
+                        <div id="gd-basket-1" class="bg-blue-100 border-4 border-blue-400 rounded-2xl p-2.5 flex flex-col justify-between min-h-[120px] hover:bg-blue-200/50 cursor-pointer transition-colors text-center">
+                            <div>
+                                <span class="text-xl">🧺 ♂️</span>
+                                <h4 class="font-playful text-blue-800 text-sm">O (MASCULINO)</h4>
+                            </div>
+                            <div class="flex flex-wrap gap-1 justify-center mt-2" id="gd-basket1-items"></div>
+                        </div>
+                        <div id="gd-basket-2" class="bg-pink-100 border-4 border-pink-400 rounded-2xl p-2.5 flex flex-col justify-between min-h-[120px] hover:bg-pink-200/50 cursor-pointer transition-colors text-center">
+                            <div>
+                                <span class="text-xl">🧺 ♀️</span>
+                                <h4 class="font-playful text-pink-800 text-sm">A (FEMININO)</h4>
+                            </div>
+                            <div class="flex flex-wrap gap-1 justify-center mt-2" id="gd-basket2-items"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 24: GAME - ROLETA DE IMAGENS QUIZ -->
             <div id="screen-wheel-quiz" class="hidden flex-col justify-between flex-grow h-full">
                 <div class="flex justify-between items-center pb-3 border-b border-slate-100">
                     <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
                         <i class="fas fa-chevron-left"></i> Sair
                     </button>
                     <div class="text-center">
-                        <h2 class="font-playful text-lg text-yellow-600">🎡 ROLETA DE IMAGENS QUIZ</h2>
+                        <h2 class="font-playful text-lg text-yellow-600">🎡 ROLETA DE IMAGENS</h2>
                         <span class="bg-yellow-100 text-yellow-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Gire a roleta para sortear a sua pergunta!</span>
                     </div>
                     <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
@@ -833,15 +956,12 @@
                     </div>
                 </div>
                 <div class="flex-grow flex flex-col md:flex-row items-center justify-center my-3 gap-6 relative">
-                    <!-- Spinning Wheel Container -->
                     <div class="flex flex-col items-center justify-center relative">
-                        <!-- Red Pointer Arrow pointing down to the canvas wheel top center -->
                         <div class="absolute top-[-10px] text-2xl text-red-500 animate-bounce z-20">▼</div>
                         <canvas id="wq-wheel-canvas" width="220" height="220" class="rounded-full shadow-lg border-4 border-yellow-400 bg-white transition-all duration-[3000ms] cubic-bezier(0.25, 1, 0.5, 1)"></canvas>
                         <button id="wq-spin-btn" onclick="spinTheWheel()" class="mt-4 bg-yellow-500 hover:bg-yellow-600 text-white font-playful font-bold py-2 px-6 rounded-full shadow-md border-b-4 border-yellow-800 hover:scale-105 active:scale-95 transition-all text-sm">GIRAR ROLETA!</button>
                     </div>
 
-                    <!-- Side Quiz Pop-up inside Game Screen (Hidden initially, shown after Wheel halts) -->
                     <div id="wq-quiz-panel" class="hidden bg-white border-4 border-yellow-400 p-4 rounded-3xl shadow-xl max-w-xs w-full text-center flex flex-col items-center">
                         <span class="text-5xl" id="wq-quiz-emoji">🍎</span>
                         <p class="font-bold text-slate-700 mt-2 text-sm">Qual é a escrita correta?</p>
@@ -850,7 +970,34 @@
                 </div>
             </div>
 
-            <!-- SCREEN 22: GENERAL GAME OVER / REWARD FEEDBACK -->
+            <!-- SCREEN 25: GAME - COMPLETAR HISTÓRIA (CLOZE) (NOVO) -->
+            <div id="screen-cloze" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-amber-600">📖 COMPLETAR HISTÓRIA</h2>
+                        <span class="bg-amber-100 text-amber-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Complete a história arrastando as palavras certas!</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Progresso: <span id="cl-progress-label" class="text-amber-600">0/3</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col items-center justify-center my-4 gap-6">
+                    <div class="bg-amber-50 border-2 border-amber-200 p-6 rounded-3xl w-full max-w-xl shadow-md">
+                        <h4 class="font-playful text-lg text-amber-800 text-center mb-4">🏠 O DIA DO GATO MILA</h4>
+                        <p class="text-slate-700 font-medium leading-relaxed text-base text-center">
+                            O <span id="cl-slot-0" class="border-b-4 border-dashed border-amber-500 px-6 py-0.5 bg-white text-amber-700 font-bold rounded-t-md mx-1 cursor-pointer">___</span> 
+                            bebeu o <span id="cl-slot-1" class="border-b-4 border-dashed border-amber-500 px-6 py-0.5 bg-white text-amber-700 font-bold rounded-t-md mx-1 cursor-pointer">___</span> 
+                            fresco e correu muito rápido de volta para a sua <span id="cl-slot-2" class="border-b-4 border-dashed border-amber-500 px-6 py-0.5 bg-white text-amber-700 font-bold rounded-t-md mx-1 cursor-pointer">___</span>!
+                        </p>
+                    </div>
+                    <div class="flex flex-wrap gap-2.5 justify-center max-w-md" id="cl-word-options"></div>
+                </div>
+            </div>
+
+            <!-- SCREEN 26: GENERAL GAME OVER / REWARD FEEDBACK -->
             <div id="screen-feedback" class="hidden flex-col items-center justify-center text-center flex-grow py-4">
                 <div id="feedback-icon" class="text-7xl mb-2 animate-bounce-slow">🎉</div>
                 <h2 id="feedback-title" class="font-playful text-2xl text-sky-800 mb-1">Muito Bem!</h2>
@@ -881,7 +1028,7 @@
 
     <!-- GENERAL VISUAL FOOTER -->
     <footer class="w-full text-center py-2 text-xs font-bold text-sky-700/80 z-10 relative bg-sky-100/50">
-        <span>Educação e Diversão • Hub Sequencial Completo de Alfabetização do 1º Ano</span>
+        <span>Educação e Diversão • Hub Sequencial de Alfabetização Completa do 1º Ano</span>
     </footer>
 
     <script>
@@ -1005,8 +1152,8 @@
                 'screen-quiz', 'screen-anagram', 'screen-word-search', 
                 'screen-group-sort', 'screen-crossword', 'screen-letter-train',
                 'screen-order-syllables', 'screen-count-syllables', 'screen-write-phrase',
-                'screen-phrase-dictation', 'screen-syn-ant', 'screen-plural-singular',
-                'screen-articles', 'screen-punctuation', 'screen-wheel-quiz', 'screen-feedback'
+                'screen-phrase-dictation', 'screen-digraphs', 'screen-rrr', 'screen-syn-ant', 'screen-plural-singular',
+                'screen-articles', 'screen-punctuation', 'screen-gender', 'screen-wheel-quiz', 'screen-cloze', 'screen-feedback'
             ];
             screens.forEach(id => {
                 const el = document.getElementById(id);
@@ -1193,7 +1340,7 @@
             const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
             alphabet.forEach(letter => {
                 const btn = document.createElement('button');
-                btn.className = "bg-white border-2 border-rose-300 hover:border-rose-500 font-playful p-2 rounded-xl text-center text-rose-700 shadow-sm text-base hover:bg-rose-50 active:scale-95 transition-all";
+                btn.className = "bg-white border-2 border-rose-300 hover:border-rose-500 font-playful p-2 rounded-xl text-center text-rose-700 shadow-sm text-base hover:bg-rose-50 active:scale-95 transition-all font-bold";
                 btn.innerText = letter;
                 btn.onclick = () => checkFlAnswer(letter, btn);
                 container.appendChild(btn);
@@ -1213,7 +1360,7 @@
             document.getElementById('fl-name-hint').innerText = current.word;
             
             document.querySelectorAll('#fl-alphabet-kb > button').forEach(btn => {
-                btn.className = "bg-white border-2 border-rose-300 hover:border-rose-500 font-playful p-2 rounded-xl text-center text-rose-700 shadow-sm text-base hover:bg-rose-50 active:scale-95 transition-all";
+                btn.className = "bg-white border-2 border-rose-300 hover:border-rose-500 font-playful p-2 rounded-xl text-center text-rose-700 shadow-sm text-base hover:bg-rose-50 active:scale-95 transition-all font-bold";
                 btn.disabled = false;
             });
         }
@@ -1222,13 +1369,13 @@
             const correctLetter = flCurrentRound[flIndex].letter;
             if (letter === correctLetter) {
                 playSound('correct');
-                btnElement.className = "bg-emerald-500 text-white border-2 border-emerald-600 font-playful p-2 rounded-xl text-center text-base shadow-md";
+                btnElement.className = "bg-emerald-500 text-white border-2 border-emerald-600 font-playful p-2 rounded-xl text-center text-base shadow-md font-bold";
                 flScore += 10;
                 flIndex++;
                 setTimeout(showFlQuestion, 1000);
             } else {
                 playSound('wrong');
-                btnElement.className = "bg-red-500 text-white border-2 border-red-600 font-playful p-2 rounded-xl text-center text-base shadow-md animate-shake";
+                btnElement.className = "bg-red-500 text-white border-2 border-red-600 font-playful p-2 rounded-xl text-center text-base shadow-md animate-shake font-bold";
                 btnElement.disabled = true;
             }
         }
@@ -1284,7 +1431,7 @@
                             <span class="w-1.5 h-1.5 bg-slate-900 rounded-full"></span>
                             <span class="w-1.5 h-1.5 bg-slate-900 rounded-full"></span>
                         </div>
-                        <div class="bg-white px-1.5 py-0.5 rounded border border-slate-300 font-playful text-amber-900 text-sm shadow-sm w-10 text-center" id="mole-letter-${i}">A</div>
+                        <div class="bg-white px-1.5 py-0.5 rounded border border-slate-300 font-playful text-amber-900 text-sm shadow-sm w-10 text-center font-bold" id="mole-letter-${i}">A</div>
                     </div>
                 `;
                 grid.appendChild(hole);
@@ -1394,7 +1541,7 @@
                 box.className = "bg-amber-500 border-b-4 border-amber-700 text-white rounded-2xl p-6 text-center cursor-pointer hover:scale-105 active:scale-95 transition-all flex flex-col items-center justify-center gap-2 shadow-lg";
                 box.innerHTML = `
                     <span class="text-4xl text-amber-100">🎁</span>
-                    <span class="font-playful text-sm">CAIXA ${i + 1}</span>
+                    <span class="font-playful text-sm font-bold">CAIXA ${i + 1}</span>
                 `;
                 box.onclick = () => triggerOpenBox(i, box);
                 grid.appendChild(box);
@@ -1623,10 +1770,10 @@
             current.sequence.forEach(letter => {
                 const wagon = document.createElement('div');
                 if (letter === '?') {
-                    wagon.className = "bg-yellow-300 border-2 border-yellow-500 rounded-xl p-3 shadow-md font-playful text-xl text-yellow-800 text-center animate-pulse min-w-[50px]";
+                    wagon.className = "bg-yellow-300 border-2 border-yellow-500 rounded-xl p-3 shadow-md font-playful text-xl text-yellow-800 text-center animate-pulse min-w-[50px] font-bold";
                     wagon.innerText = '?';
                 } else {
-                    wagon.className = "bg-cyan-100 border-2 border-cyan-300 rounded-xl p-3 shadow-md font-playful text-xl text-cyan-800 text-center min-w-[50px]";
+                    wagon.className = "bg-cyan-100 border-2 border-cyan-300 rounded-xl p-3 shadow-md font-playful text-xl text-cyan-800 text-center min-w-[50px] font-bold";
                     wagon.innerText = letter;
                 }
                 wagonRow.appendChild(wagon);
@@ -1636,7 +1783,7 @@
             optRow.innerHTML = '';
             current.options.forEach(opt => {
                 const btn = document.createElement('button');
-                btn.className = "bg-white border-2 border-cyan-400 hover:border-cyan-600 font-playful px-4 py-2 rounded-xl text-cyan-800 text-lg shadow-md hover:bg-cyan-50 active:scale-95 transition-all";
+                btn.className = "bg-white border-2 border-cyan-400 hover:border-cyan-600 font-playful px-4 py-2 rounded-xl text-cyan-800 text-lg shadow-md hover:bg-cyan-50 active:scale-95 transition-all font-bold";
                 btn.innerText = opt;
                 btn.onclick = () => selectLetterTrainOption(opt, current.missing);
                 optRow.appendChild(btn);
@@ -1702,7 +1849,7 @@
             
             current.syllables.forEach((syl, idx) => {
                 const btn = document.createElement('button');
-                btn.className = "bg-teal-500 hover:bg-teal-600 text-white font-playful px-4 py-2.5 rounded-xl shadow-md border-b-4 border-teal-800 text-base active:scale-95 transition-all";
+                btn.className = "bg-teal-500 hover:bg-teal-600 text-white font-playful px-4 py-2.5 rounded-xl shadow-md border-b-4 border-teal-800 text-base active:scale-95 transition-all font-bold";
                 btn.innerText = syl;
                 btn.onclick = () => selectSyllable(syl, btn);
                 choicesBox.appendChild(btn);
@@ -1715,11 +1862,11 @@
             
             const outputBox = document.getElementById('os-word-output');
             const block = document.createElement('div');
-            block.className = "bg-teal-100 border border-teal-300 font-playful px-3 py-1 rounded text-teal-800 text-sm uppercase animate-bounce-slow";
+            block.className = "bg-teal-100 border border-teal-300 font-playful px-3 py-1 rounded text-teal-800 text-sm uppercase animate-bounce-slow font-bold";
             block.innerText = syl;
             outputBox.appendChild(block);
 
-            element.className = "bg-slate-200 text-slate-400 font-playful px-4 py-2.5 rounded-xl shadow-inner border border-slate-300 pointer-events-none text-base";
+            element.className = "bg-slate-200 text-slate-400 font-playful px-4 py-2.5 rounded-xl shadow-inner border border-slate-300 pointer-events-none text-base font-bold";
 
             const currentCorrect = osPool[osLevelIdx].correctOrder;
             const currentIdx = osSelections.length - 1;
@@ -1785,7 +1932,7 @@
             
             for (let num = 1; num <= 4; num++) {
                 const btn = document.createElement('button');
-                btn.className = "w-14 h-14 bg-white border-4 border-lime-400 hover:border-lime-500 font-playful text-lime-700 text-xl rounded-2xl flex items-center justify-center shadow-md active:scale-90 hover:bg-lime-50 transition-all";
+                btn.className = "w-14 h-14 bg-white border-4 border-lime-400 hover:border-lime-500 font-playful text-lime-700 text-xl rounded-2xl flex items-center justify-center shadow-md active:scale-90 hover:bg-lime-50 transition-all font-bold";
                 btn.innerText = num;
                 btn.onclick = () => selectCountSyllableOption(num, current.count, btn);
                 buttonsBox.appendChild(btn);
@@ -1795,12 +1942,12 @@
         function selectCountSyllableOption(selected, correct, buttonElement) {
             if (selected === correct) {
                 playSound('correct');
-                buttonElement.className = "w-14 h-14 bg-emerald-500 text-white border-4 border-emerald-600 font-playful text-xl rounded-2xl flex items-center justify-center shadow-lg";
+                buttonElement.className = "w-14 h-14 bg-emerald-500 text-white border-4 border-emerald-600 font-playful text-xl rounded-2xl flex items-center justify-center shadow-lg font-bold";
                 csLevelIdx++;
                 setTimeout(setupCountSyllablesRound, 1000);
             } else {
                 playSound('wrong');
-                buttonElement.className = "w-14 h-14 bg-red-500 text-white border-4 border-red-600 font-playful text-xl rounded-2xl flex items-center justify-center shadow-lg animate-shake";
+                buttonElement.className = "w-14 h-14 bg-red-500 text-white border-4 border-red-600 font-playful text-xl rounded-2xl flex items-center justify-center shadow-lg animate-shake font-bold";
                 buttonElement.disabled = true;
             }
         }
@@ -1945,7 +2092,7 @@
 
             for (let i = 0; i < round.word.length; i++) {
                 const dash = document.createElement('div');
-                dash.className = "w-10 h-10 border-b-4 border-slate-400 flex items-center justify-center font-playful text-lg text-slate-800 uppercase bg-white rounded-t-md mx-0.5 shadow-sm";
+                dash.className = "w-10 h-10 border-b-4 border-slate-400 flex items-center justify-center font-playful text-lg text-slate-800 uppercase bg-white rounded-t-md mx-0.5 shadow-sm font-bold";
                 dash.innerText = '';
                 slotsBox.appendChild(dash);
             }
@@ -1956,7 +2103,7 @@
             const scrambled = round.word.split('').sort(() => 0.5 - Math.random());
             scrambled.forEach((char, idx) => {
                 const key = document.createElement('button');
-                key.className = "w-12 h-12 bg-purple-500 hover:bg-purple-600 active:scale-90 text-white font-playful text-xl rounded-xl flex items-center justify-center shadow-md border-b-4 border-purple-800 transition-all";
+                key.className = "w-12 h-12 bg-purple-500 hover:bg-purple-600 active:scale-90 text-white font-playful text-xl rounded-xl flex items-center justify-center shadow-md border-b-4 border-purple-800 transition-all font-bold";
                 key.innerText = char;
                 key.onclick = () => selectAnagramLetter(char, key);
                 lettersBox.appendChild(key);
@@ -1970,11 +2117,11 @@
             if (char === correctWord[nextIndexRequired]) {
                 playSound('correct');
                 anWordProgress.push(char);
-                element.className = "w-12 h-12 bg-emerald-400 text-white font-playful text-xl rounded-xl flex items-center justify-center shadow-inner border border-emerald-500 opacity-60 pointer-events-none";
+                element.className = "w-12 h-12 bg-emerald-400 text-white font-playful text-xl rounded-xl flex items-center justify-center shadow-inner border border-emerald-500 opacity-60 pointer-events-none font-bold";
                 
                 const slots = document.getElementById('an-target-slots').children;
                 slots[nextIndexRequired].innerText = char;
-                slots[nextIndexRequired].className = "w-10 h-10 border-b-4 border-emerald-500 bg-emerald-100 flex items-center justify-center font-playful text-lg text-emerald-800 uppercase rounded-t-md mx-0.5 animate-bounce-slow";
+                slots[nextIndexRequired].className = "w-10 h-10 border-b-4 border-emerald-500 bg-emerald-100 flex items-center justify-center font-playful text-lg text-emerald-800 uppercase rounded-t-md mx-0.5 animate-bounce-slow font-bold";
 
                 if (anWordProgress.length === correctWord.length) {
                     playSound('victory');
@@ -2040,7 +2187,7 @@
             for (let row = 0; row < 6; row++) {
                 for (let col = 0; col < 6; col++) {
                     const cell = document.createElement('button');
-                    cell.className = "w-9 h-9 sm:w-11 sm:h-11 bg-white hover:bg-indigo-50 border-2 border-indigo-200 text-indigo-800 font-playful text-base rounded-xl flex items-center justify-center shadow-sm select-none transition-all";
+                    cell.className = "w-9 h-9 sm:w-11 sm:h-11 bg-white hover:bg-indigo-50 border-2 border-indigo-200 text-indigo-800 font-playful text-base rounded-xl flex items-center justify-center shadow-sm select-none transition-all font-bold";
                     cell.innerText = wsGridData[row][col];
                     cell.setAttribute('data-row', row);
                     cell.setAttribute('data-col', col);
@@ -2056,10 +2203,10 @@
             
             if (wsSelectedCellsCoords.includes(clickedCoord)) {
                 wsSelectedCellsCoords = wsSelectedCellsCoords.filter(c => c !== clickedCoord);
-                cellNode.className = "w-9 h-9 sm:w-11 sm:h-11 bg-white hover:bg-indigo-50 border-2 border-indigo-200 text-indigo-800 font-playful text-base rounded-xl flex items-center justify-center shadow-sm select-none transition-all";
+                cellNode.className = "w-9 h-9 sm:w-11 sm:h-11 bg-white hover:bg-indigo-50 border-2 border-indigo-200 text-indigo-800 font-playful text-base rounded-xl flex items-center justify-center shadow-sm select-none transition-all font-bold";
             } else {
                 wsSelectedCellsCoords.push(clickedCoord);
-                cellNode.className = "w-9 h-9 sm:w-11 sm:h-11 bg-indigo-500 text-white border-2 border-indigo-600 font-playful text-base rounded-xl flex items-center justify-center shadow-inner select-none transition-all";
+                cellNode.className = "w-9 h-9 sm:w-11 sm:h-11 bg-indigo-500 text-white border-2 border-indigo-600 font-playful text-base rounded-xl flex items-center justify-center shadow-inner select-none transition-all font-bold";
             }
 
             let assembledString = wsSelectedCellsCoords.map(coord => {
@@ -2084,7 +2231,7 @@
                             const [r, c] = coord.split('-').map(Number);
                             const cell = document.querySelector(`[data-row="${r}"][data-col="${c}"]`);
                             if (cell) {
-                                cell.className = "w-9 h-9 sm:w-11 sm:h-11 bg-emerald-500 text-white border border-emerald-600 font-playful text-base rounded-xl flex items-center justify-center pointer-events-none";
+                                cell.className = "w-9 h-9 sm:w-11 sm:h-11 bg-emerald-500 text-white border border-emerald-600 font-playful text-base rounded-xl flex items-center justify-center pointer-events-none font-bold";
                             }
                         });
 
@@ -2297,7 +2444,7 @@
                 const item = document.createElement('div');
                 item.className = "p-1.5 bg-white rounded-xl border border-slate-100 shadow-sm text-[10px] font-bold text-slate-700 flex items-center gap-1.5";
                 item.innerHTML = `
-                    <span class="bg-teal-500 text-white rounded px-1 text-[8px] uppercase">${clue.type === 'horizontal' ? 'Deitado' : 'Em Pé'}</span>
+                    <span class="bg-teal-500 text-white rounded px-1 text-[8px] uppercase font-bold">${clue.type === 'horizontal' ? 'Deitado' : 'Em Pé'}</span>
                     <span>${clue.text}</span>
                 `;
                 cluesBox.appendChild(item);
@@ -2310,7 +2457,7 @@
                 for (let c = 0; c < 5; c++) {
                     const matchingNode = round.gridSetup.find(cell => cell.r === r && cell.c === c);
                     const wrapper = document.createElement('div');
-                    wrapper.className = "w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center font-playful relative text-sm";
+                    wrapper.className = "w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center font-playful relative text-sm font-bold";
                     
                     if (matchingNode) {
                         wrapper.className += " bg-yellow-100 border-2 border-yellow-300 hover:border-yellow-400 cursor-pointer shadow-sm";
@@ -2355,7 +2502,7 @@
             if (char === correctChar) {
                 playSound('correct');
                 cwGridFocusCell.innerText = char;
-                cwGridFocusCell.className = "w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center font-playful bg-emerald-400 text-white border-2 border-emerald-500 shadow-inner pointer-events-none text-sm";
+                cwGridFocusCell.className = "w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center font-playful bg-emerald-400 text-white border-2 border-emerald-500 shadow-inner pointer-events-none text-sm font-bold animate-bounce-slow";
                 cwGridFocusCell = null;
                 
                 const remainingUnsolved = Array.from(document.querySelectorAll('#cw-grid > div')).filter(el => {
@@ -2577,7 +2724,171 @@
             playSound('victory');
         }
 
-        // ----------------- GAME 16: SINÓNIMOS & ANTÓNIMOS (NEW) -----------------
+        // ----------------- GAME 16: DÍGRAFOS MÁGICOS (CH, LH, NH) (NOVO) -----------------
+        let dgLevelIdx = 0;
+        let dgScore = 0;
+        const dgPool = [
+            { emoji: '🔑', partial: 'AVE', display: '___AVE', target: 'CH', choices: ['CH', 'LH', 'NH'] },
+            { emoji: '🌽', partial: 'MIL', display: 'MIL___O', target: 'LH', choices: ['CH', 'LH', 'NH'] },
+            { emoji: '🐦', partial: 'NI', display: 'NI___O', target: 'NH', choices: ['CH', 'LH', 'NH'] },
+            { emoji: '🌧️', partial: 'CHU', display: 'CHU___A', target: 'V', choices: ['V', 'CH', 'LH'] } // custom PT cases
+        ];
+
+        function startDigraphsGame() {
+            showScreen('screen-digraphs');
+            dgLevelIdx = 0;
+            dgScore = 0;
+            setupDigraphRound();
+        }
+
+        function setupDigraphRound() {
+            if (dgLevelIdx >= dgPool.length) {
+                endDigraphsGame();
+                return;
+            }
+            document.getElementById('dg-progress').innerText = `${dgLevelIdx + 1}/${dgPool.length}`;
+            const current = dgPool[dgLevelIdx];
+
+            document.getElementById('dg-emoji').innerText = current.emoji;
+            
+            // Adjust label based on structure
+            if (current.display.startsWith('___')) {
+                document.getElementById('dg-blank-slot').innerText = '___';
+                document.getElementById('dg-word-text').innerText = current.partial;
+            } else if (current.display.endsWith('___A')) {
+                document.getElementById('dg-blank-slot').innerText = '___';
+                document.getElementById('dg-word-text').innerText = current.partial + 'A';
+            } else {
+                document.getElementById('dg-blank-slot').innerText = current.partial;
+                document.getElementById('dg-word-text').innerText = '___O';
+            }
+
+            const choicesBox = document.getElementById('dg-choices');
+            choicesBox.innerHTML = '';
+
+            current.choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white border-4 border-emerald-300 hover:border-emerald-500 font-playful p-4 rounded-2xl text-center text-emerald-800 shadow-md text-base hover:bg-emerald-50 active:scale-95 transition-all font-bold";
+                btn.innerText = choice;
+                btn.onclick = () => submitDigraphAnswer(choice, current.target, btn);
+                choicesBox.appendChild(btn);
+            });
+        }
+
+        function submitDigraphAnswer(selected, correct, buttonElement) {
+            if (selected === correct) {
+                playSound('correct');
+                document.getElementById('dg-blank-slot').innerText = selected;
+                buttonElement.className = "bg-emerald-500 text-white border-4 border-emerald-600 font-playful p-4 rounded-2xl text-center text-base shadow-lg font-bold";
+                dgScore += 10;
+                dgLevelIdx++;
+                setTimeout(setupDigraphRound, 1000);
+            } else {
+                playSound('wrong');
+                buttonElement.className = "bg-red-500 text-white border-4 border-red-600 font-playful p-4 rounded-2xl text-center text-base shadow-lg animate-shake font-bold";
+                buttonElement.disabled = true;
+            }
+        }
+
+        function endDigraphsGame() {
+            const starsWon = dgScore >= 40 ? 5 : 2;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = dgScore >= 40 ? "Mestre dos Dígrafos!" : "Bom Progresso!";
+            document.getElementById('feedback-msg').innerText = `Você completou os casos de dígrafos CH, LH, NH com sucesso!`;
+            document.getElementById('feedback-score').innerText = `${dgScore} Pts`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "✨";
+
+            document.getElementById('btn-replay').onclick = startDigraphsGame;
+            showScreen('screen-feedback');
+            if (dgScore >= 40) {
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+                playSound('victory');
+            }
+        }
+
+        // ----------------- GAME 17: DESAFIO R/RR (NOVO) -----------------
+        let rrLevelIdx = 0;
+        let rrScore = 0;
+        const rrPool = [
+            { emoji: '🚗', correct: 'RR', display: 'CA___O', text: 'Carro', hint: 'Meio de transporte rápido' },
+            { emoji: '💎', correct: 'R', display: 'CA___O', text: 'Caro', hint: 'Que custa muito dinheiro' },
+            { emoji: '🎡', correct: 'R', display: '___ODA', text: 'Roda', hint: 'Parte redonda que gira no carro' },
+            { emoji: '🍐', correct: 'R', display: 'PE___A', text: 'Pera', hint: 'Fruta muito saborosa' }
+        ];
+
+        function startRRRGame() {
+            showScreen('screen-rrr');
+            rrLevelIdx = 0;
+            rrScore = 0;
+            setupRRRound();
+        }
+
+        function setupRRRound() {
+            if (rrLevelIdx >= rrPool.length) {
+                endRRGame();
+                return;
+            }
+            document.getElementById('rr-progress').innerText = `${rrLevelIdx + 1}/${rrPool.length}`;
+            const current = rrPool[rrLevelIdx];
+
+            document.getElementById('rr-emoji').innerText = current.emoji;
+            document.getElementById('rr-hint-desc').innerText = current.hint;
+            document.getElementById('rr-blank-slot').innerText = '___';
+
+            // Special adjust if the blank slot is initial
+            if (current.display.startsWith('___')) {
+                document.getElementById('rr-blank-slot').parentElement.innerHTML = `<span class="border-b-4 border-dashed border-lime-500 text-lime-600 px-3 mx-1 animate-pulse" id="rr-blank-slot">___</span>ODA`;
+            } else {
+                document.getElementById('rr-blank-slot').parentElement.innerHTML = `CA<span class="border-b-4 border-dashed border-lime-500 text-lime-600 px-3 mx-1 animate-pulse" id="rr-blank-slot">___</span>O`;
+            }
+
+            const choicesBox = document.getElementById('rr-choices');
+            choicesBox.innerHTML = '';
+
+            const options = ['R', 'RR'];
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white border-4 border-lime-300 hover:border-lime-500 font-playful p-4 rounded-2xl text-center text-lime-800 shadow-md text-base hover:bg-lime-50 active:scale-95 transition-all w-1/2 font-bold";
+                btn.innerText = opt;
+                btn.onclick = () => submitRROption(opt, current.correct, btn);
+                choicesBox.appendChild(btn);
+            });
+        }
+
+        function submitRROption(selected, correct, buttonElement) {
+            if (selected === correct) {
+                playSound('correct');
+                document.getElementById('rr-blank-slot').innerText = selected;
+                buttonElement.className = "bg-emerald-500 text-white border-4 border-emerald-600 font-playful p-4 rounded-2xl text-center text-base shadow-lg font-bold w-1/2";
+                rrScore += 10;
+                rrLevelIdx++;
+                setTimeout(setupRRRound, 1000);
+            } else {
+                playSound('wrong');
+                buttonElement.className = "bg-red-500 text-white border-4 border-red-600 font-playful p-4 rounded-2xl text-center text-base shadow-lg animate-shake font-bold w-1/2";
+                buttonElement.disabled = true;
+            }
+        }
+
+        function endRRGame() {
+            const starsWon = rrScore >= 40 ? 5 : 2;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = rrScore >= 40 ? "Perfeito R/RR!" : "Bom Progresso!";
+            document.getElementById('feedback-msg').innerText = `Você treinou a sonoridade e ortografia do R brando, R forte e RR!`;
+            document.getElementById('feedback-score').innerText = `${rrScore} Pts`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "⚡";
+
+            document.getElementById('btn-replay').onclick = startRRRGame;
+            showScreen('screen-feedback');
+            if (rrScore >= 40) {
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+                playSound('victory');
+            }
+        }
+
+        // ----------------- GAME 18: SINÓNIMOS & ANTÓNIMOS -----------------
         let saLevelIdx = 0;
         let saScore = 0;
         const saPool = [
@@ -2611,7 +2922,7 @@
 
             current.choices.forEach(choice => {
                 const btn = document.createElement('button');
-                btn.className = "bg-white border-4 border-emerald-300 hover:border-emerald-500 font-playful p-4 rounded-2xl text-center text-emerald-800 shadow-md text-base hover:bg-emerald-50 active:scale-95 transition-all";
+                btn.className = "bg-white border-4 border-emerald-300 hover:border-emerald-500 font-playful p-4 rounded-2xl text-center text-emerald-800 shadow-md text-base hover:bg-emerald-50 active:scale-95 transition-all font-bold";
                 btn.innerText = choice;
                 btn.onclick = () => submitSynAntAnswer(choice, current.correct, btn);
                 choicesBox.appendChild(btn);
@@ -2621,13 +2932,13 @@
         function submitSynAntAnswer(selected, correct, buttonElement) {
             if (selected === correct) {
                 playSound('correct');
-                buttonElement.className = "bg-emerald-500 text-white border-4 border-emerald-600 font-playful p-4 rounded-2xl text-center text-base shadow-lg";
+                buttonElement.className = "bg-emerald-500 text-white border-4 border-emerald-600 font-playful p-4 rounded-2xl text-center text-base shadow-lg font-bold";
                 saScore += 10;
                 saLevelIdx++;
                 setTimeout(setupSynAntRound, 1000);
             } else {
                 playSound('wrong');
-                buttonElement.className = "bg-red-500 text-white border-4 border-red-600 font-playful p-4 rounded-2xl text-center text-base shadow-lg animate-shake";
+                buttonElement.className = "bg-red-500 text-white border-4 border-red-600 font-playful p-4 rounded-2xl text-center text-base shadow-lg animate-shake font-bold";
                 buttonElement.disabled = true;
             }
         }
@@ -2649,7 +2960,7 @@
             }
         }
 
-        // ----------------- GAME 17: PLURAL & SINGULAR (NEW) -----------------
+        // ----------------- GAME 19: PLURAL & SINGULAR -----------------
         let psLevelIdx = 0;
         let psScore = 0;
         const psPool = [
@@ -2713,7 +3024,7 @@
             }
         }
 
-        // ----------------- GAME 18: ARTIGOS DEFINIDOS (NEW) -----------------
+        // ----------------- GAME 20: ARTIGOS DEFINIDOS -----------------
         let arLevelIdx = 0;
         let arScore = 0;
         const arPool = [
@@ -2747,7 +3058,7 @@
 
             current.choices.forEach(choice => {
                 const btn = document.createElement('button');
-                btn.className = "bg-white border-4 border-teal-300 hover:border-teal-500 font-playful p-3 rounded-2xl text-center text-teal-800 shadow-md text-base hover:bg-teal-50 active:scale-95 transition-all";
+                btn.className = "bg-white border-4 border-teal-300 hover:border-teal-500 font-playful p-3 rounded-2xl text-center text-teal-800 shadow-md text-base hover:bg-teal-50 active:scale-95 transition-all font-bold";
                 btn.innerText = choice;
                 btn.onclick = () => submitArticleAnswer(choice, current.correct, btn);
                 choicesBox.appendChild(btn);
@@ -2758,13 +3069,13 @@
             if (selected === correct) {
                 playSound('correct');
                 document.getElementById('ar-blank-slot').innerText = selected;
-                buttonElement.className = "bg-emerald-500 text-white border-4 border-emerald-600 font-playful p-3 rounded-2xl text-center text-base shadow-lg";
+                buttonElement.className = "bg-emerald-500 text-white border-4 border-emerald-600 font-playful p-3 rounded-2xl text-center text-base shadow-lg font-bold";
                 arScore += 10;
                 arLevelIdx++;
                 setTimeout(setupArticlesRound, 1000);
             } else {
                 playSound('wrong');
-                buttonElement.className = "bg-red-500 text-white border-4 border-red-600 font-playful p-3 rounded-2xl text-center text-base shadow-lg animate-shake";
+                buttonElement.className = "bg-red-500 text-white border-4 border-red-600 font-playful p-3 rounded-2xl text-center text-base shadow-lg animate-shake font-bold";
                 buttonElement.disabled = true;
             }
         }
@@ -2786,7 +3097,7 @@
             }
         }
 
-        // ----------------- GAME 19: SINAIS DE PONTUAÇÃO (NEW) -----------------
+        // ----------------- GAME 21: SINAIS DE PONTUAÇÃO -----------------
         let pnLevelIdx = 0;
         let pnScore = 0;
         const pnPool = [
@@ -2821,7 +3132,7 @@
             const signs = ['.', '?', '!'];
             signs.forEach(sign => {
                 const btn = document.createElement('button');
-                btn.className = "w-14 h-14 bg-white border-4 border-indigo-300 hover:border-indigo-500 font-playful text-indigo-800 text-xl rounded-2xl flex items-center justify-center shadow-md hover:bg-indigo-50 active:scale-95 transition-all";
+                btn.className = "w-14 h-14 bg-white border-4 border-indigo-300 hover:border-indigo-500 font-playful text-indigo-800 text-xl rounded-2xl flex items-center justify-center shadow-md hover:bg-indigo-50 active:scale-95 transition-all font-bold";
                 btn.innerText = sign;
                 btn.onclick = () => submitPunctuationAnswer(sign, current.correct, btn);
                 choicesBox.appendChild(btn);
@@ -2832,13 +3143,13 @@
             if (selected === correct) {
                 playSound('correct');
                 document.getElementById('pn-sign-slot').innerText = selected;
-                buttonElement.className = "w-14 h-14 bg-emerald-500 text-white border-4 border-emerald-600 font-playful text-xl rounded-2xl flex items-center justify-center shadow-lg";
+                buttonElement.className = "w-14 h-14 bg-emerald-500 text-white border-4 border-emerald-600 font-playful text-xl rounded-2xl flex items-center justify-center shadow-lg font-bold animate-bounce-slow";
                 pnScore += 10;
                 pnLevelIdx++;
                 setTimeout(setupPunctuationRound, 1000);
             } else {
                 playSound('wrong');
-                buttonElement.className = "w-14 h-14 bg-red-500 text-white border-4 border-red-600 font-playful text-xl rounded-2xl flex items-center justify-center shadow-lg animate-shake";
+                buttonElement.className = "w-14 h-14 bg-red-500 text-white border-4 border-red-600 font-playful text-xl rounded-2xl flex items-center justify-center shadow-lg animate-shake font-bold";
                 buttonElement.disabled = true;
             }
         }
@@ -2860,7 +3171,104 @@
             }
         }
 
-        // ----------------- GAME 20: ROLETA DE IMAGENS QUIZ (NEW) -----------------
+        // ----------------- GAME 22: GÉNERO MÁGICO (NOVO) -----------------
+        let gdScore = 0;
+        let gdSelectedSource = null;
+        const gdPool = [
+            { name: 'Sapo', icon: '🐸', belongsTo: 'basket1' }, // O Sapo
+            { name: 'Cão', icon: '🐶', belongsTo: 'basket1' }, // O Cão
+            { emoji: '🌸', name: 'Flor', icon: '🌸', belongsTo: 'basket2' }, // A Flor
+            { name: 'Mesa', icon: '🪑', belongsTo: 'basket2' }, // A Mesa
+            { name: 'Gato', icon: '🐱', belongsTo: 'basket1' }, // O Gato
+            { name: 'Gata', icon: '🐈', belongsTo: 'basket2' } // A Gata
+        ];
+
+        function startGenderGame() {
+            showScreen('screen-gender');
+            gdScore = 0;
+            gdSelectedSource = null;
+            document.getElementById('gd-score').innerText = `0/6`;
+
+            document.getElementById('gd-basket1-items').innerHTML = '';
+            document.getElementById('gd-basket2-items').innerHTML = '';
+
+            const combinedItems = [...gdPool].sort(() => 0.5 - Math.random());
+            const sourceContainer = document.getElementById('gd-items-source');
+            sourceContainer.innerHTML = '';
+
+            combinedItems.forEach((item, index) => {
+                const element = document.createElement('div');
+                element.className = "bg-white border-2 border-blue-300 hover:border-blue-500 rounded-full px-3 py-1.5 cursor-pointer shadow-sm text-center flex items-center gap-1.5 select-none active:scale-95 transition-transform hover:bg-blue-50";
+                element.id = `gd-item-${index}`;
+                element.setAttribute('data-target-basket', item.belongsTo);
+                element.innerHTML = `
+                    <span class="text-xl">${item.icon}</span>
+                    <span class="font-bold text-xs text-slate-700 capitalize">${item.name}</span>
+                `;
+                element.onclick = () => selectSourceForGender(element);
+                sourceContainer.appendChild(element);
+            });
+        }
+
+        function selectSourceForGender(element) {
+            playSound('click');
+            document.querySelectorAll('#gd-items-source > div').forEach(el => {
+                el.classList.remove('ring-4', 'ring-blue-500', 'bg-blue-50');
+            });
+            gdSelectedSource = element;
+            element.classList.add('ring-4', 'ring-blue-500', 'bg-blue-50');
+        }
+
+        document.getElementById('gd-basket-1').onclick = () => {
+            if (gdSelectedSource) simulateGenderDrop(gdSelectedSource, 'basket1');
+        };
+        document.getElementById('gd-basket-2').onclick = () => {
+            if (gdSelectedSource) simulateGenderDrop(gdSelectedSource, 'basket2');
+        };
+
+        function simulateGenderDrop(element, destinationBasketId) {
+            const belongsTo = element.getAttribute('data-target-basket');
+            if (belongsTo === destinationBasketId) {
+                playSound('correct');
+                gdScore++;
+                document.getElementById('gd-score').innerText = `${gdScore}/6`;
+
+                const miniItem = document.createElement('span');
+                miniItem.className = "bg-white py-0.5 px-2 border border-slate-200 rounded-full text-[10px] font-bold shadow-sm inline-block";
+                miniItem.innerHTML = element.innerHTML;
+                document.getElementById(`gd-${destinationBasketId}-items`).appendChild(miniItem);
+
+                element.remove();
+                gdSelectedSource = null;
+
+                if (gdScore === 6) {
+                    setTimeout(() => endGenderGame(true), 1000);
+                }
+            } else {
+                playSound('wrong');
+                element.classList.add('animate-shake', 'border-red-400');
+                setTimeout(() => {
+                    element.classList.remove('animate-shake', 'border-red-400', 'ring-4', 'ring-blue-500', 'bg-blue-50');
+                }, 500);
+            }
+        }
+
+        function endGenderGame() {
+            const starsWon = 5;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = "Excelente Arrumação!";
+            document.getElementById('feedback-msg').innerText = "Fabuloso! Você compreendeu perfeitamente as regras de Masculino e Feminino.";
+            document.getElementById('feedback-score').innerText = `6 de 6`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "♀️♂️";
+
+            document.getElementById('btn-replay').onclick = startGenderGame;
+            showScreen('screen-feedback');
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+            playSound('victory');
+        }
+
+        // ----------------- GAME 23: ROLETA DE IMAGENS QUIZ -----------------
         let wqRoundCount = 0;
         let wqCurrentItem = null;
         const wqPool = [
@@ -2880,8 +3288,6 @@
             document.getElementById('wq-rounds').innerText = `0/3`;
             document.getElementById('wq-quiz-panel').classList.add('hidden');
             document.getElementById('wq-spin-btn').disabled = false;
-            
-            // Draw static canvas wheel
             drawWheel(0);
         }
 
@@ -2913,7 +3319,6 @@
                 ctx.strokeStyle = '#ffffff';
                 ctx.stroke();
 
-                // Draw Text / Emojis inside segments
                 ctx.save();
                 ctx.rotate(i * segmentAngle + segmentAngle / 2);
                 ctx.textAlign = 'right';
@@ -2934,23 +3339,21 @@
             document.getElementById('wq-spin-btn').disabled = true;
             document.getElementById('wq-quiz-panel').classList.add('hidden');
 
-            const spinRotations = 5 + Math.floor(Math.random() * 5); // 5 to 9 full spins
+            const spinRotations = 5 + Math.floor(Math.random() * 5); 
             const targetSegmentIdx = Math.floor(Math.random() * wqPool.length);
             
-            // Calculate final rotation to land correctly on the chosen segment index at the top (angle -Math.PI / 2)
             const numSegments = wqPool.length;
             const segmentAngle = (2 * Math.PI) / numSegments;
             const targetAngle = (spinRotations * 2 * Math.PI) + (numSegments - targetSegmentIdx) * segmentAngle - segmentAngle / 2 - (Math.PI / 2);
 
             let currentRotation = 0;
-            const spinDuration = 3000; // ms
+            const spinDuration = 3000; 
             const startTimestamp = performance.now();
 
             function animateSpin(timestamp) {
                 const elapsed = timestamp - startTimestamp;
                 const progress = Math.min(elapsed / spinDuration, 1);
                 
-                // Ease-out cubic formula for realistic slow deceleration feel
                 const easeOut = 1 - Math.pow(1 - progress, 3);
                 currentRotation = easeOut * targetAngle;
 
@@ -3020,6 +3423,110 @@
             document.getElementById('feedback-icon').innerText = "🎡";
 
             document.getElementById('btn-replay').onclick = startWheelQuizGame;
+            showScreen('screen-feedback');
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            playSound('victory');
+        }
+
+        // ----------------- GAME 24: COMPLETAR HISTÓRIA (NOVO) -----------------
+        let clSelectedWordNode = null;
+        let clPlacedCount = 0;
+        const clCorrectMapping = {
+            'cl-slot-0': 'gato',
+            'cl-slot-1': 'leite',
+            'cl-slot-2': 'casa'
+        };
+
+        const clOptionsPool = [
+            { text: 'gato', id: 'cl-opt-0' },
+            { text: 'leite', id: 'cl-opt-1' },
+            { text: 'casa', id: 'cl-opt-2' },
+            { text: 'sapo', id: 'cl-opt-3' } // distractor
+        ];
+
+        function startClozeGame() {
+            showScreen('screen-cloze');
+            clSelectedWordNode = null;
+            clPlacedCount = 0;
+            document.getElementById('cl-progress-label').innerText = `0/3`;
+
+            // Reset slots
+            for (let key in clCorrectMapping) {
+                const el = document.getElementById(key);
+                el.innerText = '___';
+                el.className = "border-b-4 border-dashed border-amber-500 px-6 py-0.5 bg-white text-amber-700 font-bold rounded-t-md mx-1 cursor-pointer hover:bg-amber-100";
+                el.onclick = () => tryPlaceCloze(key);
+            }
+
+            // Shuffle options
+            const shuffledOptions = [...clOptionsPool].sort(() => 0.5 - Math.random());
+            const optionsBox = document.getElementById('cl-word-options');
+            optionsBox.innerHTML = '';
+
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.id = opt.id;
+                btn.className = "bg-white border-2 border-amber-400 hover:border-amber-600 text-amber-800 font-bold px-4 py-2 rounded-2xl shadow-md text-sm hover:bg-amber-50 active:scale-95 transition-all";
+                btn.innerText = opt.text;
+                btn.onclick = () => selectClozeWord(btn);
+                optionsBox.appendChild(btn);
+            });
+        }
+
+        function selectClozeWord(element) {
+            playSound('click');
+            document.querySelectorAll('#cl-word-options > button').forEach(b => {
+                b.classList.remove('ring-4', 'ring-amber-500', 'bg-amber-100');
+            });
+            clSelectedWordNode = element;
+            element.classList.add('ring-4', 'ring-amber-500', 'bg-amber-100');
+        }
+
+        function tryPlaceCloze(slotId) {
+            if (!clSelectedWordNode) {
+                playSound('wrong');
+                return;
+            }
+
+            const chosenText = clSelectedWordNode.innerText;
+            const correctText = clCorrectMapping[slotId];
+
+            if (chosenText === correctText) {
+                playSound('correct');
+                const slot = document.getElementById(slotId);
+                slot.innerText = chosenText.toUpperCase();
+                slot.className = "border-b-4 border-emerald-500 px-6 py-0.5 bg-emerald-100 text-emerald-800 font-bold rounded-t-md mx-1 pointer-events-none animate-bounce-slow";
+                
+                clSelectedWordNode.remove();
+                clSelectedWordNode = null;
+                clPlacedCount++;
+                document.getElementById('cl-progress-label').innerText = `${clPlacedCount}/3`;
+
+                if (clPlacedCount === 3) {
+                    setTimeout(endClozeGame, 1200);
+                }
+            } else {
+                playSound('wrong');
+                clSelectedWordNode.classList.add('animate-shake', 'bg-red-50', 'border-red-400');
+                setTimeout(() => {
+                    if (clSelectedWordNode) {
+                        clSelectedWordNode.classList.remove('animate-shake', 'bg-red-50', 'border-red-400', 'ring-4', 'ring-amber-500', 'bg-amber-100');
+                    }
+                    clSelectedWordNode = null;
+                }, 800);
+            }
+        }
+
+        function endClozeGame() {
+            const starsWon = 10;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = "Narrativa Concluída!";
+            document.getElementById('feedback-msg').innerText = "Fabuloso! Você leu e preencheu perfeitamente a história com coerência!";
+            document.getElementById('feedback-score').innerText = `3 de 3 Palavras`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "📖";
+
+            document.getElementById('btn-replay').onclick = startClozeGame;
             showScreen('screen-feedback');
             confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
             playSound('victory');
