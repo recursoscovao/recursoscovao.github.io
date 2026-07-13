@@ -1,1 +1,3030 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alfabetolândia - Jornada de 20 Jogos do 1º Ano</title>
+    <!-- Tailwind CSS for modern responsive utility styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for a playful, readable child-friendly typeface -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome icons for playful button symbols -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti for victory screens -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #e0f2fe 0%, #bae6fd 100%);
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .font-playful {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+        }
+        /* Custom floating animations matching Wordwall feel */
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-12px); }
+        }
+        .animate-bounce-slow {
+            animation: bounce-slow 4s ease-in-out infinite;
+        }
+        @keyframes float-clouds {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100vw); }
+        }
+        .cloud-anim-1 { animation: float-clouds 45s linear infinite; }
+        .cloud-anim-2 { animation: float-clouds 60s linear infinite; }
+        .cloud-anim-3 { animation: float-clouds 35s linear infinite; }
+        
+        /* Wordwall style retro gradients for cards */
+        .card-wordwall-blue { background: linear-gradient(135deg, #3b82f6, #1d4ed8); }
+        .card-wordwall-orange { background: linear-gradient(135deg, #f97316, #c2410c); }
+        .card-wordwall-pink { background: linear-gradient(135deg, #ec4899, #be185d); }
+        .card-wordwall-green { background: linear-gradient(135deg, #22c55e, #15803d); }
+        .card-wordwall-purple { background: linear-gradient(135deg, #a855f7, #6b21a8); }
+        .card-wordwall-teal { background: linear-gradient(135deg, #14b8a6, #0f766e); }
+        .card-wordwall-amber { background: linear-gradient(135deg, #f59e0b, #b45309); }
+        .card-wordwall-indigo { background: linear-gradient(135deg, #6366f1, #3730a3); }
+        .card-wordwall-rose { background: linear-gradient(135deg, #f43f5e, #9f1239); }
+        .card-wordwall-cyan { background: linear-gradient(135deg, #06b6d4, #0891b2); }
+        .card-wordwall-slate { background: linear-gradient(135deg, #64748b, #334155); }
+        .card-wordwall-lime { background: linear-gradient(135deg, #84cc16, #4d7c0f); }
+        .card-wordwall-emerald { background: linear-gradient(135deg, #10b981, #047857); }
+        .card-wordwall-yellow { background: linear-gradient(135deg, #eab308, #a16207); }
+        
+        /* Pop dynamic transition */
+        .pop-card {
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .pop-card:hover {
+            transform: scale(1.05);
+        }
+        .pop-card:active {
+            transform: scale(0.95);
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+        .animate-shake {
+            animation: shake 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative">
 
+    <!-- Decorative background elements -->
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute top-10 left-0 w-24 h-12 bg-white opacity-60 rounded-full cloud-anim-1 filter blur-sm"></div>
+        <div class="absolute top-32 left-0 w-36 h-16 bg-white opacity-40 rounded-full cloud-anim-2 filter blur-sm"></div>
+        <div class="absolute top-2/3 left-0 w-28 h-12 bg-white opacity-50 rounded-full cloud-anim-3 filter blur-sm"></div>
+    </div>
+
+    <!-- Sound Toggle & General Header -->
+    <header class="w-full max-w-6xl mx-auto px-4 py-4 flex justify-between items-center z-10 relative">
+        <div class="flex items-center gap-3">
+            <span class="text-4xl">🎒</span>
+            <div>
+                <h1 class="font-playful text-3xl text-sky-800 tracking-wider">ALFABETOLÂNDIA</h1>
+                <p class="text-xs font-bold text-sky-600 uppercase tracking-widest">Mega Hub das Letras • Jornada Completa do 1º Ano (20 Jogos)</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <!-- Stars score indicator -->
+            <div class="bg-amber-400 text-white font-bold py-2 px-4 rounded-full shadow-lg flex items-center gap-2">
+                <i class="fas fa-star text-lg animate-pulse"></i>
+                <span id="star-counter" class="text-xl">0</span>
+            </div>
+            <!-- Sound controller -->
+            <button id="sound-btn" onclick="toggleMute()" class="w-12 h-12 rounded-full bg-white text-sky-600 shadow-md flex items-center justify-center hover:scale-110 active:scale-95 transition-all text-xl">
+                <i id="sound-icon" class="fas fa-volume-up"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- MAIN INTERACTIVE CONTAINER -->
+    <main class="flex-grow flex items-center justify-center p-4 z-10 relative">
+        <div id="game-container" class="w-full max-w-5xl bg-white/95 rounded-3xl shadow-2xl p-6 border-4 border-white min-h-[620px] flex flex-col justify-between">
+            
+            <!-- SCREEN 1: LOBBY / JORNADA DE APRENDIZAGEM -->
+            <div id="screen-lobby" class="flex-grow flex flex-col justify-between">
+                <div class="text-center my-2 animate-bounce-slow">
+                    <h2 class="font-playful text-3xl text-sky-700">A Sua Jornada das Letras e Gramática!</h2>
+                    <p class="text-slate-600 font-semibold text-sm mt-1">Avance nas fases pedagógicas do 1º ano para se tornar um Super Mestre!</p>
+                </div>
+
+                <!-- Structured Pedagogical Roadmap (20 games organized in 8 steps) -->
+                <div class="space-y-6 my-4 overflow-y-auto max-h-[440px] pr-2">
+                    
+                    <!-- FASE 1: RECONHECIMENTO & GRAFOFONIA -->
+                    <div class="border-2 border-pink-100 rounded-2xl p-4 bg-pink-50/50">
+                        <span class="bg-pink-500 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 1: Sons, Letras e Formas Básicas</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
+                            <div onclick="startBalloonPop()" class="card-wordwall-pink pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-pink-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🎈</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">1. Estoura-Balão</h3>
+                                    <p class="text-[10px] text-pink-100">Estoure desenhos correspondentes.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startFirstLetterGame()" class="card-wordwall-rose pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-rose-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">✏️</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">2. Letra Inicial</h3>
+                                    <p class="text-[10px] text-rose-100">Qual é a primeira letra desse desenho?</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startWhackMole()" class="card-wordwall-orange pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-orange-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🐹</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">3. Toupeira das Letras</h3>
+                                    <p class="text-[10px] text-orange-100">Bata nas toupeiras corretas.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 2: ASSOCIAÇÃO & SEQUÊNCIAS -->
+                    <div class="border-2 border-amber-100 rounded-2xl p-4 bg-amber-50/50">
+                        <span class="bg-amber-500 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 2: Descobertas e Sequências</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
+                            <div onclick="startOpenBoxGame()" class="card-wordwall-amber pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-amber-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🎁</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">4. Abre a Caixa Quiz</h3>
+                                    <p class="text-[10px] text-amber-100">Abra presentes surpresa e resolva o quiz.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startMatchUp()" class="card-wordwall-blue pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-blue-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🧩</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">5. Combinação Mágica</h3>
+                                    <p class="text-[10px] text-blue-100">Relacione as iniciais com cada desenho.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startLetterTrain()" class="card-wordwall-cyan pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-cyan-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🚂</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">6. Comboio de Letras</h3>
+                                    <p class="text-[10px] text-cyan-100">Complete as sequências no trem.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 3: CONSCIÊNCIA SILÁBICA -->
+                    <div class="border-2 border-teal-100 rounded-2xl p-4 bg-teal-50/50">
+                        <span class="bg-teal-500 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 3: Sílabas em Ação</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
+                            <div onclick="startOrderSyllables()" class="card-wordwall-teal pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-teal-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🧩</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">7. Ordenar Sílabas</h3>
+                                    <p class="text-[10px] text-teal-100">Una pedaços para formar nomes.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startCountSyllables()" class="card-wordwall-lime pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-lime-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">👏</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">8. Contar Sílabas</h3>
+                                    <p class="text-[10px] text-lime-100">Bata palmas e indique a quantidade.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startQuizGame()" class="card-wordwall-indigo pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-indigo-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">❓</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">9. Quiz do Saber</h3>
+                                    <p class="text-[10px] text-indigo-100">Responda rápido as perguntas.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 4: SÍNTESE FONÊMICA -->
+                    <div class="border-2 border-purple-100 rounded-2xl p-4 bg-purple-50/50">
+                        <span class="bg-purple-500 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 4: Fábrica e Escrita de Palavras</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
+                            <div onclick="startAnagramGame()" class="card-wordwall-purple pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-purple-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🧱</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">10. Fábrica de Palavras</h3>
+                                    <p class="text-[10px] text-purple-100">Ordene as letras e construa o nome.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startWordSearchGame()" class="card-wordwall-indigo pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-indigo-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🔍</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">11. Sopa de Letras</h3>
+                                    <p class="text-[10px] text-indigo-100">Ache as palavras ocultas na grade.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 5: ORGANIZAÇÃO & ASSOCIAÇÃO AVANÇADA -->
+                    <div class="border-2 border-green-100 rounded-2xl p-4 bg-green-50/50">
+                        <span class="bg-green-500 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 5: Organização & Cruzadas</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
+                            <div onclick="startGroupSort()" class="card-wordwall-green pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-green-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🧺</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">12. Organizador</h3>
+                                    <p class="text-[10px] text-green-100">Coloque os itens nos grupos certos.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startCrosswordGame()" class="card-wordwall-teal pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-teal-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🗺️</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">13. Mini Cruzadas</h3>
+                                    <p class="text-[10px] text-teal-100">Complete as palavras cruzadas simples.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 6: FRASES E LEITURA FLUIDA -->
+                    <div class="border-2 border-slate-200 rounded-2xl p-4 bg-slate-50/50">
+                        <span class="bg-slate-700 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 6: Fluidez de Frases e Ditados</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
+                            <div onclick="startWritePhrase()" class="card-wordwall-slate pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-slate-900">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">✍️</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">14. Escrever Frase</h3>
+                                    <p class="text-[10px] text-slate-100">Ordene as palavras da frase lógica.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startPhraseDictation()" class="card-wordwall-indigo pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-indigo-900">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🔊</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">15. Ditado Falado</h3>
+                                    <p class="text-[10px] text-indigo-100">Escute a fala e monte a frase certa.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 7: DESAFIOS GRAMATICAIS AVANÇADOS -->
+                    <div class="border-2 border-emerald-100 rounded-2xl p-4 bg-emerald-50/50">
+                        <span class="bg-emerald-600 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 7: Desafios de Gramática</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
+                            <div onclick="startSynAntGame()" class="card-wordwall-emerald pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-emerald-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🔄</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">16. Sinónimos & Antónimos</h3>
+                                    <p class="text-[10px] text-emerald-100">Ache o oposto ou igual das palavras.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startPluralSingularGame()" class="card-wordwall-lime pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-lime-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">👥</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">17. Plural & Singular</h3>
+                                    <p class="text-[10px] text-lime-100">Um ou muitos? Escolha a grafia certa.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startArticlesGame()" class="card-wordwall-teal pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-teal-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🏷️</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">18. Artigos Definidos</h3>
+                                    <p class="text-[10px] text-teal-100">Complete com: O, A, Os ou As.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startPunctuationGame()" class="card-wordwall-indigo pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-indigo-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">💬</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">19. Sinais de Pontuação</h3>
+                                    <p class="text-[10px] text-indigo-100">Termine a frase com . , ? ou !</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 8: A ROLETA DO SABER -->
+                    <div class="border-2 border-yellow-100 rounded-2xl p-4 bg-yellow-50/50">
+                        <span class="bg-yellow-600 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 8: Grande Roleta</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-3">
+                            <div onclick="startWheelQuizGame()" class="card-wordwall-yellow pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-yellow-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🎡</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-base">20. Roleta de Imagens</h3>
+                                    <p class="text-[10px] text-yellow-100">Gire a roleta e responda o quiz da figura!</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <!-- Footer tip -->
+                <div class="bg-sky-50 border border-sky-100 rounded-xl p-3 text-center text-xs font-bold text-sky-700">
+                    💡 <span class="font-bold">Dica do Professor:</span> Esta trilha foi planejada para ir do reconhecimento das letras à estrutura gramatical completa do 1º ano!
+                </div>
+            </div>
+
+            <!-- SCREEN 2: GAME - BALLOON POP -->
+            <div id="screen-balloon-pop" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-pink-600">🎈 ESTOURA-BALÃO</h2>
+                        <span id="bp-instruction" class="bg-pink-100 text-pink-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Estoure a letra A</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Tempo: <span id="bp-timer" class="text-pink-600">30s</span></div>
+                        <div>Placar: <span id="bp-score" class="text-emerald-500">0/5</span></div>
+                    </div>
+                </div>
+                <div class="relative flex-grow h-72 my-4 bg-gradient-to-b from-sky-200 to-sky-100 rounded-2xl overflow-hidden border-2 border-sky-300" id="bp-arena">
+                    <div class="absolute bottom-0 w-full h-10 bg-amber-800/30 flex items-center justify-around border-t-4 border-amber-600">
+                        <div id="train-cart" class="relative bg-amber-500 text-white py-1 px-3 rounded-t-lg font-playful text-center text-[10px] shadow-md animate-bounce-slow">
+                            🚂 Trem da Letra <span id="bp-target-letter" class="text-yellow-300 text-sm font-bold">A</span>
+                        </div>
+                    </div>
+                </div>
+                <p class="text-center text-slate-500 text-xs font-semibold">Toque nos balões certos para fazê-los estourar!</p>
+            </div>
+
+            <!-- SCREEN 3: GAME - WRITE THE FIRST LETTER -->
+            <div id="screen-first-letter" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-rose-600">✏️ ESCREVER A 1ª LETRA</h2>
+                        <span class="bg-rose-100 text-rose-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Ache a primeira letra deste objeto:</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Questão: <span id="fl-progress" class="text-rose-600">1/5</span></div>
+                        <div>Placar: <span id="fl-score" class="text-emerald-500">0</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col items-center justify-center my-4 gap-4">
+                    <div class="flex flex-col items-center bg-rose-50 border-4 border-rose-200 p-4 rounded-2xl w-44 text-center shadow-lg animate-bounce-slow">
+                        <span id="fl-emoji" class="text-6xl mb-2">🍎</span>
+                        <span id="fl-name-hint" class="font-playful text-xl text-slate-700">_ A Ç Ã</span>
+                    </div>
+                    <!-- Big interactive alphabet keyboard -->
+                    <div class="grid grid-cols-6 sm:grid-cols-9 gap-1.5 w-full max-w-lg" id="fl-alphabet-kb"></div>
+                </div>
+            </div>
+
+            <!-- SCREEN 4: GAME - WHACK A MOLE -->
+            <div id="screen-whack-mole" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-orange-600">🐹 TOUPEIRA DAS LETRAS</h2>
+                        <span id="wm-instruction" class="bg-orange-100 text-orange-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Bata nas VOGAIS!</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Tempo: <span id="wm-timer" class="text-orange-600">30s</span></div>
+                        <div>Placar: <span id="wm-score" class="text-emerald-500">0</span></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-3 gap-3 my-4 bg-amber-950/20 p-3 rounded-2xl border-4 border-amber-800/40 relative" id="wm-grid"></div>
+                <p class="text-center text-slate-500 text-xs font-semibold">Cuidado! Acerte somente o que o comando pedir.</p>
+            </div>
+
+            <!-- SCREEN 5: GAME - OPEN THE BOX -->
+            <div id="screen-open-box" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-amber-600">🎁 ABRE A CAIXA QUIZ</h2>
+                        <span class="bg-amber-100 text-amber-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Abra o presente e marque a opção certa!</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Caixas abertas: <span id="ob-count" class="text-amber-600">0/3</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col justify-center items-center my-4 relative">
+                    <div class="grid grid-cols-3 gap-4 max-w-md w-full" id="ob-boxes-grid"></div>
+                    
+                    <!-- NEW QUIZ SELECTION POPUP INSIDE GAME 4 -->
+                    <div id="ob-popup" class="hidden fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4">
+                        <div class="bg-white rounded-3xl p-5 border-4 border-amber-400 max-w-md w-full text-center shadow-2xl relative">
+                            <h4 class="font-playful text-xl text-amber-700 mb-2" id="ob-popup-title">MISTÉRIO DO PRESENTE!</h4>
+                            <div class="bg-amber-50 p-3 rounded-xl mb-3 flex flex-col items-center">
+                                <span class="text-5xl" id="ob-popup-icon">🦒</span>
+                                <p class="font-bold text-slate-700 mt-2 text-sm" id="ob-popup-prompt">Qual a primeira letra?</p>
+                            </div>
+                            <!-- Selection dynamic quiz buttons -->
+                            <div class="flex flex-col gap-2" id="ob-quiz-choices"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 6: GAME - MATCH UP -->
+            <div id="screen-match-up" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-blue-600">🧩 COMBINAÇÃO MÁGICA</h2>
+                        <span class="bg-blue-100 text-blue-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Conecte a letra com seu desenho inicial</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Placar: <span id="mu-score" class="text-emerald-500">0/4</span></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 my-4 flex-grow items-center">
+                    <div class="flex flex-col gap-2" id="mu-letters-col"></div>
+                    <div class="flex flex-col gap-2" id="mu-images-col"></div>
+                </div>
+                <p class="text-center text-slate-500 text-xs font-semibold">Selecione uma Letra, depois toque no Objeto correspondente!</p>
+            </div>
+
+            <!-- SCREEN 7: GAME - COMBOIO DE LETRAS -->
+            <div id="screen-letter-train" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-cyan-600">🚂 COMBOIO DE LETRAS</h2>
+                        <span class="bg-cyan-100 text-cyan-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Qual letra está faltando nos trilhos?</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Sequência: <span id="lt-progress" class="text-cyan-600">1/3</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col items-center justify-center my-4 gap-6">
+                    <div class="flex items-center gap-2 overflow-x-auto w-full max-w-md justify-center py-4 bg-slate-50 border border-slate-200 rounded-2xl shadow-inner" id="lt-train-wagon-row"></div>
+                    <div class="flex gap-3 justify-center" id="lt-options-row"></div>
+                </div>
+            </div>
+
+            <!-- SCREEN 8: GAME - ORDENAR SÍLABAS -->
+            <div id="screen-order-syllables" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-teal-600">🧩 ORDENAR SÍLABAS</h2>
+                        <span class="bg-teal-100 text-teal-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Junte as sílabas e forme o nome do desenho!</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Palavra: <span id="os-progress" class="text-teal-600">1/3</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col items-center justify-center my-4 gap-6">
+                    <div class="flex flex-col items-center bg-teal-50 border border-teal-200 p-4 rounded-2xl">
+                        <span id="os-emoji" class="text-6xl mb-2">🐵</span>
+                        <div id="os-word-output" class="flex gap-2 min-h-[45px] p-2 bg-white rounded-xl border border-dashed border-teal-300 w-60 items-center justify-center"></div>
+                    </div>
+                    <div id="os-syllable-choices" class="flex gap-2.5 justify-center"></div>
+                </div>
+            </div>
+
+            <!-- SCREEN 9: GAME - CONTAR SÍLABAS -->
+            <div id="screen-count-syllables" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-lime-600">👏 CONTAR SÍLABAS</h2>
+                        <span class="bg-lime-100 text-lime-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Quantas sílabas (palmas) tem essa palavra?</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Rodada: <span id="cs-progress" class="text-lime-600">1/4</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col items-center justify-center my-4 gap-4">
+                    <div class="bg-lime-50 border-2 border-lime-200 p-5 rounded-3xl text-center max-w-sm w-full shadow-md animate-bounce-slow flex flex-col items-center">
+                        <span id="cs-emoji" class="text-7xl mb-2">🐢</span>
+                        <h3 id="cs-word-text" class="font-playful text-2xl text-lime-800 uppercase tracking-widest">TARTARUGA</h3>
+                        <p id="cs-syllables-hint" class="text-xs text-lime-600 italic font-semibold mt-1">tar-ta-ru-ga</p>
+                    </div>
+                    <div class="flex gap-3 justify-center w-full max-w-xs" id="cs-number-buttons"></div>
+                </div>
+            </div>
+
+            <!-- SCREEN 10: GAME - TRIVIA QUIZ -->
+            <div id="screen-quiz" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-indigo-600">❓ QUIZ DO SABER</h2>
+                        <span id="quiz-question-title" class="bg-indigo-100 text-indigo-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Qual palavra tem 2 sílabas?</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Tempo: <span id="quiz-timer" class="text-indigo-600">15s</span></div>
+                        <div>Placar: <span id="quiz-score" class="text-emerald-500">0/4</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col justify-center items-center my-4 gap-4">
+                    <div class="bg-indigo-50 border-2 border-indigo-200 p-4 rounded-2xl w-full text-center max-w-md shadow">
+                        <p id="quiz-text" class="font-semibold text-base text-slate-700">Carregando pergunta...</p>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-2.5 w-full max-w-md" id="quiz-options"></div>
+                </div>
+            </div>
+
+            <!-- SCREEN 11: GAME - WORD FACTORY -->
+            <div id="screen-anagram" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-purple-600">🧱 FÁBRICA DE PALAVRAS</h2>
+                        <span class="bg-purple-100 text-purple-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Ordene as letras para escrever o nome!</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Palavra: <span id="an-progress" class="text-purple-600">1/3</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col items-center justify-center my-4 gap-4">
+                    <div class="flex flex-col items-center">
+                        <span id="an-emoji" class="text-7xl mb-2 animate-bounce-slow">⚽</span>
+                        <div class="flex gap-1.5 min-h-[45px] bg-slate-100 p-2.5 rounded-2xl border-2 border-dashed border-slate-300 items-center justify-center w-64" id="an-target-slots"></div>
+                    </div>
+                    <div class="flex gap-2.5 justify-center" id="an-letters-source"></div>
+                </div>
+            </div>
+
+            <!-- SCREEN 12: GAME - WORD SEARCH -->
+            <div id="screen-word-search" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-indigo-600">🔍 SOPA DE LETRAS</h2>
+                        <span class="bg-indigo-100 text-indigo-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Encontre as palavras na sopa de letras!</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Ache: <span id="ws-found-count" class="text-indigo-600">0/3</span></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-4 items-center flex-grow">
+                    <div class="bg-slate-50 p-3 rounded-2xl border border-slate-200 flex flex-col gap-1.5">
+                        <h4 class="font-bold text-slate-600 text-xs uppercase">Lista de Palavras:</h4>
+                        <div id="ws-word-list" class="flex flex-col gap-1.5"></div>
+                    </div>
+                    <div class="flex justify-center">
+                        <div class="grid grid-cols-6 gap-1 bg-slate-200 p-2 rounded-2xl border-4 border-indigo-400" id="ws-letter-grid"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 13: GAME - GROUP SORT -->
+            <div id="screen-group-sort" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-green-600">🧺 ORGANIZADOR</h2>
+                        <span id="gs-instruction" class="bg-green-100 text-green-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Separe os itens</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Placar: <span id="gs-score" class="text-emerald-500">0/6</span></div>
+                    </div>
+                </div>
+                <div class="my-3 flex flex-col justify-between flex-grow">
+                    <div class="bg-slate-100 p-2 rounded-xl min-h-[60px] flex justify-center items-center gap-2 flex-wrap border-2 border-dashed border-slate-300" id="gs-items-source"></div>
+                    <div class="grid grid-cols-2 gap-4 mt-3">
+                        <div id="gs-basket-1" class="bg-amber-100 border-4 border-amber-400 rounded-2xl p-2.5 flex flex-col justify-between min-h-[120px] hover:bg-amber-200/50 cursor-pointer transition-colors">
+                            <div class="text-center">
+                                <span class="text-xl">🧺</span>
+                                <h4 class="font-playful text-amber-800 text-xs" id="gs-basket1-title">VOGAIS</h4>
+                            </div>
+                            <div class="flex flex-wrap gap-1 justify-center mt-2" id="gs-basket1-items"></div>
+                        </div>
+                        <div id="gs-basket-2" class="bg-emerald-100 border-4 border-emerald-400 rounded-2xl p-2.5 flex flex-col justify-between min-h-[120px] hover:bg-emerald-200/50 cursor-pointer transition-colors">
+                            <div class="text-center">
+                                <span class="text-xl">🧺</span>
+                                <h4 class="font-playful text-emerald-800 text-xs" id="gs-basket2-title">CONSOANTES</h4>
+                            </div>
+                            <div class="flex flex-wrap gap-1 justify-center mt-2" id="gs-basket2-items"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 14: GAME - MINI CROSSWORDS -->
+            <div id="screen-crossword" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-teal-600">🗺️ MINI PALAVRAS CRUZADAS</h2>
+                        <span class="bg-teal-100 text-teal-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Complete os cruzamentos vazios!</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Estágio: <span id="cw-progress" class="text-teal-600">1/2</span></div>
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 my-3 items-center justify-center flex-grow">
+                    <div class="bg-slate-50 p-2.5 rounded-2xl border border-slate-200 flex flex-col gap-1.5">
+                        <h4 class="font-bold text-slate-600 text-xs uppercase">Pistas Visuais:</h4>
+                        <div id="cw-clues" class="flex flex-col gap-1.5"></div>
+                    </div>
+                    <div class="flex justify-center">
+                        <div class="grid grid-cols-5 gap-1 bg-teal-50 border-4 border-teal-300 p-2 rounded-2xl relative" id="cw-grid"></div>
+                    </div>
+                </div>
+                <div class="flex justify-center gap-1.5 flex-wrap" id="cw-keyboard"></div>
+            </div>
+
+            <!-- SCREEN 15: GAME - CONSTRUTOR DE FRASES -->
+            <div id="screen-write-phrase" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-slate-700">✍️ CONSTRUTOR DE FRASES</h2>
+                        <span class="bg-slate-100 text-slate-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Clique na ordem lógica para estruturar a frase!</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Nível: <span id="wp-progress" class="text-slate-700">1/3</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col items-center justify-center my-4 gap-6">
+                    <div class="flex flex-col items-center bg-slate-50 border-2 border-slate-200 p-5 rounded-2xl w-full max-w-md">
+                        <span id="wp-emoji" class="text-7xl mb-3">🐱🥛</span>
+                        <div id="wp-constructed-slots" class="flex flex-wrap gap-2 min-h-[50px] p-2 bg-white rounded-xl border border-dashed border-slate-300 w-full items-center justify-center font-playful text-sm text-slate-800 uppercase"></div>
+                    </div>
+                    <div id="wp-source-words" class="flex flex-wrap gap-2.5 justify-center max-w-md"></div>
+                </div>
+            </div>
+
+            <!-- SCREEN 16: GAME - DITADO DE FRASES -->
+            <div id="screen-phrase-dictation" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-indigo-700">🔊 DITADO FALADO</h2>
+                        <span class="bg-indigo-100 text-indigo-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Ouça com atenção e monte a frase falada!</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Frase: <span id="pd-progress" class="text-indigo-600">1/3</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col items-center justify-center my-4 gap-6">
+                    <div class="flex flex-col items-center gap-3">
+                        <button onclick="speakDictationText()" class="w-20 h-20 bg-indigo-600 hover:bg-indigo-700 active:scale-95 text-white font-bold rounded-full flex flex-col items-center justify-center shadow-lg hover:shadow-xl transition-all border-b-4 border-indigo-950">
+                            <i class="fas fa-volume-up text-3xl animate-pulse"></i>
+                            <span class="text-[10px] mt-1 font-bold uppercase">OUVIR</span>
+                        </button>
+                        <p class="text-xs font-bold text-slate-400">Clique para escutar o áudio do ditado</p>
+                    </div>
+                    <div class="w-full max-w-md bg-white border border-indigo-100 p-3 rounded-2xl shadow-inner min-h-[50px] flex flex-wrap gap-2 items-center justify-center" id="pd-constructed-slots"></div>
+                    <div class="flex flex-wrap gap-2.5 justify-center max-w-md" id="pd-source-words"></div>
+                </div>
+            </div>
+
+            <!-- SCREEN 17: GAME - SINÓNIMOS & ANTÓNIMOS (NEW) -->
+            <div id="screen-syn-ant" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-emerald-600">🔄 SINÓNIMOS & ANTÓNIMOS</h2>
+                        <span id="sa-instruction" class="bg-emerald-100 text-emerald-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Qual é o antónimo de...?</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Rodada: <span id="sa-progress" class="text-emerald-600">1/4</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col items-center justify-center my-4 gap-6">
+                    <div class="bg-emerald-50 border-2 border-emerald-200 p-5 rounded-3xl text-center max-w-sm w-full shadow-md animate-bounce-slow">
+                        <span id="sa-category" class="bg-emerald-600 text-white font-bold text-[10px] px-3 py-1 rounded-full uppercase tracking-wider">Antónimo</span>
+                        <h3 id="sa-word-text" class="font-playful text-3xl text-emerald-800 uppercase tracking-widest mt-2">GRANDE</h3>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full max-w-md" id="sa-choices"></div>
+                </div>
+            </div>
+
+            <!-- SCREEN 18: GAME - PLURAL & SINGULAR (NEW) -->
+            <div id="screen-plural-singular" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-lime-600">👥 PLURAL & SINGULAR</h2>
+                        <span class="bg-lime-100 text-lime-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">A grafia está no singular ou plural?</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Progresso: <span id="ps-progress" class="text-lime-600">1/4</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col items-center justify-center my-4 gap-5">
+                    <div class="bg-lime-50 border-4 border-lime-200 p-4 rounded-3xl text-center max-w-sm w-full shadow-lg">
+                        <span id="ps-emoji" class="text-7xl">🐱🐱</span>
+                        <h3 id="ps-word-display" class="font-playful text-2xl text-lime-800 uppercase tracking-widest mt-3">GATOS</h3>
+                    </div>
+                    <div class="flex gap-4 justify-center w-full max-w-xs">
+                        <button onclick="checkPluralSingular('singular')" class="bg-white border-4 border-lime-300 hover:border-lime-500 font-playful text-lime-800 px-6 py-3 rounded-2xl shadow-md text-base hover:bg-lime-50 active:scale-95 transition-all w-1/2">SINGULAR</button>
+                        <button onclick="checkPluralSingular('plural')" class="bg-white border-4 border-lime-300 hover:border-lime-500 font-playful text-lime-800 px-6 py-3 rounded-2xl shadow-md text-base hover:bg-lime-50 active:scale-95 transition-all w-1/2">PLURAL</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 19: GAME - ARTIGOS DEFINIDOS (NEW) -->
+            <div id="screen-articles" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-teal-600">🏷️ ARTIGOS DEFINIDOS</h2>
+                        <span class="bg-teal-100 text-teal-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Qual artigo encaixa melhor no espaço?</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Pergunta: <span id="ar-progress" class="text-teal-600">1/4</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col items-center justify-center my-4 gap-6">
+                    <div class="bg-teal-50 border-2 border-teal-200 p-5 rounded-3xl text-center max-w-sm w-full shadow-md flex flex-col items-center">
+                        <span id="ar-emoji" class="text-6xl mb-2">🦖</span>
+                        <h3 class="font-playful text-2xl text-teal-800 uppercase tracking-widest">
+                            <span class="border-b-4 border-dashed border-teal-500 text-teal-600 px-3 mr-1" id="ar-blank-slot">___</span>
+                            <span id="ar-word-text">Dinossauro</span>
+                        </h3>
+                    </div>
+                    <div class="grid grid-cols-4 gap-2 w-full max-w-md" id="ar-choices"></div>
+                </div>
+            </div>
+
+            <!-- SCREEN 20: GAME - SINAIS DE PONTUAÇÃO (NEW) -->
+            <div id="screen-punctuation" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-indigo-600">💬 SINAIS DE PONTUAÇÃO</h2>
+                        <span class="bg-indigo-100 text-indigo-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Selecione o sinal correto para a frase:</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Pergunta: <span id="pn-progress" class="text-indigo-600">1/4</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col items-center justify-center my-4 gap-6">
+                    <div class="bg-indigo-50 border-2 border-indigo-200 p-6 rounded-3xl text-center max-w-md w-full shadow-md flex flex-col items-center gap-2">
+                        <span id="pn-emoji" class="text-5xl mb-1">🎁</span>
+                        <h3 class="font-playful text-xl text-indigo-800 leading-relaxed">
+                            <span id="pn-sentence-text">Gostas deste brinquedo</span>
+                            <span class="bg-indigo-200 text-indigo-900 border-b-2 border-indigo-500 px-3.5 py-0.5 rounded-lg inline-block ml-1 font-bold" id="pn-sign-slot">?</span>
+                        </h3>
+                    </div>
+                    <div class="flex gap-4 justify-center" id="pn-choices"></div>
+                </div>
+            </div>
+
+            <!-- SCREEN 21: GAME - ROLETA DE IMAGENS QUIZ (NEW) -->
+            <div id="screen-wheel-quiz" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="text-xs font-bold text-slate-500 hover:text-red-500 flex items-center gap-1 transition-colors">
+                        <i class="fas fa-chevron-left"></i> Sair
+                    </button>
+                    <div class="text-center">
+                        <h2 class="font-playful text-lg text-yellow-600">🎡 ROLETA DE IMAGENS QUIZ</h2>
+                        <span class="bg-yellow-100 text-yellow-700 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Gire a roleta para sortear a sua pergunta!</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-xs">
+                        <div>Sorteios: <span id="wq-rounds" class="text-yellow-600">0/3</span></div>
+                    </div>
+                </div>
+                <div class="flex-grow flex flex-col md:flex-row items-center justify-center my-3 gap-6 relative">
+                    <!-- Spinning Wheel Container -->
+                    <div class="flex flex-col items-center justify-center relative">
+                        <!-- Red Pointer Arrow pointing down to the canvas wheel top center -->
+                        <div class="absolute top-[-10px] text-2xl text-red-500 animate-bounce z-20">▼</div>
+                        <canvas id="wq-wheel-canvas" width="220" height="220" class="rounded-full shadow-lg border-4 border-yellow-400 bg-white transition-all duration-[3000ms] cubic-bezier(0.25, 1, 0.5, 1)"></canvas>
+                        <button id="wq-spin-btn" onclick="spinTheWheel()" class="mt-4 bg-yellow-500 hover:bg-yellow-600 text-white font-playful font-bold py-2 px-6 rounded-full shadow-md border-b-4 border-yellow-800 hover:scale-105 active:scale-95 transition-all text-sm">GIRAR ROLETA!</button>
+                    </div>
+
+                    <!-- Side Quiz Pop-up inside Game Screen (Hidden initially, shown after Wheel halts) -->
+                    <div id="wq-quiz-panel" class="hidden bg-white border-4 border-yellow-400 p-4 rounded-3xl shadow-xl max-w-xs w-full text-center flex flex-col items-center">
+                        <span class="text-5xl" id="wq-quiz-emoji">🍎</span>
+                        <p class="font-bold text-slate-700 mt-2 text-sm">Qual é a escrita correta?</p>
+                        <div class="flex flex-col gap-2 mt-3 w-full" id="wq-quiz-choices"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SCREEN 22: GENERAL GAME OVER / REWARD FEEDBACK -->
+            <div id="screen-feedback" class="hidden flex-col items-center justify-center text-center flex-grow py-4">
+                <div id="feedback-icon" class="text-7xl mb-2 animate-bounce-slow">🎉</div>
+                <h2 id="feedback-title" class="font-playful text-2xl text-sky-800 mb-1">Muito Bem!</h2>
+                <p id="feedback-msg" class="text-slate-600 text-sm font-semibold max-w-md mb-4">Você superou o teste de aprendizagem das letras!</p>
+                <div class="bg-slate-50 border-2 border-slate-100 rounded-xl p-3 w-60 shadow-md mb-6 flex justify-around items-center">
+                    <div>
+                        <span class="block text-[9px] font-bold text-slate-400 uppercase">Resultado</span>
+                        <span id="feedback-score" class="text-lg font-bold text-sky-700">0</span>
+                    </div>
+                    <div class="w-px h-8 bg-slate-200"></div>
+                    <div>
+                        <span class="block text-[9px] font-bold text-slate-400 uppercase">Estrelas</span>
+                        <span id="feedback-stars" class="text-lg font-bold text-amber-500">⭐ +0</span>
+                    </div>
+                </div>
+                <div class="flex gap-3">
+                    <button onclick="backToLobby()" class="bg-slate-500 hover:bg-slate-600 text-white font-bold py-2 px-5 rounded-full shadow-md text-xs hover:scale-105 active:scale-95 transition-all">
+                        <i class="fas fa-home mr-1"></i> Início
+                    </button>
+                    <button id="btn-replay" class="bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-2 px-5 rounded-full shadow-md text-xs hover:scale-105 active:scale-95 transition-all">
+                        <i class="fas fa-redo mr-1"></i> Jogar de Novo
+                    </button>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- GENERAL VISUAL FOOTER -->
+    <footer class="w-full text-center py-2 text-xs font-bold text-sky-700/80 z-10 relative bg-sky-100/50">
+        <span>Educação e Diversão • Hub Sequencial Completo de Alfabetização do 1º Ano</span>
+    </footer>
+
+    <script>
+        // ----------------- WEB AUDIO API AUDIO SYNTHESISER -----------------
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let isMuted = false;
+
+        function playSound(type) {
+            if (isMuted) return;
+            try {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                const now = audioCtx.currentTime;
+
+                switch(type) {
+                    case 'click':
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(500, now);
+                        osc.frequency.exponentialRampToValueAtTime(100, now + 0.1);
+                        gain.gain.setValueAtTime(0.2, now);
+                        gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
+                        osc.start(now);
+                        osc.stop(now + 0.1);
+                        break;
+                    case 'correct':
+                        osc.type = 'triangle';
+                        osc.frequency.setValueAtTime(400, now);
+                        osc.frequency.setValueAtTime(600, now + 0.08);
+                        osc.frequency.setValueAtTime(800, now + 0.16);
+                        gain.gain.setValueAtTime(0.3, now);
+                        gain.gain.linearRampToValueAtTime(0.01, now + 0.3);
+                        osc.start(now);
+                        osc.stop(now + 0.3);
+                        break;
+                    case 'wrong':
+                        osc.type = 'sawtooth';
+                        osc.frequency.setValueAtTime(150, now);
+                        osc.frequency.linearRampToValueAtTime(60, now + 0.25);
+                        gain.gain.setValueAtTime(0.2, now);
+                        gain.gain.linearRampToValueAtTime(0.01, now + 0.25);
+                        osc.start(now);
+                        osc.stop(now + 0.25);
+                        break;
+                    case 'pop':
+                        osc.type = 'sine';
+                        osc.frequency.setValueAtTime(90, now);
+                        osc.frequency.exponentialRampToValueAtTime(1000, now + 0.1);
+                        gain.gain.setValueAtTime(0.4, now);
+                        gain.gain.linearRampToValueAtTime(0.01, now + 0.1);
+                        osc.start(now);
+                        osc.stop(now + 0.1);
+                        break;
+                    case 'victory':
+                        const notes = [523.25, 659.25, 783.99, 1046.50];
+                        notes.forEach((freq, idx) => {
+                            const o = audioCtx.createOscillator();
+                            const g = audioCtx.createGain();
+                            o.type = 'triangle';
+                            o.connect(g);
+                            g.connect(audioCtx.destination);
+                            o.frequency.setValueAtTime(freq, now + idx * 0.1);
+                            g.gain.setValueAtTime(0.2, now + idx * 0.1);
+                            g.gain.linearRampToValueAtTime(0.01, now + idx * 0.1 + 0.4);
+                            o.start(now + idx * 0.1);
+                            o.stop(now + idx * 0.1 + 0.5);
+                        });
+                        break;
+                }
+            } catch (err) {
+                console.warn(err);
+            }
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            const icon = document.getElementById('sound-icon');
+            if (isMuted) {
+                icon.className = 'fas fa-volume-mute text-red-500';
+            } else {
+                icon.className = 'fas fa-volume-up';
+                playSound('click');
+            }
+        }
+
+        // Global Stars system
+        let globalStars = parseInt(localStorage.getItem('alfabeto_stars_prog')) || 0;
+        document.getElementById('star-counter').innerText = globalStars;
+
+        function addStars(amount) {
+            globalStars += amount;
+            localStorage.setItem('alfabeto_stars_prog', globalStars);
+            document.getElementById('star-counter').innerText = globalStars;
+            const starCont = document.getElementById('star-counter').parentElement;
+            starCont.classList.add('scale-110');
+            setTimeout(() => starCont.classList.remove('scale-110'), 200);
+        }
+
+        // Navigation state controllers
+        let activeTimer = null;
+        let activeIntervals = [];
+
+        function clearAllIntervals() {
+            activeIntervals.forEach(clearInterval);
+            activeIntervals = [];
+            if (activeTimer) {
+                clearInterval(activeTimer);
+                activeTimer = null;
+            }
+        }
+
+        function showScreen(screenId) {
+            playSound('click');
+            const screens = [
+                'screen-lobby', 'screen-balloon-pop', 'screen-first-letter', 
+                'screen-whack-mole', 'screen-open-box', 'screen-match-up', 
+                'screen-quiz', 'screen-anagram', 'screen-word-search', 
+                'screen-group-sort', 'screen-crossword', 'screen-letter-train',
+                'screen-order-syllables', 'screen-count-syllables', 'screen-write-phrase',
+                'screen-phrase-dictation', 'screen-syn-ant', 'screen-plural-singular',
+                'screen-articles', 'screen-punctuation', 'screen-wheel-quiz', 'screen-feedback'
+            ];
+            screens.forEach(id => {
+                const el = document.getElementById(id);
+                if (el) {
+                    el.classList.add('hidden');
+                    el.classList.remove('flex');
+                }
+            });
+            const activeScreen = document.getElementById(screenId);
+            if (activeScreen) {
+                activeScreen.classList.remove('hidden');
+                activeScreen.classList.add('flex');
+            }
+        }
+
+        function backToLobby() {
+            clearAllIntervals();
+            showScreen('screen-lobby');
+        }
+
+        // ----------------- GAME 1: BALLOON POP -----------------
+        let bpScore = 0;
+        let bpTotalTime = 30;
+        let bpTarget = 'A';
+        const bpItems = [
+            { char: 'A', name: 'Abacaxi', icon: '🍍', isTarget: true },
+            { char: 'A', name: 'Anel', icon: '💍', isTarget: true },
+            { char: 'A', name: 'Abelha', icon: '🐝', isTarget: true },
+            { char: 'A', name: 'Avião', icon: '✈️', isTarget: true },
+            { char: 'B', name: 'Bola', icon: '⚽', isTarget: false },
+            { char: 'B', name: 'Banana', icon: '🍌', isTarget: false },
+            { char: 'C', name: 'Carro', icon: '🚗', isTarget: false },
+            { char: 'E', name: 'Estrela', icon: '⭐', isTarget: false },
+            { char: 'I', name: 'Igreja', icon: '⛪', isTarget: false },
+            { char: 'O', name: 'Ônibus', icon: '🚌', isTarget: false },
+            { char: 'U', name: 'Uva', icon: '🍇', isTarget: false }
+        ];
+
+        function startBalloonPop() {
+            showScreen('screen-balloon-pop');
+            bpScore = 0;
+            bpTotalTime = 30;
+            const targets = ['A', 'E', 'I', 'O', 'U'];
+            bpTarget = targets[Math.floor(Math.random() * targets.length)];
+            
+            bpItems.forEach(item => { item.isTarget = (item.char === bpTarget); });
+            document.getElementById('bp-target-letter').innerText = bpTarget;
+            document.getElementById('bp-instruction').innerText = `Estoure desenhos que comecem com "${bpTarget}"!`;
+            document.getElementById('bp-score').innerText = `0/5`;
+            document.getElementById('bp-timer').innerText = `${bpTotalTime}s`;
+
+            const arena = document.getElementById('bp-arena');
+            arena.querySelectorAll('.balloon-element').forEach(el => el.remove());
+
+            const spawnInterval = setInterval(spawnBalloon, 1200);
+            activeIntervals.push(spawnInterval);
+
+            activeTimer = setInterval(() => {
+                bpTotalTime--;
+                document.getElementById('bp-timer').innerText = `${bpTotalTime}s`;
+                if (bpTotalTime <= 0) endBalloonPop(false);
+            }, 1000);
+        }
+
+        function spawnBalloon() {
+            const arena = document.getElementById('bp-arena');
+            if (!arena) return;
+            const randomItem = bpItems[Math.floor(Math.random() * bpItems.length)];
+            const balloon = document.createElement('div');
+            balloon.className = "balloon-element absolute cursor-pointer select-none transition-all flex flex-col items-center justify-center p-2 text-center z-10";
+            
+            const colors = [
+                { bg: 'bg-red-400', border: 'border-red-500' },
+                { bg: 'bg-pink-400', border: 'border-pink-500' },
+                { bg: 'bg-sky-400', border: 'border-sky-500' },
+                { bg: 'bg-yellow-400', border: 'border-yellow-500' },
+                { bg: 'bg-purple-400', border: 'border-purple-500' }
+            ];
+            const choice = colors[Math.floor(Math.random() * colors.length)];
+            
+            balloon.innerHTML = `
+                <div class="relative flex flex-col items-center justify-center">
+                    <div class="w-14 h-16 ${choice.bg} border-2 ${choice.border} rounded-full flex flex-col items-center justify-center shadow-md text-white">
+                        <span class="text-xl">${randomItem.icon}</span>
+                        <span class="text-[8px] font-bold uppercase tracking-wide">${randomItem.name}</span>
+                    </div>
+                    <div class="w-1.5 h-1.5 ${choice.bg} -mt-1 rounded-sm rotate-45"></div>
+                    <div class="w-0.5 h-6 bg-slate-400/50 rounded-full"></div>
+                </div>
+            `;
+
+            const maxW = arena.clientWidth - 80;
+            balloon.style.left = `${Math.floor(Math.random() * maxW)}px`;
+            balloon.style.bottom = `-80px`;
+            arena.appendChild(balloon);
+
+            let currentBottom = -80;
+            const floatSpeed = 1.3 + Math.random() * 1.5;
+
+            const balloonInterval = setInterval(() => {
+                currentBottom += floatSpeed;
+                balloon.style.bottom = `${currentBottom}px`;
+                if (currentBottom > arena.clientHeight) {
+                    clearInterval(balloonInterval);
+                    balloon.remove();
+                }
+            }, 25);
+            activeIntervals.push(balloonInterval);
+
+            const popHandler = (e) => {
+                e.preventDefault();
+                popBalloon(balloon, randomItem, balloonInterval);
+            };
+            balloon.addEventListener('mousedown', popHandler);
+            balloon.addEventListener('touchstart', popHandler);
+        }
+
+        function popBalloon(element, item, intervalId) {
+            playSound('pop');
+            clearInterval(intervalId);
+            element.innerHTML = `<span class="text-3xl animate-ping">💥</span>`;
+            setTimeout(() => element.remove(), 120);
+
+            if (item.isTarget) {
+                bpScore++;
+                playSound('correct');
+                document.getElementById('bp-score').innerText = `${bpScore}/5`;
+                if (bpScore >= 5) endBalloonPop(true);
+            } else {
+                playSound('wrong');
+                bpScore = Math.max(0, bpScore - 1);
+                document.getElementById('bp-score').innerText = `${bpScore}/5`;
+            }
+        }
+
+        function endBalloonPop(isVictory) {
+            clearAllIntervals();
+            const starsWon = isVictory ? 5 : 1;
+            addStars(starsWon);
+            
+            document.getElementById('feedback-title').innerText = isVictory ? "Parabéns! Excelente Trabalho!" : "Tempo Esgotado!";
+            document.getElementById('feedback-msg').innerText = isVictory ? 
+                `Você conseguiu estourar os balões com a Letra "${bpTarget}"!` : 
+                "Pratique mais um pouco e tente voar alto!";
+            document.getElementById('feedback-score').innerText = `${bpScore} Balões`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "🎈";
+
+            document.getElementById('btn-replay').onclick = startBalloonPop;
+            showScreen('screen-feedback');
+            if (isVictory) {
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+                playSound('victory');
+            }
+        }
+
+        // ----------------- GAME 2: ESCREVER A 1ª LETRA -----------------
+        let flIndex = 0;
+        let flScore = 0;
+        const flPool = [
+            { emoji: '🍎', letter: 'M', word: '_ A Ç Ã' },
+            { emoji: '⚽', letter: 'B', word: '_ O L A' },
+            { emoji: '🐱', letter: 'G', word: '_ A T O' },
+            { emoji: '🚗', letter: 'C', word: '_ A R R O' },
+            { emoji: '🦆', letter: 'P', word: '_ A T O' },
+            { emoji: '🍇', letter: 'U', word: '_ V A' },
+            { emoji: '🦕', letter: 'D', word: '_ I N O' },
+            { emoji: '⭐', letter: 'E', word: '_ S T R E L A' }
+        ];
+        let flCurrentRound = [];
+
+        function startFirstLetterGame() {
+            showScreen('screen-first-letter');
+            flIndex = 0;
+            flScore = 0;
+            flCurrentRound = [...flPool].sort(() => 0.5 - Math.random()).slice(0, 5);
+            setupFlKeyboard();
+            showFlQuestion();
+        }
+
+        function setupFlKeyboard() {
+            const container = document.getElementById('fl-alphabet-kb');
+            container.innerHTML = '';
+            const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+            alphabet.forEach(letter => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white border-2 border-rose-300 hover:border-rose-500 font-playful p-2 rounded-xl text-center text-rose-700 shadow-sm text-base hover:bg-rose-50 active:scale-95 transition-all";
+                btn.innerText = letter;
+                btn.onclick = () => checkFlAnswer(letter, btn);
+                container.appendChild(btn);
+            });
+        }
+
+        function showFlQuestion() {
+            if (flIndex >= 5) {
+                endFlGame(true);
+                return;
+            }
+            document.getElementById('fl-progress').innerText = `${flIndex + 1}/5`;
+            document.getElementById('fl-score').innerText = flScore;
+            
+            const current = flCurrentRound[flIndex];
+            document.getElementById('fl-emoji').innerText = current.emoji;
+            document.getElementById('fl-name-hint').innerText = current.word;
+            
+            document.querySelectorAll('#fl-alphabet-kb > button').forEach(btn => {
+                btn.className = "bg-white border-2 border-rose-300 hover:border-rose-500 font-playful p-2 rounded-xl text-center text-rose-700 shadow-sm text-base hover:bg-rose-50 active:scale-95 transition-all";
+                btn.disabled = false;
+            });
+        }
+
+        function checkFlAnswer(letter, btnElement) {
+            const correctLetter = flCurrentRound[flIndex].letter;
+            if (letter === correctLetter) {
+                playSound('correct');
+                btnElement.className = "bg-emerald-500 text-white border-2 border-emerald-600 font-playful p-2 rounded-xl text-center text-base shadow-md";
+                flScore += 10;
+                flIndex++;
+                setTimeout(showFlQuestion, 1000);
+            } else {
+                playSound('wrong');
+                btnElement.className = "bg-red-500 text-white border-2 border-red-600 font-playful p-2 rounded-xl text-center text-base shadow-md animate-shake";
+                btnElement.disabled = true;
+            }
+        }
+
+        function endFlGame(isVictory) {
+            const starsWon = flScore >= 40 ? 5 : (flScore >= 20 ? 3 : 1);
+            addStars(starsWon);
+            
+            document.getElementById('feedback-title').innerText = flScore >= 40 ? "Escritor Nota 10!" : "Bom esforço!";
+            document.getElementById('feedback-msg').innerText = `Você acertou as letras iniciais e acumulou ${flScore} pontos na Fase 1.`;
+            document.getElementById('feedback-score').innerText = `${flScore} Pts`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "✏️";
+
+            document.getElementById('btn-replay').onclick = startFirstLetterGame;
+            showScreen('screen-feedback');
+            if (flScore >= 40) {
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+                playSound('victory');
+            }
+        }
+
+        // ----------------- GAME 3: TOUPEIRA DAS LETRAS -----------------
+        let wmScore = 0;
+        let wmTotalTime = 30;
+        let wmMode = 'vogais';
+        const wmLetters = [
+            { char: 'A', isVowel: true }, { char: 'E', isVowel: true }, { char: 'I', isVowel: true },
+            { char: 'O', isVowel: true }, { char: 'U', isVowel: true }, { char: 'B', isVowel: false },
+            { char: 'C', isVowel: false }, { char: 'D', isVowel: false }, { char: 'F', isVowel: false },
+            { char: 'G', isVowel: false }, { char: 'M', isVowel: false }, { char: 'P', isVowel: false }
+        ];
+
+        function startWhackMole() {
+            showScreen('screen-whack-mole');
+            wmScore = 0;
+            wmTotalTime = 30;
+            wmMode = Math.random() > 0.5 ? 'vogais' : 'consoantes';
+
+            document.getElementById('wm-instruction').innerText = wmMode === 'vogais' ? "Bata apenas nas VOGAIS!" : "Bata apenas nas CONSOANTES!";
+            document.getElementById('wm-score').innerText = `0`;
+            document.getElementById('wm-timer').innerText = `${wmTotalTime}s`;
+
+            const grid = document.getElementById('wm-grid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < 6; i++) {
+                const hole = document.createElement('div');
+                hole.className = "relative h-24 bg-amber-900 border-b-4 border-amber-950 rounded-t-full shadow-inner overflow-hidden flex items-end justify-center";
+                hole.innerHTML = `
+                    <div id="mole-${i}" class="absolute bottom-[-100%] w-16 h-20 bg-amber-600 rounded-t-full border border-amber-500 transition-all duration-300 flex flex-col items-center justify-start pt-1 shadow-md cursor-pointer">
+                        <div class="flex gap-1.5 mb-1 mt-1">
+                            <span class="w-1.5 h-1.5 bg-slate-900 rounded-full"></span>
+                            <span class="w-1.5 h-1.5 bg-slate-900 rounded-full"></span>
+                        </div>
+                        <div class="bg-white px-1.5 py-0.5 rounded border border-slate-300 font-playful text-amber-900 text-sm shadow-sm w-10 text-center" id="mole-letter-${i}">A</div>
+                    </div>
+                `;
+                grid.appendChild(hole);
+            }
+
+            const moleInterval = setInterval(activeMoleRoutine, 1100);
+            activeIntervals.push(moleInterval);
+
+            activeTimer = setInterval(() => {
+                wmTotalTime--;
+                document.getElementById('wm-timer').innerText = `${wmTotalTime}s`;
+                if (wmTotalTime <= 0) endWhackMole();
+            }, 1000);
+        }
+
+        function activeMoleRoutine() {
+            const randomHoleIdx = Math.floor(Math.random() * 6);
+            const mole = document.getElementById(`mole-${randomHoleIdx}`);
+            if (!mole || mole.classList.contains('up')) return;
+
+            const letterData = wmLetters[Math.floor(Math.random() * wmLetters.length)];
+            const letterLabel = document.getElementById(`mole-letter-${randomHoleIdx}`);
+            letterLabel.innerText = letterData.char;
+            
+            mole.setAttribute('data-correct', (wmMode === 'vogais' && letterData.isVowel) || (wmMode === 'consoantes' && !letterData.isVowel));
+            mole.style.bottom = '0%';
+            mole.classList.add('up');
+
+            const whackHandler = (e) => {
+                e.preventDefault();
+                whackMole(mole, randomHoleIdx);
+            };
+            mole.onmousedown = whackHandler;
+            mole.ontouchstart = whackHandler;
+
+            const hideTimeout = setTimeout(() => {
+                if (mole.classList.contains('up')) {
+                    mole.style.bottom = '-100%';
+                    mole.classList.remove('up');
+                    mole.onmousedown = null;
+                    mole.ontouchstart = null;
+                }
+            }, 1300);
+            activeIntervals.push(hideTimeout);
+        }
+
+        function whackMole(moleElement, index) {
+            if (!moleElement.classList.contains('up')) return;
+            const isCorrect = moleElement.getAttribute('data-correct') === 'true';
+            moleElement.style.bottom = '-100%';
+            moleElement.classList.remove('up');
+            moleElement.onmousedown = null;
+            moleElement.ontouchstart = null;
+
+            if (isCorrect) {
+                playSound('correct');
+                wmScore += 10;
+                document.getElementById('wm-score').innerText = wmScore;
+            } else {
+                playSound('wrong');
+                wmScore = Math.max(0, wmScore - 5);
+                document.getElementById('wm-score').innerText = wmScore;
+            }
+        }
+
+        function endWhackMole() {
+            clearAllIntervals();
+            const starsWon = wmScore >= 40 ? 5 : (wmScore >= 20 ? 3 : 1);
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = wmScore >= 40 ? "Agilidade Suprema!" : "Muito bem!";
+            document.getElementById('feedback-msg').innerText = `Você atingiu ${wmScore} pontos na Toupeira das Letras!`;
+            document.getElementById('feedback-score').innerText = `${wmScore} Pts`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "🐹";
+
+            document.getElementById('btn-replay').onclick = startWhackMole;
+            showScreen('screen-feedback');
+            if (wmScore >= 40) {
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+                playSound('victory');
+            }
+        }
+
+        // ----------------- GAME 4: ABRE A CAIXA QUIZ -----------------
+        let obOpenedCount = 0;
+        let obBoxSelectedNode = null;
+        
+        const obPool = [
+            { icon: '🦁', prompt: 'Qual é a primeira letra de LEÃO?', choices: ['L', 'M', 'G'], correct: 'L' },
+            { icon: '🐸', prompt: 'Quantas sílabas tem a palavra SAPO?', choices: ['1', '2', '3'], correct: '2' },
+            { icon: '🍌', prompt: 'Qual é a última letra da palavra BANANA?', choices: ['O', 'A', 'E'], correct: 'A' }
+        ];
+        let obCurrentSet = [];
+
+        function startOpenBoxGame() {
+            showScreen('screen-open-box');
+            obOpenedCount = 0;
+            obCurrentSet = [...obPool].sort(() => 0.5 - Math.random()).slice(0, 3);
+            document.getElementById('ob-count').innerText = `0/3`;
+            
+            const grid = document.getElementById('ob-boxes-grid');
+            grid.innerHTML = '';
+            
+            for (let i = 0; i < 3; i++) {
+                const box = document.createElement('div');
+                box.id = `ob-box-${i}`;
+                box.className = "bg-amber-500 border-b-4 border-amber-700 text-white rounded-2xl p-6 text-center cursor-pointer hover:scale-105 active:scale-95 transition-all flex flex-col items-center justify-center gap-2 shadow-lg";
+                box.innerHTML = `
+                    <span class="text-4xl text-amber-100">🎁</span>
+                    <span class="font-playful text-sm">CAIXA ${i + 1}</span>
+                `;
+                box.onclick = () => triggerOpenBox(i, box);
+                grid.appendChild(box);
+            }
+        }
+
+        function triggerOpenBox(index, element) {
+            playSound('click');
+            obBoxSelectedNode = element;
+            const currentQuestion = obCurrentSet[index];
+            
+            document.getElementById('ob-popup-icon').innerText = currentQuestion.icon;
+            document.getElementById('ob-popup-prompt').innerText = currentQuestion.prompt;
+            
+            const choicesBox = document.getElementById('ob-quiz-choices');
+            choicesBox.innerHTML = '';
+            
+            currentQuestion.choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white border-2 border-amber-300 hover:border-amber-500 text-slate-800 font-bold p-3 rounded-xl shadow-md text-sm hover:bg-amber-50 active:scale-95 transition-all";
+                btn.innerText = choice;
+                btn.onclick = () => selectOpenBoxAnswer(choice, currentQuestion.correct);
+                choicesBox.appendChild(btn);
+            });
+            
+            document.getElementById('ob-popup').classList.remove('hidden');
+        }
+
+        function selectOpenBoxAnswer(choice, correct) {
+            document.getElementById('ob-popup').classList.add('hidden');
+            if (!obBoxSelectedNode) return;
+            
+            obBoxSelectedNode.onclick = null;
+            
+            if (choice === correct) {
+                playSound('correct');
+                obBoxSelectedNode.className = "bg-emerald-100 border-2 border-emerald-400 text-emerald-800 rounded-2xl p-6 text-center pointer-events-none flex flex-col items-center justify-center gap-1 shadow-inner";
+                obBoxSelectedNode.innerHTML = `
+                    <span class="text-3xl">✅</span>
+                    <span class="font-semibold text-xs">Acertou!</span>
+                `;
+                obOpenedCount++;
+            } else {
+                playSound('wrong');
+                obBoxSelectedNode.className = "bg-red-100 border-2 border-red-300 text-red-800 rounded-2xl p-6 text-center pointer-events-none flex flex-col items-center justify-center gap-1 shadow-inner";
+                obBoxSelectedNode.innerHTML = `
+                    <span class="text-3xl">❌</span>
+                    <span class="font-semibold text-xs">Errou!</span>
+                `;
+            }
+            
+            document.getElementById('ob-count').innerText = `${obOpenedCount}/3`;
+            
+            const openedAll = document.querySelectorAll('#ob-boxes-grid > div.pointer-events-none').length;
+            if (openedAll >= 3) {
+                setTimeout(endOpenBoxGame, 1200);
+            }
+        }
+
+        function endOpenBoxGame() {
+            const starsWon = obOpenedCount >= 2 ? 5 : 2;
+            addStars(starsWon);
+            
+            document.getElementById('feedback-title').innerText = obOpenedCount === 3 ? "Detetive de Caixas!" : "Bom Trabalho!";
+            document.getElementById('feedback-msg').innerText = `Você abriu e resolveu ${obOpenedCount} mistérios das caixas corretamente!`;
+            document.getElementById('feedback-score').innerText = `${obOpenedCount}/3 Acertos`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "🎁";
+
+            document.getElementById('btn-replay').onclick = startOpenBoxGame;
+            showScreen('screen-feedback');
+            if (obOpenedCount === 3) {
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+                playSound('victory');
+            }
+        }
+
+        // ----------------- GAME 5: COMBINAÇÃO MÁGICA -----------------
+        let selectedLetterCard = null;
+        let muScore = 0;
+        const alphabetMatchPool = [
+            { letter: 'B', emoji: '🍌', text: 'Banana' },
+            { letter: 'C', emoji: '🚗', text: 'Carro' },
+            { letter: 'D', emoji: '🎲', text: 'Dado' },
+            { letter: 'E', emoji: '🐘', text: 'Elefante' },
+            { letter: 'G', emoji: '🐱', text: 'Gato' },
+            { letter: 'J', emoji: '🐊', text: 'Jacaré' },
+            { letter: 'L', emoji: '🦁', text: 'Leão' },
+            { letter: 'M', emoji: '🐒', text: 'Macaco' },
+            { letter: 'P', emoji: '🦆', text: 'Pato' },
+            { letter: 'S', emoji: '🐸', text: 'Sapo' }
+        ];
+
+        function startMatchUp() {
+            showScreen('screen-match-up');
+            muScore = 0;
+            selectedLetterCard = null;
+            document.getElementById('mu-score').innerText = `0/4`;
+
+            const shuffledPool = [...alphabetMatchPool].sort(() => 0.5 - Math.random());
+            const selectedPairs = shuffledPool.slice(0, 4);
+
+            const leftLetters = selectedPairs.map((p, idx) => ({ letter: p.letter, index: idx })).sort(() => 0.5 - Math.random());
+            const rightObjects = selectedPairs.map((p, idx) => ({ emoji: p.emoji, text: p.text, index: idx })).sort(() => 0.5 - Math.random());
+
+            const lettersCol = document.getElementById('mu-letters-col');
+            lettersCol.innerHTML = '';
+            leftLetters.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white border-2 border-blue-200 hover:border-blue-400 p-2.5 rounded-xl shadow-sm text-center cursor-pointer transition-all hover:scale-[1.01] flex justify-between items-center";
+                card.id = `mu-letter-${item.index}`;
+                card.setAttribute('data-pair-idx', item.index);
+                card.innerHTML = `
+                    <span class="font-playful text-xl text-blue-600">${item.letter}</span>
+                    <span class="text-[8px] bg-blue-50 px-2 py-0.5 rounded text-blue-500 font-bold uppercase">Letra</span>
+                `;
+                card.onclick = () => selectLetter(card);
+                lettersCol.appendChild(card);
+            });
+
+            const imagesCol = document.getElementById('mu-images-col');
+            imagesCol.innerHTML = '';
+            rightObjects.forEach(item => {
+                const card = document.createElement('div');
+                card.className = "bg-white border-2 border-blue-200 hover:border-blue-400 p-2 rounded-xl shadow-sm text-center cursor-pointer transition-all hover:scale-[1.01] flex items-center gap-2";
+                card.id = `mu-obj-${item.index}`;
+                card.setAttribute('data-pair-idx', item.index);
+                card.innerHTML = `
+                    <span class="text-2xl">${item.emoji}</span>
+                    <span class="font-bold text-slate-700 capitalize text-xs">${item.text}</span>
+                `;
+                card.onclick = () => selectObject(card);
+                imagesCol.appendChild(card);
+            });
+        }
+
+        function selectLetter(element) {
+            playSound('click');
+            document.querySelectorAll('#mu-letters-col > div').forEach(c => {
+                c.classList.remove('ring-4', 'ring-blue-500', 'bg-blue-50');
+            });
+            selectedLetterCard = element;
+            element.classList.add('ring-4', 'ring-blue-500', 'bg-blue-50');
+        }
+
+        function selectObject(element) {
+            if (!selectedLetterCard) {
+                playSound('wrong');
+                element.classList.add('animate-shake');
+                setTimeout(() => element.classList.remove('animate-shake'), 300);
+                return;
+            }
+            const letterPairIdx = selectedLetterCard.getAttribute('data-pair-idx');
+            const objectPairIdx = element.getAttribute('data-pair-idx');
+
+            if (letterPairIdx === objectPairIdx) {
+                playSound('correct');
+                muScore++;
+                document.getElementById('mu-score').innerText = `${muScore}/4`;
+
+                selectedLetterCard.className = "bg-emerald-100 border-2 border-emerald-400 p-2.5 rounded-xl shadow-inner text-center pointer-events-none flex justify-between items-center text-emerald-800";
+                element.className = "bg-emerald-100 border-2 border-emerald-400 p-2 rounded-xl shadow-inner text-center pointer-events-none flex items-center gap-2 text-emerald-800";
+
+                selectedLetterCard = null;
+                if (muScore === 4) {
+                    setTimeout(() => endMatchUp(true), 1200);
+                }
+            } else {
+                playSound('wrong');
+                element.classList.add('bg-red-50', 'border-red-400');
+                selectedLetterCard.classList.add('bg-red-50', 'border-red-400');
+                
+                setTimeout(() => {
+                    element.classList.remove('bg-red-50', 'border-red-400');
+                    if (selectedLetterCard) selectedLetterCard.classList.remove('bg-red-50', 'border-red-400');
+                }, 800);
+            }
+        }
+
+        function endMatchUp(isVictory) {
+            clearAllIntervals();
+            const starsWon = 5;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = "Ligação Perfeita!";
+            document.getElementById('feedback-msg').innerText = "Você tem uma memória fantástica e associou todas as letras!";
+            document.getElementById('feedback-score').innerText = `4 de 4`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "🧩";
+
+            document.getElementById('btn-replay').onclick = startMatchUp;
+            showScreen('screen-feedback');
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+            playSound('victory');
+        }
+
+        // ----------------- GAME 6: COMBOIO DE LETRAS -----------------
+        let ltLevelIdx = 0;
+        const ltPool = [
+            { sequence: ['A', '?', 'C', 'D'], missing: 'B', options: ['B', 'E', 'F'] },
+            { sequence: ['P', 'Q', '?', 'S'], missing: 'R', options: ['R', 'M', 'T'] },
+            { sequence: ['F', 'G', 'H', '?'], missing: 'I', options: ['I', 'J', 'K'] }
+        ];
+
+        function startLetterTrain() {
+            showScreen('screen-letter-train');
+            ltLevelIdx = 0;
+            setupLetterTrainRound();
+        }
+
+        function setupLetterTrainRound() {
+            if (ltLevelIdx >= 3) {
+                endLetterTrain(true);
+                return;
+            }
+            document.getElementById('lt-progress').innerText = `${ltLevelIdx + 1}/3`;
+            const current = ltPool[ltLevelIdx];
+
+            const wagonRow = document.getElementById('lt-train-wagon-row');
+            wagonRow.innerHTML = '';
+
+            const loco = document.createElement('div');
+            loco.className = "flex flex-col items-center bg-cyan-600 text-white font-bold p-3 rounded-l-2xl border-b-4 border-cyan-800 shadow-md relative min-w-[70px]";
+            loco.innerHTML = `<span class="text-3xl">🚂</span><span class="text-[9px] uppercase tracking-wider">LINHA</span>`;
+            wagonRow.appendChild(loco);
+
+            current.sequence.forEach(letter => {
+                const wagon = document.createElement('div');
+                if (letter === '?') {
+                    wagon.className = "bg-yellow-300 border-2 border-yellow-500 rounded-xl p-3 shadow-md font-playful text-xl text-yellow-800 text-center animate-pulse min-w-[50px]";
+                    wagon.innerText = '?';
+                } else {
+                    wagon.className = "bg-cyan-100 border-2 border-cyan-300 rounded-xl p-3 shadow-md font-playful text-xl text-cyan-800 text-center min-w-[50px]";
+                    wagon.innerText = letter;
+                }
+                wagonRow.appendChild(wagon);
+            });
+
+            const optRow = document.getElementById('lt-options-row');
+            optRow.innerHTML = '';
+            current.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white border-2 border-cyan-400 hover:border-cyan-600 font-playful px-4 py-2 rounded-xl text-cyan-800 text-lg shadow-md hover:bg-cyan-50 active:scale-95 transition-all";
+                btn.innerText = opt;
+                btn.onclick = () => selectLetterTrainOption(opt, current.missing);
+                optRow.appendChild(btn);
+            });
+        }
+
+        function selectLetterTrainOption(selected, correct) {
+            if (selected === correct) {
+                playSound('correct');
+                ltLevelIdx++;
+                setTimeout(setupLetterTrainRound, 1000);
+            } else {
+                playSound('wrong');
+                document.getElementById('lt-options-row').classList.add('animate-shake');
+                setTimeout(() => document.getElementById('lt-options-row').classList.remove('animate-shake'), 400);
+            }
+        }
+
+        function endLetterTrain(isVictory) {
+            const starsWon = 5;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = "Sequência Perfeita!";
+            document.getElementById('feedback-msg').innerText = "Você organizou todas as letras no trem!";
+            document.getElementById('feedback-score').innerText = `3 de 3 Fases`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "🚂";
+
+            document.getElementById('btn-replay').onclick = startLetterTrain;
+            showScreen('screen-feedback');
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+            playSound('victory');
+        }
+
+        // ----------------- GAME 7: ORDENAR SÍLABAS -----------------
+        let osLevelIdx = 0;
+        const osPool = [
+            { emoji: '🐱', syllables: ['GA', 'TO'], correctOrder: ['GA', 'TO'] },
+            { emoji: '🐵', syllables: ['CO', 'MA', 'CA'], correctOrder: ['MA', 'CA', 'CO'] },
+            { emoji: '🍌', syllables: ['NA', 'BA', 'NA'], correctOrder: ['BA', 'NA', 'NA'] }
+        ];
+        let osSelections = [];
+
+        function startOrderSyllables() {
+            showScreen('screen-order-syllables');
+            osLevelIdx = 0;
+            setupOrderSyllablesRound();
+        }
+
+        function setupOrderSyllablesRound() {
+            if (osLevelIdx >= 3) {
+                endOrderSyllables(true);
+                return;
+            }
+            document.getElementById('os-progress').innerText = `${osLevelIdx + 1}/3`;
+            const current = osPool[osLevelIdx];
+            
+            document.getElementById('os-emoji').innerText = current.emoji;
+            document.getElementById('os-word-output').innerHTML = '';
+            osSelections = [];
+
+            const choicesBox = document.getElementById('os-syllable-choices');
+            choicesBox.innerHTML = '';
+            
+            current.syllables.forEach((syl, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "bg-teal-500 hover:bg-teal-600 text-white font-playful px-4 py-2.5 rounded-xl shadow-md border-b-4 border-teal-800 text-base active:scale-95 transition-all";
+                btn.innerText = syl;
+                btn.onclick = () => selectSyllable(syl, btn);
+                choicesBox.appendChild(btn);
+            });
+        }
+
+        function selectSyllable(syl, element) {
+            playSound('click');
+            osSelections.push(syl);
+            
+            const outputBox = document.getElementById('os-word-output');
+            const block = document.createElement('div');
+            block.className = "bg-teal-100 border border-teal-300 font-playful px-3 py-1 rounded text-teal-800 text-sm uppercase animate-bounce-slow";
+            block.innerText = syl;
+            outputBox.appendChild(block);
+
+            element.className = "bg-slate-200 text-slate-400 font-playful px-4 py-2.5 rounded-xl shadow-inner border border-slate-300 pointer-events-none text-base";
+
+            const currentCorrect = osPool[osLevelIdx].correctOrder;
+            const currentIdx = osSelections.length - 1;
+            if (osSelections[currentIdx] !== currentCorrect[currentIdx]) {
+                playSound('wrong');
+                setTimeout(() => {
+                    setupOrderSyllablesRound();
+                }, 800);
+                return;
+            }
+
+            if (osSelections.length === currentCorrect.length) {
+                playSound('correct');
+                osLevelIdx++;
+                setTimeout(setupOrderSyllablesRound, 1200);
+            }
+        }
+
+        function endOrderSyllables(isVictory) {
+            const starsWon = 5;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = "Arquiteto de Sílabas!";
+            document.getElementById('feedback-msg').innerText = "Incrível! Você juntou as sílabas e formou os nomes perfeitamente!";
+            document.getElementById('feedback-score').innerText = `3 Palavras`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "🧩";
+
+            document.getElementById('btn-replay').onclick = startOrderSyllables;
+            showScreen('screen-feedback');
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+            playSound('victory');
+        }
+
+        // ----------------- GAME 8: CONTAR SÍLABAS -----------------
+        let csLevelIdx = 0;
+        const csPool = [
+            { emoji: '🐢', word: 'TARTARUGA', syllables: 'tar-ta-ru-ga', count: 4 },
+            { emoji: '🐱', word: 'GATO', syllables: 'ga-to', count: 2 },
+            { emoji: '☀️', word: 'SOL', syllables: 'sol', count: 1 },
+            { emoji: '🐘', word: 'ELEFANTE', syllables: 'e-le-fan-te', count: 4 }
+        ];
+
+        function startCountSyllables() {
+            showScreen('screen-count-syllables');
+            csLevelIdx = 0;
+            setupCountSyllablesRound();
+        }
+
+        function setupCountSyllablesRound() {
+            if (csLevelIdx >= 4) {
+                endCountSyllables(true);
+                return;
+            }
+            document.getElementById('cs-progress').innerText = `${csLevelIdx + 1}/4`;
+            const current = csPool[csLevelIdx];
+
+            document.getElementById('cs-emoji').innerText = current.emoji;
+            document.getElementById('cs-word-text').innerText = current.word;
+            document.getElementById('cs-syllables-hint').innerText = current.syllables;
+
+            const buttonsBox = document.getElementById('cs-number-buttons');
+            buttonsBox.innerHTML = '';
+            
+            for (let num = 1; num <= 4; num++) {
+                const btn = document.createElement('button');
+                btn.className = "w-14 h-14 bg-white border-4 border-lime-400 hover:border-lime-500 font-playful text-lime-700 text-xl rounded-2xl flex items-center justify-center shadow-md active:scale-90 hover:bg-lime-50 transition-all";
+                btn.innerText = num;
+                btn.onclick = () => selectCountSyllableOption(num, current.count, btn);
+                buttonsBox.appendChild(btn);
+            }
+        }
+
+        function selectCountSyllableOption(selected, correct, buttonElement) {
+            if (selected === correct) {
+                playSound('correct');
+                buttonElement.className = "w-14 h-14 bg-emerald-500 text-white border-4 border-emerald-600 font-playful text-xl rounded-2xl flex items-center justify-center shadow-lg";
+                csLevelIdx++;
+                setTimeout(setupCountSyllablesRound, 1000);
+            } else {
+                playSound('wrong');
+                buttonElement.className = "w-14 h-14 bg-red-500 text-white border-4 border-red-600 font-playful text-xl rounded-2xl flex items-center justify-center shadow-lg animate-shake";
+                buttonElement.disabled = true;
+            }
+        }
+
+        function endCountSyllables(isVictory) {
+            const starsWon = 5;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = "Palmas Virtuosas!";
+            document.getElementById('feedback-msg').innerText = "Maravilhoso! Você contou e separou as sílabas com ritmo!";
+            document.getElementById('feedback-score').innerText = `4 de 4 Acertos`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "👏";
+
+            document.getElementById('btn-replay').onclick = startCountSyllables;
+            showScreen('screen-feedback');
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+            playSound('victory');
+        }
+
+        // ----------------- GAME 9: QUIZ DO SABER -----------------
+        let quizIndex = 0;
+        let quizScore = 0;
+        let quizTime = 15;
+        const quizPool = [
+            { question: "Qual destas palavras tem exatamente 2 SÍLABAS?", options: ["Uva", "Mesa", "Abacaxi", "Elefante"], answer: "Mesa" },
+            { question: "Que animal começa com a Letra 'M'?", options: ["Macaco", "Pato", "Gato", "Sapo"], answer: "Macaco" },
+            { question: "Qual letra faz o som de ventinho 'FFF'?", options: ["F", "D", "S", "M"], answer: "F" },
+            { question: "Qual destas palavras rima com CÃO?", options: ["Gato", "Mão", "Sapo", "Lápis"], answer: "Mão" },
+            { question: "Que palavra começa com a sílaba 'BO'?", options: ["Casa", "Bola", "Pato", "Uva"], answer: "Bola" }
+        ];
+        let quizCurrentSet = [];
+
+        function startQuizGame() {
+            showScreen('screen-quiz');
+            quizIndex = 0;
+            quizScore = 0;
+            quizCurrentSet = [...quizPool].sort(() => 0.5 - Math.random()).slice(0, 4);
+            showQuizQuestion();
+        }
+
+        function showQuizQuestion() {
+            clearAllIntervals();
+            if (quizIndex >= 4) {
+                endQuizGame(true);
+                return;
+            }
+            document.getElementById('quiz-score').innerText = `${quizScore}/4`;
+            document.getElementById('quiz-question-title').innerText = `Pergunta ${quizIndex + 1} de 4`;
+
+            const current = quizCurrentSet[quizIndex];
+            document.getElementById('quiz-text').innerText = current.question;
+
+            const optionsBox = document.getElementById('quiz-options');
+            optionsBox.innerHTML = '';
+            
+            current.options.forEach(opt => {
+                const optBtn = document.createElement('button');
+                optBtn.className = "bg-white border-2 border-indigo-300 hover:border-indigo-500 font-semibold p-3 rounded-2xl text-slate-700 shadow-md text-sm active:scale-95 hover:bg-indigo-50/50 transition-all text-center";
+                optBtn.innerText = opt;
+                optBtn.onclick = () => submitQuizAnswer(opt, optBtn);
+                optionsBox.appendChild(optBtn);
+            });
+
+            quizTime = 15;
+            document.getElementById('quiz-timer').innerText = `${quizTime}s`;
+            
+            activeTimer = setInterval(() => {
+                quizTime--;
+                document.getElementById('quiz-timer').innerText = `${quizTime}s`;
+                if (quizTime <= 0) {
+                    playSound('wrong');
+                    quizIndex++;
+                    showQuizQuestion();
+                }
+            }, 1000);
+        }
+
+        function submitQuizAnswer(selected, element) {
+            clearAllIntervals();
+            const correct = quizCurrentSet[quizIndex].answer;
+            if (selected === correct) {
+                playSound('correct');
+                element.className = "bg-emerald-500 text-white border-2 border-emerald-600 font-bold p-3 rounded-2xl shadow-lg";
+                quizScore++;
+            } else {
+                playSound('wrong');
+                element.className = "bg-red-500 text-white border-2 border-red-600 font-bold p-3 rounded-2xl shadow-lg animate-shake";
+            }
+            document.querySelectorAll('#quiz-options > button').forEach(b => b.disabled = true);
+            quizIndex++;
+            setTimeout(showQuizQuestion, 1200);
+        }
+
+        function endQuizGame() {
+            const starsWon = quizScore >= 3 ? 5 : 2;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = quizScore === 4 ? "Gênio do Alfabeto!" : "Ótima tentativa!";
+            document.getElementById('feedback-msg').innerText = `Você acertou ${quizScore} perguntas do nosso Quiz Especial das Letras!`;
+            document.getElementById('feedback-score').innerText = `${quizScore} Acertos`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "❓";
+
+            document.getElementById('btn-replay').onclick = startQuizGame;
+            showScreen('screen-feedback');
+            if (quizScore === 4) {
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+                playSound('victory');
+            }
+        }
+
+        // ----------------- GAME 10: FÁBRICA DE PALAVRAS -----------------
+        let anIndex = 0;
+        const anPool = [
+            { emoji: '🍇', word: 'UVA' },
+            { emoji: '🐱', word: 'GATO' },
+            { emoji: '🎲', word: 'DADO' },
+            { emoji: '🏠', word: 'CASA' },
+            { emoji: '☕', word: 'CAFE' }
+        ];
+        let anCurrentSet = [];
+        let anWordProgress = [];
+
+        function startAnagramGame() {
+            showScreen('screen-anagram');
+            anIndex = 0;
+            anCurrentSet = [...anPool].sort(() => 0.5 - Math.random()).slice(0, 3);
+            setupAnagramRound();
+        }
+
+        function setupAnagramRound() {
+            if (anIndex >= 3) {
+                endAnagramGame(true);
+                return;
+            }
+            document.getElementById('an-progress').innerText = `${anIndex + 1}/3`;
+            const round = anCurrentSet[anIndex];
+            document.getElementById('an-emoji').innerText = round.emoji;
+
+            const slotsBox = document.getElementById('an-target-slots');
+            slotsBox.innerHTML = '';
+            anWordProgress = [];
+
+            for (let i = 0; i < round.word.length; i++) {
+                const dash = document.createElement('div');
+                dash.className = "w-10 h-10 border-b-4 border-slate-400 flex items-center justify-center font-playful text-lg text-slate-800 uppercase bg-white rounded-t-md mx-0.5 shadow-sm";
+                dash.innerText = '';
+                slotsBox.appendChild(dash);
+            }
+
+            const lettersBox = document.getElementById('an-letters-source');
+            lettersBox.innerHTML = '';
+
+            const scrambled = round.word.split('').sort(() => 0.5 - Math.random());
+            scrambled.forEach((char, idx) => {
+                const key = document.createElement('button');
+                key.className = "w-12 h-12 bg-purple-500 hover:bg-purple-600 active:scale-90 text-white font-playful text-xl rounded-xl flex items-center justify-center shadow-md border-b-4 border-purple-800 transition-all";
+                key.innerText = char;
+                key.onclick = () => selectAnagramLetter(char, key);
+                lettersBox.appendChild(key);
+            });
+        }
+
+        function selectAnagramLetter(char, element) {
+            const correctWord = anCurrentSet[anIndex].word;
+            const nextIndexRequired = anWordProgress.length;
+
+            if (char === correctWord[nextIndexRequired]) {
+                playSound('correct');
+                anWordProgress.push(char);
+                element.className = "w-12 h-12 bg-emerald-400 text-white font-playful text-xl rounded-xl flex items-center justify-center shadow-inner border border-emerald-500 opacity-60 pointer-events-none";
+                
+                const slots = document.getElementById('an-target-slots').children;
+                slots[nextIndexRequired].innerText = char;
+                slots[nextIndexRequired].className = "w-10 h-10 border-b-4 border-emerald-500 bg-emerald-100 flex items-center justify-center font-playful text-lg text-emerald-800 uppercase rounded-t-md mx-0.5 animate-bounce-slow";
+
+                if (anWordProgress.length === correctWord.length) {
+                    playSound('victory');
+                    anIndex++;
+                    setTimeout(setupAnagramRound, 1200);
+                }
+            } else {
+                playSound('wrong');
+                element.classList.add('animate-shake', 'bg-red-500');
+                setTimeout(() => element.classList.remove('animate-shake', 'bg-red-500'), 500);
+            }
+        }
+
+        function endAnagramGame(isVictory) {
+            const starsWon = 5;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = "Super Soletrador!";
+            document.getElementById('feedback-msg').innerText = "Incrível! Você juntou as letras soltas e construiu palavras perfeitamente!";
+            document.getElementById('feedback-score').innerText = `3 Palavras`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "🧱";
+
+            document.getElementById('btn-replay').onclick = startAnagramGame;
+            showScreen('screen-feedback');
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+            playSound('victory');
+        }
+
+        // ----------------- GAME 11: SOPA DE LETRAS -----------------
+        let wsWordsFound = [];
+        let wsTargetWords = ['UVA', 'SOL', 'BOLO'];
+        const wsGridData = [
+            ['U', 'V', 'A', 'X', 'Y', 'Z'],
+            ['S', 'O', 'L', 'M', 'P', 'R'],
+            ['B', 'O', 'L', 'O', 'C', 'H'],
+            ['K', 'D', 'E', 'F', 'W', 'J'],
+            ['A', 'C', 'A', 'S', 'A', 'T'],
+            ['G', 'I', 'J', 'Q', 'U', 'M']
+        ];
+        let wsSelectedCellsCoords = [];
+
+        function startWordSearchGame() {
+            showScreen('screen-word-search');
+            wsWordsFound = [];
+            wsSelectedCellsCoords = [];
+            document.getElementById('ws-found-count').innerText = `0/3`;
+
+            const wordListCont = document.getElementById('ws-word-list');
+            wordListCont.innerHTML = '';
+            wsTargetWords.forEach(word => {
+                const item = document.createElement('div');
+                item.id = `ws-item-${word}`;
+                item.className = "flex justify-between items-center bg-white p-2 rounded-xl border border-slate-100 shadow-sm font-bold text-slate-700 uppercase text-xs";
+                item.innerHTML = `
+                    <span>${word}</span>
+                    <span id="ws-chk-${word}" class="text-slate-300"><i class="fas fa-circle-notch"></i></span>
+                `;
+                wordListCont.appendChild(item);
+            });
+
+            const gridCont = document.getElementById('ws-letter-grid');
+            gridCont.innerHTML = '';
+            for (let row = 0; row < 6; row++) {
+                for (let col = 0; col < 6; col++) {
+                    const cell = document.createElement('button');
+                    cell.className = "w-9 h-9 sm:w-11 sm:h-11 bg-white hover:bg-indigo-50 border-2 border-indigo-200 text-indigo-800 font-playful text-base rounded-xl flex items-center justify-center shadow-sm select-none transition-all";
+                    cell.innerText = wsGridData[row][col];
+                    cell.setAttribute('data-row', row);
+                    cell.setAttribute('data-col', col);
+                    cell.onclick = () => clickWordSearchCell(row, col, cell);
+                    gridCont.appendChild(cell);
+                }
+            }
+        }
+
+        function clickWordSearchCell(row, col, cellNode) {
+            playSound('click');
+            const clickedCoord = `${row}-${col}`;
+            
+            if (wsSelectedCellsCoords.includes(clickedCoord)) {
+                wsSelectedCellsCoords = wsSelectedCellsCoords.filter(c => c !== clickedCoord);
+                cellNode.className = "w-9 h-9 sm:w-11 sm:h-11 bg-white hover:bg-indigo-50 border-2 border-indigo-200 text-indigo-800 font-playful text-base rounded-xl flex items-center justify-center shadow-sm select-none transition-all";
+            } else {
+                wsSelectedCellsCoords.push(clickedCoord);
+                cellNode.className = "w-9 h-9 sm:w-11 sm:h-11 bg-indigo-500 text-white border-2 border-indigo-600 font-playful text-base rounded-xl flex items-center justify-center shadow-inner select-none transition-all";
+            }
+
+            let assembledString = wsSelectedCellsCoords.map(coord => {
+                const [r, c] = coord.split('-').map(Number);
+                return wsGridData[r][c];
+            }).join('');
+
+            wsTargetWords.forEach(target => {
+                if (!wsWordsFound.includes(target)) {
+                    const sortedAssembled = assembledString.split('').sort().join('');
+                    const sortedTarget = target.split('').sort().join('');
+                    if (sortedAssembled === sortedTarget) {
+                        playSound('correct');
+                        wsWordsFound.push(target);
+                        
+                        const chk = document.getElementById(`ws-chk-${target}`);
+                        chk.innerHTML = `<i class="fas fa-check-circle"></i>`;
+                        chk.className = "text-emerald-500 text-base";
+                        document.getElementById(`ws-item-${target}`).className = "flex justify-between items-center bg-emerald-50 p-2 rounded-xl border border-emerald-200 shadow-sm font-bold text-emerald-800 uppercase animate-bounce-slow text-xs";
+
+                        wsSelectedCellsCoords.forEach(coord => {
+                            const [r, c] = coord.split('-').map(Number);
+                            const cell = document.querySelector(`[data-row="${r}"][data-col="${c}"]`);
+                            if (cell) {
+                                cell.className = "w-9 h-9 sm:w-11 sm:h-11 bg-emerald-500 text-white border border-emerald-600 font-playful text-base rounded-xl flex items-center justify-center pointer-events-none";
+                            }
+                        });
+
+                        wsSelectedCellsCoords = [];
+                        document.getElementById('ws-found-count').innerText = `${wsWordsFound.length}/3`;
+
+                        if (wsWordsFound.length === 3) {
+                            setTimeout(endWordSearchGame, 1500);
+                        }
+                    }
+                }
+            });
+        }
+
+        function endWordSearchGame() {
+            const starsWon = 5;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = "Super Detetive!";
+            document.getElementById('feedback-msg').innerText = "Fabuloso! Você encontrou todas as palavrinhas na Sopa de Letras!";
+            document.getElementById('feedback-score').innerText = `3 de 3 Palavras`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "🔍";
+
+            document.getElementById('btn-replay').onclick = startWordSearchGame;
+            showScreen('screen-feedback');
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+            playSound('victory');
+        }
+
+        // ----------------- GAME 12: ORGANIZADOR DE LETRAS -----------------
+        let gsScore = 0;
+        let gsSelectedSource = null;
+        let gsActiveSortingPair = {};
+
+        const sortingCategories = [
+            {
+                title: "Começa com A",
+                items: [
+                    { name: 'Abacate', icon: '🥑', belongsTo: 'basket1' },
+                    { name: 'Anel', icon: '💍', belongsTo: 'basket1' },
+                    { name: 'Aranha', icon: '🕷️', belongsTo: 'basket1' }
+                ],
+                basket2Title: "Começa com O",
+                basket2Items: [
+                    { name: 'Ovo', icon: '🥚', belongsTo: 'basket2' },
+                    { name: 'Olho', icon: '👁️', belongsTo: 'basket2' },
+                    { name: 'Ovelha', icon: '🐑', belongsTo: 'basket2' }
+                ]
+            },
+            {
+                title: "Vogais",
+                items: [
+                    { name: 'A', icon: '🅰️', belongsTo: 'basket1' },
+                    { name: 'E', icon: '🇪', belongsTo: 'basket1' },
+                    { name: 'U', icon: '🇺', belongsTo: 'basket1' }
+                ],
+                basket2Title: "Consoantes",
+                basket2Items: [
+                    { name: 'B', icon: '🇧', belongsTo: 'basket2' },
+                    { name: 'F', icon: '🇫', belongsTo: 'basket2' },
+                    { name: 'M', icon: '🇲', belongsTo: 'basket2' }
+                ]
+            }
+        ];
+
+        function startGroupSort() {
+            showScreen('screen-group-sort');
+            gsScore = 0;
+            gsSelectedSource = null;
+            document.getElementById('gs-score').innerText = `0/6`;
+
+            document.getElementById('gs-basket1-items').innerHTML = '';
+            document.getElementById('gs-basket2-items').innerHTML = '';
+
+            gsActiveSortingPair = sortingCategories[Math.floor(Math.random() * sortingCategories.length)];
+            
+            document.getElementById('gs-instruction').innerText = `Organize os itens nos grupos certos!`;
+            document.getElementById('gs-basket1-title').innerText = gsActiveSortingPair.title.toUpperCase();
+            document.getElementById('gs-basket2-title').innerText = gsActiveSortingPair.basket2Title.toUpperCase();
+
+            const combinedItems = [...gsActiveSortingPair.items, ...gsActiveSortingPair.basket2Items].sort(() => 0.5 - Math.random());
+            const sourceContainer = document.getElementById('gs-items-source');
+            sourceContainer.innerHTML = '';
+
+            combinedItems.forEach((item, index) => {
+                const element = document.createElement('div');
+                element.className = "bg-white border-2 border-sky-300 hover:border-sky-500 rounded-full px-3 py-1.5 cursor-pointer shadow-sm text-center flex items-center gap-1.5 select-none active:scale-95 transition-transform hover:bg-sky-50";
+                element.id = `gs-item-${index}`;
+                element.setAttribute('data-target-basket', item.belongsTo);
+                element.innerHTML = `
+                    <span class="text-xl">${item.icon}</span>
+                    <span class="font-bold text-xs text-slate-700 capitalize">${item.name}</span>
+                `;
+                element.onclick = () => selectSourceForBasket(element);
+                sourceContainer.appendChild(element);
+            });
+        }
+
+        function selectSourceForBasket(element) {
+            playSound('click');
+            document.querySelectorAll('#gs-items-source > div').forEach(el => {
+                el.classList.remove('ring-4', 'ring-green-500', 'bg-green-50');
+            });
+            gsSelectedSource = element;
+            element.classList.add('ring-4', 'ring-green-500', 'bg-green-50');
+        }
+
+        document.getElementById('gs-basket-1').onclick = () => {
+            if (gsSelectedSource) simulateDrop(gsSelectedSource, 'basket1');
+        };
+        document.getElementById('gs-basket-2').onclick = () => {
+            if (gsSelectedSource) simulateDrop(gsSelectedSource, 'basket2');
+        };
+
+        function simulateDrop(element, destinationBasketId) {
+            const belongsTo = element.getAttribute('data-target-basket');
+            if (belongsTo === destinationBasketId) {
+                playSound('correct');
+                gsScore++;
+                document.getElementById('gs-score').innerText = `${gsScore}/6`;
+
+                const miniItem = document.createElement('span');
+                miniItem.className = "bg-white py-0.5 px-2 border border-slate-200 rounded-full text-[10px] font-bold shadow-sm inline-block";
+                miniItem.innerHTML = element.innerHTML;
+                document.getElementById(`gs-${destinationBasketId}-items`).appendChild(miniItem);
+
+                element.remove();
+                gsSelectedSource = null;
+
+                if (gsScore === 6) {
+                    setTimeout(() => endGroupSort(true), 1000);
+                }
+            } else {
+                playSound('wrong');
+                element.classList.add('animate-shake', 'border-red-400');
+                setTimeout(() => {
+                    element.classList.remove('animate-shake', 'border-red-400', 'ring-4', 'ring-green-500', 'bg-green-50');
+                }, 500);
+            }
+        }
+
+        function endGroupSort(isVictory) {
+            const starsWon = 5;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = "Organização Nota 10!";
+            document.getElementById('feedback-msg').innerText = "Muito bem! Você separou todas as palavras em suas devidas cestas.";
+            document.getElementById('feedback-score').innerText = `6 de 6`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "🧺";
+
+            document.getElementById('btn-replay').onclick = startGroupSort;
+            showScreen('screen-feedback');
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+            playSound('victory');
+        }
+
+        // ----------------- GAME 13: MINI PALAVRAS CRUZADAS -----------------
+        let cwLevelIndex = 0;
+        let cwGridFocusCell = null;
+        
+        const cwLevels = [
+            {
+                gridSetup: [
+                    { r: 2, c: 0, val: 'S', isClue: false, id: 'h1' },
+                    { r: 2, c: 1, val: 'O', isClue: false, id: 'h1_v1' },
+                    { r: 2, c: 2, val: 'L', isClue: false, id: 'h1' },
+                    { r: 1, c: 1, val: 'G', isClue: false, id: 'v1' },
+                    { r: 3, c: 1, val: 'T', isClue: false, id: 'v1' },
+                    { r: 4, c: 1, val: 'O', isClue: false, id: 'v1' }
+                ],
+                clues: [
+                    { type: 'horizontal', text: '☀️ Brilha no céu durante o dia.' },
+                    { type: 'vertical', text: '🐱 Faz miau e gosta de peixe.' }
+                ]
+            },
+            {
+                gridSetup: [
+                    { r: 1, c: 1, val: 'U', isClue: false, id: 'h2_v2' },
+                    { r: 1, c: 2, val: 'V', isClue: false, id: 'h2' },
+                    { r: 1, c: 3, val: 'A', isClue: false, id: 'h2' },
+                    { r: 0, c: 1, val: 'B', isClue: false, id: 'v2' },
+                    { r: 2, c: 1, val: 'L', isClue: false, id: 'v2' },
+                    { r: 3, c: 1, val: 'E', isClue: false, id: 'v2' }
+                ],
+                clues: [
+                    { type: 'horizontal', text: '🍇 Fruta roxa que faz suco.' },
+                    { type: 'vertical', text: '☕ Onde fazemos e servimos o café quente.' }
+                ]
+            }
+        ];
+
+        function startCrosswordGame() {
+            showScreen('screen-crossword');
+            cwLevelIndex = 0;
+            cwGridFocusCell = null;
+            setupCrosswordRound();
+        }
+
+        function setupCrosswordRound() {
+            if (cwLevelIndex >= 2) {
+                endCrosswordGame(true);
+                return;
+            }
+            document.getElementById('cw-progress').innerText = `${cwLevelIndex + 1}/2`;
+            const round = cwLevels[cwLevelIndex];
+
+            const cluesBox = document.getElementById('cw-clues');
+            cluesBox.innerHTML = '';
+            round.clues.forEach(clue => {
+                const item = document.createElement('div');
+                item.className = "p-1.5 bg-white rounded-xl border border-slate-100 shadow-sm text-[10px] font-bold text-slate-700 flex items-center gap-1.5";
+                item.innerHTML = `
+                    <span class="bg-teal-500 text-white rounded px-1 text-[8px] uppercase">${clue.type === 'horizontal' ? 'Deitado' : 'Em Pé'}</span>
+                    <span>${clue.text}</span>
+                `;
+                cluesBox.appendChild(item);
+            });
+
+            const gridBox = document.getElementById('cw-grid');
+            gridBox.innerHTML = '';
+            
+            for (let r = 0; r < 5; r++) {
+                for (let c = 0; c < 5; c++) {
+                    const matchingNode = round.gridSetup.find(cell => cell.r === r && cell.c === c);
+                    const wrapper = document.createElement('div');
+                    wrapper.className = "w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center font-playful relative text-sm";
+                    
+                    if (matchingNode) {
+                        wrapper.className += " bg-yellow-100 border-2 border-yellow-300 hover:border-yellow-400 cursor-pointer shadow-sm";
+                        wrapper.id = `cw-cell-${r}-${c}`;
+                        wrapper.setAttribute('data-ans', matchingNode.val);
+                        wrapper.innerText = '';
+                        wrapper.onclick = () => focusCrosswordCell(wrapper);
+                    } else {
+                        wrapper.className += " bg-slate-100/30 border border-slate-200/10";
+                    }
+                    gridBox.appendChild(wrapper);
+                }
+            }
+
+            const kbBox = document.getElementById('cw-keyboard');
+            kbBox.innerHTML = '';
+            const characters = 'ABCEGLOSTUV'.split('');
+            characters.forEach(char => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white border border-teal-300 hover:border-teal-500 text-teal-800 font-bold px-2 py-1 rounded-md text-xs hover:bg-teal-50 active:scale-90 transition-all";
+                btn.innerText = char;
+                btn.onclick = () => typeCrosswordLetter(char);
+                kbBox.appendChild(btn);
+            });
+        }
+
+        function focusCrosswordCell(element) {
+            playSound('click');
+            document.querySelectorAll('#cw-grid > div').forEach(c => {
+                c.classList.remove('ring-4', 'ring-teal-500');
+            });
+            cwGridFocusCell = element;
+            element.classList.add('ring-4', 'ring-teal-500');
+        }
+
+        function typeCrosswordLetter(char) {
+            if (!cwGridFocusCell) {
+                playSound('wrong');
+                return;
+            }
+            const correctChar = cwGridFocusCell.getAttribute('data-ans');
+            if (char === correctChar) {
+                playSound('correct');
+                cwGridFocusCell.innerText = char;
+                cwGridFocusCell.className = "w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center font-playful bg-emerald-400 text-white border-2 border-emerald-500 shadow-inner pointer-events-none text-sm";
+                cwGridFocusCell = null;
+                
+                const remainingUnsolved = Array.from(document.querySelectorAll('#cw-grid > div')).filter(el => {
+                    const ans = el.getAttribute('data-ans');
+                    return ans && el.innerText !== ans;
+                });
+
+                if (remainingUnsolved.length === 0) {
+                    playSound('victory');
+                    cwLevelIndex++;
+                    setTimeout(setupCrosswordRound, 1500);
+                }
+            } else {
+                playSound('wrong');
+                cwGridFocusCell.classList.add('animate-shake', 'bg-red-200', 'border-red-400');
+                setTimeout(() => {
+                    if (cwGridFocusCell) {
+                        cwGridFocusCell.classList.remove('animate-shake', 'bg-red-200', 'border-red-400');
+                    }
+                }, 600);
+            }
+        }
+
+        function endCrosswordGame() {
+            const starsWon = 10;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = "Rei/Rainha das Palavras!";
+            document.getElementById('feedback-msg').innerText = "Fabuloso! Você cruzou todas as palavras com muito raciocínio e inteligência!";
+            document.getElementById('feedback-score').innerText = `2 Desafios`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "🗺️";
+
+            document.getElementById('btn-replay').onclick = startCrosswordGame;
+            showScreen('screen-feedback');
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            playSound('victory');
+        }
+
+        // ----------------- GAME 14: CONSTRUTOR DE FRASES -----------------
+        let wpLevelIdx = 0;
+        const wpPool = [
+            { emoji: '🐱🥛', words: ['O', 'gato', 'bebe', 'leite'], correctPhrase: ['O', 'gato', 'bebe', 'leite'] },
+            { emoji: '🐸💦', words: ['O', 'sapo', 'pula', 'na', 'lagoa'], correctPhrase: ['O', 'sapo', 'pula', 'na', 'lagoa'] },
+            { emoji: '👧🍎', words: ['A', 'menina', 'come', 'maçã'], correctPhrase: ['A', 'menina', 'come', 'maçã'] }
+        ];
+        let wpSelectedWords = [];
+
+        function startWritePhrase() {
+            showScreen('screen-write-phrase');
+            wpLevelIdx = 0;
+            setupWritePhraseRound();
+        }
+
+        function setupWritePhraseRound() {
+            if (wpLevelIdx >= 3) {
+                endWritePhrase(true);
+                return;
+            }
+            document.getElementById('wp-progress').innerText = `${wpLevelIdx + 1}/3`;
+            const current = wpPool[wpLevelIdx];
+
+            document.getElementById('wp-emoji').innerText = current.emoji;
+            document.getElementById('wp-constructed-slots').innerHTML = '';
+            wpSelectedWords = [];
+
+            const sourceContainer = document.getElementById('wp-source-words');
+            sourceContainer.innerHTML = '';
+
+            const scrambled = [...current.words].sort(() => 0.5 - Math.random());
+            scrambled.forEach((word, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white border-2 border-slate-300 hover:border-slate-500 text-slate-800 font-bold px-3 py-1.5 rounded-xl shadow-sm hover:bg-slate-50 active:scale-95 transition-all text-xs";
+                btn.innerText = word;
+                btn.onclick = () => selectPhraseWord(word, btn);
+                sourceContainer.appendChild(btn);
+            });
+        }
+
+        function selectPhraseWord(word, element) {
+            playSound('click');
+            wpSelectedWords.push(word);
+
+            const container = document.getElementById('wp-constructed-slots');
+            const block = document.createElement('span');
+            block.className = "bg-slate-200 text-slate-800 px-3 py-1 rounded-xl text-xs font-bold border border-slate-300 shadow-sm animate-bounce-slow";
+            block.innerText = word;
+            container.appendChild(block);
+
+            element.className = "bg-slate-100 text-slate-300 border border-slate-200 px-3 py-1.5 rounded-xl shadow-inner pointer-events-none text-xs";
+
+            const currentCorrect = wpPool[wpLevelIdx].correctPhrase;
+            const currentIdx = wpSelectedWords.length - 1;
+
+            if (wpSelectedWords[currentIdx] !== currentCorrect[currentIdx]) {
+                playSound('wrong');
+                setTimeout(() => {
+                    setupWritePhraseRound();
+                }, 800);
+                return;
+            }
+
+            if (wpSelectedWords.length === currentCorrect.length) {
+                playSound('correct');
+                wpLevelIdx++;
+                setTimeout(setupWritePhraseRound, 1200);
+            }
+        }
+
+        function endWritePhrase(isVictory) {
+            const starsWon = 8;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = "Super Escritor!";
+            document.getElementById('feedback-msg').innerText = "Maravilhoso! Você escreveu todas as frases na sequência lógica de forma fantástica!";
+            document.getElementById('feedback-score').innerText = `3 de 3 Frases`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "✍️";
+
+            document.getElementById('btn-replay').onclick = startWritePhrase;
+            showScreen('screen-feedback');
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+            playSound('victory');
+        }
+
+        // ----------------- GAME 15: DITADO DE FRASES -----------------
+        let pdLevelIdx = 0;
+        const pdPool = [
+            { textToSpeak: "O gato bebe leite", words: ['O', 'gato', 'bebe', 'leite'], correctPhrase: ['O', 'gato', 'bebe', 'leite'] },
+            { textToSpeak: "O sapo pula alto", words: ['O', 'sapo', 'pula', 'alto'], correctPhrase: ['O', 'sapo', 'pula', 'alto'] },
+            { textToSpeak: "A bola é amarela", words: ['A', 'bola', 'é', 'amarela'], correctPhrase: ['A', 'bola', 'é', 'amarela'] }
+        ];
+        let pdSelectedWords = [];
+
+        function startPhraseDictation() {
+            showScreen('screen-phrase-dictation');
+            pdLevelIdx = 0;
+            setupPhraseDictationRound();
+        }
+
+        function setupPhraseDictationRound() {
+            if (pdLevelIdx >= 3) {
+                endPhraseDictation(true);
+                return;
+            }
+            document.getElementById('pd-progress').innerText = `${pdLevelIdx + 1}/3`;
+            const current = pdPool[pdLevelIdx];
+
+            document.getElementById('pd-constructed-slots').innerHTML = '';
+            pdSelectedWords = [];
+
+            setTimeout(speakDictationText, 500);
+
+            const sourceContainer = document.getElementById('pd-source-words');
+            sourceContainer.innerHTML = '';
+
+            const scrambled = [...current.words].sort(() => 0.5 - Math.random());
+            scrambled.forEach((word, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white border-2 border-indigo-300 hover:border-indigo-500 text-indigo-900 font-bold px-3 py-1.5 rounded-xl shadow-sm hover:bg-indigo-50 active:scale-95 transition-all text-xs";
+                btn.innerText = word;
+                btn.onclick = () => selectDictationWord(word, btn);
+                sourceContainer.appendChild(btn);
+            });
+        }
+
+        function speakDictationText() {
+            const text = pdPool[pdLevelIdx].textToSpeak;
+            if ('speechSynthesis' in window) {
+                const utterance = new SpeechSynthesisUtterance(text);
+                utterance.lang = 'pt-BR';
+                utterance.rate = 0.85;
+                window.speechSynthesis.speak(utterance);
+            } else {
+                console.warn("Speech Synthesis API not supported.");
+            }
+        }
+
+        function selectDictationWord(word, element) {
+            playSound('click');
+            pdSelectedWords.push(word);
+
+            const container = document.getElementById('pd-constructed-slots');
+            const block = document.createElement('span');
+            block.className = "bg-indigo-100 text-indigo-800 px-3 py-1 rounded-xl text-xs font-bold border border-indigo-200 shadow-sm animate-bounce-slow";
+            block.innerText = word;
+            container.appendChild(block);
+
+            element.className = "bg-indigo-50 text-indigo-300 border border-indigo-100 px-3 py-1.5 rounded-xl shadow-inner pointer-events-none text-xs";
+
+            const currentCorrect = pdPool[pdLevelIdx].correctPhrase;
+            const currentIdx = pdSelectedWords.length - 1;
+
+            if (pdSelectedWords[currentIdx] !== currentCorrect[currentIdx]) {
+                playSound('wrong');
+                setTimeout(() => {
+                    setupPhraseDictationRound();
+                }, 800);
+                return;
+            }
+
+            if (pdSelectedWords.length === currentCorrect.length) {
+                playSound('correct');
+                pdLevelIdx++;
+                setTimeout(setupPhraseDictationRound, 1200);
+            }
+        }
+
+        function endPhraseDictation(isVictory) {
+            const starsWon = 10;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = "Super Ouvinte!";
+            document.getElementById('feedback-msg').innerText = "Fantástico! Você ouviu o ditado de voz e reconstruiu todas as frases perfeitamente!";
+            document.getElementById('feedback-score').innerText = `3 de 3 Ditados`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "🔊";
+
+            document.getElementById('btn-replay').onclick = startPhraseDictation;
+            showScreen('screen-feedback');
+            confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+            playSound('victory');
+        }
+
+        // ----------------- GAME 16: SINÓNIMOS & ANTÓNIMOS (NEW) -----------------
+        let saLevelIdx = 0;
+        let saScore = 0;
+        const saPool = [
+            { word: "GRANDE", type: "antónimo", choices: ["Pequeno", "Gigante", "Alto"], correct: "Pequeno" },
+            { word: "FELIZ", type: "sinónimo", choices: ["Contente", "Triste", "Zangado"], correct: "Contente" },
+            { word: "BONITO", type: "sinónimo", choices: ["Belo", "Feio", "Sujeira"], correct: "Belo" },
+            { word: "QUENTE", type: "antónimo", choices: ["Frio", "Morno", "Fogo"], correct: "Frio" }
+        ];
+
+        function startSynAntGame() {
+            showScreen('screen-syn-ant');
+            saLevelIdx = 0;
+            saScore = 0;
+            setupSynAntRound();
+        }
+
+        function setupSynAntRound() {
+            if (saLevelIdx >= saPool.length) {
+                endSynAntGame();
+                return;
+            }
+            document.getElementById('sa-progress').innerText = `${saLevelIdx + 1}/${saPool.length}`;
+            const current = saPool[saLevelIdx];
+            
+            document.getElementById('sa-category').innerText = current.type.toUpperCase();
+            document.getElementById('sa-word-text').innerText = current.word;
+            document.getElementById('sa-instruction').innerText = `Escolha o ${current.type} de:`;
+
+            const choicesBox = document.getElementById('sa-choices');
+            choicesBox.innerHTML = '';
+
+            current.choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white border-4 border-emerald-300 hover:border-emerald-500 font-playful p-4 rounded-2xl text-center text-emerald-800 shadow-md text-base hover:bg-emerald-50 active:scale-95 transition-all";
+                btn.innerText = choice;
+                btn.onclick = () => submitSynAntAnswer(choice, current.correct, btn);
+                choicesBox.appendChild(btn);
+            });
+        }
+
+        function submitSynAntAnswer(selected, correct, buttonElement) {
+            if (selected === correct) {
+                playSound('correct');
+                buttonElement.className = "bg-emerald-500 text-white border-4 border-emerald-600 font-playful p-4 rounded-2xl text-center text-base shadow-lg";
+                saScore += 10;
+                saLevelIdx++;
+                setTimeout(setupSynAntRound, 1000);
+            } else {
+                playSound('wrong');
+                buttonElement.className = "bg-red-500 text-white border-4 border-red-600 font-playful p-4 rounded-2xl text-center text-base shadow-lg animate-shake";
+                buttonElement.disabled = true;
+            }
+        }
+
+        function endSynAntGame() {
+            const starsWon = saScore >= 40 ? 5 : (saScore >= 20 ? 3 : 1);
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = "Mestre das Palavras!";
+            document.getElementById('feedback-msg').innerText = `Você dominou os sinónimos e antónimos marcando ${saScore} pontos!`;
+            document.getElementById('feedback-score').innerText = `${saScore} Pts`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "🔄";
+
+            document.getElementById('btn-replay').onclick = startSynAntGame;
+            showScreen('screen-feedback');
+            if (saScore >= 40) {
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+                playSound('victory');
+            }
+        }
+
+        // ----------------- GAME 17: PLURAL & SINGULAR (NEW) -----------------
+        let psLevelIdx = 0;
+        let psScore = 0;
+        const psPool = [
+            { emoji: '🐱🐱', word: 'GATOS', type: 'plural' },
+            { emoji: '🍎', word: 'MAÇÃ', type: 'singular' },
+            { emoji: '🚗🚗🚗', word: 'CARROS', type: 'plural' },
+            { emoji: '🎈', word: 'BALÃO', type: 'singular' }
+        ];
+
+        function startPluralSingularGame() {
+            showScreen('screen-plural-singular');
+            psLevelIdx = 0;
+            psScore = 0;
+            setupPluralSingularRound();
+        }
+
+        function setupPluralSingularRound() {
+            if (psLevelIdx >= psPool.length) {
+                endPluralSingularGame();
+                return;
+            }
+            document.getElementById('ps-progress').innerText = `${psLevelIdx + 1}/${psPool.length}`;
+            const current = psPool[psLevelIdx];
+
+            document.getElementById('ps-emoji').innerText = current.emoji;
+            document.getElementById('ps-word-display').innerText = current.word;
+        }
+
+        function checkPluralSingular(answer) {
+            const correct = psPool[psLevelIdx].type;
+            if (answer === correct) {
+                playSound('correct');
+                psScore += 10;
+                psLevelIdx++;
+                setupPluralSingularRound();
+            } else {
+                playSound('wrong');
+                document.getElementById('ps-word-display').parentElement.classList.add('animate-shake');
+                setTimeout(() => {
+                    document.getElementById('ps-word-display').parentElement.classList.remove('animate-shake');
+                    psLevelIdx++;
+                    setupPluralSingularRound();
+                }, 600);
+            }
+        }
+
+        function endPluralSingularGame() {
+            const starsWon = psScore >= 40 ? 5 : 2;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = psScore >= 40 ? "Excelente Visão!" : "Bom esforço!";
+            document.getElementById('feedback-msg').innerText = `Você classificou plural e singular corretamente somando ${psScore} pontos.`;
+            document.getElementById('feedback-score').innerText = `${psScore} Pts`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "👥";
+
+            document.getElementById('btn-replay').onclick = startPluralSingularGame;
+            showScreen('screen-feedback');
+            if (psScore >= 40) {
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+                playSound('victory');
+            }
+        }
+
+        // ----------------- GAME 18: ARTIGOS DEFINIDOS (NEW) -----------------
+        let arLevelIdx = 0;
+        let arScore = 0;
+        const arPool = [
+            { emoji: '🦖', word: 'Dinossauro', correct: 'O', choices: ['O', 'A', 'Os', 'As'] },
+            { emoji: '🌸🌸', word: 'Flores', correct: 'As', choices: ['O', 'A', 'Os', 'As'] },
+            { emoji: '🚗', word: 'Carro', correct: 'O', choices: ['O', 'A', 'Os', 'As'] },
+            { emoji: '🐱🐱', word: 'Gatos', correct: 'Os', choices: ['O', 'A', 'Os', 'As'] }
+        ];
+
+        function startArticlesGame() {
+            showScreen('screen-articles');
+            arLevelIdx = 0;
+            arScore = 0;
+            setupArticlesRound();
+        }
+
+        function setupArticlesRound() {
+            if (arLevelIdx >= arPool.length) {
+                endArticlesGame();
+                return;
+            }
+            document.getElementById('ar-progress').innerText = `${arLevelIdx + 1}/${arPool.length}`;
+            const current = arPool[arLevelIdx];
+
+            document.getElementById('ar-emoji').innerText = current.emoji;
+            document.getElementById('ar-word-text').innerText = current.word;
+            document.getElementById('ar-blank-slot').innerText = '___';
+
+            const choicesBox = document.getElementById('ar-choices');
+            choicesBox.innerHTML = '';
+
+            current.choices.forEach(choice => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white border-4 border-teal-300 hover:border-teal-500 font-playful p-3 rounded-2xl text-center text-teal-800 shadow-md text-base hover:bg-teal-50 active:scale-95 transition-all";
+                btn.innerText = choice;
+                btn.onclick = () => submitArticleAnswer(choice, current.correct, btn);
+                choicesBox.appendChild(btn);
+            });
+        }
+
+        function submitArticleAnswer(selected, correct, buttonElement) {
+            if (selected === correct) {
+                playSound('correct');
+                document.getElementById('ar-blank-slot').innerText = selected;
+                buttonElement.className = "bg-emerald-500 text-white border-4 border-emerald-600 font-playful p-3 rounded-2xl text-center text-base shadow-lg";
+                arScore += 10;
+                arLevelIdx++;
+                setTimeout(setupArticlesRound, 1000);
+            } else {
+                playSound('wrong');
+                buttonElement.className = "bg-red-500 text-white border-4 border-red-600 font-playful p-3 rounded-2xl text-center text-base shadow-lg animate-shake";
+                buttonElement.disabled = true;
+            }
+        }
+
+        function endArticlesGame() {
+            const starsWon = arScore >= 40 ? 5 : 2;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = arScore >= 40 ? "Articulador Fantástico!" : "Muito Bem!";
+            document.getElementById('feedback-msg').innerText = `Você resolveu os desafios de artigos definidos marcando ${arScore} pontos!`;
+            document.getElementById('feedback-score').innerText = `${arScore} Pts`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "🏷️";
+
+            document.getElementById('btn-replay').onclick = startArticlesGame;
+            showScreen('screen-feedback');
+            if (arScore >= 40) {
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+                playSound('victory');
+            }
+        }
+
+        // ----------------- GAME 19: SINAIS DE PONTUAÇÃO (NEW) -----------------
+        let pnLevelIdx = 0;
+        let pnScore = 0;
+        const pnPool = [
+            { sentence: "Gostas de jogar futebol", correct: "?", emoji: '⚽' },
+            { sentence: "Que dia maravilhoso", correct: "!", emoji: '☀️' },
+            { sentence: "O gato dorme no sofá", correct: ".", emoji: '🐱' },
+            { sentence: "Onde fica a escola", correct: "?", emoji: '🏫' }
+        ];
+
+        function startPunctuationGame() {
+            showScreen('screen-punctuation');
+            pnLevelIdx = 0;
+            pnScore = 0;
+            setupPunctuationRound();
+        }
+
+        function setupPunctuationRound() {
+            if (pnLevelIdx >= pnPool.length) {
+                endPunctuationGame();
+                return;
+            }
+            document.getElementById('pn-progress').innerText = `${pnLevelIdx + 1}/${pnPool.length}`;
+            const current = pnPool[pnLevelIdx];
+
+            document.getElementById('pn-emoji').innerText = current.emoji;
+            document.getElementById('pn-sentence-text').innerText = current.sentence;
+            document.getElementById('pn-sign-slot').innerText = '_';
+
+            const choicesBox = document.getElementById('pn-choices');
+            choicesBox.innerHTML = '';
+
+            const signs = ['.', '?', '!'];
+            signs.forEach(sign => {
+                const btn = document.createElement('button');
+                btn.className = "w-14 h-14 bg-white border-4 border-indigo-300 hover:border-indigo-500 font-playful text-indigo-800 text-xl rounded-2xl flex items-center justify-center shadow-md hover:bg-indigo-50 active:scale-95 transition-all";
+                btn.innerText = sign;
+                btn.onclick = () => submitPunctuationAnswer(sign, current.correct, btn);
+                choicesBox.appendChild(btn);
+            });
+        }
+
+        function submitPunctuationAnswer(selected, correct, buttonElement) {
+            if (selected === correct) {
+                playSound('correct');
+                document.getElementById('pn-sign-slot').innerText = selected;
+                buttonElement.className = "w-14 h-14 bg-emerald-500 text-white border-4 border-emerald-600 font-playful text-xl rounded-2xl flex items-center justify-center shadow-lg";
+                pnScore += 10;
+                pnLevelIdx++;
+                setTimeout(setupPunctuationRound, 1000);
+            } else {
+                playSound('wrong');
+                buttonElement.className = "w-14 h-14 bg-red-500 text-white border-4 border-red-600 font-playful text-xl rounded-2xl flex items-center justify-center shadow-lg animate-shake";
+                buttonElement.disabled = true;
+            }
+        }
+
+        function endPunctuationGame() {
+            const starsWon = pnScore >= 40 ? 5 : 2;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = pnScore >= 40 ? "Pontuador Brilhante!" : "Bom progresso!";
+            document.getElementById('feedback-msg').innerText = `Você identificou os sinais de pontuação corretos das frases e obteve ${pnScore} pontos!`;
+            document.getElementById('feedback-score').innerText = `${pnScore} Pts`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "💬";
+
+            document.getElementById('btn-replay').onclick = startPunctuationGame;
+            showScreen('screen-feedback');
+            if (pnScore >= 40) {
+                confetti({ particleCount: 80, spread: 60, origin: { y: 0.6 } });
+                playSound('victory');
+            }
+        }
+
+        // ----------------- GAME 20: ROLETA DE IMAGENS QUIZ (NEW) -----------------
+        let wqRoundCount = 0;
+        let wqCurrentItem = null;
+        const wqPool = [
+            { emoji: '🍎', word: 'MAÇÃ', options: ['MAÇÃ', 'MESA', 'MALA'] },
+            { emoji: '🐱', word: 'GATO', options: ['GATO', 'GOTA', 'GALO'] },
+            { emoji: '🐶', word: 'CÃO', options: ['CÃO', 'CASA', 'CAMA'] },
+            { emoji: '🦁', word: 'LEÃO', options: ['LEÃO', 'LIXO', 'LAMA'] },
+            { emoji: '🎈', word: 'BALÃO', options: ['BALÃO', 'BOLA', 'BOLO'] },
+            { emoji: '🍇', word: 'UVA', options: ['UVA', 'UNHA', 'URSO'] },
+            { emoji: '🦖', word: 'DINO', options: ['DINO', 'DADO', 'DOCE'] },
+            { emoji: '🚗', word: 'CARRO', options: ['CARRO', 'CASA', 'COLA'] }
+        ];
+
+        function startWheelQuizGame() {
+            showScreen('screen-wheel-quiz');
+            wqRoundCount = 0;
+            document.getElementById('wq-rounds').innerText = `0/3`;
+            document.getElementById('wq-quiz-panel').classList.add('hidden');
+            document.getElementById('wq-spin-btn').disabled = false;
+            
+            // Draw static canvas wheel
+            drawWheel(0);
+        }
+
+        function drawWheel(angle) {
+            const canvas = document.getElementById('wq-wheel-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const cw = canvas.width;
+            const ch = canvas.height;
+            const radius = cw / 2;
+
+            ctx.clearRect(0, 0, cw, ch);
+            ctx.save();
+            ctx.translate(radius, radius);
+            ctx.rotate(angle);
+
+            const numSegments = wqPool.length;
+            const segmentAngle = (2 * Math.PI) / numSegments;
+            const colors = ['#f87171', '#fbbf24', '#34d399', '#60a5fa', '#a78bfa', '#f472b6', '#fb7185', '#22d3ee'];
+
+            for (let i = 0; i < numSegments; i++) {
+                ctx.beginPath();
+                ctx.moveTo(0, 0);
+                ctx.arc(0, 0, radius, i * segmentAngle, (i + 1) * segmentAngle);
+                ctx.closePath();
+                ctx.fillStyle = colors[i % colors.length];
+                ctx.fill();
+                ctx.lineWidth = 2;
+                ctx.strokeStyle = '#ffffff';
+                ctx.stroke();
+
+                // Draw Text / Emojis inside segments
+                ctx.save();
+                ctx.rotate(i * segmentAngle + segmentAngle / 2);
+                ctx.textAlign = 'right';
+                ctx.textBaseline = 'middle';
+                ctx.fillStyle = '#ffffff';
+                ctx.font = '24px Arial';
+                ctx.fillText(wqPool[i].emoji, radius - 20, 0);
+                ctx.restore();
+            }
+            ctx.restore();
+        }
+
+        let wheelIsSpinning = false;
+        function spinTheWheel() {
+            if (wheelIsSpinning) return;
+            playSound('click');
+            wheelIsSpinning = true;
+            document.getElementById('wq-spin-btn').disabled = true;
+            document.getElementById('wq-quiz-panel').classList.add('hidden');
+
+            const spinRotations = 5 + Math.floor(Math.random() * 5); // 5 to 9 full spins
+            const targetSegmentIdx = Math.floor(Math.random() * wqPool.length);
+            
+            // Calculate final rotation to land correctly on the chosen segment index at the top (angle -Math.PI / 2)
+            const numSegments = wqPool.length;
+            const segmentAngle = (2 * Math.PI) / numSegments;
+            const targetAngle = (spinRotations * 2 * Math.PI) + (numSegments - targetSegmentIdx) * segmentAngle - segmentAngle / 2 - (Math.PI / 2);
+
+            let currentRotation = 0;
+            const spinDuration = 3000; // ms
+            const startTimestamp = performance.now();
+
+            function animateSpin(timestamp) {
+                const elapsed = timestamp - startTimestamp;
+                const progress = Math.min(elapsed / spinDuration, 1);
+                
+                // Ease-out cubic formula for realistic slow deceleration feel
+                const easeOut = 1 - Math.pow(1 - progress, 3);
+                currentRotation = easeOut * targetAngle;
+
+                drawWheel(currentRotation);
+
+                if (progress < 1) {
+                    requestAnimationFrame(animateSpin);
+                } else {
+                    wheelIsSpinning = false;
+                    wqCurrentItem = wqPool[targetSegmentIdx];
+                    triggerWheelQuizPopUp();
+                }
+            }
+            requestAnimationFrame(animateSpin);
+        }
+
+        function triggerWheelQuizPopUp() {
+            playSound('correct');
+            wqRoundCount++;
+            document.getElementById('wq-rounds').innerText = `${wqRoundCount}/3`;
+
+            const panel = document.getElementById('wq-quiz-panel');
+            panel.classList.remove('hidden');
+
+            document.getElementById('wq-quiz-emoji').innerText = wqCurrentItem.emoji;
+
+            const choicesBox = document.getElementById('wq-quiz-choices');
+            choicesBox.innerHTML = '';
+
+            wqCurrentItem.options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "bg-white border-2 border-yellow-400 hover:border-yellow-600 text-slate-800 font-bold p-2.5 rounded-xl shadow-md text-xs hover:bg-yellow-50 active:scale-95 transition-all w-full";
+                btn.innerText = opt;
+                btn.onclick = () => submitWheelQuizAnswer(opt, wqCurrentItem.word, btn);
+                choicesBox.appendChild(btn);
+            });
+        }
+
+        function submitWheelQuizAnswer(selected, correct, buttonElement) {
+            if (selected === correct) {
+                playSound('correct');
+                buttonElement.className = "bg-emerald-500 text-white border-2 border-emerald-600 font-bold p-2.5 rounded-xl shadow-md text-xs w-full";
+            } else {
+                playSound('wrong');
+                buttonElement.className = "bg-red-500 text-white border-2 border-red-600 font-bold p-2.5 rounded-xl shadow-md text-xs w-full animate-shake";
+            }
+
+            document.querySelectorAll('#wq-quiz-choices > button').forEach(b => b.disabled = true);
+
+            setTimeout(() => {
+                if (wqRoundCount >= 3) {
+                    endWheelQuizGame();
+                } else {
+                    document.getElementById('wq-quiz-panel').classList.add('hidden');
+                    document.getElementById('wq-spin-btn').disabled = false;
+                }
+            }, 1500);
+        }
+
+        function endWheelQuizGame() {
+            const starsWon = 10;
+            addStars(starsWon);
+            document.getElementById('feedback-title').innerText = "Giro da Sorte Concluído!";
+            document.getElementById('feedback-msg').innerText = "Excelente! Você girou a roleta, identificou as imagens e arrasou no quiz!";
+            document.getElementById('feedback-score').innerText = `3 de 3 Rodadas`;
+            document.getElementById('feedback-stars').innerText = `⭐ +${starsWon}`;
+            document.getElementById('feedback-icon').innerText = "🎡";
+
+            document.getElementById('btn-replay').onclick = startWheelQuizGame;
+            showScreen('screen-feedback');
+            confetti({ particleCount: 100, spread: 70, origin: { y: 0.6 } });
+            playSound('victory');
+        }
+
+    </script>
+</body>
+</html>
