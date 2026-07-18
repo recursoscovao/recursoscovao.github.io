@@ -16,7 +16,7 @@ const JOGO_CONFIG = {
         ano3: "icon3.png",
         ano4: "icon4.png",
         voltar: "voltar.png",
-        voltarMobile: "voltar_az.png" // Adicionado aqui
+        voltarMobile: "voltar_az.png"
     },
     links: {
         home: "/jogos", 
@@ -27,9 +27,9 @@ const JOGO_CONFIG = {
         ano4: "/jogos/4"
     },
     temaCores: {
-        azul: { borda: "#5ba4e5", fundo: "#e1f0ff" },
-        verde: { borda: "#58bc8c", fundo: "#e8f7f0" },
-        castanho: { borda: "#8b4513", fundo: "#ffe8cc" }
+        azul: { borda: "#5ba4e5", fundo: "#e1f0ff", seta: "#1e88e5" },
+        verde: { borda: "#58bc8c", fundo: "#e8f7f0", seta: "#2e7d32" },
+        castanho: { borda: "#d35400", fundo: "#fef5e7", seta: "#a04000" }
     },
     listaJogos: [
         { nome: "Português", icon: "pt.png", link: "pt/", tema: "azul" },
