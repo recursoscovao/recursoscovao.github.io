@@ -15,11 +15,11 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* BLOQUEIO ABSOLUTO DE SCROLL */
+        /* SCROLL PERMITIDO: min-height garante que preenche o ecrã, mas cresce se for preciso */
         body, html {
-            height: 100dvh; 
+            min-height: 100dvh; 
             width: 100vw;
-            overflow: hidden; 
+            overflow-x: hidden; /* Apenas barra o scroll horizontal */
             background-color: var(--sky-blue);
             display: flex; 
             flex-direction: column;
@@ -27,7 +27,7 @@
         }
 
         /* ----- DECORAÇÕES DO CÉU ----- */
-        .sky-decorations { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .sky-decorations { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
         .cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.6; filter: blur(0.5px); }
         .cloud-1 { top: 25%; left: -2%; width: 12vw; height: 4vh; min-width: 80px; }
         .cloud-2 { top: 15%; right: 5%; width: 10vw; height: 3vh; min-width: 60px; }
@@ -35,18 +35,19 @@
         .cloud::after { content:''; position:absolute; top: -20%; left: 50%; width: 40%; height: 120%; background: white; border-radius: 50%; }
 
         .star-decor {
-            position: absolute; top: 22%; left: 12%; width: clamp(15px, 3vh, 30px); height: clamp(15px, 3vh, 30px);
+            position: absolute; top: 22%; left: 12%; width: clamp(20px, 4vh, 35px); height: clamp(20px, 4vh, 35px);
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFC107'%3E%3Cpath d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/%3E%3C/svg%3E");
             background-repeat: no-repeat; transform: rotate(-15deg);
         }
 
-        .plane-wrapper { position: absolute; top: 16%; right: 8%; width: 15vw; height: 10vh; min-width: 90px; }
+        /* Avião Maior */
+        .plane-wrapper { position: absolute; top: 15%; right: 8%; width: 22vw; height: 12vh; min-width: 150px; max-width: 250px; }
         .plane-trail {
             position: absolute; top: 25%; right: 25%; width: 100%; height: 50%;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' preserveAspectRatio='none'%3E%3Cpath d='M0,50 Q40,-10 100,20' fill='none' stroke='%2388C0ED' stroke-width='4' stroke-dasharray='5,7' stroke-linecap='round'/%3E%3C/svg%3E");
         }
         .plane-icon {
-            position: absolute; top: 0; right: 0; width: clamp(20px, 4vh, 40px); height: clamp(20px, 4vh, 40px);
+            position: absolute; top: 0; right: 0; width: clamp(35px, 6vh, 60px); height: clamp(35px, 6vh, 60px);
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235B9EE5'%3E%3Cpath d='M2.01 21L23 12 2.01 3 2 10l15 2-15 2z'/%3E%3C/svg%3E");
             background-repeat: no-repeat; transform: rotate(-15deg);
         }
@@ -59,21 +60,21 @@
             padding: clamp(8px, 1.5vh, 20px); position: relative; z-index: 10; flex-shrink: 0;
         }
         .header-content { display: flex; align-items: center; gap: clamp(10px, 2vw, 15px); }
-        #header-icon { height: clamp(35px, 8vh, 60px); filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1)); }
+        #header-icon { height: clamp(40px, 8vh, 65px); filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1)); }
         .title-group { display: flex; flex-direction: column; justify-content: center; line-height: 0.9; }
-        .title-main { font-weight: 900; font-size: clamp(1.2rem, 3.5vh, 2.2rem); letter-spacing: -0.5px; }
+        .title-main { font-weight: 900; font-size: clamp(1.3rem, 3.5vh, 2.4rem); letter-spacing: -0.5px; }
         #txt-titulo1 { color: var(--mundo-red); } #txt-titulo2 { color: var(--jogos-blue); }
-        .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.6rem, 1.5vh, 0.9rem); margin-top: 4px; }
+        .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.7rem, 1.5vh, 1rem); margin-top: 4px; }
 
         /* ----- INTRO TEXT ----- */
         .intro-container { 
             display: flex; align-items: center; justify-content: center; gap: 10px;
-            margin: clamp(1vh, 3vh, 4vh) 0; position: relative; z-index: 5; flex-shrink: 0;
+            margin: clamp(2vh, 4vh, 5vh) 0; position: relative; z-index: 5; flex-shrink: 0;
         }
         .accent-lines { width: clamp(20px, 3vw, 30px); height: clamp(20px, 3vw, 30px); }
         .accent-left { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14 4 L6 12 L14 20' fill='none' stroke='%23FFC107' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' stroke-dasharray='1 8'/%3E%3C/svg%3E"); }
         .accent-right { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 4 L18 12 L10 20' fill='none' stroke='%23FFC107' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' stroke-dasharray='1 8'/%3E%3C/svg%3E"); }
-        .intro-text { color: var(--jogos-blue); font-size: clamp(1rem, 3vh, 2rem); font-weight: 900; }
+        .intro-text { color: var(--jogos-blue); font-size: clamp(1.1rem, 3.5vh, 2.2rem); font-weight: 900; }
         .intro-text .destaque { position: relative; display: inline-block; }
         .intro-text .destaque::after {
             content: ''; position: absolute; bottom: -6px; left: 0; width: 100%; height: 10px;
@@ -83,86 +84,92 @@
 
         /* ----- GRELHA DINÂMICA ----- */
         main { 
-            flex: 1; 
-            min-height: 0; 
-            display: flex; align-items: center; justify-content: center;
-            padding: 0 clamp(10px, 3vw, 20px); z-index: 10;
+            flex: 1; /* Ocupa espaço restante, empurra o footer para o fundo */
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            padding: 0 clamp(10px, 3vw, 20px) 30px clamp(10px, 3vw, 20px); z-index: 10;
         }
 
-        .game-wrapper { display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; }
+        .game-wrapper { display: flex; width: 100%; align-items: stretch; justify-content: center; flex-wrap: wrap; }
 
+        /* ESTILO DO CARTÃO: Borda Colorida + Contorno Branco Grosso via Box-Shadow */
         .game-card { 
             display: flex; background: white; text-decoration: none; 
-            transition: transform 0.2s ease; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            border: 2px solid var(--card-color); /* Linha fina de cor do tema */
+            /* O box-shadow duplo recria a borda branca exterior grossa e a sombra suave ao mesmo tempo */
+            box-shadow: 0 0 0 5px white, 0 10px 20px 5px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease; 
+            margin: 6px; /* Espaço para o box-shadow não cortar */
         }
-        .card-img-container { display: flex; align-items: center; justify-content: center; }
+        
+        .card-img-container { 
+            display: flex; align-items: center; justify-content: center; 
+            background-color: var(--card-color);
+        }
         .card-img-container img { object-fit: contain; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.12)); }
+        
         .card-info { display: flex; background: white; }
-        .card-title { font-weight: 900; }
-        .card-btn { display: flex; align-items: center; justify-content: center; color: white; }
+        .card-title { font-weight: 900; color: var(--card-color); }
+        .card-btn { display: flex; align-items: center; justify-content: center; color: white; background-color: var(--card-color); }
         .card-btn svg { width: 50%; height: 50%; }
 
         /* =========================================
-           MODO RETRATO (Telemóvel ou Tablet Vertical)
+           MODO RETRATO E MOBILE (Empilhados com Scroll)
            ========================================= */
-        @media (orientation: portrait) {
-            .game-wrapper { flex-direction: column; gap: clamp(6px, 1.5vh, 15px); max-width: 450px; }
+        @media (orientation: portrait), (max-width: 768px) {
+            .game-wrapper { flex-direction: column; gap: 15px; max-width: 450px; }
             .game-card { 
-                flex: 1; width: 100%; flex-direction: row; align-items: center; 
-                /* Borda Dupla Efeito: Borda externa + Padding interno branco */
-                border: clamp(3px, 0.5vh, 4px) solid;
-                padding: clamp(4px, 1vh, 6px); /* Espaço branco interno */
-                border-radius: 50px; 
-                max-height: 10vh; 
+                flex: none; flex-direction: row; align-items: center; 
+                padding: 6px; border-radius: 50px; height: auto; min-height: 85px; 
             }
-            .card-img-container { height: 100%; aspect-ratio: 1; border-radius: 50%; flex-shrink: 0; }
+            .card-img-container { height: 75px; width: 75px; border-radius: 50%; flex-shrink: 0; }
             .card-img-container img { max-width: 75%; max-height: 75%; }
             .card-info { flex-direction: row; align-items: center; justify-content: space-between; flex-grow: 1; padding: 0 10px 0 15px; }
-            .card-title { font-size: clamp(0.9rem, 2.5vh, 1.2rem); }
-            .card-btn { height: clamp(30px, 5vh, 45px); width: clamp(30px, 5vh, 45px); border-radius: 50%; flex-shrink: 0; }
+            .card-title { font-size: clamp(1.1rem, 2.5vh, 1.4rem); }
+            .card-btn { height: clamp(35px, 6vh, 45px); width: clamp(35px, 6vh, 45px); border-radius: 50%; flex-shrink: 0; }
             .star-decor { left: 5%; top: 18%; }
-            .plane-wrapper { width: 25vw; top: 15%; right: 2%; }
+            
+            /* Ocultar avião e tracejados no mobile */
+            .plane-wrapper { display: none !important; }
             .accent-lines { display: none; }
         }
 
         /* =========================================
-           MODO PAISAGEM (Computador ou Tablet Horizontal)
+           MODO PAISAGEM (Computador / Tablet Horizontal)
            ========================================= */
-        @media (orientation: landscape) {
-            .game-wrapper { flex-direction: row; gap: clamp(10px, 2vw, 25px); max-width: 1300px; }
+        @media (orientation: landscape) and (min-width: 769px) {
+            .game-wrapper { flex-direction: row; gap: clamp(10px, 2vw, 25px); max-width: 1400px; }
             .game-card { 
                 flex: 1; flex-direction: column; 
-                /* Borda Dupla Efeito: Borda externa + Padding interno branco */
-                border: clamp(3px, 0.5vw, 4px) solid;
-                padding: clamp(6px, 1vw, 12px); /* Cria o espaço branco à volta da imagem interior */
-                border-radius: clamp(18px, 2.5vw, 30px); 
-                height: clamp(150px, 60vh, 450px); 
+                padding: clamp(6px, 1vw, 10px); /* Cria o gap branco interior (padding) */
+                border-radius: clamp(20px, 2.5vw, 35px); 
+                height: 40vh; /* Ocupa exatamente 40% da altura da janela conforme pediste */
+                min-height: 350px; max-height: 500px; /* Limites de segurança */
             }
-            .game-card:hover { transform: scale(1.03) translateY(-4px); }
+            .game-card:hover { transform: scale(1.03) translateY(-6px); }
             .card-img-container { 
                 width: 100%; height: 60%; 
-                /* A imagem interior agora também tem cantos arredondados independentes */
-                border-radius: clamp(10px, 1.5vw, 20px); 
+                /* Base ligeiramente mais redonda para dar o efeito visual da imagem original */
+                border-radius: clamp(12px, 1.5vw, 20px) clamp(12px, 1.5vw, 20px) clamp(20px, 3vw, 35px) clamp(20px, 3vw, 35px); 
             }
             .card-img-container img { max-width: 80%; max-height: 80%; }
             .card-info { flex-direction: column; align-items: center; justify-content: space-evenly; height: 40%; padding: 5px; }
-            .card-title { font-size: clamp(0.9rem, 2.2vh, 1.4rem); text-align: center; }
-            .card-btn { width: clamp(35px, 6vh, 50px); height: clamp(35px, 6vh, 50px); border-radius: 50%; }
+            .card-title { font-size: clamp(1rem, 2.5vh, 1.5rem); text-align: center; }
+            .card-btn { width: clamp(40px, 6vh, 55px); height: clamp(40px, 6vh, 55px); border-radius: 50%; }
         }
 
         /* ----- FOOTER ----- */
         footer {
-            height: clamp(50px, 12vh, 100px); width: 100%; position: relative; flex-shrink: 0; 
+            height: clamp(60px, 12vh, 100px); width: 100%; position: relative; flex-shrink: 0; 
             display: flex; align-items: flex-end; justify-content: center;
-            padding-bottom: clamp(6px, 1.5vh, 12px); z-index: 20;
+            padding-bottom: clamp(8px, 1.5vh, 15px); z-index: 20;
             
-            /* SVG Fiel: Inclui a nova forma azul claro central (#CAE6FF) atrás do texto */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3C!-- Forma Azul Claro Central --%3E%3Cpath fill='%23CAE6FF' d='M200,120 Q720,40 1240,120 Z'/%3E%3C!-- Colinas de Trás --%3E%3Cpath fill='%23A6D746' d='M0,50 Q300,70 650,120 L0,120 Z'/%3E%3Cpath fill='%23A6D746' d='M1440,50 Q1140,70 790,120 L1440,120 Z'/%3E%3C!-- Colinas da Frente --%3E%3Cpath fill='%238AC63F' d='M0,80 Q250,90 550,120 L0,120 Z'/%3E%3Cpath fill='%238AC63F' d='M1440,80 Q1190,90 890,120 L1440,120 Z'/%3E%3C!-- Moitas Esquerda --%3E%3Cg fill='%233A9A40'%3E%3Cpath d='M0,120 C10,50 100,30 150,120 Z'/%3E%3Ccircle cx='30' cy='120' r='60'/%3E%3Ccircle cx='90' cy='120' r='50'/%3E%3Ccircle cx='0' cy='60' r='40'/%3E%3Ccircle cx='120' cy='100' r='30'/%3E%3C/g%3E%3Cg fill='%234CAF50'%3E%3Ccircle cx='20' cy='120' r='50'/%3E%3Ccircle cx='70' cy='120' r='40'/%3E%3C/g%3E%3C!-- Moitas Direita --%3E%3Cg fill='%233A9A40'%3E%3Cpath d='M1440,120 C1430,50 1340,30 1290,120 Z'/%3E%3Ccircle cx='1410' cy='120' r='60'/%3E%3Ccircle cx='1350' cy='120' r='50'/%3E%3Ccircle cx='1440' cy='60' r='40'/%3E%3Ccircle cx='1320' cy='100' r='30'/%3E%3C/g%3E%3Cg fill='%234CAF50'%3E%3Ccircle cx='1420' cy='120' r='50'/%3E%3Ccircle cx='1370' cy='120' r='40'/%3E%3C/g%3E%3C!-- Flores --%3E%3C!-- Margarida Esquerda Grande --%3E%3Cg transform='translate(350, 95) scale(0.9)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23fff'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFC107'/%3E%3C/g%3E%3C!-- Margarida Esquerda Pequena --%3E%3Cg transform='translate(250, 110) scale(0.5)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23fff'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFC107'/%3E%3C/g%3E%3C!-- Flor Rosa Direita --%3E%3Cg transform='translate(1080, 95) scale(0.9)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFEB3B'/%3E%3C/g%3E%3C!-- Margarida Direita Pequena --%3E%3Cg transform='translate(1220, 105) scale(0.8)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23fff'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFC107'/%3E%3C/g%3E%3C/svg%3E");
+            /* Fundo SVG igual à imagem com o "Vale" Azul Claro */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath fill='%23CAE6FF' d='M200,120 Q720,40 1240,120 Z'/%3E%3Cpath fill='%23A6D746' d='M0,50 Q300,70 650,120 L0,120 Z'/%3E%3Cpath fill='%23A6D746' d='M1440,50 Q1140,70 790,120 L1440,120 Z'/%3E%3Cpath fill='%238AC63F' d='M0,80 Q250,90 550,120 L0,120 Z'/%3E%3Cpath fill='%238AC63F' d='M1440,80 Q1190,90 890,120 L1440,120 Z'/%3E%3Cg fill='%233A9A40'%3E%3Cpath d='M0,120 C10,50 100,30 150,120 Z'/%3E%3Ccircle cx='30' cy='120' r='60'/%3E%3Ccircle cx='90' cy='120' r='50'/%3E%3Ccircle cx='0' cy='60' r='40'/%3E%3Ccircle cx='120' cy='100' r='30'/%3E%3C/g%3E%3Cg fill='%234CAF50'%3E%3Ccircle cx='20' cy='120' r='50'/%3E%3Ccircle cx='70' cy='120' r='40'/%3E%3C/g%3E%3Cg fill='%233A9A40'%3E%3Cpath d='M1440,120 C1430,50 1340,30 1290,120 Z'/%3E%3Ccircle cx='1410' cy='120' r='60'/%3E%3Ccircle cx='1350' cy='120' r='50'/%3E%3Ccircle cx='1440' cy='60' r='40'/%3E%3Ccircle cx='1320' cy='100' r='30'/%3E%3C/g%3E%3Cg fill='%234CAF50'%3E%3Ccircle cx='1420' cy='120' r='50'/%3E%3Ccircle cx='1370' cy='120' r='40'/%3E%3C/g%3E%3Cg transform='translate(350, 95) scale(0.9)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23fff'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFC107'/%3E%3C/g%3E%3Cg transform='translate(250, 110) scale(0.5)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23fff'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFC107'/%3E%3C/g%3E%3Cg transform='translate(1080, 95) scale(0.9)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFEB3B'/%3E%3C/g%3E%3Cg transform='translate(1220, 105) scale(0.8)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23fff'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFC107'/%3E%3C/g%3E%3C/svg%3E");
             background-size: 100% 100%; background-position: bottom center; background-repeat: no-repeat;
         }
 
         .footer-text {
-            color: var(--jogos-blue); font-size: clamp(0.6rem, 1.6vh, 0.95rem); font-weight: 800; z-index: 2;
+            color: var(--jogos-blue); font-size: clamp(0.7rem, 1.8vh, 0.95rem); font-weight: 800; z-index: 2;
             text-align: center; line-height: 1.2;
         }
     </style>
@@ -230,17 +237,20 @@
                     const card = document.createElement('a');
                     card.className = 'game-card';
                     card.href = jogo.link;
-                    card.style.borderColor = tema.fundo;
+                    
+                    // Definimos a cor do tema numa variável CSS do elemento
+                    // Isto alimenta o border, a cor do texto, o fundo da imagem, etc!
+                    card.style.setProperty('--card-color', tema.fundo);
                     
                     const iconeSeta = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>`;
 
                     card.innerHTML = `
-                        <div class="card-img-container" style="background-color: ${tema.fundo}">
+                        <div class="card-img-container">
                             <img src="${config.caminhoIconsJogos}${jogo.icon}" alt="${jogo.nome}">
                         </div>
                         <div class="card-info">
-                            <span class="card-title" style="color: ${tema.fundo}">${jogo.nome}</span>
-                            <div class="card-btn" style="background-color: ${tema.fundo}">
+                            <span class="card-title">${jogo.nome}</span>
+                            <div class="card-btn">
                                 ${iconeSeta}
                             </div>
                         </div>
