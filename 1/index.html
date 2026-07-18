@@ -10,7 +10,7 @@
     
     <style>
         :root {
-            --blue-primary: #007bff;
+            --primary-blue: #007bff; /* Cor exata do botão voltar_az.png */
             --text-dark: #2d5a88;
             --text-grey: #a5b4c4;
         }
@@ -22,7 +22,7 @@
             min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; position: relative;
         }
 
-        /* --- DECORAÇÃO DE FUNDO --- */
+        /* --- ELEMENTOS DE FUNDO --- */
         .sky-decor {
             position: absolute; top: 0; left: 0; width: 100%; height: 300px;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300"><circle cx="100" cy="50" r="40" fill="white" opacity="0.6"/><circle cx="140" cy="60" r="30" fill="white" opacity="0.6"/><circle cx="850" cy="80" r="50" fill="white" opacity="0.6"/><circle cx="890" cy="90" r="35" fill="white" opacity="0.6"/></svg>');
@@ -41,20 +41,25 @@
             padding: 5px 20px; height: 85px; z-index: 1000;
         }
 
+        /* Hambúrguer com cor da seta e efeito rollover */
         .hamburger-btn { 
-            background: none; border: none; color: var(--blue-primary); 
-            font-size: 30px; cursor: pointer; display: flex; align-items: center; justify-content: flex-start;
+            background: none; border: none; color: var(--primary-blue); 
+            font-size: 32px; cursor: pointer; display: flex; align-items: center; justify-content: flex-start;
+            transition: transform 0.2s;
         }
+        .hamburger-btn:hover { transform: scale(1.1); color: #0056b3; }
 
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         #header-icon { height: 60px; }
+        
         .title-group { display: flex; flex-direction: column; text-align: left; }
-        .title-main { font-weight: 900; font-size: 1.4rem; text-transform: uppercase; color: var(--blue-primary); line-height: 1; }
+        .title-main { font-weight: 900; font-size: 1.4rem; text-transform: uppercase; color: var(--primary-blue); line-height: 1; }
         .title-main span { color: var(--text-grey); }
-        .title-sub { color: var(--blue-primary); font-weight: 800; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .title-sub { color: var(--primary-blue); font-weight: 800; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
 
         .btn-voltar-top { display: flex; justify-content: flex-end; }
-        .btn-voltar-top img { height: 45px; cursor: pointer; }
+        .btn-voltar-top img { height: 45px; cursor: pointer; transition: transform 0.2s; }
+        .btn-voltar-top img:hover { transform: scale(1.1); }
 
         /* --- MENU DROPDOWN --- */
         .menu-dropdown { 
@@ -65,7 +70,9 @@
             display: flex; align-items: center; gap: 12px; padding: 12px 18px; 
             background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             text-decoration: none; color: var(--text-dark); font-weight: 700; min-width: 220px;
+            transition: background 0.2s, color 0.2s;
         }
+        .menu-item:hover { background: var(--primary-blue); color: white; }
         .menu-item img { height: 25px; }
 
         /* --- SUB-HEADER --- */
@@ -73,33 +80,41 @@
         .intro-text { color: #2d5a88; font-size: 1.7rem; font-weight: 800; display: inline-flex; align-items: center; gap: 15px; }
         .sparkle { color: #ffcc00; font-size: 1.8rem; font-weight: 900; }
 
-        /* --- GRID --- */
+        /* --- GRID DE JOGOS --- */
         main { flex: 1; display: flex; justify-content: center; align-items: flex-start; padding: 10px 20px; z-index: 10; }
         .game-wrapper { display: flex; gap: 25px; width: 100%; max-width: 1100px; justify-content: center; }
 
-        /* Card Desktop */
         .game-card { 
             background: white; border-radius: 35px; border: 3px solid; 
             text-decoration: none; padding: 25px; flex: 1; max-width: 330px;
             display: flex; flex-direction: column; align-items: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: 0.3s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: transform 0.3s;
         }
+        .game-card:hover { transform: translateY(-8px); }
         
         .card-img-container { 
             width: 100%; aspect-ratio: 1.3; display: flex; align-items: center; justify-content: center; 
             border-radius: 25px; margin-bottom: 20px;
         }
         .card-img-container img { width: 85%; height: 85%; object-fit: contain; }
+        
         .game-card h2 { color: var(--text-dark); font-size: 1.2rem; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; }
-        .btn-action { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
+        
+        /* Botão redondo de ação com rollover */
+        .btn-action { 
+            width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; 
+            transition: transform 0.2s, filter 0.2s;
+        }
+        .game-card:hover .btn-action { transform: scale(1.15); filter: brightness(1.1); }
 
         footer { position: fixed; bottom: 15px; width: 100%; text-align: center; font-weight: 700; color: #5d7082; font-size: 0.75rem; z-index: 10; }
 
-        /* --- MOBILE --- */
+        /* --- RESPONSIVIDADE MOBILE --- */
         @media (max-width: 768px) {
             header { grid-template-columns: 60px 1fr 60px; height: 75px; padding: 0 10px; }
             #header-icon { height: 45px; }
             .title-main { font-size: 1rem; }
+            .btn-voltar-top img { height: 38px; }
             .game-wrapper { flex-direction: column; align-items: center; gap: 15px; padding-bottom: 120px; }
             .game-card { flex-direction: row; width: 95%; height: 85px; padding: 10px 20px; border-radius: 22px; }
             .card-img-container { width: 65px; height: 65px; margin-bottom: 0; margin-right: 15px; border-radius: 12px; }
@@ -118,6 +133,7 @@
             <i class="fas fa-bars"></i>
         </button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
+        
         <div class="header-center">
             <img id="header-icon" src="" alt="Logo">
             <div class="title-group">
@@ -125,8 +141,9 @@
                 <span id="txt-subtitulo" class="title-sub"></span>
             </div>
         </div>
+        
         <div class="header-right btn-voltar-top">
-            <img id="icon-voltar-top" src="" alt="Voltar" onclick="window.history.back()">
+            <img id="icon-voltar-top" src="" alt="Voltar" onclick="window.location.href='../'">
         </div>
     </header>
 
@@ -153,6 +170,8 @@
             document.getElementById('txt-subtitulo').innerText = config.textos.subtitulo;
             document.getElementById('txt-intro').innerText = config.textos.intro;
             document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
+            
+            // Ícones unificados
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu.ano1;
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + config.iconesMenu.voltar;
 
