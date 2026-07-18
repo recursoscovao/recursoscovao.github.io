@@ -15,11 +15,11 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* BLOQUEIO ABSOLUTO DE SCROLL - Voltou ao height estrito */
+        /* BLOQUEIO ABSOLUTO DE SCROLL */
         body, html {
             height: 100dvh; 
             width: 100vw;
-            overflow: hidden; /* Sem scroll rigorosamente nenhum */
+            overflow: hidden; 
             background-color: var(--sky-blue);
             display: flex; 
             flex-direction: column;
@@ -70,7 +70,7 @@
         .intro-container { 
             display: flex; align-items: center; justify-content: center; gap: 10px;
             margin: clamp(2vh, 4vh, 5vh) 0; position: relative; z-index: 5; flex-shrink: 0;
-            text-align: center; /* Garante alinhamento nos tracejados se quebrar */
+            text-align: center;
         }
         .accent-lines { width: clamp(20px, 3vw, 30px); height: clamp(20px, 3vw, 30px); flex-shrink: 0; }
         .accent-left { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14 4 L6 12 L14 20' fill='none' stroke='%23FFC107' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' stroke-dasharray='1 8'/%3E%3C/svg%3E"); }
@@ -78,8 +78,7 @@
         
         .intro-text { 
             color: var(--jogos-blue); font-size: clamp(1.1rem, 3.5vh, 2.2rem); font-weight: 900; 
-            text-align: center; /* CENTRA o texto em telemóveis quando tem várias linhas */
-            line-height: 1.3;
+            text-align: center; line-height: 1.3;
         }
         .intro-text .destaque { position: relative; display: inline-block; }
         .intro-text .destaque::after {
@@ -90,15 +89,14 @@
 
         /* ----- GRELHA DINÂMICA ----- */
         main { 
-            flex: 1; /* Ocupa espaço restante */
-            min-height: 0; /* Previne que o main force o scroll */
+            flex: 1; 
+            min-height: 0; 
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             padding: 0 clamp(10px, 3vw, 20px) 1vh clamp(10px, 3vw, 20px); z-index: 10;
         }
 
         .game-wrapper { display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; flex-wrap: wrap; }
 
-        /* ESTILO DO CARTÃO: Borda Colorida + Contorno Branco Grosso via Box-Shadow */
         .game-card { 
             display: flex; background: white; text-decoration: none; 
             border: 2px solid var(--card-color); 
@@ -119,25 +117,38 @@
         .card-btn svg { width: 50%; height: 50%; }
 
         /* =========================================
-           MODO RETRATO (Telemóvel Vertical)
+           MODO RETRATO (Telemóvel Vertical) -> ALTERADO AQUI!
            ========================================= */
         @media (orientation: portrait) {
-            .game-wrapper { flex-direction: column; gap: clamp(6px, 1.5vh, 15px); max-width: 450px; justify-content: center; }
-            .game-card { 
-                flex: 1; flex-direction: row; align-items: center; 
-                padding: clamp(4px, 1vh, 6px); border-radius: 50px; 
-                height: auto; 
-                min-height: 0; /* Permite espremer sem fazer scroll */
-                max-height: 12vh; /* Limite máximo estético */
+            .game-wrapper { 
+                flex-direction: column; 
+                gap: clamp(10px, 1.8vh, 18px); 
+                max-width: 450px; 
+                width: 100%;
+                /* Stretch garante que TODOS os cartões têm 100% da largura possível */
+                align-items: stretch; 
+                justify-content: center; 
             }
-            .card-img-container { height: 100%; aspect-ratio: 1; border-radius: 50%; flex-shrink: 0; }
-            .card-img-container img { max-width: 75%; max-height: 75%; }
-            .card-info { flex-direction: row; align-items: center; justify-content: space-between; flex-grow: 1; padding: 0 10px 0 15px; }
-            .card-title { font-size: clamp(1rem, 2.5vh, 1.4rem); }
-            .card-btn { height: clamp(30px, 6vh, 45px); width: clamp(30px, 6vh, 45px); border-radius: 50%; flex-shrink: 0; }
+            .game-card { 
+                flex: none; width: 100%; flex-direction: row; align-items: center; 
+                padding: clamp(4px, 1vh, 8px); border-radius: 50px; 
+                height: auto; 
+                min-height: 80px; 
+                max-height: 12vh; 
+            }
+            .card-img-container { 
+                height: 100%; 
+                aspect-ratio: 0.95; /* Ligeiramente retangular, igual à imagem */
+                /* Curva acentuada à esquerda (acompanha o cartão), curva suave à direita */
+                border-radius: 40px 15px 15px 40px; 
+                flex-shrink: 0; 
+            }
+            .card-img-container img { max-width: 80%; max-height: 80%; }
+            .card-info { flex-direction: row; align-items: center; justify-content: space-between; flex-grow: 1; padding: 0 15px 0 20px; }
+            .card-title { font-size: clamp(1.1rem, 3vh, 1.5rem); }
+            .card-btn { height: clamp(35px, 6vh, 45px); width: clamp(35px, 6vh, 45px); border-radius: 50%; flex-shrink: 0; }
             .star-decor { left: 5%; top: 18%; }
             
-            /* Ocultar avião e tracejados no mobile vertical para dar espaço */
             .plane-wrapper { display: none !important; }
             .accent-lines { display: none; }
         }
@@ -152,8 +163,8 @@
                 padding: clamp(4px, 1vh, 10px); 
                 border-radius: clamp(15px, 2.5vw, 35px); 
                 height: 100%; 
-                max-height: 45vh; /* Ocupa no máximo ~40% do ecrã */
-                min-height: 0; /* Segredo: Permite espremer a altura em telemóveis deitados sem fazer scroll! */
+                max-height: 45vh; 
+                min-height: 0; 
             }
             .game-card:hover { transform: scale(1.03) translateY(-4px); }
             .card-img-container { 
@@ -169,7 +180,7 @@
             }
         }
 
-        /* ----- FOOTER (Com Forma Azul Arredondada) ----- */
+        /* ----- FOOTER ----- */
         footer {
             height: clamp(55px, 12vh, 100px); width: 100%; position: relative; flex-shrink: 0; 
             display: flex; align-items: flex-end; justify-content: center;
@@ -249,7 +260,6 @@
                     card.className = 'game-card';
                     card.href = jogo.link;
                     
-                    // Definimos a cor do tema numa variável CSS
                     card.style.setProperty('--card-color', tema.fundo);
                     
                     const iconeSeta = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>`;
