@@ -15,8 +15,8 @@ const JOGO_CONFIG = {
         ano2: "icon2.png",
         ano3: "icon3.png",
         ano4: "icon4.png",
-        voltar: "seta.png",
-        voltarMobile: "seta.png" 
+        voltar: "voltar_az.png",
+        voltarMobile: "voltar_az.png" 
     },
     links: {
         home: "../", 
