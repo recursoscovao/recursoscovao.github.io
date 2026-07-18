@@ -10,134 +10,155 @@
     
     <style>
         :root {
-            --primary-blue: #1e88e5;
-            --text-dark: #1a3c5e;
-            --sky-top: #d8ebff;
-            --sky-bottom: #ffffff;
+            --primary-blue: #007bff;
+            --text-dark: #2d5a88;
+            --sky-bg: #e1f0ff;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            background: linear-gradient(to bottom, var(--sky-top) 0%, var(--sky-bottom) 50%, var(--sky-bottom) 100%);
+            background: var(--sky-bg);
             min-height: 100vh;
             display: flex; flex-direction: column;
             overflow-x: hidden;
             position: relative;
         }
 
-        /* --- ELEMENTOS DE FUNDO (NUVENS E ARBUSTOS) --- */
-        .sky-elements {
-            position: absolute; width: 100%; height: 300px; top: 0; left: 0; z-index: 0; pointer-events: none;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300"><path fill="white" opacity="0.6" d="M150,100 Q180,70 210,100 T270,100 T330,100 T210,130 Z M700,50 Q730,20 760,50 T820,50 T880,50 T760,80 Z"/></svg>');
+        /* --- ELEMENTOS DE FUNDO (CÉU E RELVA) --- */
+        .background-decor {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;
+            background: linear-gradient(to bottom, #d8ebff 0%, #ffffff 60%);
         }
 
-        .ground-elements {
-            position: absolute; bottom: 0; width: 100%; height: 120px; z-index: 1; pointer-events: none;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120"><path fill="%234CAF50" d="M0,120 L1440,120 L1440,40 Q1380,20 1320,40 T1200,40 T1080,40 T960,40 T840,40 T720,40 T600,40 T480,40 T360,40 T240,40 T120,40 T0,40 Z"/></svg>');
-            background-position: bottom; background-repeat: repeat-x;
+        /* Nuvens no topo */
+        .cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.8; filter: blur(5px); }
+        .cloud-1 { width: 120px; height: 40px; top: 10%; left: 5%; }
+        .cloud-2 { width: 150px; height: 50px; top: 15%; right: 10%; }
+
+        /* Arbustos (Bushes) no fundo - Exatamente como na imagem */
+        .bushes {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 100px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 20'%3E%3Cpath d='M0 20h120V10a10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0z' fill='%234fb443'/%3E%3C/svg%3E");
+            background-repeat: repeat-x; background-size: 300px auto; z-index: 1;
+        }
+
+        /* Flores pequenas no fundo */
+        .bushes::after {
+            content: "🌼"; position: absolute; top: 20px; left: 15%; font-size: 15px; opacity: 0.7;
+            text-shadow: 200px 10px 0 #fff, 450px -5px 0 #fff, 700px 15px 0 #fff, 950px 0 0 #fff;
         }
 
         /* --- HEADER --- */
         header { 
             background: white; display: flex; justify-content: space-between; align-items: center; 
-            padding: 0 20px; height: 80px; z-index: 1000;
+            padding: 0 20px; height: 85px; z-index: 1000;
         }
 
         .hamburger-btn { 
-            background: white; border: 2px solid #f0f4f8; color: var(--primary-blue);
-            width: 45px; height: 45px; border-radius: 12px; font-size: 20px; cursor: pointer;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+            background: none; border: 1px solid #e1f0ff; color: var(--primary-blue); 
+            font-size: 26px; cursor: pointer; width: 45px; height: 45px; border-radius: 12px;
+            display: flex; align-items: center; justify-content: center;
         }
 
         .header-center { display: flex; align-items: center; gap: 10px; }
-        #header-icon { height: 60px; width: auto; }
-        .title-group { display: flex; flex-direction: column; text-align: left; }
-        .title-main { font-weight: 900; font-size: 1.4rem; text-transform: uppercase; color: #1e88e5; line-height: 1; }
+        #header-icon { height: 60px; }
+        .title-group { display: flex; flex-direction: column; }
+        .title-main { font-weight: 900; font-size: 1.4rem; text-transform: uppercase; color: var(--primary-blue); line-height: 1; }
         .title-main span:last-child { color: #a5b4c4; }
-        .title-sub { color: #1e88e5; font-weight: 800; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; margin-top: 2px;}
+        .title-sub { color: var(--primary-blue); font-weight: 800; font-size: 10px; text-transform: uppercase; margin-top: 2px; }
 
-        .btn-voltar-circle { 
-            background: var(--primary-blue); width: 40px; height: 40px; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; color: white; text-decoration: none;
-            box-shadow: 0 3px 6px rgba(0,0,0,0.1); font-size: 18px;
+        .btn-voltar-top { 
+            background: var(--primary-blue); color: white; width: 40px; height: 40px; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            text-decoration: none; font-size: 18px; box-shadow: 0 3px 6px rgba(0,0,0,0.1);
         }
 
-        /* --- INTRO TEXT COM FAÍSCAS --- */
-        .sub-header { text-align: center; padding: 25px 10px; z-index: 10; }
-        .intro-container { display: inline-flex; align-items: center; gap: 15px; }
-        .intro-text { color: #2c3e50; font-size: 1.6rem; font-weight: 800; }
-        .sparks { color: #ffcc00; font-size: 1.8rem; font-weight: 900; }
+        /* --- TEXTO INTRO COM FAÍSCAS AMARELAS --- */
+        .sub-header { text-align: center; padding: 25px 10px; z-index: 10; position: relative; }
+        .intro-text { color: #1a4a7a; font-size: 1.6rem; font-weight: 800; position: relative; display: inline-block; }
+        
+        /* As 3 faíscas amarelas da imagem */
+        .intro-text::before, .intro-text::after {
+            content: ""; position: absolute; width: 30px; height: 30px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 12h3M5 5l2 2M5 19l2-2' stroke='%23ffcc00' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; top: 5px;
+        }
+        .intro-text::before { left: -40px; transform: rotate(0deg); }
+        .intro-text::after { right: -40px; transform: rotate(180deg) scaleY(-1); }
 
-        /* --- ÁREA PRINCIPAL --- */
+        /* --- GRID DE JOGOS --- */
         main { flex: 1; display: flex; justify-content: center; align-items: flex-start; padding: 10px 20px; z-index: 10; }
         .game-wrapper { display: flex; gap: 20px; width: 100%; max-width: 1100px; justify-content: center; }
 
-        /* DESIGN PC / TABLET */
+        /* CARD DESKTOP */
         .game-card { 
-            background: white; border-radius: 40px; border: 4px solid; 
-            text-decoration: none; padding: 30px; flex: 1; max-width: 320px;
+            background: white; border-radius: 40px; border: 3px solid; 
+            text-decoration: none; padding: 25px; flex: 1; max-width: 320px;
             display: flex; flex-direction: column; align-items: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); transition: 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: 0.3s;
         }
-        .game-card:hover { transform: translateY(-10px); }
         
         .card-img-container { 
-            width: 100%; aspect-ratio: 1.3; display: flex; align-items: center; justify-content: center; 
-            border-radius: 25px; margin-bottom: 20px; background-color: #f8fbff;
+            width: 100%; aspect-ratio: 1.25; display: flex; align-items: center; justify-content: center; 
+            margin-bottom: 15px;
         }
-        .card-img-container img { width: 75%; height: 75%; object-fit: contain; }
+        .card-img-container img { width: 85%; object-fit: contain; }
         
-        .game-card h2 { color: #1e88e5; font-size: 1.2rem; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; }
+        /* Faixa branca arredondada para o nome */
+        .game-card h2 { 
+            color: #1a4a7a; font-size: 1.1rem; font-weight: 900; text-transform: uppercase; 
+            margin-bottom: 15px; width: 100%; text-align: center;
+        }
         
-        .btn-card-action {
-            width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: white; font-size: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        .btn-action {
+            width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 16px;
         }
 
-        /* --- FOOTER --- */
+        /* --- RODAPÉ --- */
         footer { 
-            height: 100px; display: flex; align-items: flex-end; justify-content: center; 
-            padding-bottom: 20px; font-weight: 700; color: #5d7082; font-size: 0.75rem; z-index: 10;
+            height: 60px; display: flex; align-items: center; justify-content: center; 
+            font-weight: 700; color: #5d7082; font-size: 0.75rem; z-index: 10;
+        }
+
+        /* --- RESPONSIVIDADE MOBILE (IGUAL À IMAGEM) --- */
+        @media (max-width: 650px) {
+            header { height: 75px; padding: 0 10px; }
+            .intro-text { font-size: 1.2rem; }
+            .intro-text::before, .intro-text::after { width: 20px; left: -30px; right: -30px; }
+
+            .game-wrapper { flex-direction: column; align-items: center; padding-bottom: 120px; }
+            
+            /* Card vira Horizontal no Telemóvel */
+            .game-card { 
+                flex-direction: row; width: 100%; height: 80px; 
+                padding: 10px 15px; border-radius: 20px;
+            }
+            .card-img-container { width: 60px; height: 60px; margin-bottom: 0; margin-right: 15px; }
+            .game-card h2 { flex: 1; text-align: left; font-size: 0.95rem; margin-bottom: 0; }
+            .btn-action { width: 34px; height: 34px; }
         }
 
         /* --- MENU DROPDOWN --- */
         #dropdownMenu {
-            position: absolute; top: 80px; left: 20px; display: none; 
-            flex-direction: column; gap: 10px; z-index: 2000;
+            position: absolute; top: 85px; left: 20px; display: none; 
+            flex-direction: column; gap: 8px; z-index: 2000;
         }
         .menu-item {
-            display: flex; align-items: center; gap: 12px; padding: 15px 20px; 
+            display: flex; align-items: center; gap: 12px; padding: 12px 18px; 
             background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            text-decoration: none; color: #5d7082; font-weight: 700; min-width: 220px;
-        }
-
-        /* --- RESPONSIVIDADE TELEMÓVEL (IGUAL À IMAGEM) --- */
-        @media (max-width: 650px) {
-            header { height: 70px; padding: 0 10px; }
-            #header-icon { height: 45px; }
-            .title-main { font-size: 1.1rem; }
-            .intro-text { font-size: 1.3rem; }
-            
-            main { align-items: center; padding-bottom: 120px; }
-            .game-wrapper { flex-direction: column; align-items: center; gap: 15px; }
-            
-            /* TRANSFORMANDO O CARD EM LISTA HORIZONTAL */
-            .game-card { 
-                flex-direction: row; width: 95%; max-width: 100%; height: 90px; 
-                padding: 10px 20px; border-radius: 25px; border-width: 3px;
-            }
-            .card-img-container { width: 70px; height: 100%; margin-bottom: 0; margin-right: 15px; background: none; }
-            .card-img-container img { width: 100%; height: 100%; }
-            .game-card h2 { flex: 1; text-align: left; font-size: 1rem; margin-bottom: 0; color: #476a8a; }
-            .btn-card-action { width: 35px; height: 35px; font-size: 14px; }
+            text-decoration: none; color: #5d7082; font-weight: 700; min-width: 200px;
         }
     </style>
 </head>
 <body>
 
-    <div class="sky-elements"></div>
-    <div class="ground-elements"></div>
+    <div class="background-decor">
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        <div class="bushes"></div>
+    </div>
 
     <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)">
@@ -147,10 +168,10 @@
         <div id="dropdownMenu"></div>
 
         <div class="header-center">
-            <img id="header-icon" src="" alt="Girafa">
+            <img id="header-icon" src="" alt="Logo">
             <div class="title-group">
                 <div class="title-main">
-                    <span id="txt-titulo1"></span> 
+                    <span id="txt-titulo1" style="color: var(--primary-blue);"></span> 
                     <span id="txt-titulo2"></span>
                 </div>
                 <span id="txt-subtitulo" class="title-sub"></span>
@@ -158,18 +179,14 @@
         </div>
 
         <div class="header-right">
-            <a href="javascript:voltarUmNivel()" class="btn-voltar-circle">
+            <a href="javascript:voltarUmNivel()" class="btn-voltar-top">
                 <i class="fas fa-arrow-left"></i>
             </a>
         </div>
     </header>
 
     <div class="sub-header">
-        <div class="intro-container">
-            <span class="sparks">✨</span>
-            <span id="txt-intro" class="intro-text"></span>
-            <span class="sparks">✨</span>
-        </div>
+        <div class="intro-text" id="txt-intro"></div>
     </div>
 
     <main>
@@ -195,6 +212,7 @@
             document.getElementById('txt-subtitulo').innerText = config.textos.subtitulo;
             document.getElementById('txt-intro').innerText = config.textos.intro;
             document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
+            
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu.ano1;
 
             const grid = document.getElementById('gamesGrid');
@@ -209,15 +227,19 @@
                     <div class="card-img-container">
                         <img src="${config.caminhoIconsJogos}${jogo.icon}" alt="${jogo.nome}">
                     </div>
-                    <h2>${jogo.nome}</h2>
-                    <div class="btn-card-action" style="background-color: ${tema.seta};">
-                        <i class="fas fa-arrow-right"></i>
+                    <div style="background-color: white; border-radius: 30px; width: 100%;">
+                        <h2>${jogo.nome}</h2>
+                        <div style="display: flex; justify-content: center; padding-bottom: 10px;">
+                            <div class="btn-action" style="background-color: ${tema.seta};">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                        </div>
                     </div>
                 `;
                 grid.appendChild(card);
             });
 
-            // Gerar menu lateral simples
+            // Menu hamburguer
             const menu = document.getElementById('dropdownMenu');
             Object.keys(config.links).forEach(key => {
                 const a = document.createElement('a');
