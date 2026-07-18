@@ -7,226 +7,191 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@600;700;800;900&display=swap" rel="stylesheet">
     <style>
         :root {
-            --text-dark: #1e293b;
-            --text-grey: #64748b;
+            --text-grey: #8792a1;
             --mundo-red: #E1251B;
             --jogos-blue: #1A499C;
-            --sky-blue: #E8F4FD;
+            --sky-blue: #EAF4FE;
         }
 
-        * { 
-            box-sizing: border-box; 
-            margin: 0; 
-            padding: 0; 
-            font-family: 'Nunito', sans-serif; 
-            -webkit-tap-highlight-color: transparent;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* ESTRUTURA SEM SCROLL */
-        body { 
+        /* BLOQUEIO TOTAL DE SCROLL */
+        body, html {
+            height: 100dvh; width: 100vw;
+            overflow: hidden; /* Corta qualquer scroll */
             background-color: var(--sky-blue);
-            height: 100dvh; /* Altura exata do ecrã */
-            width: 100vw;
-            overflow: hidden; /* Proíbe o scroll */
-            display: flex; 
-            flex-direction: column;
+            display: flex; flex-direction: column;
             position: relative;
         }
 
-        /* ----- DECORAÇÕES FLUTUANTES NO CÉU ----- */
-        .decorations {
-            position: absolute;
-            top: 0; left: 0; width: 100%; height: 60%;
-            pointer-events: none;
-            z-index: 1;
-        }
-        .cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.8; }
-        .cloud::before, .cloud::after { content: ''; position: absolute; background: white; border-radius: 50%; }
-        .cloud-1 { top: 20%; left: -2%; width: clamp(80px, 10vw, 120px); height: clamp(25px, 4vw, 40px); }
-        .cloud-1::before { width: 50%; height: 150%; top: -75%; left: 15%; }
-        .cloud-1::after { width: 40%; height: 100%; top: -40%; left: 50%; }
-        .cloud-2 { top: 12%; right: 2%; width: clamp(60px, 8vw, 100px); height: clamp(20px, 3vw, 35px); }
-        .cloud-2::before { width: 50%; height: 150%; top: -75%; left: 15%; }
-        .cloud-2::after { width: 40%; height: 100%; top: -40%; left: 50%; }
+        /* ----- DECORAÇÕES DO CÉU ----- */
+        .sky-decorations { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        
+        /* Nuvens macias */
+        .cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.6; filter: blur(1px); }
+        .cloud-1 { top: 25%; left: -2%; width: 15vw; height: 5vh; min-width: 100px; }
+        .cloud-2 { top: 15%; right: 5%; width: 12vw; height: 4vh; min-width: 80px; }
+        .cloud::before { content:''; position:absolute; top: -50%; left: 15%; width: 50%; height: 150%; background: white; border-radius: 50%; }
+        .cloud::after { content:''; position:absolute; top: -20%; left: 50%; width: 40%; height: 120%; background: white; border-radius: 50%; }
 
-        .paper-plane-wrapper {
-            position: absolute; top: 18%; right: 10%; width: 15vw; height: 10vh; max-width: 150px;
+        /* Estrela Esquerda */
+        .star-decor {
+            position: absolute; top: 22%; left: 12%; width: clamp(20px, 3vh, 35px); height: clamp(20px, 3vh, 35px);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFC107'%3E%3Cpath d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; transform: rotate(-15deg);
         }
+
+        /* Avião e Rasto Direita */
+        .plane-wrapper { position: absolute; top: 18%; right: 8%; width: 15vw; height: 10vh; min-width: 100px; }
         .plane-trail {
-            position: absolute; top: 20%; right: 20%; width: 100%; height: 50%;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' preserveAspectRatio='none'%3E%3Cpath d='M0,50 Q30,-10 100,20' fill='none' stroke='%2388C0ED' stroke-width='4' stroke-dasharray='6,6' stroke-linecap='round'/%3E%3C/svg%3E");
+            position: absolute; top: 25%; right: 25%; width: 100%; height: 50%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' preserveAspectRatio='none'%3E%3Cpath d='M0,50 Q40,-10 100,20' fill='none' stroke='%2388C0ED' stroke-width='4' stroke-dasharray='6,8' stroke-linecap='round'/%3E%3C/svg%3E");
         }
         .plane-icon {
-            position: absolute; top: 0; right: 0; width: clamp(25px, 4vw, 40px); height: clamp(25px, 4vw, 40px);
-            transform: rotate(-15deg);
+            position: absolute; top: 0; right: 0; width: clamp(25px, 4vh, 45px); height: clamp(25px, 4vh, 45px);
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235B9EE5'%3E%3Cpath d='M2.01 21L23 12 2.01 3 2 10l15 2-15 2z'/%3E%3C/svg%3E");
-            background-repeat: no-repeat; background-size: contain;
+            background-repeat: no-repeat; transform: rotate(-15deg);
         }
 
-        /* ----- HEADER (Arredondado, ajustável em altura) ----- */
+        /* ----- HEADER (Flex-Shrink 0 para manter o tamanho) ----- */
         .header-wrapper {
-            background: white;
-            border-radius: 0 0 clamp(20px, 4vw, 50px) clamp(20px, 4vw, 50px);
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            background: white; border-radius: 0 0 clamp(20px, 4vw, 40px) clamp(20px, 4vw, 40px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
             display: flex; align-items: center; justify-content: center; 
-            padding: clamp(10px, 2vh, 25px) 20px clamp(15px, 3vh, 35px) 20px;
-            position: relative;
-            z-index: 10;
-            flex-shrink: 0; /* Não encolhe */
+            padding: clamp(10px, 2vh, 20px); position: relative; z-index: 10; flex-shrink: 0;
         }
-        .header-content { display: flex; align-items: center; gap: clamp(10px, 2vw, 15px); }
-        #header-icon { height: clamp(40px, 8vh, 65px); width: auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+        .header-content { display: flex; align-items: center; gap: 15px; }
+        #header-icon { height: clamp(40px, 8vh, 70px); filter: drop-shadow(0 2px 5px rgba(0,0,0,0.1)); }
         .title-group { display: flex; flex-direction: column; justify-content: center; line-height: 0.9; }
-        .title-main { font-weight: 900; font-size: clamp(1.2rem, 3.5vh, 2.2rem); letter-spacing: -0.5px; }
-        #txt-titulo1 { color: var(--mundo-red); }
-        #txt-titulo2 { color: var(--jogos-blue); }
-        .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.6rem, 1.5vh, 0.9rem); margin-top: 4px; }
+        .title-main { font-weight: 900; font-size: clamp(1.3rem, 3.5vh, 2.4rem); letter-spacing: -0.5px; }
+        #txt-titulo1 { color: var(--mundo-red); } #txt-titulo2 { color: var(--jogos-blue); }
+        .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.7rem, 1.5vh, 1rem); margin-top: 4px; }
 
-        /* ----- TEXTO INTRODUTÓRIO ----- */
+        /* ----- INTRO TEXT E DETALHES AMARELOS ----- */
         .intro-container { 
-            text-align: center; 
-            margin: clamp(10px, 3vh, 30px) 0;
-            position: relative;
-            z-index: 5;
-            flex-shrink: 0;
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+            margin: clamp(1vh, 3vh, 4vh) 0; position: relative; z-index: 5; flex-shrink: 0;
         }
-        .intro-text { color: var(--jogos-blue); font-size: clamp(1rem, 3.5vh, 1.8rem); font-weight: 900; }
+        
+        /* Traços amarelos ao lado do texto */
+        .accent-lines { width: clamp(20px, 3vw, 35px); height: clamp(20px, 3vw, 35px); }
+        .accent-left { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M14 4 L6 12 L14 20' fill='none' stroke='%23FFC107' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' stroke-dasharray='1 8'/%3E%3C/svg%3E"); }
+        .accent-right { background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M10 4 L18 12 L10 20' fill='none' stroke='%23FFC107' stroke-width='4' stroke-linecap='round' stroke-linejoin='round' stroke-dasharray='1 8'/%3E%3C/svg%3E"); }
+
+        .intro-text { color: var(--jogos-blue); font-size: clamp(1.1rem, 3.5vh, 2.2rem); font-weight: 900; }
         .intro-text .destaque { position: relative; display: inline-block; }
-        .intro-text .destaque::after {
-            content: ''; position: absolute; bottom: -8px; left: -5%; width: 110%; height: 12px;
+        .intro-text .destaque::after { /* Linha curva amarela */
+            content: ''; position: absolute; bottom: -8px; left: 0; width: 100%; height: 12px;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 25' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='8' stroke-linecap='round' fill='transparent'/%3E%3C/svg%3E");
-            background-size: 100% 100%; background-repeat: no-repeat; z-index: -1;
+            background-size: 100% 100%; z-index: -1;
         }
 
-        /* ----- MAIN CONTENT: GRELHA DINÂMICA ----- */
+        /* ----- ÁREA DOS CARTÕES (Encolhe e Estica p/ caber) ----- */
         main { 
-            flex: 1; /* Ocupa todo o espaço restante */
-            min-height: 0; /* Previne que o Flexbox faça scroll */
-            display: flex;
-            align-items: center; 
-            justify-content: center;
-            padding: 0 clamp(10px, 3vw, 20px) 2vh clamp(10px, 3vw, 20px);
+            flex: 1; /* Ocupa o restante do ecrã */
+            min-height: 0; /* Previne scroll indesejado do flexbox */
+            display: flex; align-items: center; justify-content: center;
+            padding: 0 clamp(10px, 3vw, 20px) 1vh clamp(10px, 3vw, 20px);
             z-index: 10;
         }
 
-        .game-wrapper { 
-            display: grid;
-            width: 100%;
-            height: 100%; /* Preenche o Main */
-            max-width: 1200px;
-        }
+        .game-wrapper { display: grid; width: 100%; height: 100%; max-width: 1300px; }
 
         .game-card { 
-            display: flex;
-            background: white;
-            text-decoration: none; 
-            border: 3px solid white;
-            transition: transform 0.2s ease;
-            overflow: hidden;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+            display: flex; background: white; text-decoration: none; 
+            border: clamp(3px, 0.5vh, 5px) solid; /* Borda colorida */
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
-
+        
         .card-img-container { display: flex; align-items: center; justify-content: center; }
         .card-img-container img { object-fit: contain; filter: drop-shadow(0 5px 8px rgba(0,0,0,0.15)); }
         .card-info { display: flex; background: white; }
         .card-title { font-weight: 900; }
         .card-btn { display: flex; align-items: center; justify-content: center; color: white; }
+        .card-btn svg { width: 50%; height: 50%; }
 
-        /* --- MOBILE LAYOUT (Pílulas empilhadas verticalmente) --- */
-        @media (max-width: 899px) {
+        /* =========================================
+           MODO RETRATO (Portrait) - TELEMÓVEIS / TABLET VERTICAL
+           ========================================= */
+        @media (orientation: portrait) {
             .game-wrapper {
                 grid-template-columns: 1fr;
-                grid-template-rows: repeat(5, 1fr); /* 5 linhas de tamanhos iguais */
-                gap: clamp(8px, 2vh, 15px);
-                max-width: 500px;
+                grid-template-rows: repeat(5, 1fr);
+                gap: clamp(8px, 1.5vh, 15px);
+                max-width: 450px; margin: 0 auto;
             }
-            .game-card {
-                flex-direction: row; align-items: center;
-                border-radius: 50px; padding: 4px;
-                height: 100%; /* Força a caber na sua linha */
-            }
-            .card-img-container {
-                height: 100%; aspect-ratio: 1/1; /* Quadrado */
-                border-radius: 50%; flex-shrink: 0;
-            }
+            .game-card { flex-direction: row; align-items: center; border-radius: 50px; padding: 4px; height: 100%; }
+            .card-img-container { height: 100%; aspect-ratio: 1; border-radius: 50%; flex-shrink: 0; }
             .card-img-container img { max-width: 75%; max-height: 75%; }
-            .card-info {
-                flex-direction: row; align-items: center; justify-content: space-between;
-                flex-grow: 1; padding: 0 10px;
-            }
-            .card-title { font-size: clamp(0.9rem, 2.5vh, 1.2rem); }
-            .card-btn { height: clamp(28px, 5vh, 40px); width: clamp(28px, 5vh, 40px); border-radius: 50%; flex-shrink: 0; }
-            .card-btn svg { width: 50%; height: 50%; }
-            .paper-plane-wrapper { display: none; } /* Esconder avião no mobile para limpar ecrã */
+            .card-info { flex-direction: row; align-items: center; justify-content: space-between; flex-grow: 1; padding: 0 10px 0 15px; }
+            .card-title { font-size: clamp(1rem, 2.5vh, 1.3rem); }
+            .card-btn { height: clamp(30px, 5vh, 45px); width: clamp(30px, 5vh, 45px); border-radius: 50%; flex-shrink: 0; }
+            
+            /* Ajustes estéticos Mobile */
+            .star-decor { left: 5%; top: 18%; }
+            .plane-wrapper { width: 25vw; top: 15%; right: 2%; }
+            .accent-lines { display: none; } /* Esconde as linhas laterais para poupar espaço no mobile */
         }
 
-        /* --- DESKTOP/TABLET LAYOUT (Cartões verticais lado a lado) --- */
-        @media (min-width: 900px) {
+        /* =========================================
+           MODO PAISAGEM (Landscape) - COMPUTADORES / TABLET DEITADO
+           ========================================= */
+        @media (orientation: landscape) {
             .game-wrapper {
                 grid-template-columns: repeat(5, 1fr);
-                grid-template-rows: 1fr; /* Apenas 1 linha */
-                gap: 2vw;
-                align-items: center;
+                grid-template-rows: 1fr;
+                gap: 2vw; align-items: center;
             }
             .game-card {
-                flex-direction: column;
-                border-radius: 25px; padding: 0;
-                height: 85%; /* Não ocupa os 100% para respirar */
-                max-height: 400px; /* Limite máximo estético */
+                flex-direction: column; border-radius: clamp(20px, 3vw, 35px); padding: 0;
+                height: 90%; max-height: 480px; /* Não encosta aos limites */
             }
-            .game-card:hover { transform: translateY(-5px); }
-            .card-img-container { width: 100%; height: 65%; border-radius: 22px 22px 0 0; }
-            .card-img-container img { max-width: 75%; max-height: 75%; }
-            .card-info {
-                flex-direction: column; align-items: center; justify-content: center;
-                height: 35%; gap: 10%; padding: 10px; border-radius: 0 0 22px 22px;
-            }
-            .card-title { font-size: clamp(1rem, 2vw, 1.4rem); text-align: center;}
-            .card-btn { width: clamp(35px, 3.5vw, 45px); height: clamp(35px, 3.5vw, 45px); border-radius: 50%; }
-            .card-btn svg { width: 50%; height: 50%; }
+            .game-card:hover { transform: scale(1.03) translateY(-5px); }
+            
+            /* A imagem ocupa a parte de cima toda com fundo de cor */
+            .card-img-container { width: 100%; height: 65%; border-radius: 20px 20px 0 0; }
+            .card-img-container img { max-width: 80%; max-height: 80%; }
+            
+            /* Info na parte branca de baixo */
+            .card-info { flex-direction: column; align-items: center; justify-content: space-evenly; height: 35%; padding: 10px; }
+            .card-title { font-size: clamp(1rem, 2.5vh, 1.5rem); text-align: center; }
+            .card-btn { width: clamp(35px, 6vh, 55px); height: clamp(35px, 6vh, 55px); border-radius: 50%; }
         }
 
-        /* ----- FOOTER (Com Imagem Reconstruída em CSS/SVG) ----- */
+        /* ----- FOOTER PAISAGEM (Arbustos, Caminho e Texto) ----- */
         footer {
-            height: clamp(50px, 12vh, 100px); /* Altura adaptável */
-            width: 100%;
-            position: relative;
-            flex-shrink: 0; /* Previne que desapareça */
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            padding-bottom: clamp(5px, 1.5vh, 15px);
+            height: clamp(60px, 15vh, 120px);
+            width: 100%; position: relative; flex-shrink: 0; display: flex; align-items: flex-end; justify-content: center;
+            padding-bottom: clamp(5px, 2vh, 15px); z-index: 20;
             
-            /* SVG que recria o prado, as folhas nas pontas e as flores */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath fill='%23C5E452' d='M0,80 Q360,20 720,60 T1440,70 L1440,120 L0,120 Z'/%3E%3Cpath fill='%2389CC35' d='M0,90 Q400,10 800,80 T1440,90 L1440,120 L0,120 Z'/%3E%3Cg fill='%233F9F42'%3E%3Ccircle cx='20' cy='120' r='60'/%3E%3Ccircle cx='70' cy='130' r='50'/%3E%3Ccircle cx='-10' cy='70' r='40'/%3E%3Ccircle cx='1420' cy='120' r='70'/%3E%3Ccircle cx='1370' cy='110' r='50'/%3E%3Ccircle cx='1450' cy='60' r='40'/%3E%3C/g%3E%3Cg fill='%2363B945'%3E%3Ccircle cx='40' cy='110' r='40'/%3E%3Ccircle cx='0' cy='90' r='30'/%3E%3Ccircle cx='1400' cy='100' r='45'/%3E%3Ccircle cx='1440' cy='80' r='35'/%3E%3C/g%3E%3Ccircle cx='180' cy='95' r='5' fill='%23FFF'/%3E%3Ccircle cx='185' cy='90' r='5' fill='%23FFF'/%3E%3Ccircle cx='190' cy='95' r='5' fill='%23FFF'/%3E%3Ccircle cx='185' cy='100' r='5' fill='%23FFF'/%3E%3Ccircle cx='185' cy='95' r='3' fill='%23FFC107'/%3E%3Ccircle cx='1050' cy='100' r='4' fill='%23FFF'/%3E%3Ccircle cx='1054' cy='96' r='4' fill='%23FFF'/%3E%3Ccircle cx='1058' cy='100' r='4' fill='%23FFF'/%3E%3Ccircle cx='1054' cy='104' r='4' fill='%23FFF'/%3E%3Ccircle cx='1054' cy='100' r='2.5' fill='%23FFC107'/%3E%3Ccircle cx='1200' cy='90' r='6' fill='%23FFB6C1'/%3E%3Ccircle cx='1206' cy='86' r='6' fill='%23FFB6C1'/%3E%3Ccircle cx='1212' cy='90' r='6' fill='%23FFB6C1'/%3E%3Ccircle cx='1206' cy='94' r='6' fill='%23FFB6C1'/%3E%3Ccircle cx='1206' cy='90' r='3' fill='%23FFEB3B'/%3E%3C/svg%3E");
-            background-size: 100% 100%;
-            background-position: bottom center;
-            background-repeat: no-repeat;
+            /* Arte em SVG: Fundo verde claro, montes médios, caminho castanho, moitas verde escuro laterais e florzinhas */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 150' preserveAspectRatio='none'%3E%3Cpath fill='%23C0E565' d='M0,80 Q360,30 720,70 T1440,80 L1440,150 L0,150 Z'/%3E%3Cpath fill='%238BC34A' d='M0,100 Q400,20 800,90 T1440,100 L1440,150 L0,150 Z'/%3E%3Cpath fill='%23BCAAA4' d='M400,150 Q720,80 1000,150 Z'/%3E%3Cpath fill='%238D6E63' d='M450,150 Q720,100 950,150 Z'/%3E%3Cg fill='%23388E3C'%3E%3Ccircle cx='0' cy='150' r='90'/%3E%3Ccircle cx='80' cy='150' r='60'/%3E%3Ccircle cx='30' cy='80' r='50'/%3E%3Ccircle cx='1440' cy='150' r='90'/%3E%3Ccircle cx='1360' cy='150' r='60'/%3E%3Ccircle cx='1410' cy='80' r='50'/%3E%3C/g%3E%3Cg fill='%234CAF50'%3E%3Ccircle cx='10' cy='100' r='40'/%3E%3Ccircle cx='120' cy='160' r='40'/%3E%3Ccircle cx='1430' cy='100' r='40'/%3E%3Ccircle cx='1320' cy='160' r='40'/%3E%3C/g%3E%3Ccircle cx='200' cy='110' r='5' fill='%23FFF'/%3E%3Ccircle cx='205' cy='105' r='5' fill='%23FFF'/%3E%3Ccircle cx='210' cy='110' r='5' fill='%23FFF'/%3E%3Ccircle cx='205' cy='115' r='5' fill='%23FFF'/%3E%3Ccircle cx='205' cy='110' r='3' fill='%23FFC107'/%3E%3Ccircle cx='1200' cy='120' r='6' fill='%23F48FB1'/%3E%3Ccircle cx='1206' cy='114' r='6' fill='%23F48FB1'/%3E%3Ccircle cx='1212' cy='120' r='6' fill='%23F48FB1'/%3E%3Ccircle cx='1206' cy='126' r='6' fill='%23F48FB1'/%3E%3Ccircle cx='1206' cy='120' r='3' fill='%23FFEB3B'/%3E%3C/svg%3E");
+            background-size: 100% 100%; background-position: bottom center; background-repeat: no-repeat;
         }
 
         .footer-text {
-            color: var(--jogos-blue);
-            font-size: clamp(0.6rem, 1.5vh, 0.85rem);
-            font-weight: 800;
-            z-index: 2;
+            color: var(--jogos-blue); font-size: clamp(0.55rem, 1.5vh, 0.85rem); font-weight: 800; z-index: 2;
+            text-align: center; line-height: 1.2;
+            text-shadow: 0px 1px 2px rgba(255,255,255,0.8); /* Ajuda a ler por cima da estrada */
         }
-
     </style>
 </head>
 <body>
 
-    <!-- Decorações do Céu -->
-    <div class="decorations">
+    <!-- Elementos Flutuantes do Fundo -->
+    <div class="sky-decorations">
         <div class="cloud cloud-1"></div>
         <div class="cloud cloud-2"></div>
-        <div class="paper-plane-wrapper">
+        <div class="star-decor"></div>
+        <div class="plane-wrapper">
             <div class="plane-trail"></div>
             <div class="plane-icon"></div>
         </div>
     </div>
 
-    <!-- Header Branco Arredondado -->
-    <div class="header-wrapper">
+    <!-- Cabeçalho (Sem menu hamburguer) -->
+    <header class="header-wrapper">
         <div class="header-content">
             <img id="header-icon" src="" alt="Logo">
             <div class="title-group">
@@ -237,26 +202,29 @@
                 <span id="txt-subtitulo" class="title-sub"></span>
             </div>
         </div>
-    </div>
+    </header>
 
-    <!-- Texto Introdutório e Sublinhado -->
+    <!-- Texto de Introdução com Tracejados -->
     <div class="intro-container">
+        <div class="accent-lines accent-left"></div>
         <div class="intro-text">
             <span id="txt-intro-normal"></span>
             <span id="txt-intro-destaque" class="destaque"></span>
         </div>
+        <div class="accent-lines accent-right"></div>
     </div>
 
-    <!-- Grelha de Cartões Dinâmica (Flex 1 - Preenche o buraco central) -->
+    <!-- Grelha de Jogos (Ajusta-se automaticamente a modo vertical ou pílula) -->
     <main>
         <div class="game-wrapper" id="gamesGrid"></div>
     </main>
 
-    <!-- Novo Footer Fiel à Imagem -->
+    <!-- Rodapé Paisagem -->
     <footer>
         <div class="footer-text" id="txt-rodape"></div>
     </footer>
 
+    <!-- Lógica JavaScript -->
     <script src="dados.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
@@ -269,10 +237,7 @@
                 
                 document.getElementById('txt-intro-normal').textContent = config.textos.introNormal || "Escolhe o teu ano e ";
                 document.getElementById('txt-intro-destaque').textContent = config.textos.introDestaque || "diverte-te!";
-                
-                // Vai buscar o texto do footer ao dados.js e insere-o
                 document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
-
                 document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu.logo;
 
                 const grid = document.getElementById('gamesGrid');
@@ -282,9 +247,11 @@
                     const card = document.createElement('a');
                     card.className = 'game-card';
                     card.href = jogo.link;
-                    // Borda dinâmicamente colorida como na imagem original
-                    card.style.borderColor = tema.fundo; 
                     
+                    // A cor da borda do cartão igual à cor do tema (Fica igual à imagem)
+                    card.style.borderColor = tema.fundo;
+                    
+                    // Ícone SVG Seta
                     const iconeSeta = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>`;
 
                     card.innerHTML = `
