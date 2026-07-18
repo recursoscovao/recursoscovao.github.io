@@ -11,6 +11,7 @@
             --text-grey: #64748b;
             --mundo-red: #E1251B;
             --jogos-blue: #1A499C;
+            --sky-blue: #E2F2FE;
             --nav-bg: #ffffff;
         }
 
@@ -23,41 +24,112 @@
         }
         
         body { 
-            background: linear-gradient(180deg, #E2F2FE 0%, #FFFFFF 50%, #E2F2FE 100%);
+            background-color: var(--sky-blue);
             min-height: 100vh; 
             display: flex; 
             flex-direction: column;
-            overflow-x: hidden;
+            overflow-x: hidden; /* Evita scroll horizontal causado pelos objetos de fundo */
             position: relative;
-            padding-bottom: 90px; /* Espaço para a barra flutuante */
+            padding-bottom: 90px; 
         }
 
-        /* FUNDO: MONTANHAS VERDES */
-        .bg-mountains {
+        /* ----- PAISAGEM DE FUNDO (MONTANHAS E CAMINHO) ----- */
+        .bg-landscape {
             position: fixed;
             bottom: 0;
             left: 0;
             width: 100%;
-            height: 25vh;
+            height: 35vh;
             z-index: -1;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 320'%3E%3Cpath fill='%2398D542' fill-opacity='1' d='M0,256L48,250.7C96,245,192,235,288,240C384,245,480,267,576,266.7C672,267,768,245,864,229.3C960,213,1056,203,1152,213.3C1248,224,1344,256,1392,272L1440,288L1440,320L1392,320C1344,320,1248,320,1152,320C1056,320,960,320,864,320C768,320,672,320,576,320C480,320,384,320,288,320C192,320,96,320,48,320L0,320Z'%3E%3C/path%3E%3Cpath fill='%2383C834' fill-opacity='1' d='M0,192L60,202.7C120,213,240,235,360,229.3C480,224,600,192,720,186.7C840,181,960,203,1080,208C1200,213,1320,203,1380,197.3L1440,192L1440,320L1380,320C1320,320,1200,320,1080,320C960,320,840,320,720,320C600,320,480,320,360,320C240,320,120,320,60,320L0,320Z'%3E%3C/path%3E%3C/svg%3E");
+            /* SVG com montanhas, caminho de terra castanho e florzinhas brancas/rosas */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 400' preserveAspectRatio='none'%3E%3Cpath fill='%2389CC35' d='M0,200 C300,100 600,250 1440,150 L1440,400 L0,400 Z'/%3E%3Cpath fill='%2378B72D' d='M0,250 C400,300 800,180 1440,280 L1440,400 L0,400 Z'/%3E%3Cpath fill='%23E1B875' d='M300,400 C500,320 800,280 1100,400 Z'/%3E%3Ccircle cx='150' cy='320' r='5' fill='%23fff'/%3E%3Ccircle cx='150' cy='320' r='2' fill='%23FFC107'/%3E%3Ccircle cx='1200' cy='350' r='4' fill='%23FF80AB'/%3E%3Ccircle cx='1200' cy='350' r='1.5' fill='%23fff'/%3E%3Ccircle cx='800' cy='380' r='6' fill='%23fff'/%3E%3Ccircle cx='800' cy='380' r='2.5' fill='%23FFC107'/%3E%3C/svg%3E");
             background-size: cover;
             background-position: bottom center;
             background-repeat: no-repeat;
         }
 
-        /* HEADER */
-        header { 
+        /* ----- DECORAÇÕES FLUTUANTES (Nuvens, Estrelas, Avião) ----- */
+        .decorations {
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
+        }
+
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 50px;
+            opacity: 0.8;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+        .cloud::before, .cloud::after {
+            content: ''; position: absolute; background: white; border-radius: 50%;
+        }
+        /* Nuvem 1 (Esquerda) */
+        .cloud-1 { top: 25%; left: -5%; width: 120px; height: 40px; }
+        .cloud-1::before { width: 60px; height: 60px; top: -30px; left: 15px; }
+        .cloud-1::after { width: 40px; height: 40px; top: -15px; left: 65px; }
+        
+        /* Nuvem 2 (Direita) */
+        .cloud-2 { top: 15%; right: 5%; width: 100px; height: 35px; transform: scale(0.8); }
+        .cloud-2::before { width: 50px; height: 50px; top: -25px; left: 15px; }
+        .cloud-2::after { width: 35px; height: 35px; top: -15px; left: 55px; }
+
+        /* Estrelas */
+        .star {
+            position: absolute;
+            width: 25px; height: 25px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFD54F'%3E%3Cpath d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/%3E%3C/svg%3E");
+        }
+        .star-1 { top: 28%; left: 10%; transform: rotate(-15deg); width: 35px; height: 35px; }
+        .star-2 { top: 12%; right: 20%; transform: rotate(20deg); width: 20px; height: 20px;}
+        .star-3 { top: 25%; right: 12%; transform: rotate(45deg); width: 15px; height: 15px;}
+
+        /* Avião de Papel com Rasto Tracejado */
+        .paper-plane-wrapper {
+            position: absolute;
+            top: 20%;
+            right: 15%;
+            width: 200px;
+            height: 100px;
+        }
+        .plane-trail {
+            position: absolute;
+            top: 20px; right: 25px;
+            width: 150px; height: 50px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 50' preserveAspectRatio='none'%3E%3Cpath d='M0,50 Q40,-10 150,20' fill='none' stroke='%2388C0ED' stroke-width='3' stroke-dasharray='8,8' stroke-linecap='round'/%3E%3C/svg%3E");
+        }
+        .plane-icon {
+            position: absolute;
+            top: 0; right: 0;
+            width: 40px; height: 40px;
+            transform: rotate(-15deg);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235B9EE5'%3E%3Cpath d='M2.01 21L23 12 2.01 3 2 10l15 2-15 2z'/%3E%3C/svg%3E");
+        }
+
+        /* ----- HEADER (Forma Arredondada Branca) ----- */
+        .header-wrapper {
+            background: white;
+            border-radius: 0 0 50px 50px; /* Arredondado apenas em baixo */
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
             display: flex; 
             align-items: center; 
             justify-content: center; 
-            padding: 20px;
-            gap: 15px;
-            margin-top: 10px;
+            padding: 25px 20px 35px 20px;
+            position: relative;
+            z-index: 10;
         }
         
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
         #header-icon { 
-            height: clamp(50px, 10vw, 75px); 
+            height: clamp(55px, 10vw, 75px); 
             width: auto; 
             filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
         }
@@ -85,53 +157,55 @@
             margin-top: 5px; 
         }
 
-        /* INTRO TEXT */
+        /* ----- INTRO TEXT E SUBLINHADO CURVO ----- */
         .intro-container { 
             text-align: center; 
-            margin: 15px 0 30px 0;
+            margin: 35px 0 35px 0;
             position: relative;
+            z-index: 5;
         }
         
         .intro-text { 
             color: var(--jogos-blue); 
-            font-size: clamp(1.1rem, 4vw, 1.8rem); 
-            font-weight: 800; 
+            font-size: clamp(1.2rem, 4vw, 2rem); 
+            font-weight: 900; 
             display: inline-block;
-            position: relative;
-            z-index: 2;
         }
 
         .intro-text .destaque {
             position: relative;
             display: inline-block;
+            color: #1A499C; /* Azul igual ao resto */
         }
 
+        /* Linha Curva Amarela */
         .intro-text .destaque::after {
             content: '';
             position: absolute;
-            bottom: -5px;
-            left: 0;
-            width: 100%;
-            height: 6px;
-            background-color: #FFC107;
-            border-radius: 4px;
+            bottom: -15px;
+            left: -5%;
+            width: 110%;
+            height: 20px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 25' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' stroke-linecap='round' fill='transparent'/%3E%3C/svg%3E");
+            background-size: 100% 100%;
+            background-repeat: no-repeat;
             z-index: -1;
         }
 
-        /* GRID DE JOGOS E CARTÕES */
+        /* ----- GRID DE JOGOS ----- */
         main { 
             flex: 1; 
             display: flex;
             align-items: center; 
             justify-content: center;
             padding: 0 20px 40px 20px;
-            z-index: 5;
+            z-index: 10;
         }
 
         .game-wrapper { 
             display: grid;
             width: 100%;
-            max-width: 1400px;
+            max-width: 1200px;
             gap: 15px;
         }
 
@@ -140,9 +214,10 @@
             background: white;
             text-decoration: none; 
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            border: 3px solid white; /* Borda branca igual à imagem */
         }
 
-        .game-card:hover { transform: translateY(-3px); }
+        .game-card:hover { transform: translateY(-5px); }
 
         .card-img-container { 
             display: flex; 
@@ -163,6 +238,7 @@
 
         .card-info {
             display: flex;
+            background: white; /* Parte inferior do cartão a branco */
         }
 
         .card-title { 
@@ -177,140 +253,142 @@
         }
 
         /* ----- MODO MOBILE (Pílulas Horizontais) ----- */
-        @media (max-width: 767px) {
-            .game-wrapper {
-                grid-template-columns: 1fr;
-            }
+        @media (max-width: 899px) {
+            .header-wrapper { padding: 15px 15px 25px 15px; border-radius: 0 0 35px 35px; }
+            .game-wrapper { grid-template-columns: 1fr; max-width: 500px; }
 
             .game-card {
                 flex-direction: row;
                 align-items: center;
                 border-radius: 50px;
-                padding: 8px 12px 8px 8px;
-                box-shadow: 0 4px 15px rgba(0,0,0,0.06);
+                padding: 6px 10px 6px 6px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.08);
             }
 
             .card-img-container {
-                width: 65px;
-                height: 65px;
-                border-radius: 20px;
+                width: 70px; height: 70px;
+                border-radius: 35px;
                 flex-shrink: 0;
             }
-
-            .card-img-container img { max-width: 85%; max-height: 85%; }
+            .card-img-container img { max-width: 80%; max-height: 80%; }
 
             .card-info {
-                flex-direction: row;
-                align-items: center;
-                justify-content: space-between;
-                flex-grow: 1;
-                padding-left: 15px;
+                flex-direction: row; align-items: center; justify-content: space-between;
+                flex-grow: 1; padding: 0 10px 0 15px;
+                border-radius: 0 50px 50px 0;
             }
 
             .card-title { font-size: 1.1rem; }
-
-            .card-btn {
-                width: 35px;
-                height: 35px;
-                border-radius: 50%;
-                flex-shrink: 0;
-            }
-
+            .card-btn { width: 35px; height: 35px; border-radius: 50%; flex-shrink: 0; }
             .card-btn svg { width: 18px; height: 18px; }
+
+            .paper-plane-wrapper { transform: scale(0.6); top: 18%; right: -5%; }
+            .star-1 { width: 25px; height: 25px; left: 5%; }
         }
 
         /* ----- MODO DESKTOP / TABLET (Cartões Verticais) ----- */
-        @media (min-width: 768px) {
-            .game-wrapper {
-                grid-template-columns: repeat(5, 1fr);
-                gap: 20px;
-            }
+        @media (min-width: 900px) {
+            .game-wrapper { grid-template-columns: repeat(5, 1fr); gap: 25px; }
 
             .game-card {
                 flex-direction: column;
                 border-radius: 25px;
-                padding: 10px;
-                box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+                padding: 0; /* O padding vai para o interior agora */
+                box-shadow: 0 12px 30px rgba(0,0,0,0.08);
                 height: 100%;
-                min-height: 320px;
+                min-height: 350px;
+                overflow: hidden;
             }
 
             .card-img-container {
-                width: 100%;
-                height: 65%;
-                border-radius: 18px;
+                width: 100%; height: 65%;
+                border-radius: 22px 22px 0 0;
             }
-
             .card-img-container img { max-width: 75%; max-height: 75%; }
 
             .card-info {
-                flex-direction: column;
-                align-items: center;
-                justify-content: center;
-                height: 35%;
-                gap: 12px;
+                flex-direction: column; align-items: center; justify-content: center;
+                height: 35%; gap: 15px; padding: 15px;
+                border-radius: 0 0 22px 22px;
             }
 
-            .card-title { font-size: 1.3rem; }
-
-            .card-btn {
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-            }
-
-            .card-btn svg { width: 22px; height: 22px; }
+            .card-title { font-size: 1.4rem; }
+            .card-btn { width: 45px; height: 45px; border-radius: 50%; }
+            .card-btn svg { width: 24px; height: 24px; }
         }
 
-        /* BARRA DE NAVEGAÇÃO FLUTUANTE (BOTTOM NAV) */
+        /* ----- BARRA DE NAVEGAÇÃO FLUTUANTE (BOTTOM NAV) ----- */
         .bottom-nav {
             position: fixed;
-            bottom: 20px;
+            bottom: 25px;
             left: 50%;
             transform: translateX(-50%);
             background: var(--nav-bg);
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            padding: 12px 25px;
+            gap: 15px;
+            padding: 12px 30px;
             border-radius: 50px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
             z-index: 100;
         }
 
         .nav-item {
             display: flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             text-decoration: none;
             color: var(--jogos-blue);
             font-weight: 800;
-            font-size: 0.9rem;
-            padding: 0 10px;
-            border-right: 2px solid #f1f5f9;
+            font-size: 0.95rem;
+            padding: 0 15px;
+            border-right: 2px solid #e2e8f0;
         }
         
         .nav-item:last-child { border-right: none; }
-        .nav-icon { width: 20px; height: 20px; }
+        .nav-icon { width: 22px; height: 22px; }
 
+        @media (max-width: 600px) {
+            .bottom-nav { width: 90%; padding: 10px; gap: 5px; }
+            .nav-item { font-size: 0.8rem; padding: 0 8px; }
+            .nav-icon { width: 18px; height: 18px; }
+        }
     </style>
 </head>
 <body>
 
-    <div class="bg-mountains"></div>
+    <!-- Fundo Paisagem -->
+    <div class="bg-landscape"></div>
 
-    <header>
-        <img id="header-icon" src="" alt="Logo">
-        <div class="title-group">
-            <div class="title-main">
-                <span id="txt-titulo1"></span> 
-                <span id="txt-titulo2"></span>
-            </div>
-            <span id="txt-subtitulo" class="title-sub"></span>
+    <!-- Decorações Flutuantes (Céu) -->
+    <div class="decorations">
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        <div class="star star-1"></div>
+        <div class="star star-2"></div>
+        <div class="star star-3"></div>
+        <div class="paper-plane-wrapper">
+            <div class="plane-trail"></div>
+            <div class="plane-icon"></div>
         </div>
-    </header>
+    </div>
 
+    <!-- Header Branco Arredondado -->
+    <div class="header-wrapper">
+        <div class="header-content">
+            <img id="header-icon" src="" alt="Logo">
+            <div class="title-group">
+                <div class="title-main">
+                    <span id="txt-titulo1"></span> 
+                    <span id="txt-titulo2"></span>
+                </div>
+                <span id="txt-subtitulo" class="title-sub"></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Texto Introdutório e Sublinhado -->
     <div class="intro-container">
         <div class="intro-text">
             <span id="txt-intro-normal"></span>
@@ -318,11 +396,12 @@
         </div>
     </div>
 
+    <!-- Grelha de Cartões -->
     <main>
         <div class="game-wrapper" id="gamesGrid"></div>
     </main>
 
-    <!-- Barra Flutuante de Fundo (Aprende, Explora, Diverte-te) -->
+    <!-- Barra Inferior Flutuante -->
     <div class="bottom-nav">
         <a href="#" class="nav-item">
             <svg class="nav-icon" viewBox="0 0 24 24" fill="#FFC107"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
@@ -344,19 +423,15 @@
             if (typeof JOGO_CONFIG !== 'undefined') {
                 const config = JOGO_CONFIG;
 
-                // Preencher Cabeçalho
                 document.getElementById('txt-titulo1').textContent = config.textos.tituloLinha1;
                 document.getElementById('txt-titulo2').textContent = config.textos.tituloLinha2;
                 document.getElementById('txt-subtitulo').textContent = config.textos.subtitulo;
                 
-                // Preencher Texto de Introdução
                 document.getElementById('txt-intro-normal').textContent = config.textos.introNormal || "Escolhe o teu ano e ";
                 document.getElementById('txt-intro-destaque').textContent = config.textos.introDestaque || "diverte-te!";
                 
-                // Preencher Logo
                 document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu.logo;
 
-                // Gerar Cartões Dinâmicos
                 const grid = document.getElementById('gamesGrid');
                 
                 config.listaJogos.forEach(jogo => {
@@ -365,7 +440,6 @@
                     card.className = 'game-card';
                     card.href = jogo.link;
                     
-                    // Ícone Seta Branco (SVG Puro para escalar perfeitamente)
                     const iconeSeta = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>`;
 
                     card.innerHTML = `
@@ -381,8 +455,6 @@
                     `;
                     grid.appendChild(card);
                 });
-            } else {
-                console.error("Ficheiro dados.js não carregou ou tem erros.");
             }
         });
     </script>
