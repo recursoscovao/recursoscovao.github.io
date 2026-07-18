@@ -1,7 +1,7 @@
 const JOGO_CONFIG = {
     textos: {
-        tituloLinha1: "Pequenos",
-        tituloLinha2: "Exploradores",
+        tituloLinha1: "PEQUENOS",
+        tituloLinha2: "EXPLORADORES",
         subtitulo: "ATIVIDADES | 1º ANO",
         intro: "O que vamos aprender hoje?",
         rodape: "&copy; Pequenos Exploradores - Recursos Educativos"
@@ -15,7 +15,7 @@ const JOGO_CONFIG = {
         ano2: "icon2.png",
         ano3: "icon3.png",
         ano4: "icon4.png",
-        voltar: "voltar_az.png", // Ícone unificado para PC e Mobile
+        voltar: "voltar_az.png",
         voltarMobile: "voltar_az.png" 
     },
     links: {
@@ -27,7 +27,7 @@ const JOGO_CONFIG = {
         ano4: "../4/"
     },
     temaCores: {
-        azul: { borda: "#5ba4e5", fundo: "#e1f0ff", seta: "#007bff" },
+        azul: { borda: "#5ba4e5", fundo: "#e1f0ff", seta: "#5EA2E6" },
         verde: { borda: "#58bc8c", fundo: "#e8f7f0", seta: "#28a745" },
         castanho: { borda: "#e2922e", fundo: "#fff5e6", seta: "#d35400" }
     },
