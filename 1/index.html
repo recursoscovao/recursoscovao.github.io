@@ -10,9 +10,9 @@
     
     <style>
         :root {
-            --primary-blue: #5EA2E6; /* Cor exata solicitada */
+            --primary-blue: #5EA2E6; 
+            --text-grey: #A5B4C4;
             --text-dark: #2d5a88;
-            --text-grey: #a5b4c4;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -35,26 +35,35 @@
             background-size: 280px auto; z-index: 1; pointer-events: none;
         }
 
-        /* --- HEADER --- */
+        /* --- HEADER (ESTILO EXACTO À IMAGEM) --- */
         header { 
-            background: white; display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; 
-            padding: 5px 20px; height: 85px; z-index: 1000;
+            background: white; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; 
+            padding: 5px 20px; height: 100px; z-index: 1000;
         }
 
         .hamburger-btn { 
             background: none; border: none; color: var(--primary-blue); 
-            font-size: 32px; cursor: pointer; display: flex; align-items: center; justify-content: flex-start;
-            transition: transform 0.2s;
+            font-size: 32px; cursor: pointer; display: flex; align-items: center;
         }
-        .hamburger-btn:hover { transform: scale(1.15); filter: brightness(0.9); }
+        .hamburger-btn:hover { transform: scale(1.1); color: var(--primary-blue); opacity: 0.8; }
 
-        .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
-        #header-icon { height: 60px; }
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 15px; }
+        #header-icon { height: 75px; width: auto; }
         
-        .title-group { display: flex; flex-direction: column; text-align: left; }
-        .title-main { font-weight: 900; font-size: 1.4rem; text-transform: uppercase; color: var(--primary-blue); line-height: 1; }
-        .title-main span { color: var(--text-grey); }
-        .title-sub { color: var(--primary-blue); font-weight: 800; font-size: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.85; }
+        
+        #txt-titulo1 { 
+            font-weight: 900; font-size: 1.8rem; color: var(--primary-blue); 
+            letter-spacing: -0.5px;
+        }
+        #txt-titulo2 { 
+            font-weight: 900; font-size: 1.8rem; color: var(--text-grey); 
+            letter-spacing: -0.5px; margin-bottom: 5px;
+        }
+        #txt-subtitulo { 
+            color: var(--primary-blue); font-weight: 700; font-size: 12px; 
+            letter-spacing: 0.8px; margin-top: 4px; line-height: 1;
+        }
 
         .btn-voltar-top { display: flex; justify-content: flex-end; }
         .btn-voltar-top img { height: 45px; cursor: pointer; transition: transform 0.2s; }
@@ -62,28 +71,25 @@
 
         /* --- MENU DROPDOWN --- */
         .menu-dropdown { 
-            position: absolute; top: 85px; left: 20px; display: none; 
+            position: absolute; top: 90px; left: 20px; display: none; 
             flex-direction: column; gap: 8px; z-index: 2000; 
         }
         .menu-item { 
             display: flex; align-items: center; gap: 12px; padding: 12px 18px; 
             background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
             text-decoration: none; color: var(--text-dark); font-weight: 700; min-width: 230px;
-            transition: background 0.2s, color 0.2s;
+            transition: 0.2s;
         }
         .menu-item:hover { background: var(--primary-blue); color: white; }
-        .menu-item img { height: 26px; width: 26px; object-fit: contain; }
+        .menu-item img { height: 26px; }
+        .voltar-item { border-top: 2px solid #f0f4f8; margin-top: 5px; color: var(--primary-blue); }
 
-        /* Estilo especial para o item VOLTAR dentro do menu */
-        .menu-item.voltar-item { border-top: 2px solid #f0f4f8; margin-top: 5px; color: var(--primary-blue); }
-        .menu-item.voltar-item:hover { background: var(--primary-blue); color: white; }
-
-        /* --- SUB-HEADER --- */
+        /* --- TEXTO INTRO --- */
         .sub-header { text-align: center; padding: 30px 10px; z-index: 10; }
         .intro-text { color: #2d5a88; font-size: 1.7rem; font-weight: 800; display: inline-flex; align-items: center; gap: 15px; }
         .sparkle { color: #ffcc00; font-size: 1.8rem; font-weight: 900; }
 
-        /* --- GRID DE JOGOS --- */
+        /* --- GRID --- */
         main { flex: 1; display: flex; justify-content: center; align-items: flex-start; padding: 10px 20px; z-index: 10; }
         .game-wrapper { display: flex; gap: 25px; width: 100%; max-width: 1100px; justify-content: center; }
 
@@ -91,31 +97,22 @@
             background: white; border-radius: 35px; border: 3px solid; 
             text-decoration: none; padding: 25px; flex: 1; max-width: 330px;
             display: flex; flex-direction: column; align-items: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: transform 0.3s;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: 0.3s;
         }
         .game-card:hover { transform: translateY(-8px); }
-        
-        .card-img-container { 
-            width: 100%; aspect-ratio: 1.3; display: flex; align-items: center; justify-content: center; 
-            border-radius: 25px; margin-bottom: 20px;
-        }
+        .card-img-container { width: 100%; aspect-ratio: 1.3; display: flex; align-items: center; justify-content: center; border-radius: 25px; margin-bottom: 20px; }
         .card-img-container img { width: 85%; height: 85%; object-fit: contain; }
-        
         .game-card h2 { color: var(--text-dark); font-size: 1.2rem; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; }
-        
-        .btn-action { 
-            width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; 
-            transition: transform 0.2s;
-        }
-        .game-card:hover .btn-action { transform: scale(1.15); filter: brightness(1.1); }
+        .btn-action { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
 
         footer { position: fixed; bottom: 15px; width: 100%; text-align: center; font-weight: 700; color: #5d7082; font-size: 0.75rem; z-index: 10; }
 
         /* --- RESPONSIVIDADE MOBILE --- */
         @media (max-width: 768px) {
-            header { grid-template-columns: 60px 1fr 60px; height: 75px; padding: 0 10px; }
-            #header-icon { height: 45px; }
-            .title-main { font-size: 1rem; }
+            header { grid-template-columns: 50px 1fr 50px; height: 85px; padding: 0 10px; }
+            #header-icon { height: 55px; }
+            #txt-titulo1, #txt-titulo2 { font-size: 1.2rem; }
+            #txt-subtitulo { font-size: 9px; }
             .btn-voltar-top img { height: 38px; }
             .game-wrapper { flex-direction: column; align-items: center; gap: 15px; padding-bottom: 120px; }
             .game-card { flex-direction: row; width: 95%; height: 85px; padding: 10px 20px; border-radius: 22px; }
@@ -139,8 +136,9 @@
         <div class="header-center">
             <img id="header-icon" src="" alt="Logo">
             <div class="title-group">
-                <div class="title-main"><span id="txt-titulo1"></span> <span id="txt-titulo2"></span></div>
-                <span id="txt-subtitulo" class="title-sub"></span>
+                <div id="txt-titulo1"></div>
+                <div id="txt-titulo2"></div>
+                <div id="txt-subtitulo"></div>
             </div>
         </div>
         
@@ -176,27 +174,22 @@
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu.ano1;
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + config.iconesMenu.voltar;
 
-            // Criar Menu Dropdown
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
-            // Adicionar anos ao menu
             Object.keys(config.links).forEach(key => {
                 const a = document.createElement('a');
-                a.className = 'menu-item'; 
-                a.href = config.links[key];
+                a.className = 'menu-item'; a.href = config.links[key];
                 a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
                 menuBox.appendChild(a);
             });
 
-            // Adicionar botão Voltar ao final do menu
             const btnVoltarMenu = document.createElement('a');
             btnVoltarMenu.className = 'menu-item voltar-item';
             btnVoltarMenu.href = "../";
             btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnVoltarMenu);
 
-            // Criar Cards de Jogos
             const grid = document.getElementById('gamesGrid');
             config.listaJogos.forEach(jogo => {
                 const tema = config.temaCores[jogo.tema];
