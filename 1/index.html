@@ -18,33 +18,25 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            background: linear-gradient(to bottom, #e1f0ff 0%, #ffffff 40%);
+            /* AQUI USAMOS A TUA IMAGEM DE FUNDO */
+            background: url('fundo.jpg') no-repeat center bottom / cover fixed;
             min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; position: relative;
-        }
-
-        /* --- ELEMENTOS DE FUNDO (CÉU E RELVA) --- */
-        .sky-decor {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400"><circle cx="100" cy="80" r="40" fill="white" opacity="0.6"/><circle cx="140" cy="90" r="30" fill="white" opacity="0.6"/><circle cx="850" cy="100" r="50" fill="white" opacity="0.6"/></svg>');
-        }
-
-        .grass-bg {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 120px; z-index: 1;
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 20"><path d="M0 20h120V10a10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0z" fill="%234fb443"/></svg>') repeat-x bottom;
-            background-size: 300px auto;
         }
 
         /* --- HEADER --- */
         header { 
             background: white; display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; 
             padding: 5px 20px; height: 100px; z-index: 1000; position: relative;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
 
+        /* Menu Hamburguer Corrigido */
         .hamburger-btn { 
-            background: none; border: none; color: var(--primary-blue); font-size: 32px; cursor: pointer;
-            transition: 0.2s;
+            background: none; border: none; color: var(--primary-blue); 
+            font-size: 28px; cursor: pointer; width: 45px; height: 45px;
+            display: flex; align-items: center; justify-content: flex-start;
         }
-        .hamburger-btn:hover { transform: scale(1.1); }
+        .hamburger-btn:hover { color: var(--primary-blue); filter: brightness(0.9); }
 
         .header-center { display: flex; align-items: center; justify-content: center; gap: 15px; }
         #header-icon { height: 75px; }
@@ -52,23 +44,24 @@
         .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.85; }
         #txt-titulo1 { font-weight: 900; font-size: 1.8rem; color: var(--primary-blue); }
         #txt-titulo2 { font-weight: 900; font-size: 1.8rem; color: var(--text-grey); }
-        #txt-subtitulo { color: var(--primary-blue); font-weight: 700; font-size: 11px; margin-top: 5px; letter-spacing: 0.5px; }
+        #txt-subtitulo { color: var(--primary-blue); font-weight: 700; font-size: 11px; margin-top: 5px; }
 
-        .btn-voltar-top img { height: 45px; cursor: pointer; transition: 0.2s; }
-        .btn-voltar-top img:hover { transform: scale(1.1); }
+        .btn-voltar-top img { height: 45px; cursor: pointer; }
 
-        /* --- MENU --- */
+        /* --- MENU DROPDOWN REDIMENSIONADO --- */
         .menu-dropdown { 
-            position: absolute; top: 90px; left: 20px; display: none; flex-direction: column; gap: 8px; z-index: 2000; 
+            position: absolute; top: 85px; left: 20px; display: none; flex-direction: column; gap: 8px; z-index: 2000; 
         }
         .menu-item { 
             display: flex; align-items: center; gap: 12px; padding: 12px 18px; 
             background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            text-decoration: none; color: var(--text-dark); font-weight: 700; min-width: 230px;
+            text-decoration: none; color: var(--text-dark); font-weight: 700; min-width: 220px;
         }
         .menu-item:hover { background: var(--primary-blue); color: white; }
+        .menu-item img { height: 26px; }
+        .voltar-item { border-top: 2px solid #f0f4f8; margin-top: 5px; color: var(--primary-blue); }
 
-        /* --- INTRO COM FAÍSCAS --- */
+        /* --- INTRO COM AS FAÍSCAS --- */
         .sub-header { text-align: center; padding: 35px 10px; z-index: 10; position: relative; }
         .intro-text { color: #1a4a7a; font-size: 1.7rem; font-weight: 800; position: relative; display: inline-block; }
         
@@ -80,68 +73,57 @@
         .intro-text::before { left: -45px; }
         .intro-text::after { right: -45px; transform: translateY(-50%) scaleX(-1); }
 
-        /* --- GRID DE JOGOS (PC) --- */
-        main { flex: 1; display: flex; justify-content: center; align-items: flex-start; padding: 10px 20px; z-index: 10; }
+        /* --- GRID DE JOGOS --- */
+        main { flex: 1; display: flex; justify-content: center; align-items: flex-start; padding: 20px; z-index: 10; }
         .game-wrapper { display: flex; gap: 25px; width: 100%; max-width: 1150px; justify-content: center; }
 
+        /* Card Desktop */
         .game-card { 
             background: white; border-radius: 40px; border: 3px solid; 
-            text-decoration: none; padding: 15px; flex: 1; max-width: 350px;
+            text-decoration: none; padding: 15px; flex: 1; max-width: 340px;
             display: flex; flex-direction: column; align-items: center; position: relative;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: 0.3s;
         }
         
         .inner-content {
             width: 100%; border-radius: 30px; display: flex; flex-direction: column; align-items: center;
-            padding: 30px 20px 60px 20px; position: relative;
+            padding: 20px 20px 55px 20px; position: relative;
         }
-        .inner-content img { width: 80%; aspect-ratio: 1; object-fit: contain; }
+        .inner-content img { width: 85%; aspect-ratio: 1; object-fit: contain; }
 
-        /* Bolha branca do título */
         .title-bubble {
             background: white; width: 90%; height: 50px; border-radius: 25px;
             display: flex; align-items: center; justify-content: center;
-            position: absolute; bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            position: absolute; bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
-        .title-bubble h2 { font-size: 1.2rem; font-weight: 900; text-transform: uppercase; }
+        .title-bubble h2 { font-size: 1.15rem; font-weight: 900; text-transform: uppercase; }
 
-        /* Botão Seta abaixo */
         .btn-round {
             width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
             color: white; font-size: 18px; margin-top: -15px; z-index: 5;
         }
 
-        footer { position: fixed; bottom: 15px; width: 100%; text-align: center; font-weight: 700; color: #5d7082; font-size: 0.75rem; z-index: 10; }
-
-        /* --- RESPONSIVIDADE MOBILE (DESIGN PILL) --- */
+        /* --- MOBILE --- */
         @media (max-width: 768px) {
-            header { grid-template-columns: 60px 1fr 60px; height: 85px; padding: 0 10px; }
+            header { grid-template-columns: 50px 1fr 50px; height: 85px; }
             #header-icon { height: 55px; }
             #txt-titulo1, #txt-titulo2 { font-size: 1.2rem; }
             .intro-text { font-size: 1.2rem; }
             .intro-text::before, .intro-text::after { width: 20px; left: -30px; right: -30px; }
 
             .game-wrapper { flex-direction: column; align-items: center; gap: 15px; padding-bottom: 120px; }
-            
-            /* Card vira Pill Horizontal */
-            .game-card { 
-                flex-direction: row; width: 95%; max-width: 100%; height: 85px; 
-                padding: 10px 15px; border-radius: 25px; border-width: 2px;
-            }
+            .game-card { flex-direction: row; width: 95%; height: 85px; padding: 10px 15px; border-radius: 22px; }
             .inner-content { padding: 0; flex-direction: row; background: none !important; height: 100%; }
             .inner-content img { width: 60px; height: 60px; margin-right: 15px; }
             .title-bubble { position: static; background: none; box-shadow: none; width: auto; flex: 1; justify-content: flex-start; }
             .title-bubble h2 { font-size: 1rem; }
             .btn-round { margin-top: 0; width: 34px; height: 34px; font-size: 14px; }
-            
-            .grass-bg { height: 80px; }
         }
+
+        footer { padding: 15px; text-align: center; font-weight: 700; color: #5d7082; font-size: 0.75rem; z-index: 10; background: rgba(255,255,255,0.7); }
     </style>
 </head>
 <body>
-
-    <div class="sky-decor"></div>
-    <div class="grass-bg"></div>
 
     <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
@@ -193,13 +175,15 @@
                 a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
                 menuBox.appendChild(a);
             });
+            const btnVoltar = document.createElement('a'); btnVoltar.className='menu-item voltar-item'; btnVoltar.href='../';
+            btnVoltar.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
+            menuBox.appendChild(btnVoltar);
 
             const grid = document.getElementById('gamesGrid');
             config.listaJogos.forEach(jogo => {
                 const tema = config.temaCores[jogo.tema];
                 const card = document.createElement('a');
                 card.className = 'game-card'; card.href = jogo.link; card.style.borderColor = tema.borda;
-                
                 card.innerHTML = `
                     <div class="inner-content" style="background-color: ${tema.fundo};">
                         <img src="${config.caminhoIconsJogos}${jogo.icon}">
