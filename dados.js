@@ -10,14 +10,7 @@ const JOGO_CONFIG = {
     caminhoIconsMenu: "icons/", 
     caminhoIconsJogos: "icons/", 
     iconesMenu: {
-        logo: "jogo.png", 
-        home: "home.png",
-        pre: "iconpre.png",
-        ano1: "icon1.png",
-        ano2: "icon2.png",
-        ano3: "icon3.png",
-        ano4: "icon4.png",
-        voltar: "voltar.png"
+        logo: "jogo.png"
     },
     links: {
         home: "index.html", 
