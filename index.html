@@ -10,7 +10,7 @@
             --text-grey: #8792a1;
             --mundo-red: #E1251B;
             --jogos-blue: #1A499C;
-            --sky-blue: #EAF4FE; /* Azul claro do fundo */
+            --sky-blue: #EAF4FE;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
@@ -19,7 +19,7 @@
         body, html {
             height: 100dvh; 
             width: 100vw;
-            overflow: hidden; /* Corta imediatamente qualquer scroll */
+            overflow: hidden; 
             background-color: var(--sky-blue);
             display: flex; 
             flex-direction: column;
@@ -81,10 +81,10 @@
             background-size: 100% 100%; z-index: -1;
         }
 
-        /* ----- GRELHA DINÂMICA (A Mágica do Flexbox Sem Scroll) ----- */
+        /* ----- GRELHA DINÂMICA ----- */
         main { 
-            flex: 1; /* Preenche todo o espaço vazio restante do ecrã */
-            min-height: 0; /* Impede o main de esticar o body e causar scroll */
+            flex: 1; 
+            min-height: 0; 
             display: flex; align-items: center; justify-content: center;
             padding: 0 clamp(10px, 3vw, 20px); z-index: 10;
         }
@@ -93,7 +93,6 @@
 
         .game-card { 
             display: flex; background: white; text-decoration: none; 
-            border: clamp(3px, 0.5vh, 5px) solid; 
             transition: transform 0.2s ease; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
         }
         .card-img-container { display: flex; align-items: center; justify-content: center; }
@@ -110,8 +109,11 @@
             .game-wrapper { flex-direction: column; gap: clamp(6px, 1.5vh, 15px); max-width: 450px; }
             .game-card { 
                 flex: 1; width: 100%; flex-direction: row; align-items: center; 
-                border-radius: 50px; padding: clamp(4px, 1vh, 8px); 
-                max-height: 10vh; /* Limita a altura máxima da pílula */
+                /* Borda Dupla Efeito: Borda externa + Padding interno branco */
+                border: clamp(3px, 0.5vh, 4px) solid;
+                padding: clamp(4px, 1vh, 6px); /* Espaço branco interno */
+                border-radius: 50px; 
+                max-height: 10vh; 
             }
             .card-img-container { height: 100%; aspect-ratio: 1; border-radius: 50%; flex-shrink: 0; }
             .card-img-container img { max-width: 75%; max-height: 75%; }
@@ -120,7 +122,7 @@
             .card-btn { height: clamp(30px, 5vh, 45px); width: clamp(30px, 5vh, 45px); border-radius: 50%; flex-shrink: 0; }
             .star-decor { left: 5%; top: 18%; }
             .plane-wrapper { width: 25vw; top: 15%; right: 2%; }
-            .accent-lines { display: none; } /* Esconde tracejados para poupar espaço lateral */
+            .accent-lines { display: none; }
         }
 
         /* =========================================
@@ -129,25 +131,33 @@
         @media (orientation: landscape) {
             .game-wrapper { flex-direction: row; gap: clamp(10px, 2vw, 25px); max-width: 1300px; }
             .game-card { 
-                flex: 1; flex-direction: column; border-radius: clamp(15px, 2.5vw, 30px); padding: 0;
-                height: clamp(150px, 60vh, 450px); /* A altura adapta-se ao ecrã */
+                flex: 1; flex-direction: column; 
+                /* Borda Dupla Efeito: Borda externa + Padding interno branco */
+                border: clamp(3px, 0.5vw, 4px) solid;
+                padding: clamp(6px, 1vw, 12px); /* Cria o espaço branco à volta da imagem interior */
+                border-radius: clamp(18px, 2.5vw, 30px); 
+                height: clamp(150px, 60vh, 450px); 
             }
             .game-card:hover { transform: scale(1.03) translateY(-4px); }
-            .card-img-container { width: 100%; height: 65%; border-radius: clamp(10px, 2vw, 25px) clamp(10px, 2vw, 25px) 0 0; }
+            .card-img-container { 
+                width: 100%; height: 60%; 
+                /* A imagem interior agora também tem cantos arredondados independentes */
+                border-radius: clamp(10px, 1.5vw, 20px); 
+            }
             .card-img-container img { max-width: 80%; max-height: 80%; }
-            .card-info { flex-direction: column; align-items: center; justify-content: space-evenly; height: 35%; padding: 5px; }
+            .card-info { flex-direction: column; align-items: center; justify-content: space-evenly; height: 40%; padding: 5px; }
             .card-title { font-size: clamp(0.9rem, 2.2vh, 1.4rem); text-align: center; }
             .card-btn { width: clamp(35px, 6vh, 50px); height: clamp(35px, 6vh, 50px); border-radius: 50%; }
         }
 
-        /* ----- FOOTER EXATO À NOVA IMAGEM (Vale Azul no Meio) ----- */
+        /* ----- FOOTER ----- */
         footer {
             height: clamp(50px, 12vh, 100px); width: 100%; position: relative; flex-shrink: 0; 
             display: flex; align-items: flex-end; justify-content: center;
             padding-bottom: clamp(6px, 1.5vh, 12px); z-index: 20;
             
-            /* SVG Fiel: Colinas terminam no centro, deixando a cor de fundo (azul claro) preencher o vale e acolher o texto */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3C!-- Colinas de Trás --%3E%3Cpath fill='%23A6D746' d='M0,50 Q300,70 650,120 L0,120 Z'/%3E%3Cpath fill='%23A6D746' d='M1440,50 Q1140,70 790,120 L1440,120 Z'/%3E%3C!-- Colinas da Frente --%3E%3Cpath fill='%238AC63F' d='M0,80 Q250,90 550,120 L0,120 Z'/%3E%3Cpath fill='%238AC63F' d='M1440,80 Q1190,90 890,120 L1440,120 Z'/%3E%3C!-- Moitas Esquerda --%3E%3Cg fill='%233A9A40'%3E%3Cpath d='M0,120 C10,50 100,30 150,120 Z'/%3E%3Ccircle cx='30' cy='120' r='60'/%3E%3Ccircle cx='90' cy='120' r='50'/%3E%3Ccircle cx='0' cy='60' r='40'/%3E%3Ccircle cx='120' cy='100' r='30'/%3E%3C/g%3E%3Cg fill='%234CAF50'%3E%3Ccircle cx='20' cy='120' r='50'/%3E%3Ccircle cx='70' cy='120' r='40'/%3E%3C/g%3E%3C!-- Moitas Direita --%3E%3Cg fill='%233A9A40'%3E%3Cpath d='M1440,120 C1430,50 1340,30 1290,120 Z'/%3E%3Ccircle cx='1410' cy='120' r='60'/%3E%3Ccircle cx='1350' cy='120' r='50'/%3E%3Ccircle cx='1440' cy='60' r='40'/%3E%3Ccircle cx='1320' cy='100' r='30'/%3E%3C/g%3E%3Cg fill='%234CAF50'%3E%3Ccircle cx='1420' cy='120' r='50'/%3E%3Ccircle cx='1370' cy='120' r='40'/%3E%3C/g%3E%3C!-- Flores --%3E%3C!-- Margarida Esquerda Grande --%3E%3Cg transform='translate(350, 95) scale(0.9)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23fff'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFC107'/%3E%3C/g%3E%3C!-- Margarida Esquerda Pequena --%3E%3Cg transform='translate(250, 110) scale(0.5)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23fff'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFC107'/%3E%3C/g%3E%3C!-- Flor Rosa Direita --%3E%3Cg transform='translate(1080, 95) scale(0.9)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFEB3B'/%3E%3C/g%3E%3C!-- Margarida Direita Pequena --%3E%3Cg transform='translate(1220, 105) scale(0.8)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23fff'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFC107'/%3E%3C/g%3E%3C/svg%3E");
+            /* SVG Fiel: Inclui a nova forma azul claro central (#CAE6FF) atrás do texto */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3C!-- Forma Azul Claro Central --%3E%3Cpath fill='%23CAE6FF' d='M200,120 Q720,40 1240,120 Z'/%3E%3C!-- Colinas de Trás --%3E%3Cpath fill='%23A6D746' d='M0,50 Q300,70 650,120 L0,120 Z'/%3E%3Cpath fill='%23A6D746' d='M1440,50 Q1140,70 790,120 L1440,120 Z'/%3E%3C!-- Colinas da Frente --%3E%3Cpath fill='%238AC63F' d='M0,80 Q250,90 550,120 L0,120 Z'/%3E%3Cpath fill='%238AC63F' d='M1440,80 Q1190,90 890,120 L1440,120 Z'/%3E%3C!-- Moitas Esquerda --%3E%3Cg fill='%233A9A40'%3E%3Cpath d='M0,120 C10,50 100,30 150,120 Z'/%3E%3Ccircle cx='30' cy='120' r='60'/%3E%3Ccircle cx='90' cy='120' r='50'/%3E%3Ccircle cx='0' cy='60' r='40'/%3E%3Ccircle cx='120' cy='100' r='30'/%3E%3C/g%3E%3Cg fill='%234CAF50'%3E%3Ccircle cx='20' cy='120' r='50'/%3E%3Ccircle cx='70' cy='120' r='40'/%3E%3C/g%3E%3C!-- Moitas Direita --%3E%3Cg fill='%233A9A40'%3E%3Cpath d='M1440,120 C1430,50 1340,30 1290,120 Z'/%3E%3Ccircle cx='1410' cy='120' r='60'/%3E%3Ccircle cx='1350' cy='120' r='50'/%3E%3Ccircle cx='1440' cy='60' r='40'/%3E%3Ccircle cx='1320' cy='100' r='30'/%3E%3C/g%3E%3Cg fill='%234CAF50'%3E%3Ccircle cx='1420' cy='120' r='50'/%3E%3Ccircle cx='1370' cy='120' r='40'/%3E%3C/g%3E%3C!-- Flores --%3E%3C!-- Margarida Esquerda Grande --%3E%3Cg transform='translate(350, 95) scale(0.9)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23fff'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFC107'/%3E%3C/g%3E%3C!-- Margarida Esquerda Pequena --%3E%3Cg transform='translate(250, 110) scale(0.5)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23fff'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFC107'/%3E%3C/g%3E%3C!-- Flor Rosa Direita --%3E%3Cg transform='translate(1080, 95) scale(0.9)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23FFA5D8'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFEB3B'/%3E%3C/g%3E%3C!-- Margarida Direita Pequena --%3E%3Cg transform='translate(1220, 105) scale(0.8)'%3E%3Ccircle cx='0' cy='-6' r='5' fill='%23fff'/%3E%3Ccircle cx='6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-4' cy='5' r='5' fill='%23fff'/%3E%3Ccircle cx='-6' cy='-2' r='5' fill='%23fff'/%3E%3Ccircle cx='0' cy='0' r='3.5' fill='%23FFC107'/%3E%3C/g%3E%3C/svg%3E");
             background-size: 100% 100%; background-position: bottom center; background-repeat: no-repeat;
         }
 
