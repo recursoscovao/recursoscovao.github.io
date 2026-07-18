@@ -11,8 +11,7 @@
             --text-grey: #64748b;
             --mundo-red: #E1251B;
             --jogos-blue: #1A499C;
-            --sky-blue: #E2F2FE;
-            --nav-bg: #ffffff;
+            --sky-blue: #E8F4FD;
         }
 
         * { 
@@ -23,351 +22,203 @@
             -webkit-tap-highlight-color: transparent;
         }
         
+        /* ESTRUTURA SEM SCROLL */
         body { 
             background-color: var(--sky-blue);
-            min-height: 100vh; 
+            height: 100dvh; /* Altura exata do ecrã */
+            width: 100vw;
+            overflow: hidden; /* Proíbe o scroll */
             display: flex; 
             flex-direction: column;
-            overflow-x: hidden; /* Evita scroll horizontal causado pelos objetos de fundo */
             position: relative;
-            padding-bottom: 90px; 
         }
 
-        /* ----- PAISAGEM DE FUNDO (MONTANHAS E CAMINHO) ----- */
-        .bg-landscape {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            height: 35vh;
-            z-index: -1;
-            /* SVG com montanhas, caminho de terra castanho e florzinhas brancas/rosas */
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 400' preserveAspectRatio='none'%3E%3Cpath fill='%2389CC35' d='M0,200 C300,100 600,250 1440,150 L1440,400 L0,400 Z'/%3E%3Cpath fill='%2378B72D' d='M0,250 C400,300 800,180 1440,280 L1440,400 L0,400 Z'/%3E%3Cpath fill='%23E1B875' d='M300,400 C500,320 800,280 1100,400 Z'/%3E%3Ccircle cx='150' cy='320' r='5' fill='%23fff'/%3E%3Ccircle cx='150' cy='320' r='2' fill='%23FFC107'/%3E%3Ccircle cx='1200' cy='350' r='4' fill='%23FF80AB'/%3E%3Ccircle cx='1200' cy='350' r='1.5' fill='%23fff'/%3E%3Ccircle cx='800' cy='380' r='6' fill='%23fff'/%3E%3Ccircle cx='800' cy='380' r='2.5' fill='%23FFC107'/%3E%3C/svg%3E");
-            background-size: cover;
-            background-position: bottom center;
-            background-repeat: no-repeat;
-        }
-
-        /* ----- DECORAÇÕES FLUTUANTES (Nuvens, Estrelas, Avião) ----- */
+        /* ----- DECORAÇÕES FLUTUANTES NO CÉU ----- */
         .decorations {
             position: absolute;
-            top: 0; left: 0; width: 100%; height: 100%;
+            top: 0; left: 0; width: 100%; height: 60%;
             pointer-events: none;
             z-index: 1;
-            overflow: hidden;
         }
+        .cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.8; }
+        .cloud::before, .cloud::after { content: ''; position: absolute; background: white; border-radius: 50%; }
+        .cloud-1 { top: 20%; left: -2%; width: clamp(80px, 10vw, 120px); height: clamp(25px, 4vw, 40px); }
+        .cloud-1::before { width: 50%; height: 150%; top: -75%; left: 15%; }
+        .cloud-1::after { width: 40%; height: 100%; top: -40%; left: 50%; }
+        .cloud-2 { top: 12%; right: 2%; width: clamp(60px, 8vw, 100px); height: clamp(20px, 3vw, 35px); }
+        .cloud-2::before { width: 50%; height: 150%; top: -75%; left: 15%; }
+        .cloud-2::after { width: 40%; height: 100%; top: -40%; left: 50%; }
 
-        .cloud {
-            position: absolute;
-            background: white;
-            border-radius: 50px;
-            opacity: 0.8;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-        }
-        .cloud::before, .cloud::after {
-            content: ''; position: absolute; background: white; border-radius: 50%;
-        }
-        /* Nuvem 1 (Esquerda) */
-        .cloud-1 { top: 25%; left: -5%; width: 120px; height: 40px; }
-        .cloud-1::before { width: 60px; height: 60px; top: -30px; left: 15px; }
-        .cloud-1::after { width: 40px; height: 40px; top: -15px; left: 65px; }
-        
-        /* Nuvem 2 (Direita) */
-        .cloud-2 { top: 15%; right: 5%; width: 100px; height: 35px; transform: scale(0.8); }
-        .cloud-2::before { width: 50px; height: 50px; top: -25px; left: 15px; }
-        .cloud-2::after { width: 35px; height: 35px; top: -15px; left: 55px; }
-
-        /* Estrelas */
-        .star {
-            position: absolute;
-            width: 25px; height: 25px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFD54F'%3E%3Cpath d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/%3E%3C/svg%3E");
-        }
-        .star-1 { top: 28%; left: 10%; transform: rotate(-15deg); width: 35px; height: 35px; }
-        .star-2 { top: 12%; right: 20%; transform: rotate(20deg); width: 20px; height: 20px;}
-        .star-3 { top: 25%; right: 12%; transform: rotate(45deg); width: 15px; height: 15px;}
-
-        /* Avião de Papel com Rasto Tracejado */
         .paper-plane-wrapper {
-            position: absolute;
-            top: 20%;
-            right: 15%;
-            width: 200px;
-            height: 100px;
+            position: absolute; top: 18%; right: 10%; width: 15vw; height: 10vh; max-width: 150px;
         }
         .plane-trail {
-            position: absolute;
-            top: 20px; right: 25px;
-            width: 150px; height: 50px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 150 50' preserveAspectRatio='none'%3E%3Cpath d='M0,50 Q40,-10 150,20' fill='none' stroke='%2388C0ED' stroke-width='3' stroke-dasharray='8,8' stroke-linecap='round'/%3E%3C/svg%3E");
+            position: absolute; top: 20%; right: 20%; width: 100%; height: 50%;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' preserveAspectRatio='none'%3E%3Cpath d='M0,50 Q30,-10 100,20' fill='none' stroke='%2388C0ED' stroke-width='4' stroke-dasharray='6,6' stroke-linecap='round'/%3E%3C/svg%3E");
         }
         .plane-icon {
-            position: absolute;
-            top: 0; right: 0;
-            width: 40px; height: 40px;
+            position: absolute; top: 0; right: 0; width: clamp(25px, 4vw, 40px); height: clamp(25px, 4vw, 40px);
             transform: rotate(-15deg);
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235B9EE5'%3E%3Cpath d='M2.01 21L23 12 2.01 3 2 10l15 2-15 2z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat; background-size: contain;
         }
 
-        /* ----- HEADER (Forma Arredondada Branca) ----- */
+        /* ----- HEADER (Arredondado, ajustável em altura) ----- */
         .header-wrapper {
             background: white;
-            border-radius: 0 0 50px 50px; /* Arredondado apenas em baixo */
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03);
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            padding: 25px 20px 35px 20px;
+            border-radius: 0 0 clamp(20px, 4vw, 50px) clamp(20px, 4vw, 50px);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            display: flex; align-items: center; justify-content: center; 
+            padding: clamp(10px, 2vh, 25px) 20px clamp(15px, 3vh, 35px) 20px;
             position: relative;
             z-index: 10;
+            flex-shrink: 0; /* Não encolhe */
         }
-        
-        .header-content {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        #header-icon { 
-            height: clamp(55px, 10vw, 75px); 
-            width: auto; 
-            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
-        }
-        
-        .title-group { 
-            display: flex; 
-            flex-direction: column; 
-            justify-content: center;
-        }
-        
-        .title-main { 
-            font-weight: 900; 
-            font-size: clamp(1.4rem, 4vw, 2.2rem); 
-            line-height: 1; 
-            letter-spacing: -0.5px;
-        }
-        
+        .header-content { display: flex; align-items: center; gap: clamp(10px, 2vw, 15px); }
+        #header-icon { height: clamp(40px, 8vh, 65px); width: auto; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1)); }
+        .title-group { display: flex; flex-direction: column; justify-content: center; line-height: 0.9; }
+        .title-main { font-weight: 900; font-size: clamp(1.2rem, 3.5vh, 2.2rem); letter-spacing: -0.5px; }
         #txt-titulo1 { color: var(--mundo-red); }
         #txt-titulo2 { color: var(--jogos-blue); }
-        
-        .title-sub { 
-            color: var(--text-grey); 
-            font-weight: 700; 
-            font-size: clamp(0.7rem, 2vw, 0.95rem); 
-            margin-top: 5px; 
-        }
+        .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.6rem, 1.5vh, 0.9rem); margin-top: 4px; }
 
-        /* ----- INTRO TEXT E SUBLINHADO CURVO ----- */
+        /* ----- TEXTO INTRODUTÓRIO ----- */
         .intro-container { 
             text-align: center; 
-            margin: 35px 0 35px 0;
+            margin: clamp(10px, 3vh, 30px) 0;
             position: relative;
             z-index: 5;
+            flex-shrink: 0;
         }
-        
-        .intro-text { 
-            color: var(--jogos-blue); 
-            font-size: clamp(1.2rem, 4vw, 2rem); 
-            font-weight: 900; 
-            display: inline-block;
-        }
-
-        .intro-text .destaque {
-            position: relative;
-            display: inline-block;
-            color: #1A499C; /* Azul igual ao resto */
-        }
-
-        /* Linha Curva Amarela */
+        .intro-text { color: var(--jogos-blue); font-size: clamp(1rem, 3.5vh, 1.8rem); font-weight: 900; }
+        .intro-text .destaque { position: relative; display: inline-block; }
         .intro-text .destaque::after {
-            content: '';
-            position: absolute;
-            bottom: -15px;
-            left: -5%;
-            width: 110%;
-            height: 20px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 25' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' stroke-linecap='round' fill='transparent'/%3E%3C/svg%3E");
-            background-size: 100% 100%;
-            background-repeat: no-repeat;
-            z-index: -1;
+            content: ''; position: absolute; bottom: -8px; left: -5%; width: 110%; height: 12px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 25' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='8' stroke-linecap='round' fill='transparent'/%3E%3C/svg%3E");
+            background-size: 100% 100%; background-repeat: no-repeat; z-index: -1;
         }
 
-        /* ----- GRID DE JOGOS ----- */
+        /* ----- MAIN CONTENT: GRELHA DINÂMICA ----- */
         main { 
-            flex: 1; 
+            flex: 1; /* Ocupa todo o espaço restante */
+            min-height: 0; /* Previne que o Flexbox faça scroll */
             display: flex;
             align-items: center; 
             justify-content: center;
-            padding: 0 20px 40px 20px;
+            padding: 0 clamp(10px, 3vw, 20px) 2vh clamp(10px, 3vw, 20px);
             z-index: 10;
         }
 
         .game-wrapper { 
             display: grid;
             width: 100%;
+            height: 100%; /* Preenche o Main */
             max-width: 1200px;
-            gap: 15px;
         }
 
         .game-card { 
             display: flex;
             background: white;
             text-decoration: none; 
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-            border: 3px solid white; /* Borda branca igual à imagem */
-        }
-
-        .game-card:hover { transform: translateY(-5px); }
-
-        .card-img-container { 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
+            border: 3px solid white;
+            transition: transform 0.2s ease;
             overflow: hidden;
-        }
-        
-        .card-img-container img { 
-            object-fit: contain;
-            filter: drop-shadow(0 5px 8px rgba(0,0,0,0.15));
-            transition: transform 0.3s ease;
-        }
-        
-        .game-card:hover .card-img-container img {
-            transform: scale(1.1);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
         }
 
-        .card-info {
-            display: flex;
-            background: white; /* Parte inferior do cartão a branco */
-        }
+        .card-img-container { display: flex; align-items: center; justify-content: center; }
+        .card-img-container img { object-fit: contain; filter: drop-shadow(0 5px 8px rgba(0,0,0,0.15)); }
+        .card-info { display: flex; background: white; }
+        .card-title { font-weight: 900; }
+        .card-btn { display: flex; align-items: center; justify-content: center; color: white; }
 
-        .card-title { 
-            font-weight: 900; 
-        }
-
-        .card-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-        }
-
-        /* ----- MODO MOBILE (Pílulas Horizontais) ----- */
+        /* --- MOBILE LAYOUT (Pílulas empilhadas verticalmente) --- */
         @media (max-width: 899px) {
-            .header-wrapper { padding: 15px 15px 25px 15px; border-radius: 0 0 35px 35px; }
-            .game-wrapper { grid-template-columns: 1fr; max-width: 500px; }
-
+            .game-wrapper {
+                grid-template-columns: 1fr;
+                grid-template-rows: repeat(5, 1fr); /* 5 linhas de tamanhos iguais */
+                gap: clamp(8px, 2vh, 15px);
+                max-width: 500px;
+            }
             .game-card {
-                flex-direction: row;
-                align-items: center;
-                border-radius: 50px;
-                padding: 6px 10px 6px 6px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.08);
+                flex-direction: row; align-items: center;
+                border-radius: 50px; padding: 4px;
+                height: 100%; /* Força a caber na sua linha */
             }
-
             .card-img-container {
-                width: 70px; height: 70px;
-                border-radius: 35px;
-                flex-shrink: 0;
-            }
-            .card-img-container img { max-width: 80%; max-height: 80%; }
-
-            .card-info {
-                flex-direction: row; align-items: center; justify-content: space-between;
-                flex-grow: 1; padding: 0 10px 0 15px;
-                border-radius: 0 50px 50px 0;
-            }
-
-            .card-title { font-size: 1.1rem; }
-            .card-btn { width: 35px; height: 35px; border-radius: 50%; flex-shrink: 0; }
-            .card-btn svg { width: 18px; height: 18px; }
-
-            .paper-plane-wrapper { transform: scale(0.6); top: 18%; right: -5%; }
-            .star-1 { width: 25px; height: 25px; left: 5%; }
-        }
-
-        /* ----- MODO DESKTOP / TABLET (Cartões Verticais) ----- */
-        @media (min-width: 900px) {
-            .game-wrapper { grid-template-columns: repeat(5, 1fr); gap: 25px; }
-
-            .game-card {
-                flex-direction: column;
-                border-radius: 25px;
-                padding: 0; /* O padding vai para o interior agora */
-                box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-                height: 100%;
-                min-height: 350px;
-                overflow: hidden;
-            }
-
-            .card-img-container {
-                width: 100%; height: 65%;
-                border-radius: 22px 22px 0 0;
+                height: 100%; aspect-ratio: 1/1; /* Quadrado */
+                border-radius: 50%; flex-shrink: 0;
             }
             .card-img-container img { max-width: 75%; max-height: 75%; }
+            .card-info {
+                flex-direction: row; align-items: center; justify-content: space-between;
+                flex-grow: 1; padding: 0 10px;
+            }
+            .card-title { font-size: clamp(0.9rem, 2.5vh, 1.2rem); }
+            .card-btn { height: clamp(28px, 5vh, 40px); width: clamp(28px, 5vh, 40px); border-radius: 50%; flex-shrink: 0; }
+            .card-btn svg { width: 50%; height: 50%; }
+            .paper-plane-wrapper { display: none; } /* Esconder avião no mobile para limpar ecrã */
+        }
 
+        /* --- DESKTOP/TABLET LAYOUT (Cartões verticais lado a lado) --- */
+        @media (min-width: 900px) {
+            .game-wrapper {
+                grid-template-columns: repeat(5, 1fr);
+                grid-template-rows: 1fr; /* Apenas 1 linha */
+                gap: 2vw;
+                align-items: center;
+            }
+            .game-card {
+                flex-direction: column;
+                border-radius: 25px; padding: 0;
+                height: 85%; /* Não ocupa os 100% para respirar */
+                max-height: 400px; /* Limite máximo estético */
+            }
+            .game-card:hover { transform: translateY(-5px); }
+            .card-img-container { width: 100%; height: 65%; border-radius: 22px 22px 0 0; }
+            .card-img-container img { max-width: 75%; max-height: 75%; }
             .card-info {
                 flex-direction: column; align-items: center; justify-content: center;
-                height: 35%; gap: 15px; padding: 15px;
-                border-radius: 0 0 22px 22px;
+                height: 35%; gap: 10%; padding: 10px; border-radius: 0 0 22px 22px;
             }
-
-            .card-title { font-size: 1.4rem; }
-            .card-btn { width: 45px; height: 45px; border-radius: 50%; }
-            .card-btn svg { width: 24px; height: 24px; }
+            .card-title { font-size: clamp(1rem, 2vw, 1.4rem); text-align: center;}
+            .card-btn { width: clamp(35px, 3.5vw, 45px); height: clamp(35px, 3.5vw, 45px); border-radius: 50%; }
+            .card-btn svg { width: 50%; height: 50%; }
         }
 
-        /* ----- BARRA DE NAVEGAÇÃO FLUTUANTE (BOTTOM NAV) ----- */
-        .bottom-nav {
-            position: fixed;
-            bottom: 25px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: var(--nav-bg);
+        /* ----- FOOTER (Com Imagem Reconstruída em CSS/SVG) ----- */
+        footer {
+            height: clamp(50px, 12vh, 100px); /* Altura adaptável */
+            width: 100%;
+            position: relative;
+            flex-shrink: 0; /* Previne que desapareça */
             display: flex;
-            align-items: center;
+            align-items: flex-end;
             justify-content: center;
-            gap: 15px;
-            padding: 12px 30px;
-            border-radius: 50px;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.12);
-            z-index: 100;
+            padding-bottom: clamp(5px, 1.5vh, 15px);
+            
+            /* SVG que recria o prado, as folhas nas pontas e as flores */
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath fill='%23C5E452' d='M0,80 Q360,20 720,60 T1440,70 L1440,120 L0,120 Z'/%3E%3Cpath fill='%2389CC35' d='M0,90 Q400,10 800,80 T1440,90 L1440,120 L0,120 Z'/%3E%3Cg fill='%233F9F42'%3E%3Ccircle cx='20' cy='120' r='60'/%3E%3Ccircle cx='70' cy='130' r='50'/%3E%3Ccircle cx='-10' cy='70' r='40'/%3E%3Ccircle cx='1420' cy='120' r='70'/%3E%3Ccircle cx='1370' cy='110' r='50'/%3E%3Ccircle cx='1450' cy='60' r='40'/%3E%3C/g%3E%3Cg fill='%2363B945'%3E%3Ccircle cx='40' cy='110' r='40'/%3E%3Ccircle cx='0' cy='90' r='30'/%3E%3Ccircle cx='1400' cy='100' r='45'/%3E%3Ccircle cx='1440' cy='80' r='35'/%3E%3C/g%3E%3Ccircle cx='180' cy='95' r='5' fill='%23FFF'/%3E%3Ccircle cx='185' cy='90' r='5' fill='%23FFF'/%3E%3Ccircle cx='190' cy='95' r='5' fill='%23FFF'/%3E%3Ccircle cx='185' cy='100' r='5' fill='%23FFF'/%3E%3Ccircle cx='185' cy='95' r='3' fill='%23FFC107'/%3E%3Ccircle cx='1050' cy='100' r='4' fill='%23FFF'/%3E%3Ccircle cx='1054' cy='96' r='4' fill='%23FFF'/%3E%3Ccircle cx='1058' cy='100' r='4' fill='%23FFF'/%3E%3Ccircle cx='1054' cy='104' r='4' fill='%23FFF'/%3E%3Ccircle cx='1054' cy='100' r='2.5' fill='%23FFC107'/%3E%3Ccircle cx='1200' cy='90' r='6' fill='%23FFB6C1'/%3E%3Ccircle cx='1206' cy='86' r='6' fill='%23FFB6C1'/%3E%3Ccircle cx='1212' cy='90' r='6' fill='%23FFB6C1'/%3E%3Ccircle cx='1206' cy='94' r='6' fill='%23FFB6C1'/%3E%3Ccircle cx='1206' cy='90' r='3' fill='%23FFEB3B'/%3E%3C/svg%3E");
+            background-size: 100% 100%;
+            background-position: bottom center;
+            background-repeat: no-repeat;
         }
 
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            text-decoration: none;
+        .footer-text {
             color: var(--jogos-blue);
+            font-size: clamp(0.6rem, 1.5vh, 0.85rem);
             font-weight: 800;
-            font-size: 0.95rem;
-            padding: 0 15px;
-            border-right: 2px solid #e2e8f0;
+            z-index: 2;
         }
-        
-        .nav-item:last-child { border-right: none; }
-        .nav-icon { width: 22px; height: 22px; }
 
-        @media (max-width: 600px) {
-            .bottom-nav { width: 90%; padding: 10px; gap: 5px; }
-            .nav-item { font-size: 0.8rem; padding: 0 8px; }
-            .nav-icon { width: 18px; height: 18px; }
-        }
     </style>
 </head>
 <body>
 
-    <!-- Fundo Paisagem -->
-    <div class="bg-landscape"></div>
-
-    <!-- Decorações Flutuantes (Céu) -->
+    <!-- Decorações do Céu -->
     <div class="decorations">
         <div class="cloud cloud-1"></div>
         <div class="cloud cloud-2"></div>
-        <div class="star star-1"></div>
-        <div class="star star-2"></div>
-        <div class="star star-3"></div>
         <div class="paper-plane-wrapper">
             <div class="plane-trail"></div>
             <div class="plane-icon"></div>
@@ -396,26 +247,15 @@
         </div>
     </div>
 
-    <!-- Grelha de Cartões -->
+    <!-- Grelha de Cartões Dinâmica (Flex 1 - Preenche o buraco central) -->
     <main>
         <div class="game-wrapper" id="gamesGrid"></div>
     </main>
 
-    <!-- Barra Inferior Flutuante -->
-    <div class="bottom-nav">
-        <a href="#" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="#FFC107"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
-            Aprende
-        </a>
-        <a href="#" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="#E91E63"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
-            Explora
-        </a>
-        <a href="#" class="nav-item">
-            <svg class="nav-icon" viewBox="0 0 24 24" fill="#8BC34A"><path d="M19 3H5v4.5c0 3.03 2.15 5.59 5.03 6.31L12 15.5l1.97-1.69C16.85 13.09 19 10.53 19 7.5V3zM7 5h10v2.5c0 1.93-1.39 3.55-3.21 3.96L12 13l-1.79-1.54C8.39 11.05 7 9.43 7 7.5V5z"/><path d="M12 17c-2.76 0-5 2.24-5 5h10c0-2.76-2.24-5-5-5z"/></svg>
-            Diverte-te
-        </a>
-    </div>
+    <!-- Novo Footer Fiel à Imagem -->
+    <footer>
+        <div class="footer-text" id="txt-rodape"></div>
+    </footer>
 
     <script src="dados.js"></script>
     <script>
@@ -430,6 +270,9 @@
                 document.getElementById('txt-intro-normal').textContent = config.textos.introNormal || "Escolhe o teu ano e ";
                 document.getElementById('txt-intro-destaque').textContent = config.textos.introDestaque || "diverte-te!";
                 
+                // Vai buscar o texto do footer ao dados.js e insere-o
+                document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
+
                 document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu.logo;
 
                 const grid = document.getElementById('gamesGrid');
@@ -439,6 +282,8 @@
                     const card = document.createElement('a');
                     card.className = 'game-card';
                     card.href = jogo.link;
+                    // Borda dinâmicamente colorida como na imagem original
+                    card.style.borderColor = tema.fundo; 
                     
                     const iconeSeta = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"></path><path d="m12 5 7 7-7 7"></path></svg>`;
 
