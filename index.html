@@ -19,7 +19,7 @@
         body, html {
             height: 100dvh; 
             width: 100vw;
-            overflow: hidden; 
+            overflow: hidden; /* Corta totalmente o scroll */
             background-color: var(--sky-blue);
             display: flex; 
             flex-direction: column;
@@ -40,7 +40,6 @@
             background-repeat: no-repeat; transform: rotate(-15deg);
         }
 
-        /* Avião Maior */
         .plane-wrapper { position: absolute; top: 15%; right: 8%; width: 22vw; height: 12vh; min-width: 150px; max-width: 250px; }
         .plane-trail {
             position: absolute; top: 25%; right: 25%; width: 100%; height: 50%;
@@ -89,20 +88,17 @@
 
         /* ----- GRELHA DINÂMICA ----- */
         main { 
-            flex: 1; 
-            min-height: 0; 
+            flex: 1; /* Ocupa espaço restante todo */
+            min-height: 0; /* Impede o scroll */
             display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 0 clamp(10px, 3vw, 20px) 1vh clamp(10px, 3vw, 20px); z-index: 10;
+            padding: 0 clamp(10px, 3vw, 20px) 2vh clamp(10px, 3vw, 20px); z-index: 10;
         }
 
         .game-wrapper { display: flex; width: 100%; height: 100%; align-items: center; justify-content: center; flex-wrap: wrap; }
 
         .game-card { 
             display: flex; background: white; text-decoration: none; 
-            border: 2px solid var(--card-color); 
-            box-shadow: 0 0 0 5px white, 0 8px 15px 5px rgba(0,0,0,0.06);
             transition: transform 0.2s ease; 
-            margin: 6px; 
         }
         
         .card-img-container { 
@@ -117,54 +113,60 @@
         .card-btn svg { width: 50%; height: 50%; }
 
         /* =========================================
-           MODO RETRATO (Telemóvel Vertical) -> ALTERADO AQUI!
+           MODO RETRATO (Telemóvel Vertical)
            ========================================= */
         @media (orientation: portrait) {
             .game-wrapper { 
                 flex-direction: column; 
-                gap: clamp(10px, 1.8vh, 18px); 
+                gap: clamp(8px, 1.5vh, 15px); 
                 max-width: 450px; 
-                width: 100%;
-                /* Stretch garante que TODOS os cartões têm 100% da largura possível */
-                align-items: stretch; 
-                justify-content: center; 
+                align-items: stretch; /* Garante mesma largura */
             }
             .game-card { 
-                flex: none; width: 100%; flex-direction: row; align-items: center; 
-                padding: clamp(4px, 1vh, 8px); border-radius: 50px; 
-                height: auto; 
-                min-height: 80px; 
-                max-height: 12vh; 
+                flex: 1 1 0; /* Isto força os 5 cartões a partilharem a altura exatamente igual e não esconde os últimos! */
+                min-height: 0; /* Permite que fiquem pequenos o suficiente para caber todos */
+                max-height: 12vh; /* Mas não cresçam demais em ecrãs grandes */
+                flex-direction: row; align-items: center; 
+                
+                /* Design igual à nova imagem: */
+                padding: 0; /* Sem espaço branco a separar a cor das bordas */
+                border: 2px solid var(--card-color);
+                border-radius: 50px; /* Forma de pílula redonda */
+                overflow: hidden; /* Faz com que a cor interior acompanhe a curva da pílula perfeitamente */
+                box-shadow: 0 4px 10px rgba(0,0,0,0.06); 
+                margin: 0; 
             }
             .card-img-container { 
                 height: 100%; 
-                aspect-ratio: 0.95; /* Ligeiramente retangular, igual à imagem */
-                /* Curva acentuada à esquerda (acompanha o cartão), curva suave à direita */
-                border-radius: 40px 15px 15px 40px; 
+                aspect-ratio: 1.1; /* Largura um pouco maior que a altura para caber o animal */
+                border-radius: 0 25px 25px 0; /* Curvinha suave por dentro, lado direito */
                 flex-shrink: 0; 
             }
             .card-img-container img { max-width: 80%; max-height: 80%; }
-            .card-info { flex-direction: row; align-items: center; justify-content: space-between; flex-grow: 1; padding: 0 15px 0 20px; }
-            .card-title { font-size: clamp(1.1rem, 3vh, 1.5rem); }
+            .card-info { flex-direction: row; align-items: center; justify-content: space-between; flex: 1; padding: 0 15px 0 20px; }
+            .card-title { font-size: clamp(1.1rem, 2.5vh, 1.5rem); }
             .card-btn { height: clamp(35px, 6vh, 45px); width: clamp(35px, 6vh, 45px); border-radius: 50%; flex-shrink: 0; }
-            .star-decor { left: 5%; top: 18%; }
             
+            .star-decor { left: 5%; top: 18%; }
             .plane-wrapper { display: none !important; }
             .accent-lines { display: none; }
         }
 
         /* =========================================
-           MODO PAISAGEM (Tablet ou Telemóvel Horizontal)
+           MODO PAISAGEM (Tablet / PC / Telemóvel Horizontal)
            ========================================= */
         @media (orientation: landscape) {
             .game-wrapper { flex-direction: row; gap: clamp(8px, 1.5vw, 25px); max-width: 1400px; }
             .game-card { 
                 flex: 1; flex-direction: column; 
-                padding: clamp(4px, 1vh, 10px); 
+                padding: clamp(6px, 1vw, 10px); 
                 border-radius: clamp(15px, 2.5vw, 35px); 
+                border: 2px solid var(--card-color);
+                box-shadow: 0 0 0 5px white, 0 8px 15px 5px rgba(0,0,0,0.06); /* Dupla borda branca grossa */
+                margin: 6px;
                 height: 100%; 
-                max-height: 45vh; 
-                min-height: 0; 
+                max-height: 45vh; /* Ocupam só ~40% do ecrã */
+                min-height: 0; /* Encolhem para não fazer scroll se reduzires a altura */
             }
             .game-card:hover { transform: scale(1.03) translateY(-4px); }
             .card-img-container { 
