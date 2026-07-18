@@ -19,12 +19,12 @@ const JOGO_CONFIG = {
         voltarMobile: "voltar_az.png"
     },
     links: {
-        home: "/jogos", 
-        pre: "/jogos/pre",
-        ano1: "/jogos/1",
-        ano2: "/jogos/2",
-        ano3: "/jogos/3",
-        ano4: "/jogos/4"
+        home: "/", 
+        pre: "/pre",
+        ano1: "/1",
+        ano2: "//2",
+        ano3: "/3",
+        ano4: "/4"
     },
     temaCores: {
         azul: { borda: "#5ba4e5", fundo: "#e1f0ff", seta: "#1e88e5" },
