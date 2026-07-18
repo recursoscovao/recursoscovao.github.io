@@ -18,148 +18,130 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            background: linear-gradient(to bottom, #e1f0ff 0%, #f0f7ff 100%);
+            background: linear-gradient(to bottom, #e1f0ff 0%, #ffffff 40%);
             min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; position: relative;
         }
 
-        /* --- ELEMENTOS DE FUNDO (EXATOS) --- */
+        /* --- ELEMENTOS DE FUNDO (CÉU E RELVA) --- */
         .sky-decor {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400"><circle cx="100" cy="80" r="40" fill="white" opacity="0.6"/><circle cx="140" cy="90" r="30" fill="white" opacity="0.6"/><circle cx="850" cy="100" r="50" fill="white" opacity="0.6"/></svg>');
         }
-        /* Nuvens suaves */
-        .cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.7; filter: blur(8px); }
-        .cloud-1 { width: 150px; height: 45px; top: 10%; left: 10%; }
-        .cloud-2 { width: 120px; height: 40px; top: 18%; right: 15%; }
-        .cloud-3 { width: 200px; height: 60px; top: 5%; right: 25%; }
 
-        /* Arbustos (Bushes) no rodapé */
-        .bushes {
-            position: fixed; bottom: 0; left: 0; width: 100%; height: 110px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 20'%3E%3Cpath d='M0 20h120V10a10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0z' fill='%234fb443'/%3E%3C/svg%3E");
-            background-repeat: repeat-x; background-size: 350px auto; z-index: 1;
+        .grass-bg {
+            position: fixed; bottom: 0; left: 0; width: 100%; height: 120px; z-index: 1;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 20"><path d="M0 20h120V10a10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0 10 10 0 0 0-20 0z" fill="%234fb443"/></svg>') repeat-x bottom;
+            background-size: 300px auto;
         }
-        /* Pequenas flores na relva */
-        .flower { position: absolute; color: white; font-size: 14px; opacity: 0.9; z-index: 2; bottom: 35px; }
 
         /* --- HEADER --- */
         header { 
-            background: white; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; 
+            background: white; display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; 
             padding: 5px 20px; height: 100px; z-index: 1000; position: relative;
         }
-        .hamburger-btn { background: none; border: none; color: var(--primary-blue); font-size: 32px; cursor: pointer; }
+
+        .hamburger-btn { 
+            background: none; border: none; color: var(--primary-blue); font-size: 32px; cursor: pointer;
+            transition: 0.2s;
+        }
+        .hamburger-btn:hover { transform: scale(1.1); }
+
         .header-center { display: flex; align-items: center; justify-content: center; gap: 15px; }
-        #header-icon { height: 75px; width: auto; }
+        #header-icon { height: 75px; }
+        
         .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.85; }
-        #txt-titulo1 { font-weight: 900; font-size: 1.8rem; color: var(--primary-blue); letter-spacing: -0.5px; }
-        #txt-titulo2 { font-weight: 900; font-size: 1.8rem; color: var(--text-grey); letter-spacing: -0.5px; }
-        #txt-subtitulo { color: var(--primary-blue); font-weight: 700; font-size: 12px; margin-top: 5px; line-height: 1; }
-        .btn-voltar-top { display: flex; justify-content: flex-end; }
-        .btn-voltar-top img { height: 45px; cursor: pointer; }
+        #txt-titulo1 { font-weight: 900; font-size: 1.8rem; color: var(--primary-blue); }
+        #txt-titulo2 { font-weight: 900; font-size: 1.8rem; color: var(--text-grey); }
+        #txt-subtitulo { color: var(--primary-blue); font-weight: 700; font-size: 11px; margin-top: 5px; letter-spacing: 0.5px; }
+
+        .btn-voltar-top img { height: 45px; cursor: pointer; transition: 0.2s; }
+        .btn-voltar-top img:hover { transform: scale(1.1); }
 
         /* --- MENU --- */
-        .menu-dropdown { position: absolute; top: 90px; left: 20px; display: none; flex-direction: column; gap: 8px; z-index: 2000; }
-        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-decoration: none; color: var(--text-dark); font-weight: 700; min-width: 230px; }
+        .menu-dropdown { 
+            position: absolute; top: 90px; left: 20px; display: none; flex-direction: column; gap: 8px; z-index: 2000; 
+        }
+        .menu-item { 
+            display: flex; align-items: center; gap: 12px; padding: 12px 18px; 
+            background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            text-decoration: none; color: var(--text-dark); font-weight: 700; min-width: 230px;
+        }
         .menu-item:hover { background: var(--primary-blue); color: white; }
-        .menu-item img { height: 26px; }
 
-        /* --- INTRO COM AS FAÍSCAS AMARELAS (RAY SPARKLES) --- */
+        /* --- INTRO COM FAÍSCAS --- */
         .sub-header { text-align: center; padding: 35px 10px; z-index: 10; position: relative; }
-        .intro-text { 
-            color: #1a4a7a; font-size: 1.7rem; font-weight: 800; 
-            position: relative; display: inline-block; 
+        .intro-text { color: #1a4a7a; font-size: 1.7rem; font-weight: 800; position: relative; display: inline-block; }
+        
+        .intro-text::before, .intro-text::after {
+            content: ""; position: absolute; width: 30px; height: 30px; top: 50%; transform: translateY(-50%);
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 12h3M5 5l2 2M5 19l2-2' stroke='%23ffcc00' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
         }
-        /* Raios da esquerda e direita */
-        .rays {
-            position: absolute; width: 30px; height: 30px; top: 50%; transform: translateY(-50%);
-            background-image: radial-gradient(circle, #ffcc00 20%, transparent 20%);
-            background-size: 30px 30px;
-        }
-        /* Faísca Esquerda */
-        .rays-l { left: -45px; }
-        .rays-l::before, .rays-l::after, .rays-l span { 
-            content: ''; position: absolute; width: 12px; height: 4px; background: #ffcc00; border-radius: 2px;
-        }
-        .rays-l span { top: 13px; left: 0; }
-        .rays-l::before { top: 3px; left: 5px; transform: rotate(-30deg); }
-        .rays-l::after { bottom: 3px; left: 5px; transform: rotate(30deg); }
+        .intro-text::before { left: -45px; }
+        .intro-text::after { right: -45px; transform: translateY(-50%) scaleX(-1); }
 
-        /* Faísca Direita */
-        .rays-r { right: -45px; }
-        .rays-r::before, .rays-r::after, .rays-r span { 
-            content: ''; position: absolute; width: 12px; height: 4px; background: #ffcc00; border-radius: 2px;
-        }
-        .rays-r span { top: 13px; right: 0; }
-        .rays-r::before { top: 3px; right: 5px; transform: rotate(30deg); }
-        .rays-r::after { bottom: 3px; right: 5px; transform: rotate(-30deg); }
-
-        /* --- GRID DE JOGOS --- */
+        /* --- GRID DE JOGOS (PC) --- */
         main { flex: 1; display: flex; justify-content: center; align-items: flex-start; padding: 10px 20px; z-index: 10; }
         .game-wrapper { display: flex; gap: 25px; width: 100%; max-width: 1150px; justify-content: center; }
 
         .game-card { 
-            background: white; border-radius: 40px; border: 4px solid; 
-            text-decoration: none; padding: 0; flex: 1; max-width: 350px;
-            display: flex; flex-direction: column; overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: transform 0.3s;
+            background: white; border-radius: 40px; border: 3px solid; 
+            text-decoration: none; padding: 15px; flex: 1; max-width: 350px;
+            display: flex; flex-direction: column; align-items: center; position: relative;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: 0.3s;
         }
-        .game-card:hover { transform: translateY(-8px); }
         
-        /* Parte superior colorida do card */
-        .card-top { 
-            width: 100%; aspect-ratio: 1.3; display: flex; align-items: center; justify-content: center; 
-            padding: 20px; position: relative;
+        .inner-content {
+            width: 100%; border-radius: 30px; display: flex; flex-direction: column; align-items: center;
+            padding: 30px 20px 60px 20px; position: relative;
         }
-        .card-top img { width: 85%; height: 85%; object-fit: contain; }
+        .inner-content img { width: 80%; aspect-ratio: 1; object-fit: contain; }
 
-        /* Parte inferior branca do card */
-        .card-bottom { 
-            background: white; width: 100%; padding: 20px; text-align: center;
-            display: flex; flex-direction: column; align-items: center; gap: 15px;
+        /* Bolha branca do título */
+        .title-bubble {
+            background: white; width: 90%; height: 50px; border-radius: 25px;
+            display: flex; align-items: center; justify-content: center;
+            position: absolute; bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
-        .card-bottom h2 { color: #1e88e5; font-size: 1.25rem; font-weight: 900; text-transform: uppercase; }
-        
-        .btn-action { 
-            width: 45px; height: 45px; border-radius: 50%; display: flex; align-items: center; justify-content: center; 
-            color: white; font-size: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        .title-bubble h2 { font-size: 1.2rem; font-weight: 900; text-transform: uppercase; }
+
+        /* Botão Seta abaixo */
+        .btn-round {
+            width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 18px; margin-top: -15px; z-index: 5;
         }
 
-        /* --- FOOTER (BARRA AZUL E RODAPÉ) --- */
-        .footer-bar {
-            position: fixed; bottom: 0; width: 100%; height: 40px;
-            background: rgba(225, 240, 255, 0.9); display: flex; align-items: center; justify-content: center;
-            z-index: 100; border-top: 1px solid rgba(0,0,0,0.05);
-        }
-        .footer-bar p { font-weight: 700; color: #5d7082; font-size: 0.8rem; }
+        footer { position: fixed; bottom: 15px; width: 100%; text-align: center; font-weight: 700; color: #5d7082; font-size: 0.75rem; z-index: 10; }
 
-        /* --- MOBILE --- */
+        /* --- RESPONSIVIDADE MOBILE (DESIGN PILL) --- */
         @media (max-width: 768px) {
-            header { grid-template-columns: 50px 1fr 50px; height: 85px; padding: 0 10px; }
+            header { grid-template-columns: 60px 1fr 60px; height: 85px; padding: 0 10px; }
             #header-icon { height: 55px; }
             #txt-titulo1, #txt-titulo2 { font-size: 1.2rem; }
             .intro-text { font-size: 1.2rem; }
-            .rays { transform: translateY(-50%) scale(0.8); }
+            .intro-text::before, .intro-text::after { width: 20px; left: -30px; right: -30px; }
+
+            .game-wrapper { flex-direction: column; align-items: center; gap: 15px; padding-bottom: 120px; }
             
-            .game-wrapper { flex-direction: column; align-items: center; padding-bottom: 150px; }
-            .game-card { flex-direction: row; width: 95%; height: 100px; border-radius: 25px; }
-            .card-top { width: 100px; height: 100%; aspect-ratio: auto; border-radius: 0; }
-            .card-bottom { flex: 1; flex-direction: row; padding: 0 15px; justify-content: space-between; gap: 10px; }
-            .card-bottom h2 { font-size: 0.95rem; text-align: left; }
-            .btn-action { width: 36px; height: 36px; font-size: 16px; }
+            /* Card vira Pill Horizontal */
+            .game-card { 
+                flex-direction: row; width: 95%; max-width: 100%; height: 85px; 
+                padding: 10px 15px; border-radius: 25px; border-width: 2px;
+            }
+            .inner-content { padding: 0; flex-direction: row; background: none !important; height: 100%; }
+            .inner-content img { width: 60px; height: 60px; margin-right: 15px; }
+            .title-bubble { position: static; background: none; box-shadow: none; width: auto; flex: 1; justify-content: flex-start; }
+            .title-bubble h2 { font-size: 1rem; }
+            .btn-round { margin-top: 0; width: 34px; height: 34px; font-size: 14px; }
+            
+            .grass-bg { height: 80px; }
         }
     </style>
 </head>
 <body>
 
-    <div class="sky-decor">
-        <div class="cloud cloud-1"></div>
-        <div class="cloud cloud-2"></div>
-        <div class="cloud cloud-3"></div>
-    </div>
-
-    <div class="bushes"></div>
-    <span class="flower" style="left: 15%;">✿</span>
-    <span class="flower" style="left: 45%;">✿</span>
-    <span class="flower" style="left: 75%;">✿</span>
+    <div class="sky-decor"></div>
+    <div class="grass-bg"></div>
 
     <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
@@ -178,18 +160,11 @@
     </header>
 
     <div class="sub-header">
-        <div class="intro-text">
-            <div class="rays rays-l"><span></span></div>
-            <span id="txt-intro"></span>
-            <div class="rays rays-r"><span></span></div>
-        </div>
+        <div class="intro-text" id="txt-intro"></div>
     </div>
 
     <main><div class="game-wrapper" id="gamesGrid"></div></main>
-
-    <div class="footer-bar">
-        <p id="txt-rodape"></p>
-    </div>
+    <footer id="txt-rodape"></footer>
 
     <script src="dados.js"></script>
     <script>
@@ -224,16 +199,16 @@
                 const tema = config.temaCores[jogo.tema];
                 const card = document.createElement('a');
                 card.className = 'game-card'; card.href = jogo.link; card.style.borderColor = tema.borda;
+                
                 card.innerHTML = `
-                    <div class="card-top" style="background-color: ${tema.fundo};">
+                    <div class="inner-content" style="background-color: ${tema.fundo};">
                         <img src="${config.caminhoIconsJogos}${jogo.icon}">
+                        <div class="title-bubble"><h2 style="color: ${tema.texto}">${jogo.nome}</h2></div>
                     </div>
-                    <div class="card-bottom">
-                        <h2 style="color: ${tema.seta}">${jogo.nome}</h2>
-                        <div class="btn-action" style="background-color: ${tema.seta};">
-                            <i class="fas fa-arrow-right"></i>
-                        </div>
-                    </div>`;
+                    <div class="btn-round" style="background-color: ${tema.texto};">
+                        <i class="fas fa-arrow-right"></i>
+                    </div>
+                `;
                 grid.appendChild(card);
             });
         };
