@@ -5,7 +5,7 @@ const JOGO_CONFIG = {
         subtitulo: "Atividades | Pré e 1º Ciclo",
         introNormal: "Escolhe o teu ano e ",
         introDestaque: "diverte-te!",
-        rodape: "&copy; Mundo dos Jogos - Recursos Educativos"
+        rodape: "&copy; Pequenos Exploradores - Recursos Educativos"
     },
     caminhoIconsMenu: "icons/", 
     caminhoIconsJogos: "icons/", 
@@ -21,11 +21,11 @@ const JOGO_CONFIG = {
         ano4: "4/index.html"
     },
     temaCores: {
-        rosa: { borda: "#FFFFFF", fundo: "#F28EB0" },
-        laranja: { borda: "#FFFFFF", fundo: "#F5A623" },
-        verde: { borda: "#FFFFFF", fundo: "#68C971" },
-        azul: { borda: "#FFFFFF", fundo: "#5B9EE5" },
-        roxo: { borda: "#FFFFFF", fundo: "#9370DB" }
+        rosa: { borda: "#FFFFFF", fundo: "#F48FB1" },
+        laranja: { borda: "#FFFFFF", fundo: "#FFB74D" },
+        verde: { borda: "#FFFFFF", fundo: "#81C784" },
+        azul: { borda: "#FFFFFF", fundo: "#64B5F6" },
+        roxo: { borda: "#FFFFFF", fundo: "#BA68C8" }
     },
     listaJogos: [
         { nome: "Pré-Escolar", icon: "iconpre.png", link: "pre/", tema: "rosa" },
