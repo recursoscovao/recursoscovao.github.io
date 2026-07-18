@@ -10,7 +10,7 @@
     
     <style>
         :root {
-            --primary-blue: #007bff; /* Cor exata do botão voltar_az.png */
+            --primary-blue: #5EA2E6; /* Cor exata solicitada */
             --text-dark: #2d5a88;
             --text-grey: #a5b4c4;
         }
@@ -22,9 +22,9 @@
             min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; position: relative;
         }
 
-        /* --- ELEMENTOS DE FUNDO --- */
+        /* --- FUNDO DECORATIVO --- */
         .sky-decor {
-            position: absolute; top: 0; left: 0; width: 100%; height: 300px;
+            position: absolute; top: 0; left: 0; width: 100%; height: 250px;
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 300"><circle cx="100" cy="50" r="40" fill="white" opacity="0.6"/><circle cx="140" cy="60" r="30" fill="white" opacity="0.6"/><circle cx="850" cy="80" r="50" fill="white" opacity="0.6"/><circle cx="890" cy="90" r="35" fill="white" opacity="0.6"/></svg>');
             z-index: 0; pointer-events: none;
         }
@@ -41,13 +41,12 @@
             padding: 5px 20px; height: 85px; z-index: 1000;
         }
 
-        /* Hambúrguer com cor da seta e efeito rollover */
         .hamburger-btn { 
             background: none; border: none; color: var(--primary-blue); 
             font-size: 32px; cursor: pointer; display: flex; align-items: center; justify-content: flex-start;
             transition: transform 0.2s;
         }
-        .hamburger-btn:hover { transform: scale(1.1); color: #0056b3; }
+        .hamburger-btn:hover { transform: scale(1.15); filter: brightness(0.9); }
 
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         #header-icon { height: 60px; }
@@ -69,11 +68,15 @@
         .menu-item { 
             display: flex; align-items: center; gap: 12px; padding: 12px 18px; 
             background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            text-decoration: none; color: var(--text-dark); font-weight: 700; min-width: 220px;
+            text-decoration: none; color: var(--text-dark); font-weight: 700; min-width: 230px;
             transition: background 0.2s, color 0.2s;
         }
         .menu-item:hover { background: var(--primary-blue); color: white; }
-        .menu-item img { height: 25px; }
+        .menu-item img { height: 26px; width: 26px; object-fit: contain; }
+
+        /* Estilo especial para o item VOLTAR dentro do menu */
+        .menu-item.voltar-item { border-top: 2px solid #f0f4f8; margin-top: 5px; color: var(--primary-blue); }
+        .menu-item.voltar-item:hover { background: var(--primary-blue); color: white; }
 
         /* --- SUB-HEADER --- */
         .sub-header { text-align: center; padding: 30px 10px; z-index: 10; }
@@ -100,10 +103,9 @@
         
         .game-card h2 { color: var(--text-dark); font-size: 1.2rem; font-weight: 900; text-transform: uppercase; margin-bottom: 20px; }
         
-        /* Botão redondo de ação com rollover */
         .btn-action { 
             width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; 
-            transition: transform 0.2s, filter 0.2s;
+            transition: transform 0.2s;
         }
         .game-card:hover .btn-action { transform: scale(1.15); filter: brightness(1.1); }
 
@@ -171,19 +173,30 @@
             document.getElementById('txt-intro').innerText = config.textos.intro;
             document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
             
-            // Ícones unificados
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu.ano1;
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + config.iconesMenu.voltar;
 
+            // Criar Menu Dropdown
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
+            
+            // Adicionar anos ao menu
             Object.keys(config.links).forEach(key => {
                 const a = document.createElement('a');
-                a.className = 'menu-item'; a.href = config.links[key];
+                a.className = 'menu-item'; 
+                a.href = config.links[key];
                 a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
                 menuBox.appendChild(a);
             });
 
+            // Adicionar botão Voltar ao final do menu
+            const btnVoltarMenu = document.createElement('a');
+            btnVoltarMenu.className = 'menu-item voltar-item';
+            btnVoltarMenu.href = "../";
+            btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
+            menuBox.appendChild(btnVoltarMenu);
+
+            // Criar Cards de Jogos
             const grid = document.getElementById('gamesGrid');
             config.listaJogos.forEach(jogo => {
                 const tema = config.temaCores[jogo.tema];
