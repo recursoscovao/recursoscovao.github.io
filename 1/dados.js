@@ -2,7 +2,7 @@ const JOGO_CONFIG = {
     textos: {
         tituloLinha1: "Pequenos",
         tituloLinha2: "Exploradores",
-        subtitulo: "Atividades | 1º Ano",
+        subtitulo: "ATIVIDADES | 1º ANO",
         intro: "O que vamos aprender hoje?",
         rodape: "&copy; Pequenos Exploradores - Recursos Educativos"
     },
@@ -27,9 +27,9 @@ const JOGO_CONFIG = {
         ano4: "/4"
     },
     temaCores: {
-        azul: { borda: "#5ba4e5", fundo: "#e1f0ff", seta: "#007bff" },
+        azul: { borda: "#4ea1f1", fundo: "#e1f0ff", seta: "#007bff" },
         verde: { borda: "#58bc8c", fundo: "#e8f7f0", seta: "#28a745" },
-        castanho: { borda: "#d35400", fundo: "#fef5e7", seta: "#e67e22" }
+        castanho: { borda: "#e67e22", fundo: "#fef5e7", seta: "#d35400" }
     },
     listaJogos: [
         { nome: "Português", icon: "pt.png", link: "pt/", tema: "azul" },
