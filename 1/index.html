@@ -19,10 +19,10 @@
         
         body { 
             background: #e1f0ff; 
-            min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; position: relative;
+            min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; position: relative;
         }
 
-        /* --- CENÁRIO DE FUNDO SVG --- */
+        /* --- CENÁRIO DE FUNDO (COLINAS E CAMINHO) --- */
         .background-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;
         }
@@ -65,7 +65,7 @@
         main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 20px; z-index: 10; min-height: 0; }
         .game-wrapper { display: flex; gap: 25px; width: 100%; max-width: 1150px; justify-content: center; }
 
-        /* --- CARD STYLE (IGUAL À IMAGEM) --- */
+        /* --- CARTÕES (ESTILO SOLICITADO) --- */
         .game-card { 
             background: white; border-radius: 40px; border: 3px solid; 
             text-decoration: none; flex: 1; max-width: 350px;
@@ -78,21 +78,21 @@
             width: 100%; aspect-ratio: 1.2; display: flex; align-items: center; justify-content: center; 
             padding: 20px;
         }
-        .card-illustration img { width: 80%; height: 85%; object-fit: contain; }
+        .card-illustration img { width: 85%; height: 85%; object-fit: contain; }
 
-        /* Bolha branca inferior que contém texto e botão */
+        /* Bolha branca inferior com texto e botão juntos */
         .card-controls {
             background: white; width: 100%; padding: 20px 10px; border-radius: 35px 35px 0 0;
             display: flex; flex-direction: column; align-items: center; gap: 12px; margin-top: -30px;
         }
-        .card-controls h2 { font-size: 1.2rem; font-weight: 900; text-transform: uppercase; text-align: center; }
+        .card-controls h2 { font-size: 1.2rem; font-weight: 900; text-transform: uppercase; }
 
         .btn-circle {
             width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center;
             color: white; font-size: 18px; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
 
-        /* --- MOBILE --- */
+        /* --- RESPONSIVIDADE MOBILE --- */
         @media (max-width: 768px) {
             header { grid-template-columns: 50px 1fr 50px; height: 85px; }
             .game-wrapper { flex-direction: column; align-items: center; gap: 15px; }
@@ -108,6 +108,7 @@
 </head>
 <body>
 
+    <!-- REPOSTO O FUNDO DA PAISAGEM ORIGINAL -->
     <div class="background-container">
         <div class="sky"></div>
         <svg class="landscape-svg" preserveAspectRatio="none" viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
@@ -119,6 +120,10 @@
             <path d="M600 600 Q750 400 950 480 Q1050 550 1050 600 L600 600" fill="#76c94a"/>
             <path d="M300 600 Q450 550 500 520 T600 480 L700 480 Q650 500 450 600 Z" fill="#e2b170" opacity="0.8"/>
             <g fill="#4fb443"><circle cx="40" cy="550" r="60"/><circle cx="960" cy="550" r="60"/></g>
+            <g>
+                <circle cx="150" cy="540" r="6" fill="white"/><circle cx="150" cy="540" r="2" fill="#ffd700"/>
+                <circle cx="820" cy="560" r="6" fill="#ff9ff3"/><circle cx="820" cy="560" r="2" fill="#ffd700"/>
+            </g>
         </svg>
     </div>
 
