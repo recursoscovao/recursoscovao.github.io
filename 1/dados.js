@@ -16,20 +16,20 @@ const JOGO_CONFIG = {
         ano3: "icon3.png",
         ano4: "icon4.png",
         voltar: "voltar.png",
-        voltarMobile: "voltar_az.png"
+        voltarMobile: "voltar_az.png" 
     },
     links: {
         home: "/", 
         pre: "/pre",
         ano1: "/1",
-        ano2: "//2",
+        ano2: "/2",
         ano3: "/3",
         ano4: "/4"
     },
     temaCores: {
-        azul: { borda: "#5ba4e5", fundo: "#e1f0ff", seta: "#1e88e5" },
-        verde: { borda: "#58bc8c", fundo: "#e8f7f0", seta: "#2e7d32" },
-        castanho: { borda: "#d35400", fundo: "#fef5e7", seta: "#a04000" }
+        azul: { borda: "#5ba4e5", fundo: "#e1f0ff", seta: "#007bff" },
+        verde: { borda: "#58bc8c", fundo: "#e8f7f0", seta: "#28a745" },
+        castanho: { borda: "#d35400", fundo: "#fef5e7", seta: "#e67e22" }
     },
     listaJogos: [
         { nome: "Português", icon: "pt.png", link: "pt/", tema: "azul" },
