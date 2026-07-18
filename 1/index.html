@@ -18,28 +18,39 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
         
         body { 
-            /* AQUI USAMOS A TUA IMAGEM DE FUNDO */
-            background: url('fundo.jpg') no-repeat center bottom / cover fixed;
+            background: #e1f0ff; 
             min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; position: relative;
+        }
+
+        /* --- CENÁRIO DE FUNDO GERADO POR CÓDIGO --- */
+        .background-container {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; pointer-events: none;
+        }
+        
+        /* Céu e Nuvens */
+        .sky {
+            width: 100%; height: 100%;
+            background: linear-gradient(to bottom, #a3d5ff 0%, #ffffff 60%);
+        }
+
+        /* SVG para Colinas, Caminho, Flores e Arbustos */
+        .landscape-svg {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 100%;
         }
 
         /* --- HEADER --- */
         header { 
-            background: white; display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; 
-            padding: 5px 20px; height: 100px; z-index: 1000; position: relative;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            background: white; display: grid; grid-template-columns: 70px 1fr 70px; align-items: center; 
+            padding: 5px 20px; height: 100px; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
 
-        /* Menu Hamburguer Corrigido */
         .hamburger-btn { 
             background: none; border: none; color: var(--primary-blue); 
-            font-size: 28px; cursor: pointer; width: 45px; height: 45px;
-            display: flex; align-items: center; justify-content: flex-start;
+            font-size: 28px; cursor: pointer; display: flex; align-items: center;
         }
-        .hamburger-btn:hover { color: var(--primary-blue); filter: brightness(0.9); }
 
-        .header-center { display: flex; align-items: center; justify-content: center; gap: 15px; }
-        #header-icon { height: 75px; }
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
+        #header-icon { height: 75px; width: auto; }
         
         .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.85; }
         #txt-titulo1 { font-weight: 900; font-size: 1.8rem; color: var(--primary-blue); }
@@ -48,9 +59,9 @@
 
         .btn-voltar-top img { height: 45px; cursor: pointer; }
 
-        /* --- MENU DROPDOWN REDIMENSIONADO --- */
+        /* --- MENU DROPDOWN --- */
         .menu-dropdown { 
-            position: absolute; top: 85px; left: 20px; display: none; flex-direction: column; gap: 8px; z-index: 2000; 
+            position: absolute; top: 90px; left: 20px; display: none; flex-direction: column; gap: 8px; z-index: 2000; 
         }
         .menu-item { 
             display: flex; align-items: center; gap: 12px; padding: 12px 18px; 
@@ -59,10 +70,9 @@
         }
         .menu-item:hover { background: var(--primary-blue); color: white; }
         .menu-item img { height: 26px; }
-        .voltar-item { border-top: 2px solid #f0f4f8; margin-top: 5px; color: var(--primary-blue); }
 
         /* --- INTRO COM AS FAÍSCAS --- */
-        .sub-header { text-align: center; padding: 35px 10px; z-index: 10; position: relative; }
+        .sub-header { text-align: center; padding: 30px 10px; z-index: 10; position: relative; }
         .intro-text { color: #1a4a7a; font-size: 1.7rem; font-weight: 800; position: relative; display: inline-block; }
         
         .intro-text::before, .intro-text::after {
@@ -77,24 +87,24 @@
         main { flex: 1; display: flex; justify-content: center; align-items: flex-start; padding: 20px; z-index: 10; }
         .game-wrapper { display: flex; gap: 25px; width: 100%; max-width: 1150px; justify-content: center; }
 
-        /* Card Desktop */
         .game-card { 
             background: white; border-radius: 40px; border: 3px solid; 
-            text-decoration: none; padding: 15px; flex: 1; max-width: 340px;
+            text-decoration: none; padding: 15px; flex: 1; max-width: 350px;
             display: flex; flex-direction: column; align-items: center; position: relative;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: 0.3s;
         }
+        .game-card:hover { transform: translateY(-8px); }
         
         .inner-content {
             width: 100%; border-radius: 30px; display: flex; flex-direction: column; align-items: center;
-            padding: 20px 20px 55px 20px; position: relative;
+            padding: 25px 20px 60px 20px; position: relative;
         }
         .inner-content img { width: 85%; aspect-ratio: 1; object-fit: contain; }
 
         .title-bubble {
             background: white; width: 90%; height: 50px; border-radius: 25px;
             display: flex; align-items: center; justify-content: center;
-            position: absolute; bottom: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);
+            position: absolute; bottom: 18px; box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
         .title-bubble h2 { font-size: 1.15rem; font-weight: 900; text-transform: uppercase; }
 
@@ -103,27 +113,56 @@
             color: white; font-size: 18px; margin-top: -15px; z-index: 5;
         }
 
-        /* --- MOBILE --- */
+        /* --- RESPONSIVIDADE MOBILE --- */
         @media (max-width: 768px) {
             header { grid-template-columns: 50px 1fr 50px; height: 85px; }
             #header-icon { height: 55px; }
             #txt-titulo1, #txt-titulo2 { font-size: 1.2rem; }
             .intro-text { font-size: 1.2rem; }
-            .intro-text::before, .intro-text::after { width: 20px; left: -30px; right: -30px; }
-
-            .game-wrapper { flex-direction: column; align-items: center; gap: 15px; padding-bottom: 120px; }
-            .game-card { flex-direction: row; width: 95%; height: 85px; padding: 10px 15px; border-radius: 22px; }
+            .game-wrapper { flex-direction: column; align-items: center; gap: 15px; padding-bottom: 150px; }
+            .game-card { flex-direction: row; width: 95%; height: 85px; padding: 10px 15px; border-radius: 25px; border-width: 2px; }
             .inner-content { padding: 0; flex-direction: row; background: none !important; height: 100%; }
-            .inner-content img { width: 60px; height: 60px; margin-right: 15px; }
+            .inner-content img { width: 55px; height: 55px; margin-right: 15px; }
             .title-bubble { position: static; background: none; box-shadow: none; width: auto; flex: 1; justify-content: flex-start; }
             .title-bubble h2 { font-size: 1rem; }
             .btn-round { margin-top: 0; width: 34px; height: 34px; font-size: 14px; }
         }
 
-        footer { padding: 15px; text-align: center; font-weight: 700; color: #5d7082; font-size: 0.75rem; z-index: 10; background: rgba(255,255,255,0.7); }
+        footer { padding: 15px; text-align: center; font-weight: 700; color: #2d5a88; font-size: 0.75rem; z-index: 10; }
     </style>
 </head>
 <body>
+
+    <!-- CENÁRIO DE FUNDO SVG -->
+    <div class="background-container">
+        <div class="sky"></div>
+        <svg class="landscape-svg" preserveAspectRatio="none" viewBox="0 0 1000 600" xmlns="http://www.w3.org/2000/svg">
+            <!-- Nuvens -->
+            <g fill="white" opacity="0.6">
+                <circle cx="100" cy="80" r="35"/><circle cx="135" cy="80" r="25"/><circle cx="115" cy="65" r="25"/>
+                <circle cx="850" cy="120" r="40"/><circle cx="890" cy="120" r="30"/><circle cx="870" cy="100" r="30"/>
+                <circle cx="500" cy="60" r="30"/><circle cx="530" cy="60" r="20"/>
+            </g>
+            <!-- Colinas de Trás -->
+            <path d="M-100 600 Q200 450 500 600 T1100 600" fill="#a8e063"/>
+            <!-- Colina da Esquerda (Arbusto Frontal) -->
+            <path d="M-50 600 Q50 350 250 500 Q400 650 400 600 L-50 600" fill="#76c94a"/>
+            <!-- Colina da Direita (Arbusto Frontal) -->
+            <path d="M600 600 Q750 400 950 480 Q1050 550 1050 600 L600 600" fill="#76c94a"/>
+            <!-- Caminho -->
+            <path d="M300 600 Q450 550 500 520 T600 480 L700 480 Q650 500 450 600 Z" fill="#e2b170" opacity="0.8"/>
+            <!-- Arbustos laterais -->
+            <g fill="#4fb443">
+                <circle cx="40" cy="550" r="60"/><circle cx="10" cy="500" r="50"/>
+                <circle cx="960" cy="550" r="60"/><circle cx="990" cy="500" r="50"/>
+            </g>
+            <!-- Flores -->
+            <g>
+                <circle cx="150" cy="540" r="6" fill="white"/><circle cx="150" cy="540" r="2" fill="#ffd700"/>
+                <circle cx="820" cy="560" r="6" fill="#ff9ff3"/><circle cx="820" cy="560" r="2" fill="#ffd700"/>
+            </g>
+        </svg>
+    </div>
 
     <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
@@ -175,7 +214,7 @@
                 a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
                 menuBox.appendChild(a);
             });
-            const btnVoltar = document.createElement('a'); btnVoltar.className='menu-item voltar-item'; btnVoltar.href='../';
+            const btnVoltar = document.createElement('a'); btnVoltar.className='menu-item'; btnVoltar.href='../';
             btnVoltar.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnVoltar);
 
