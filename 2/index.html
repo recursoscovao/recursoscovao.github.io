@@ -90,42 +90,42 @@
         }
 
         /* ==========================================================
-           TELEMOVEL HORIZONTAL (LANDSCAPE) - AJUSTADO PARA SETAS
+           TELEMOVEL HORIZONTAL (LANDSCAPE) - AJUSTADO PARA SETA POR BAIXO
            ========================================================== */
         @media (orientation: landscape) and (max-height: 500px) {
             header { height: 48px; padding: 0 15px; border-radius: 0 0 20px 20px; }
-            #header-icon { height: 30px; }
+            #header-icon { height: 28px; }
             .hamburger-btn { font-size: 20px; }
             #txt-titulo1, #txt-titulo2 { font-size: 0.85rem; }
             #txt-subtitulo { display: none; } 
             #icon-voltar-top { height: 28px; }
 
             .sub-header { padding: 4px 0; }
-            .intro-text { font-size: 0.85rem; }
+            .intro-text { font-size: 0.8rem; }
             .intro-text::after { height: 3px; bottom: -1px; }
 
             main { padding: 0 10px 5px 10px; }
             .game-wrapper { gap: 8px; max-height: none; height: 100%; flex-direction: row; }
             .game-card { border-radius: 20px; border-width: 2px; }
-            .card-top { padding: 4px; flex: 1; }
-            .card-top img { max-height: 75%; }
             
-            /* Ajuste para garantir a seta ao lado do texto */
+            /* Reduzi flex e imagem para dar espaço à seta em baixo */
+            .card-top { padding: 4px; flex: 1; }
+            .card-top img { max-height: 65%; } 
+            
             .card-bottom { 
                 margin-top: -15px; 
                 border-radius: 15px 15px 0 0; 
-                padding: 4px 8px; 
-                flex: 0.8; 
-                flex-direction: row !important; /* Força linha para caber a seta */
-                justify-content: space-between; 
-                align-items: center;
-                gap: 5px;
+                padding: 4px; 
+                flex: 1; 
+                flex-direction: column !important; /* Texto e seta na vertical */
+                justify-content: center; 
+                gap: 2px; 
             }
-            .card-bottom h2 { font-size: 0.7rem; text-align: left; }
-            .btn-circle { width: 26px; height: 26px; font-size: 0.7rem; flex-shrink: 0; display: flex !important; }
+            .card-bottom h2 { font-size: 0.7rem; text-align: center; }
+            .btn-circle { width: 24px; height: 24px; font-size: 0.65rem; }
 
             footer { height: 40px; padding-bottom: 4px; }
-            .footer-text { font-size: 0.65rem; }
+            .footer-text { font-size: 0.6rem; }
         }
 
         /* ----- FOOTER ----- */
