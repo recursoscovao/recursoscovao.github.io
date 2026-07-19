@@ -17,7 +17,7 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* BLOQUEIO GERAL DE SCROLL (Aplica-se a todos os modos) */
+        /* BLOQUEIO TOTAL DE SCROLL GERAL */
         html, body {
             height: 100dvh; width: 100vw;
             overflow: hidden; 
@@ -26,14 +26,12 @@
             position: relative;
         }
 
-        .sky-decorations { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
+        .sky-decorations { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
         .cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.6; }
         .cloud-1 { top: 15%; left: -2%; width: 12vw; height: 3vh; min-width: 80px; }
         .cloud-2 { top: 10%; right: 5%; width: 10vw; height: 2.5vh; min-width: 60px; }
-        /* As estrelas e aviões (se existissem) para desktop podem ser adicionadas aqui */
 
-
-        /* ----- HEADER (Estilos GERAIS, aplicam-se a desktop/landscape por padrão) ----- */
+        /* ----- HEADER ORIGINAL ----- */
         header { 
             background: white; border-radius: 0 0 clamp(20px, 3vw, 40px) clamp(20px, 3vw, 40px);
             display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; 
@@ -43,11 +41,9 @@
         .hamburger-btn { background: none; border: none; color: var(--primary-blue); font-size: 28px; cursor: pointer; }
         
         .header-center { display: flex; align-items: center; justify-content: center; gap: 15px; }
-        /* ÍCONE DO HEADER (Tamanho para DESKTOP/LANDSCAPE) */
         #header-icon { height: clamp(55px, 9vh, 80px); object-fit: contain; }
         
         .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.9; }
-        /* TAMANHOS DE LETRA DO CABEÇALHO GERAIS (ajustados anteriormente) */
         #txt-titulo1 { color: var(--primary-blue); font-weight: 900; font-size: clamp(1.1rem, 2vw, 1.6rem); }
         #txt-titulo2 { color: var(--text-grey); font-weight: 900; font-size: clamp(1.1rem, 2vw, 1.6rem); }
         #txt-subtitulo { color: var(--text-grey); font-weight: 700; font-size: clamp(9px, 1.2vh, 11px); margin-top: 3px; }
@@ -55,7 +51,6 @@
         .header-right { display: flex; justify-content: flex-end; }
         #icon-voltar-top { height: 45px; cursor: pointer; }
 
-        /* ----- MENU DROPDOWN (Estilos GERAIS) ----- */
         .menu-dropdown { 
             position: absolute; top: clamp(80px, 11vh, 95px); left: 20px; 
             display: none; flex-direction: column; gap: 6px; z-index: 2000; 
@@ -69,7 +64,6 @@
         .menu-item img { height: 24px; width: 24px; object-fit: contain; }
         .menu-sep { border-top: 2px solid #f0f4f8; margin: 4px 0; }
 
-        /* ----- INTRO (Estilos GERAIS) ----- */
         .sub-header { text-align: center; padding: 25px 0 10px 0; z-index: 10; flex-shrink: 0; }
         .intro-text { color: #1a4a7a; font-size: clamp(1.2rem, 3vh, 1.8rem); font-weight: 800; position: relative; display: inline-block; }
         .intro-text::after {
@@ -78,18 +72,10 @@
             background-size: 100% 100%; z-index: -1;
         }
 
-        /* ----- MAIN (Estilos GERAIS para desktop/landscape) ----- */
-        main { 
-            flex: 1; /* Ocupa o espaço restante */
-            display: flex; justify-content: center; align-items: center; 
-            padding: 0 20px; z-index: 10; min-height: 0;
-        }
-        .game-wrapper { 
-            display: flex; gap: 25px; width: 100%; max-width: 1100px; 
-            justify-content: center; align-items: center; height: 100%; max-height: 400px; 
-        }
+        /* ----- MAIN E CARTÕES (DEFAULT / DESKTOP) ----- */
+        main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 0 20px; z-index: 10; min-height: 0; }
+        .game-wrapper { display: flex; gap: 25px; width: 100%; max-width: 1100px; justify-content: center; align-items: center; height: 100%; max-height: 400px; }
 
-        /* ----- CARTÕES (Estilo para DESKTOP/LANDSCAPE - Layout em coluna) ----- */
         .game-card { 
             background: white; border-radius: 35px; border: 4px solid var(--theme-color); 
             text-decoration: none; flex: 1; max-width: 320px; height: 100%;
@@ -97,10 +83,7 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: transform 0.3s;
         }
         .game-card:hover { transform: translateY(-10px); }
-        .card-top { 
-            flex: 1.2; width: 100%; display: flex; align-items: center; justify-content: center; 
-            padding: 20px; 
-        }
+        .card-top { flex: 1.2; width: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; }
         .card-top img { max-width: 85%; max-height: 90%; object-fit: contain; }
         .card-bottom { 
             background: white; width: 100%; flex: 0.8; border-radius: 35px 35px 0 0;
@@ -110,129 +93,81 @@
         .card-bottom h2 { font-size: 1.3rem; font-weight: 900; color: var(--theme-text); text-transform: uppercase; }
         .btn-circle { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; background-color: var(--theme-color); }
 
-        /* ----- FOOTER (Estilos GERAIS) ----- */
+        /* ==========================================================
+           AJUSTES EXCLUSIVOS PARA TELEMÓVEL NA VERTICAL (PORTRAIT)
+           - Reduz o ícone do header
+           - Transforma os cartões em "pill" horizontal
+           - Preenche o espaço exato sem precisar de scroll
+           ========================================================== */
+        @media (orientation: portrait) {
+            header { grid-template-columns: 60px 1fr 60px; height: 72px; padding: 0 12px; }
+            #header-icon { height: 42px; } /* Ícone menor no telemóvel */
+            
+            .sub-header { padding: 12px 0 6px 0; }
+            .intro-text { font-size: 1.1rem; }
+
+            main { padding: 0 15px 12px 15px; align-items: stretch; }
+            
+            .game-wrapper { 
+                flex-direction: column; 
+                gap: 10px; 
+                height: 100%; 
+                max-height: none; 
+            }
+            
+            .game-card { 
+                flex-direction: row; 
+                width: 100%; 
+                max-width: none;
+                height: auto; 
+                flex: 1; /* Divide o ecrã perfeitamente pelos 3 cartões */
+                min-height: 0;
+                border-radius: 40px; 
+                border-width: 2.5px;
+                padding: 6px; 
+                box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            }
+            .game-card:hover { transform: none; } /* Sem efeito hover no toque do telemóvel */
+
+            .card-top { 
+                width: auto; 
+                height: 100%; 
+                aspect-ratio: 1/1; 
+                flex: none; 
+                padding: 6px; 
+                border-radius: 30px; 
+                background-color: var(--theme-bg); 
+            }
+            .card-top img { max-width: 85%; max-height: 85%; }
+
+            .card-bottom { 
+                margin-top: 0; 
+                border-radius: 0; 
+                height: 100%; 
+                flex: 1; 
+                flex-direction: row; 
+                justify-content: space-between; 
+                background: transparent; 
+                padding: 0 10px 0 12px; 
+                gap: 5px;
+            }
+            .card-bottom h2 { font-size: 1rem; text-align: left; }
+            .btn-circle { width: 38px; height: 38px; font-size: 0.9rem; }
+        }
+
+        /* ----- FOOTER ----- */
         footer {
             height: 70px; width: 100%; position: relative; flex-shrink: 0; 
             display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath fill='%23CAE6FF' d='M200,120 Q720,40 1240,120 Z'/%3E%3Cpath fill='%23A6D746' d='M0,50 Q300,70 650,120 L0,120 Z'/%3E%3Cpath fill='%23A6D746' d='M1440,50 Q1140,70 790,120 L1440,120 Z'/%3E%3C/svg%3E");
             background-size: 100% 100%;
         }
-        /* COR DO RODAPÉ (ajustada anteriormente) */
         .footer-text { color: var(--text-grey); font-size: 0.8rem; font-weight: 800; z-index: 2; }
-
-
-        /* =========================================
-           MODO TELEMÓVEL VERTICAL (Portrait)
-           APENAS AQUI SÃO FEITAS AS ALTERAÇÕES ESPECÍFICAS
-           ========================================= */
-        @media (orientation: portrait) {
-            /* ----- HEADER ----- */
-            header { 
-                grid-template-columns: 60px 1fr 60px; 
-                height: clamp(65px, 10vh, 85px); /* Um pouco mais baixo que desktop */
-                padding: 0 15px;
-                border-radius: 0 0 25px 25px;
-            }
-            .hamburger-btn { font-size: 24px; }
-            #header-icon { 
-                height: clamp(35px, 6vh, 50px); /* Ícone mais pequeno como pedido */
-                margin-right: 5px; /* Ajuste o espaçamento se necessário */
-            }
-            #txt-titulo1, #txt-titulo2 { font-size: clamp(1rem, 4.5vw, 1.3rem); }
-            #txt-subtitulo { font-size: clamp(8px, 2.5vw, 10px); margin-top: 2px; }
-            #icon-voltar-top { height: clamp(35px, 5.5vh, 45px); }
-
-            /* ----- INTRO ----- */
-            .intro-text { font-size: clamp(1.1rem, 2.8vh, 1.4rem); }
-            .sub-header { padding: clamp(10px, 2.5vh, 18px) 0 clamp(5px, 1.5vh, 10px) 0; }
-            
-            /* ----- MAIN (Ocupa o resto do espaço e organiza os cartões em coluna) ----- */
-            main { 
-                padding: clamp(5px, 1.5vh, 10px) 15px clamp(10px, 2vh, 15px) 15px;
-                flex-direction: column;
-                justify-content: flex-start; /* Alinha os cartões no topo do espaço */
-            }
-            .game-wrapper { 
-                flex-direction: column; 
-                gap: clamp(8px, 1.5vh, 15px); /* Espaçamento entre cartões */
-                width: 100%; max-width: 450px; /* Limita a largura para não ficarem demasiado grandes */
-                height: 100%; /* Ocupa a altura total do main */
-                max-height: none; /* Remove limite de altura de desktop */
-                flex: 1; /* Faz a grelha de jogos ocupar o espaço restante do main */
-            }
-
-            /* ----- CARTÕES (Estilo PILL para telemóvel) ----- */
-            .game-card { 
-                flex: 1; /* CADA CARTÃO divide igualmente o espaço vertical DISPONÍVEL */
-                min-height: 0; /* Permite que os cartões encolham em ecrãs muito pequenos */
-                max-height: 12vh; /* Impede que cresçam demais em ecrãs grandes */
-                flex-direction: row; /* Coloca a imagem e o texto lado a lado */
-                padding: clamp(6px, 1.2vh, 10px); /* Padding interno da pílula */
-                border-radius: 50px; /* Borda arredondada (forma de pílula) */
-                border-width: 2px; /* Espessura da borda */
-                box-shadow: 0 3px 8px rgba(0,0,0,0.06); /* Sombra mais suave */
-            }
-            .game-card:hover { transform: none; /* Desativa a animação de hover no mobile */ }
-
-
-            .card-top { 
-                height: 100%; /* A imagem ocupa a altura da pílula */
-                aspect-ratio: 1/1; /* Mantém a imagem quadrada */
-                background-color: var(--theme-bg); /* Fundo colorido da imagem */
-                border-radius: 35px; /* Borda arredondada suave para a imagem interna */
-                padding: clamp(5px, 1.2vh, 8px); 
-                flex-shrink: 0; /* Garante que a imagem não encolhe */
-            }
-            .card-top img { max-width: 90%; max-height: 90%; }
-
-            .card-bottom { 
-                flex: 1; /* Ocupa o resto da largura */
-                flex-direction: row; /* Nome e botão lado a lado */
-                align-items: center; justify-content: space-between; 
-                padding: 0 10px 0 15px; /* Espaçamento interno */
-                margin-top: 0; /* Remove margem que existe no desktop */
-                background: transparent; /* Remove o fundo branco para integrar melhor */
-                box-shadow: none; /* Remove sombras internas */
-            }
-            .card-bottom h2 { 
-                font-size: clamp(1rem, 2.5vh, 1.3rem); /* Tamanho do texto do jogo */
-                text-align: left; /* Alinha à esquerda */
-            }
-            .btn-circle { 
-                width: clamp(35px, 5vh, 45px); height: clamp(35px, 5vh, 45px); 
-                font-size: 1rem;
-            }
-
-            /* ----- FOOTER ----- */
-            footer {
-                height: clamp(50px, 8vh, 70px); /* Altura ajustada para mobile */
-                padding-bottom: clamp(8px, 1.5vh, 12px);
-            }
-            .footer-text { font-size: clamp(0.7rem, 1.5vh, 0.85rem); }
-
-            /* ----- MENU DROPDOWN (Ajustes para mobile) ----- */
-            .menu-dropdown { 
-                top: clamp(70px, 10.5vh, 90px); /* Ajusta a posição para baixo do header */
-                left: clamp(15px, 4vw, 20px);
-                max-width: 80%; /* Para não ocupar o ecrã todo */
-            }
-            .menu-item { font-size: clamp(0.85rem, 2.2vh, 1rem); }
-            .menu-item img { height: clamp(20px, 3.5vh, 24px); width: clamp(20px, 3.5vh, 24px); }
-
-            /* Nuvens e outros elementos de decoração para desktop desativados no mobile */
-            .sky-decorations > *:not(.cloud) { display: none !important; } 
-            .cloud-1 { top: 25%; left: -5%; width: 20vw; height: 3vh; opacity: 0.5; }
-            .cloud-2 { top: 18%; right: 10%; width: 15vw; height: 2.5vh; opacity: 0.5; }
-        }
     </style>
 </head>
 <body>
 
-    <div class="sky-decorations">
-        <div class="cloud cloud-1"></div>
-        <div class="cloud cloud-2"></div>
-        <!-- Elementos como estrelas ou aviões para desktop iriam aqui -->
-    </div>
+    <div class="sky-decorations"><div class="cloud cloud-1"></div><div class="cloud cloud-2"></div></div>
 
     <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
@@ -303,8 +238,8 @@
                     card.className = 'game-card';
                     card.href = jogo.link;
                     card.style.setProperty('--theme-color', tema.borda);
-                    card.style.setProperty('--theme-bg', tema.fundo); /* Adicionado para a cor de fundo da imagem */
                     card.style.setProperty('--theme-text', tema.texto);
+                    card.style.setProperty('--theme-bg', tema.fundo);
                     card.innerHTML = `
                         <div class="card-top"><img src="${config.caminhoIconsJogos}${jogo.icon}"></div>
                         <div class="card-bottom">
