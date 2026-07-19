@@ -17,7 +17,6 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* BLOQUEIO TOTAL DE SCROLL */
         html, body {
             height: 100dvh; width: 100vw;
             overflow: hidden; 
@@ -28,7 +27,7 @@
 
         .sky-decorations { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
 
-        /* ----- HEADER ORIGINAL ----- */
+        /* ----- HEADER PADRÃO (PC/TABLET) ----- */
         header { 
             background: white; border-radius: 0 0 clamp(20px, 3vw, 40px) clamp(20px, 3vw, 40px);
             display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; 
@@ -45,17 +44,15 @@
         .header-right { display: flex; justify-content: flex-end; }
         #icon-voltar-top { height: 45px; cursor: pointer; }
 
-        /* ----- MENU ----- */
         .menu-dropdown { position: absolute; top: clamp(80px, 11vh, 95px); left: 20px; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
         .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-decoration: none; color: var(--text-grey); font-weight: 700; min-width: 220px; }
         .menu-item img { height: 24px; width: 24px; object-fit: contain; }
 
-        /* ----- INTRO ----- */
         .sub-header { text-align: center; padding: 25px 0 10px 0; z-index: 10; flex-shrink: 0; }
         .intro-text { color: #1a4a7a; font-size: clamp(1.2rem, 3vh, 1.8rem); font-weight: 800; position: relative; display: inline-block; }
         .intro-text::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 8px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 25' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='8' stroke-linecap='round' fill='transparent'/%3E%3C/svg%3E"); background-size: 100% 100%; z-index: -1; }
 
-        /* ----- MAIN E CARTÕES (DEFAULT / PORTRAIT) ----- */
+        /* ----- MAIN PADRÃO ----- */
         main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 0 20px; z-index: 10; min-height: 0; }
         .game-wrapper { display: flex; gap: 25px; width: 100%; max-width: 1100px; justify-content: center; align-items: center; height: 100%; max-height: 400px; }
         .game-card { background: white; border-radius: 35px; border: 4px solid var(--theme-color); text-decoration: none; flex: 1; max-width: 320px; height: 100%; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
@@ -65,6 +62,9 @@
         .card-bottom h2 { font-size: 1.3rem; font-weight: 900; color: var(--theme-text); text-transform: uppercase; }
         .btn-circle { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; background-color: var(--theme-color); }
 
+        /* ==========================================================
+           MODO VERTICAL (PORTRAIT) - MANTIDO "PILL"
+           ========================================================== */
         @media (orientation: portrait) {
             header { grid-template-columns: 60px 1fr 60px; height: 72px; padding: 0 12px; }
             #header-icon { height: 42px; } 
@@ -79,47 +79,46 @@
         }
 
         /* ==========================================================
-           TELEMOVEL HORIZONTAL (LANDSCAPE) - AJUSTES PEDIDOS
+           MODO HORIZONTAL (LANDSCAPE) - AJUSTES PEDIDOS
            ========================================================== */
         @media (orientation: landscape) and (max-height: 500px) {
-            /* 1. Aumento da altura do Header e restauração do subtítulo */
-            header { height: 58px; padding: 0 15px; border-radius: 0 0 20px 20px; }
-            #header-icon { height: 35px; }
-            #txt-titulo1, #txt-titulo2 { font-size: 0.95rem; }
-            #txt-subtitulo { display: block; font-size: 8px; margin-top: 2px; } /* Reaparece o subtítulo */
-            #icon-voltar-top { height: 35px; }
+            /* 1. Header com 65px de altura e subtítulo visível */
+            header { height: 65px; padding: 0 15px; border-radius: 0 0 20px 20px; }
+            #header-icon { height: 38px; }
+            #txt-titulo1, #txt-titulo2 { font-size: 1rem; }
+            #txt-subtitulo { display: block !important; font-size: 9px; margin-top: 2px; } 
+            #icon-voltar-top { height: 38px; }
 
-            .sub-header { padding: 5px 0; }
-            .intro-text { font-size: 0.9rem; }
+            .sub-header { padding: 8px 0; }
+            .intro-text { font-size: 0.95rem; }
 
             /* 2. Centralizar cartões verticalmente na main */
-            main { padding: 0 10px 5px 10px; display: flex; align-items: center; justify-content: center; }
-            .game-wrapper { gap: 12px; height: 75%; max-height: 230px; flex-direction: row; align-items: center; }
+            main { padding: 0 10px 5px 10px; display: flex; align-items: center; }
+            .game-wrapper { gap: 12px; height: 80%; max-height: 250px; flex-direction: row; align-items: center; }
             
             .game-card { border-radius: 25px; border-width: 2px; flex: 1; height: 100%; }
             
-            /* 3. Fazer os icons subir um pouco */
-            .card-top { padding: 2px 4px 10px 4px; flex: 1.5; align-items: center; } 
-            .card-top img { max-height: 90%; transform: translateY(-3px); } /* Sobe o icon ligeiramente */
+            /* 3. Reduzir icons e subí-los um pouco */
+            .card-top { padding: 5px 5px 12px 5px; flex: 1.6; align-items: center; } 
+            .card-top img { max-height: 80%; transform: translateY(-5px); } /* Sobe o icon */
             
-            /* 4. Garantir que as setas apareçam e fiquem bem posicionadas */
+            /* 4. Garantir que as setas apareçam e não fiquem coladas */
             .card-bottom { 
-                margin-top: -18px; 
-                border-radius: 18px 18px 0 0; 
-                padding: 4px 4px 12px 4px; /* Mais padding inferior para a seta */
+                margin-top: -20px; 
+                border-radius: 20px 20px 0 0; 
+                padding: 5px 5px 15px 5px; /* Mais espaço inferior para a seta */
                 flex: 1; 
                 flex-direction: column !important; 
                 justify-content: space-evenly; 
-                gap: 2px; 
+                gap: 3px; 
             }
             .card-bottom h2 { font-size: 0.75rem; text-align: center; }
-            .btn-circle { display: flex !important; width: 28px; height: 28px; font-size: 0.75rem; flex-shrink: 0; }
+            .btn-circle { display: flex !important; width: 30px; height: 30px; font-size: 0.8rem; flex-shrink: 0; }
 
-            footer { height: 42px; padding-bottom: 5px; }
+            footer { height: 45px; padding-bottom: 5px; }
             .footer-text { font-size: 0.65rem; }
         }
 
-        /* ----- FOOTER ----- */
         footer {
             height: 70px; width: 100%; position: relative; flex-shrink: 0; 
             display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px;
@@ -167,7 +166,7 @@
                 document.getElementById('txt-intro').innerText = config.textos.intro;
                 document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
 
-                const ano = config.anoAtivo || 'ano1';
+                const ano = config.anoAtivo || 'ano2';
                 document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[ano];
                 document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + config.iconesMenu.voltar;
 
