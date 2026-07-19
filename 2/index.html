@@ -78,20 +78,25 @@
         .btn-circle { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; background-color: var(--theme-color); }
 
 /* ==========================================================
-           MODO VERTICAL (PORTRAIT) - ESTILO FIEL À IMAGEM
+           MODO VERTICAL (PORTRAIT) - COM TEXTO E ÍCONE REDUZIDOS
            ========================================================== */
         @media (orientation: portrait) {
             header { 
                 grid-template-columns: 60px 1fr 60px; 
-                height: 80px; 
+                height: 75px; /* Ligeiramente mais baixo */
                 padding: 0 15px; 
             }
 
-            .sub-header { padding: 35px 0 25px 0; }
-            .intro-text { font-size: 1.2rem; font-weight: 900; color: #1a4a7a; }
+            /* ÍCONE DO TÍTULO (MAIS PEQUENO) */
+            #header-icon { 
+                height: 38px; /* Reduzido de 50px para 38px */
+            } 
+
+            .sub-header { padding: 30px 0 20px 0; }
+            .intro-text { font-size: 1.4rem; font-weight: 900; }
 
             main { 
-                padding: 0 0 40px 0; 
+                padding: 0 0 30px 0; 
                 display: flex;
                 flex-direction: column;
                 align-items: center;
@@ -102,78 +107,67 @@
                 display: flex;
                 flex-direction: column; 
                 align-items: center;
-                gap: 22px; 
+                gap: 18px; 
                 width: 100%; 
             }
 
-            /* O CARTÃO (ESTILO CÁPSULA) */
             .game-card { 
                 display: flex;
                 flex-direction: row; 
-                width: 99%; /* Ocupa a largura quase toda */
-                height: 130px; /* Altura robusta como na imagem */
-                border-radius: 20px; /* Arredondamento total nas pontas */
-                border: 4px solid var(--theme-color); /* Borda colorida */
-                background-color: white; /* Fundo da parte direita */
-                overflow: hidden; /* Corta o fundo colorido da esquerda */
+                width: 92%; 
+                height: 125px; /* Altura ligeiramente reduzida para acompanhar o texto */
+                border-radius: 60px; 
+                border: 3.5px solid var(--theme-color); 
+                background-color: white; 
+                overflow: hidden; 
                 text-decoration: none;
-                box-shadow: 0 8px 15px rgba(0,0,0,0.08);
+                box-shadow: 0 6px 12px rgba(0,0,0,0.06);
             }
 
-            /* PARTE ESQUERDA (Fundo colorido com o boneco) */
             .card-top { 
-                width: 32%; /* Ocupa cerca de 1/3 do cartão */
+                width: 32%; 
                 height: 100%; 
-                background-color: var(--theme-bg); /* Cor suave de fundo */
+                background-color: var(--theme-bg); 
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 15px;
+                padding: 12px;
                 flex: none;
-                border-right: 1px solid rgba(0,0,0,0.05); /* Divisória subtil */
             }
             .card-top img { 
-                max-width: 110%; /* Deixa a imagem ligeiramente maior */
-                max-height: 95%; 
-                object-fit: contain;
+                max-width: 100%; 
+                max-height: 90%; 
             }
 
-            /* PARTE DIREITA (Título e Botão) */
             .card-bottom { 
                 flex: 1;
-                height: 100%;
-                background: white;
                 display: flex;
-                flex-direction: row !important; /* Força linha */
+                flex-direction: row !important; 
                 justify-content: space-between;
                 align-items: center;
-                padding: 0 25px 0 20px;
-                margin-top: 0;
-                border-radius: 0;
+                padding: 0 20px 0 15px;
             }
 
-            /* Título com a cor do tema */
+            /* TEXTO DOS CARTÕES (MAIS PEQUENO) */
             .card-bottom h2 { 
-                font-size: 1.4rem; 
+                font-size: 1.05rem; /* Reduzido de 1.4rem para 1.05rem */
                 font-weight: 900;
-                color: var(--theme-color); /* Texto com a mesma cor da borda */
+                color: var(--theme-color); 
                 text-transform: uppercase;
-                letter-spacing: 1px;
+                letter-spacing: 0.5px;
                 margin: 0;
             }
 
-            /* Botão com a cor do tema */
             .btn-circle { 
-                width: 60px; 
-                height: 60px; 
+                width: 45px; /* Botão também ligeiramente menor */
+                height: 45px; 
                 border-radius: 50%;
-                background-color: var(--theme-color); /* Círculo preenchido */
+                background-color: var(--theme-color); 
                 color: white;
-                font-size: 1.4rem;
+                font-size: 1.1rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.15);
             }
         }
         
