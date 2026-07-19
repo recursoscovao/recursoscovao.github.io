@@ -181,24 +181,24 @@
         }
         
 /* ==========================================================
-           MODO HORIZONTAL (LANDSCAPE) - AJUSTE DE RADIUS E SETA
+           MODO HORIZONTAL (LANDSCAPE) - PROPORÇÃO 70/30
            ========================================================== */
         @media (orientation: landscape) and (max-height: 500px) {
             footer { display: none !important; }
 
             header { 
-                height: 45px; 
+                height: 42px; 
                 padding: 0 15px; 
                 border-radius: 0 0 15px 15px; 
                 flex-shrink: 0;
             }
-            #header-icon { height: 30px; }
-            #txt-titulo1, #txt-titulo2 { font-size: 0.85rem; }
+            #header-icon { height: 28px; }
+            #txt-titulo1, #txt-titulo2 { font-size: 0.8rem; }
             #txt-subtitulo { display: none; } 
 
-            /* SETA VOLTAR MAIS PEQUENA */
+            /* SETA VOLTAR DISCRETA */
             #icon-voltar-top { 
-                height: 24px; /* Reduzido de 38px para 24px */
+                height: 22px; 
                 width: auto;
             }
 
@@ -206,7 +206,7 @@
             .intro-text { font-size: 0.9rem; }
 
             main { 
-                padding: 5px 10px 20px 10px; 
+                padding: 5px 10px 15px 10px; 
                 display: flex; 
                 align-items: flex-start; 
                 justify-content: center; 
@@ -220,7 +220,6 @@
                 width: 100%; 
                 max-width: 950px;
                 justify-content: center;
-                padding-top: 5px;
             }
 
             .game-card { 
@@ -228,68 +227,66 @@
                 display: flex;
                 flex-direction: column; 
                 max-width: 190px;
-                min-height: 170px; 
+                height: 160px; /* Altura fixa para controlar a proporção */
                 border-radius: 30px; 
                 border: 2.5px solid var(--theme-color); 
                 background-color: white; 
                 overflow: hidden;
-                position: relative;
             }
 
-            /* ÁREA DO ÍCONE */
+            /* ÁREA DO ÍCONE (70% DA ALTURA) */
             .card-top { 
                 width: 100%; 
-                height: 110px; 
+                height: 75%; /* Ocupa a maior parte */
                 background-color: var(--theme-bg); 
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 8px;
+                padding: 10px 10px 20px 10px; /* Padding extra em baixo para o ícone não descer muito */
                 flex: none;
-                z-index: 1;
             }
             .card-top img { 
-                max-width: 90%; 
-                max-height: 85%; 
+                max-width: 95%; 
+                max-height: 90%; 
                 transform: scale(1.1);
             }
 
-            /* PARTE BRANCA COM RADIUS (SOBREPOSTA) */
+            /* PARTE BRANCA (30% DA ALTURA - ESTILO SLIM COM RADIUS) */
             .card-bottom { 
-                flex: 1;
                 width: 100%;
+                height: 40%; /* Altura total do bloco, mas parte ficará escondida ou sobreposta */
                 background: white;
-                /* O Segredo do Radius: */
-                margin-top: -20px; /* Faz a parte branca subir sobre a cor */
-                border-radius: 25px 25px 0 0; /* Mantém os cantos arredondados no topo */
+                margin-top: -25px; /* Subida para criar o radius sobre a cor */
+                border-radius: 25px 25px 0 0;
                 display: flex;
                 flex-direction: column !important; 
                 justify-content: center; 
                 align-items: center; 
-                padding: 5px 4px 8px 4px; 
-                gap: 3px;
-                z-index: 2; /* Garante que fica por cima do fundo colorido */
-                position: relative;
+                padding: 2px 5px 5px 5px; 
+                gap: 2px;
+                flex: none;
+                z-index: 2;
             }
 
             .card-bottom h2 { 
-                font-size: 0.7rem; 
+                font-size: 0.65rem; 
                 font-weight: 900;
                 color: var(--theme-color); 
                 text-transform: uppercase;
                 text-align: center;
                 margin: 0;
+                line-height: 1;
             }
 
             .btn-circle { 
-                width: 28px; 
-                height: 28px; 
-                min-width: 28px;
-                min-height: 28px;
+                width: 24px; 
+                height: 24px; 
+                min-width: 24px;
+                min-height: 24px;
                 border-radius: 50%;
                 background-color: var(--theme-color); 
                 color: white;
-                font-size: 0.7rem;
+                font-size: 0.65rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;
