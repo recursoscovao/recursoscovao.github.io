@@ -17,6 +17,7 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
         
+        /* BLOQUEIO ABSOLUTO DE SCROLL */
         html, body {
             height: 100dvh; width: 100vw;
             overflow: hidden; 
@@ -25,108 +26,122 @@
             position: relative;
         }
 
-        .sky-decorations { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
-        .cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.6; }
-        .cloud-1 { top: 15%; left: -2%; width: 12vw; height: 3vh; min-width: 80px; }
-        .cloud-2 { top: 10%; right: 5%; width: 10vw; height: 2.5vh; min-width: 60px; }
+        .sky-decorations { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 
+        /* ----- HEADER ----- */
         header { 
-            background: white; border-radius: 0 0 clamp(20px, 3vw, 40px) clamp(20px, 3vw, 40px);
-            display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; 
-            padding: 0 20px; height: clamp(75px, 12vh, 100px); z-index: 1000; flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            background: white; border-radius: 0 0 30px 30px;
+            display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; 
+            padding: 0 15px; height: clamp(65px, 10vh, 85px); z-index: 1000; flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.03);
         }
-        .hamburger-btn { background: none; border: none; color: var(--primary-blue); font-size: 28px; cursor: pointer; }
+        .hamburger-btn { background: none; border: none; color: var(--primary-blue); font-size: 24px; cursor: pointer; }
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 10px; }
         
-        .header-center { display: flex; align-items: center; justify-content: center; gap: 15px; }
-        #header-icon { height: clamp(55px, 9vh, 80px); object-fit: contain; }
+        /* Ícone reduzido como pedido */
+        #header-icon { height: clamp(35px, 6vh, 50px); object-fit: contain; }
         
-        .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.9; }
-        #txt-titulo1 { color: var(--primary-blue); font-weight: 900; font-size: clamp(1.1rem, 2vw, 1.6rem); }
-        #txt-titulo2 { color: var(--text-grey); font-weight: 900; font-size: clamp(1.1rem, 2vw, 1.6rem); }
-        #txt-subtitulo { color: var(--text-grey); font-weight: 700; font-size: clamp(9px, 1.2vh, 11px); margin-top: 3px; }
+        .title-group { display: flex; flex-direction: column; line-height: 0.9; }
+        #txt-titulo1 { color: var(--primary-blue); font-weight: 900; font-size: clamp(1rem, 4vw, 1.3rem); }
+        #txt-titulo2 { color: var(--text-grey); font-weight: 900; font-size: clamp(1rem, 4vw, 1.3rem); }
+        #txt-subtitulo { color: var(--text-grey); font-weight: 700; font-size: 9px; margin-top: 2px; }
+        #icon-voltar-top { height: 35px; }
 
-        .header-right { display: flex; justify-content: flex-end; }
-        #icon-voltar-top { height: 45px; cursor: pointer; }
-
-        .menu-dropdown { 
-            position: absolute; top: clamp(80px, 11vh, 95px); left: 20px; 
-            display: none; flex-direction: column; gap: 6px; z-index: 2000; 
-        }
-        .menu-item { 
-            display: flex; align-items: center; gap: 12px; padding: 12px 18px; 
-            background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
-            text-decoration: none; color: var(--text-grey); font-weight: 700; min-width: 220px;
-        }
-        .menu-item:hover { background: var(--primary-blue); color: white; }
-        .menu-item img { height: 24px; width: 24px; object-fit: contain; }
-        .menu-sep { border-top: 2px solid #f0f4f8; margin: 4px 0; }
-
-        .sub-header { text-align: center; padding: 25px 0 10px 0; z-index: 10; flex-shrink: 0; }
-        .intro-text { color: #1a4a7a; font-size: clamp(1.2rem, 3vh, 1.8rem); font-weight: 800; position: relative; display: inline-block; }
+        /* ----- INTRO ----- */
+        .sub-header { text-align: center; padding: clamp(10px, 3vh, 20px) 0; z-index: 10; flex-shrink: 0; }
+        .intro-text { color: #1a4a7a; font-size: clamp(1.1rem, 2.5vh, 1.4rem); font-weight: 800; position: relative; display: inline-block; }
         .intro-text::after {
-            content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 8px;
+            content: ''; position: absolute; bottom: -4px; left: 0; width: 100%; height: 6px;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 25' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='8' stroke-linecap='round' fill='transparent'/%3E%3C/svg%3E");
             background-size: 100% 100%; z-index: -1;
         }
 
-        main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 0 20px; z-index: 10; min-height: 0; }
-        .game-wrapper { display: flex; gap: 25px; width: 100%; max-width: 1100px; justify-content: center; align-items: center; height: 100%; max-height: 400px; }
+        /* ----- MAIN (ESPAÇO DINÂMICO) ----- */
+        main { 
+            flex: 1; /* Ocupa todo o espaço entre intro e footer */
+            display: flex; flex-direction: column; 
+            padding: 0 15px 10px 15px; z-index: 10; min-height: 0;
+        }
+        .game-wrapper { 
+            display: flex; flex-direction: column; 
+            gap: clamp(8px, 1.5vh, 15px); 
+            height: 100%; width: 100%; max-width: 500px; margin: 0 auto;
+        }
 
+        /* ----- CARTÃO ESTILO PILL (IGUAL À IMAGEM) ----- */
         .game-card { 
-            background: white; border-radius: 35px; border: 4px solid var(--theme-color); 
-            text-decoration: none; flex: 1; max-width: 320px; height: 100%;
-            display: flex; flex-direction: column; overflow: hidden;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: transform 0.3s;
+            flex: 1; /* Faz os 3 cartões dividirem o espaço main exatamente */
+            display: flex; flex-direction: row; align-items: center;
+            background: white; border-radius: 25px; 
+            border: 2px solid var(--theme-color); 
+            text-decoration: none; padding: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+            min-height: 0; /* Permite encolher em ecrãs pequenos */
         }
-        .game-card:hover { transform: translateY(-10px); }
-        .card-top { flex: 1.2; width: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        .card-top img { max-width: 85%; max-height: 90%; object-fit: contain; }
+
+        /* Contentor da Imagem (Lado Esquerdo) */
+        .card-top { 
+            height: 100%; aspect-ratio: 1/1;
+            background-color: var(--theme-bg);
+            border-radius: 18px; display: flex; align-items: center; justify-content: center;
+            padding: 8px; flex-shrink: 0;
+        }
+        .card-top img { max-width: 100%; max-height: 100%; object-fit: contain; }
+
+        /* Texto e Botão (Centro e Direito) */
         .card-bottom { 
-            background: white; width: 100%; flex: 0.8; border-radius: 35px 35px 0 0;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 15px; margin-top: -35px; position: relative; padding: 15px;
+            flex: 1; display: flex; flex-direction: row; 
+            align-items: center; justify-content: space-between; 
+            padding: 0 10px 0 15px; 
         }
-        .card-bottom h2 { font-size: 1.3rem; font-weight: 900; color: var(--theme-text); text-transform: uppercase; }
-        .btn-circle { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; background-color: var(--theme-color); }
-
-        @media (orientation: portrait) {
-            header { grid-template-columns: 60px 1fr 60px; height: 85px; }
-            .game-wrapper { flex-direction: column; gap: 15px; height: auto; max-height: none; }
-            .game-card { flex-direction: row; width: 100%; height: 100px; border-radius: 50px; flex: none; padding-right: 20px; }
-            .card-top { width: 110px; height: 100%; flex: none; }
-            .card-bottom { margin-top: 0; flex: 1; flex-direction: row; justify-content: space-between; background: transparent; }
+        .card-bottom h2 { 
+            font-size: clamp(0.9rem, 2.2vh, 1.2rem); 
+            font-weight: 900; color: var(--theme-text); 
+            text-transform: uppercase; 
+        }
+        .btn-circle { 
+            width: clamp(35px, 5vh, 45px); height: clamp(35px, 5vh, 45px); 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center; 
+            color: white; background-color: var(--theme-color); font-size: 1rem;
+            flex-shrink: 0;
         }
 
+        /* ----- FOOTER ----- */
         footer {
-            height: 70px; width: 100%; position: relative; flex-shrink: 0; 
-            display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px;
+            height: clamp(50px, 8vh, 70px); width: 100%; position: relative; flex-shrink: 0; 
+            display: flex; align-items: flex-end; justify-content: center; padding-bottom: 10px;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath fill='%23CAE6FF' d='M200,120 Q720,40 1240,120 Z'/%3E%3Cpath fill='%23A6D746' d='M0,50 Q300,70 650,120 L0,120 Z'/%3E%3Cpath fill='%23A6D746' d='M1440,50 Q1140,70 790,120 L1440,120 Z'/%3E%3C/svg%3E");
             background-size: 100% 100%;
         }
+        .footer-text { color: var(--text-grey); font-size: 0.75rem; font-weight: 800; z-index: 2; }
 
-        /* COR DO RODAPÉ ALTERADA PARA CINZA DISCRETO AQUI */
-        .footer-text { color: var(--text-grey); font-size: 0.8rem; font-weight: 800; z-index: 2; }
+        /* MENU DROPDOWN */
+        .menu-dropdown { position: absolute; top: 75px; left: 15px; display: none; flex-direction: column; gap: 5px; z-index: 2000; }
+        .menu-item { display: flex; align-items: center; gap: 10px; padding: 10px 15px; background: white; border-radius: 12px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-decoration: none; color: var(--text-grey); font-weight: 700; font-size: 0.9rem; }
     </style>
 </head>
 <body>
 
-    <div class="sky-decorations"><div class="cloud cloud-1"></div><div class="cloud cloud-2"></div></div>
+    <div class="sky-decorations"></div>
 
     <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
         <div class="header-center">
-            <img id="header-icon" src="" alt="Logo">
+            <img id="header-icon" src="" alt="Icon">
             <div class="title-group">
                 <div id="txt-titulo1"></div><div id="txt-titulo2"></div><div id="txt-subtitulo"></div>
             </div>
         </div>
-        <div class="header-right"><img id="icon-voltar-top" src="" alt="Voltar" onclick="window.history.back()"></div>
+        <div class="header-right"><img id="icon-voltar-top" src="" alt="V" onclick="window.history.back()"></div>
     </header>
 
     <div class="sub-header"><div class="intro-text" id="txt-intro"></div></div>
-    <main><div class="game-wrapper" id="gamesGrid"></div></main>
+
+    <main>
+        <div class="game-wrapper" id="gamesGrid"></div>
+    </main>
+
     <footer><div class="footer-text" id="txt-rodape"></div></footer>
 
     <script src="dados.js"></script>
@@ -141,39 +156,25 @@
         window.onload = () => {
             if (typeof JOGO_CONFIG !== 'undefined') {
                 const config = JOGO_CONFIG;
-
                 document.getElementById('txt-titulo1').innerText = config.textos.tituloLinha1;
                 document.getElementById('txt-titulo2').innerText = config.textos.tituloLinha2;
                 document.getElementById('txt-subtitulo').innerText = config.textos.subtitulo;
                 document.getElementById('txt-intro').innerText = config.textos.intro;
                 document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
 
-                const ano = config.anoAtivo || 'ano1';
+                const ano = config.anoAtivo || 'ano2';
                 document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[ano];
                 document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + config.iconesMenu.voltar;
 
                 const menuBox = document.getElementById('dropdownMenu');
                 const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
-                
                 Object.keys(config.links).forEach(key => {
                     if (config.iconesMenu[key]) {
-                        const a = document.createElement('a');
-                        a.className = 'menu-item';
-                        a.href = config.links[key];
-                        a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
+                        const a = document.createElement('a'); a.className = 'menu-item'; a.href = config.links[key];
+                        a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}" width="20"> <span>${labels[key] || key}</span>`;
                         menuBox.appendChild(a);
                     }
                 });
-
-                const sep = document.createElement('div'); sep.className = 'menu-sep';
-                menuBox.appendChild(sep);
-
-                const btnVoltar = document.createElement('a');
-                btnVoltar.className = 'menu-item';
-                btnVoltar.href = "#";
-                btnVoltar.onclick = (e) => { e.preventDefault(); window.history.back(); };
-                btnVoltar.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
-                menuBox.appendChild(btnVoltar);
 
                 const grid = document.getElementById('gamesGrid');
                 config.listaJogos.forEach(jogo => {
@@ -182,9 +183,10 @@
                     card.className = 'game-card';
                     card.href = jogo.link;
                     card.style.setProperty('--theme-color', tema.borda);
+                    card.style.setProperty('--theme-bg', tema.fundo);
                     card.style.setProperty('--theme-text', tema.texto);
                     card.innerHTML = `
-                        <div class="card-top" style="background-color: ${tema.fundo};"><img src="${config.caminhoIconsJogos}${jogo.icon}"></div>
+                        <div class="card-top"><img src="${config.caminhoIconsJogos}${jogo.icon}"></div>
                         <div class="card-bottom">
                             <h2>${jogo.nome}</h2>
                             <div class="btn-circle"><i class="fas fa-arrow-right"></i></div>
