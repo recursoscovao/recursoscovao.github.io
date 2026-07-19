@@ -84,7 +84,6 @@
         }
         .game-card:hover { transform: translateY(-10px); }
         
-        /* ADICIONADA COR DE FUNDO AQUI PARA PC/TABLET */
         .card-top { 
             flex: 1.2; width: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; 
             background-color: var(--theme-bg); 
@@ -105,57 +104,46 @@
         @media (orientation: portrait) {
             header { grid-template-columns: 60px 1fr 60px; height: 72px; padding: 0 12px; }
             #header-icon { height: 42px; } 
-            
             .sub-header { padding: 12px 0 6px 0; }
             .intro-text { font-size: 1.1rem; }
-
             main { padding: 0 15px 12px 15px; align-items: stretch; }
-            
-            .game-wrapper { 
-                flex-direction: column; 
-                gap: 10px; 
-                height: 100%; 
-                max-height: none; 
-            }
-            
-            .game-card { 
-                flex-direction: row; 
-                width: 100%; 
-                max-width: none;
-                height: auto; 
-                flex: 1; 
-                min-height: 0;
-                border-radius: 40px; 
-                border-width: 2.5px;
-                padding: 6px; 
-                box-shadow: 0 4px 10px rgba(0,0,0,0.04);
-            }
+            .game-wrapper { flex-direction: column; gap: 10px; height: 100%; max-height: none; }
+            .game-card { flex-direction: row; width: 100%; max-width: none; height: auto; flex: 1; min-height: 0; border-radius: 40px; border-width: 2.5px; padding: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
             .game-card:hover { transform: none; }
-
-            .card-top { 
-                width: auto; 
-                height: 100%; 
-                aspect-ratio: 1/1; 
-                flex: none; 
-                padding: 6px; 
-                border-radius: 30px; 
-                background-color: var(--theme-bg); 
-            }
+            .card-top { width: auto; height: 100%; aspect-ratio: 1/1; flex: none; padding: 6px; border-radius: 30px; background-color: var(--theme-bg); }
             .card-top img { max-width: 85%; max-height: 85%; }
-
-            .card-bottom { 
-                margin-top: 0; 
-                border-radius: 0; 
-                height: 100%; 
-                flex: 1; 
-                flex-direction: row; 
-                justify-content: space-between; 
-                background: transparent; 
-                padding: 0 10px 0 12px; 
-                gap: 5px;
-            }
+            .card-bottom { margin-top: 0; border-radius: 0; height: 100%; flex: 1; flex-direction: row; justify-content: space-between; background: transparent; padding: 0 10px 0 12px; gap: 5px; }
             .card-bottom h2 { font-size: 1rem; text-align: left; }
             .btn-circle { width: 38px; height: 38px; font-size: 0.9rem; }
+        }
+
+        /* ==========================================================
+           NOVO: AJUSTES PARA TELEMÓVEL NA HORIZONTAL (LANDSCAPE)
+           Garante que tudo cabe sem scroll em ecrãs baixos
+           ========================================================== */
+        @media (orientation: landscape) and (max-height: 500px) {
+            header { height: 50px; padding: 0 15px; border-radius: 0 0 20px 20px; }
+            #header-icon { height: 32px; }
+            .hamburger-btn { font-size: 20px; }
+            #txt-titulo1, #txt-titulo2 { font-size: 0.9rem; }
+            #txt-subtitulo { display: none; } /* Esconde o subtitulo para ganhar espaço */
+            #icon-voltar-top { height: 30px; }
+
+            .sub-header { padding: 5px 0; }
+            .intro-text { font-size: 0.9rem; }
+            .intro-text::after { height: 4px; bottom: -2px; }
+
+            main { padding: 0 10px 5px 10px; }
+            .game-wrapper { gap: 10px; max-height: none; height: 100%; }
+            .game-card { border-radius: 20px; border-width: 2px; }
+            .card-top { padding: 5px; flex: 1; }
+            .card-top img { max-height: 80%; }
+            .card-bottom { margin-top: -20px; border-radius: 20px 20px 0 0; padding: 5px; flex: 0.7; }
+            .card-bottom h2 { font-size: 0.75rem; }
+            .btn-circle { width: 28px; height: 28px; }
+
+            footer { height: 45px; padding-bottom: 5px; }
+            .footer-text { font-size: 0.65rem; }
         }
 
         /* ----- FOOTER ----- */
