@@ -1,10 +1,10 @@
 const JOGO_CONFIG = {
     textos: {
-        tituloLinha1: "PEQUENOS",
+        tituloLinha1: "JOVENS",
         tituloLinha2: "EXPLORADORES",
-        subtitulo: "ATIVIDADES | 1º ANO",
+        subtitulo: "ATIVIDADES | 2º ANO",
         intro: "O que vamos aprender hoje?",
-        rodape: "&copy; Pequenos Exploradores - Recursos Educativos"
+        rodape: "&copy; Jovens Exploradores - Recursos Educativos"
     },
     caminhoIconsMenu: "../icons/", 
     caminhoIconsJogos: "../icons/", 
@@ -15,8 +15,8 @@ const JOGO_CONFIG = {
         ano2: "icon2.png",
         ano3: "icon3.png",
         ano4: "icon4.png",
-        voltar: "voltar_az.png",
-        voltarMobile: "voltar_az.png" 
+        voltar: "voltar_vr.png",
+        voltarMobile: "voltar_vr.png" 
     },
     links: {
         home: "../", 
