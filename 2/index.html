@@ -53,8 +53,6 @@
             position: absolute; top: clamp(80px, 11vh, 95px); left: 20px; 
             display: none; flex-direction: column; gap: 6px; z-index: 2000; 
         }
-        
-        /* COR DA LETRA ALTERADA PARA CINZA AQUI */
         .menu-item { 
             display: flex; align-items: center; gap: 12px; padding: 12px 18px; 
             background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
@@ -106,7 +104,9 @@
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath fill='%23CAE6FF' d='M200,120 Q720,40 1240,120 Z'/%3E%3Cpath fill='%23A6D746' d='M0,50 Q300,70 650,120 L0,120 Z'/%3E%3Cpath fill='%23A6D746' d='M1440,50 Q1140,70 790,120 L1440,120 Z'/%3E%3C/svg%3E");
             background-size: 100% 100%;
         }
-        .footer-text { color: #2d5a88; font-size: 0.8rem; font-weight: 800; z-index: 2; }
+
+        /* COR DO RODAPÉ ALTERADA PARA CINZA DISCRETO AQUI */
+        .footer-text { color: var(--text-grey); font-size: 0.8rem; font-weight: 800; z-index: 2; }
     </style>
 </head>
 <body>
@@ -172,8 +172,6 @@
                 btnVoltar.className = 'menu-item';
                 btnVoltar.href = "#";
                 btnVoltar.onclick = (e) => { e.preventDefault(); window.history.back(); };
-                
-                /* REMOVIDA A COR VERMELHA DO TEXTO VOLTAR AQUI */
                 btnVoltar.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
                 menuBox.appendChild(btnVoltar);
 
