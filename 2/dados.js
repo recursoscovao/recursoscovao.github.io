@@ -12,17 +12,16 @@ const JOGO_CONFIG = {
         home: "home.png",
         pre: "iconpre.png",
         ano1: "icon1.png",
-        ano2: "icon2.png",
+        ano2: "icon2.png", // Este é o ícone da tartaruga
         ano3: "icon3.png",
         ano4: "icon4.png",
-        voltar: "voltar_az.png",
-        voltarMobile: "voltar_az.png" 
+        voltar: "voltar_az.png"
     },
     links: {
         home: "../", 
         pre: "../pre/",
-        ano1: "./",
-        ano2: "../2/",
+        ano1: "../1/",
+        ano2: "./",
         ano3: "../3/",
         ano4: "../4/"
     },
