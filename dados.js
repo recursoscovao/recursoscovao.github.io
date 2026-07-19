@@ -5,7 +5,7 @@ const JOGO_CONFIG = {
         subtitulo: "Atividades | Pré e 1º Ciclo",
         introNormal: "Escolhe o teu ano e ",
         introDestaque: "diverte-te!",
-        rodape: "&copy; Pequenos Exploradores - Recursos Educativos"
+        rodape: "&copy; Mundo do Jogos - Recursos Educativos"
     },
     caminhoIconsMenu: "icons/", 
     caminhoIconsJogos: "icons/", 
