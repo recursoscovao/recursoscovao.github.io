@@ -5,195 +5,237 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pequenos Exploradores</title>
     
+    <!-- Fonte Moderna e Arredondada -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary-blue: #5EA2E6; 
-            --text-grey: #A5B4C4;
-            --sky-blue: #EAF4FE;
+            --primary-blue: #2563EB;
+            --primary-green: #16A34A;
+            --primary-orange: #EA8C00;
+            --text-dark: #183153;
+            --bg-sky: #F0F9FF;
+            --radius-lg: 30px;
+            --radius-md: 20px;
+            --shadow-soft: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Fredoka', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* BLOQUEIO TOTAL DE SCROLL */
         html, body {
             height: 100vh; width: 100vw;
-            overflow: hidden; 
-            background-color: var(--sky-blue);
+            overflow: hidden; /* Zero Scroll */
+            background-color: var(--bg-sky);
+            color: var(--text-dark);
             display: flex; flex-direction: column;
-            position: relative;
         }
 
-        /* ----- CENÁRIO DE FUNDO (ESTRUTURA SVG) ----- */
-        .sky-decorations { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
-        .cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.6; }
-        .cloud-1 { top: 15%; left: -2%; width: 12vw; height: 3vh; min-width: 80px; }
-        .cloud-2 { top: 10%; right: 5%; width: 10vw; height: 2.5vh; min-width: 60px; }
-        .star-decor { position: absolute; top: 20%; left: 10%; width: 25px; height: 25px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFC107'%3E%3Cpath d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/%3E%3C/svg%3E"); background-repeat: no-repeat; }
-        .plane-wrapper { position: absolute; top: 10%; right: 10%; width: 15vw; height: 6vh; max-width: 150px; }
-        .plane-icon { position: absolute; top: 0; right: 0; width: 35px; height: 35px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235B9EE5'%3E%3Cpath d='M2.01 21L23 12 2.01 3 2 10l15 2-15 2z'/%3E%3C/svg%3E"); background-repeat: no-repeat; transform: rotate(-15deg); }
+        /* ----- CENÁRIO DE FUNDO (SVG E CSS) ----- */
+        .scenery { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
+        .cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.8; filter: blur(1px); }
+        .cloud-1 { top: 15%; left: 5%; width: 120px; height: 40px; }
+        .cloud-2 { top: 10%; right: 10%; width: 100px; height: 35px; }
+        .star { position: absolute; color: #FFD700; opacity: 0.3; font-size: 10px; }
+        
+        .grass { 
+            position: absolute; bottom: 0; width: 100%; height: 15vh; 
+            background: linear-gradient(to top, #DCFCE7 0%, transparent 100%);
+            z-index: 2;
+        }
 
-        /* ----- HEADER ----- */
+        /* ----- CABEÇALHO PREMIUM ----- */
         header { 
-            background: white; border-radius: 0 0 clamp(20px, 3vw, 40px) clamp(20px, 3vw, 40px);
-            display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; 
-            padding: 0 20px; height: clamp(70px, 11vh, 90px); z-index: 1000; flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+            background: white; height: 80px; display: flex; align-items: center; justify-content: space-between;
+            padding: 0 30px; z-index: 1000; box-shadow: 0 2px 15px rgba(0,0,0,0.03); flex-shrink: 0;
         }
-        .hamburger-btn { background: none; border: none; color: var(--primary-blue); font-size: clamp(24px, 4vh, 30px); cursor: pointer; transition: 0.2s; }
-        .header-center { display: flex; align-items: center; justify-content: center; gap: clamp(10px, 2vw, 15px); }
-        #header-icon { height: clamp(50px, 8vh, 70px); }
-        .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.85; }
-        #txt-titulo1, #txt-titulo2 { font-weight: 900; font-size: clamp(1.1rem, 2.2vw, 1.7rem); }
-        #txt-titulo1 { color: var(--primary-blue); } #txt-titulo2 { color: var(--text-grey); }
-        #txt-subtitulo { color: var(--primary-blue); font-weight: 700; font-size: clamp(8px, 1.2vh, 11px); margin-top: 3px; }
-        .header-right { display: flex; justify-content: flex-end; }
-        .header-right img { height: clamp(30px, 5vh, 42px); cursor: pointer; }
-
-        /* ----- MENU ----- */
-        .menu-dropdown { position: absolute; top: clamp(70px, 11vh, 90px); left: 20px; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
-        .menu-item { display: flex; align-items: center; gap: 10px; padding: 8px 18px; background: white; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-decoration: none; color: #2d5a88; font-weight: 700; min-width: 220px; transition: 0.2s; font-size: 0.9rem; }
-        .menu-item:hover { background: var(--primary-blue); color: white; }
-        .menu-item img { height: 22px; width: 22px; object-fit: contain; }
-
-        /* ----- INTRO ----- */
-        .sub-header { text-align: center; padding: clamp(8px, 2vh, 20px) 0; z-index: 10; flex-shrink: 0; }
-        .intro-text { color: #1a4a7a; font-size: clamp(1.1rem, 3vh, 1.6rem); font-weight: 800; position: relative; display: inline-block; }
-        .intro-text::before, .intro-text::after {
-            content: ""; position: absolute; width: 25px; height: 25px; top: 50%; transform: translateY(-50%);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 12h3M5 5l2 2M5 19l2-2' stroke='%23ffcc00' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat; background-size: contain;
+        .nav-btn { 
+            width: 48px; height: 48px; border-radius: 50%; border: none; background: #F8FAFC;
+            color: var(--primary-blue); font-size: 20px; cursor: pointer;
+            display: flex; align-items: center; justify-content: center; transition: 0.2s;
         }
-        .intro-text::before { left: -35px; } .intro-text::after { right: -35px; transform: translateY(-50%) scaleX(-1); }
+        .nav-btn:hover { background: #F1F5F9; transform: scale(1.05); }
+        
+        .logo-center { display: flex; align-items: center; gap: 12px; }
+        #header-icon { height: 55px; width: auto; }
+        .logo-text { display: flex; flex-direction: column; line-height: 1; }
+        .logo-text .t1 { font-weight: 700; color: var(--primary-blue); font-size: 1.4rem; letter-spacing: -0.5px; }
+        .logo-text .t2 { color: #64748B; font-size: 0.75rem; font-weight: 600; margin-top: 4px; }
 
-        /* ----- MAIN (ESPAÇO DINÂMICO) ----- */
-        main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 0 clamp(10px, 3vw, 40px); z-index: 10; min-height: 0; }
-        .game-wrapper { display: flex; gap: clamp(10px, 2vw, 25px); width: 100%; max-width: 1300px; justify-content: center; height: 100%; align-items: center; }
+        /* ----- CONTEÚDO PRINCIPAL ----- */
+        main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; z-index: 10; position: relative; padding: 0 20px; }
 
-        /* DESIGN PC & TABLET LANDSCAPE */
-        .game-card { 
-            background: white; border-radius: clamp(20px, 3vw, 35px); border: 4px solid var(--theme-color); 
-            text-decoration: none; flex: 1; max-width: 380px; height: 90%;
-            display: flex; flex-direction: column; overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: 0.3s;
+        .title-section { text-align: center; margin-bottom: 2vh; opacity: 0; animation: fadeIn 0.8s forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .intro-title { 
+            font-size: clamp(1.2rem, 4vh, 2rem); font-weight: 700; color: var(--text-dark); 
+            position: relative; display: inline-block; padding: 0 40px;
         }
-        .card-top { flex: 1.3; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; }
-        .card-top img { max-width: 85%; max-height: 90%; object-fit: contain; }
-        .card-bottom { 
-            background: white; width: 100%; flex: 0.7; border-radius: 35px 35px 0 0;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 12px; margin-top: -35px; position: relative; padding: 10px;
+        .intro-title::before, .intro-title::after {
+            content: "///"; position: absolute; color: #FACC15; font-weight: 900; letter-spacing: 2px; top: 50%; transform: translateY(-50%);
         }
-        .card-bottom h2 { font-size: clamp(0.9rem, 2vh, 1.3rem); font-weight: 900; text-transform: uppercase; color: var(--theme-color); }
-        .btn-circle { width: clamp(35px, 6vh, 45px); height: clamp(35px, 6vh, 45px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; background-color: var(--theme-color); }
+        .intro-title::before { left: 0; } .intro-title::after { right: 0; }
 
-        /* ----- MOBILE VERTICAL (DESIGN PILL) ----- */
-        @media (max-width: 768px) and (orientation: portrait) {
-            header { grid-template-columns: 60px 1fr 60px; height: 80px; }
-            main { align-items: flex-start; padding: 5px 20px; }
-            .game-wrapper { flex-direction: column; gap: 12px; padding-bottom: 120px; }
-            .game-card { 
-                flex-direction: row; width: 100%; height: clamp(90px, 13vh, 115px); border-radius: 25px; border-width: 3px;
-                flex: none; max-width: none; align-items: center; padding-right: 15px;
+        /* GRELHA DE CARTÕES */
+        .game-grid { 
+            display: flex; gap: 25px; width: 100%; max-width: 1300px; 
+            justify-content: center; align-items: stretch; height: 55vh; 
+        }
+
+        /* ESTILO DOS CARTÕES (DESKTOP/TABLET) */
+        .card {
+            background: white; border-radius: var(--radius-lg); border: 3px solid transparent;
+            text-decoration: none; flex: 1; max-width: 380px; display: flex; flex-direction: column;
+            padding: 15px; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            box-shadow: var(--shadow-soft); cursor: pointer; overflow: hidden;
+        }
+        .card:hover { transform: translateY(-10px) scale(1.03); box-shadow: 0 20px 30px -10px rgba(0,0,0,0.08); }
+
+        .card-inner { flex: 1; border-radius: var(--radius-md); display: flex; flex-direction: column; align-items: center; justify-content: space-between; padding: 20px; }
+        .card-img-wrap { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 0; }
+        .card-img-wrap img { max-width: 90%; max-height: 90%; object-fit: contain; }
+        
+        .card h2 { font-size: 1.5rem; font-weight: 700; margin: 15px 0; }
+        .action-btn { 
+            width: 52px; height: 52px; border-radius: 50%; color: white;
+            display: flex; align-items: center; justify-content: center; font-size: 20px;
+            transition: 0.3s;
+        }
+        .card:hover .action-btn { transform: rotate(360deg); }
+
+        /* ----- RESPONSIVIDADE MOBILE (<768px) ----- */
+        @media (max-width: 767px) {
+            header { height: 70px; padding: 0 15px; }
+            #header-icon { height: 45px; }
+            .logo-text .t1 { font-size: 1.1rem; }
+            
+            main { justify-content: flex-start; padding-top: 2vh; }
+            .game-grid { flex-direction: column; height: auto; gap: 15px; padding-bottom: 100px; }
+            
+            /* Formato Pastilha Horizontal */
+            .card { 
+                flex-direction: row; height: 90px; width: 100%; border-radius: var(--radius-md);
+                padding: 8px; flex: none; align-items: center;
             }
-            .card-top { width: clamp(90px, 30vw, 130px); height: 100%; padding: 10px; flex: none; }
-            .card-bottom { margin-top: 0; border-radius: 0; height: 100%; flex: 1; flex-direction: row; justify-content: space-between; padding: 0 10px 0 15px; box-shadow: none; background: transparent; }
-            .card-bottom h2 { font-size: 1.1rem; text-align: left; }
-            .btn-circle { width: 40px; height: 40px; flex-shrink: 0; }
-            .plane-wrapper, .cloud, .star-decor { display: none !important; }
+            .card-inner { flex-direction: row; padding: 0; background: transparent !important; }
+            .card-img-wrap { width: 75px; height: 75px; border-radius: 15px; background: white; flex: none; margin-right: 15px; }
+            .card h2 { font-size: 1.1rem; flex: 1; margin: 0; text-align: left; }
+            .action-btn { width: 40px; height: 40px; font-size: 16px; flex-shrink: 0; }
+            
+            .scenery { display: none; }
         }
 
         /* ----- FOOTER ----- */
-        footer {
-            height: clamp(70px, 16vh, 110px); width: 100%; position: relative; flex-shrink: 0; 
-            display: flex; align-items: flex-end; justify-content: center;
-            padding-bottom: 12px; z-index: 20;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath fill='%23CAE6FF' d='M200,120 Q720,40 1240,120 Z'/%3E%3Cpath fill='%23A6D746' d='M0,50 Q300,70 650,120 L0,120 Z'/%3E%3Cpath fill='%23A6D746' d='M1440,50 Q1140,70 790,120 L1440,120 Z'/%3E%3Cpath fill='%238AC63F' d='M0,80 Q250,90 550,120 L0,120 Z'/%3E%3Cpath fill='%238AC63F' d='M1440,80 Q1190,90 890,120 L1440,120 Z'/%3E%3C/svg%3E");
-            background-size: 100% 100%; background-position: bottom center; background-repeat: no-repeat;
+        footer { 
+            height: 60px; display: flex; align-items: center; justify-content: center;
+            font-size: 0.8rem; color: #94A3B8; font-weight: 500; z-index: 100;
         }
-        .footer-text { color: #2d5a88; font-size: clamp(0.6rem, 1.2vh, 0.85rem); font-weight: 800; z-index: 2; text-align: center; }
+
+        /* ----- MENU DROPDOWN ----- */
+        .dropdown {
+            position: absolute; top: 85px; left: 30px; background: white;
+            border-radius: var(--radius-md); box-shadow: var(--shadow-soft);
+            display: none; flex-direction: column; min-width: 240px; padding: 10px; z-index: 2000;
+        }
+        .menu-item {
+            display: flex; align-items: center; gap: 12px; padding: 12px 15px;
+            text-decoration: none; color: var(--text-dark); font-weight: 600;
+            border-radius: 12px; transition: 0.2s;
+        }
+        .menu-item:hover { background: #F8FAFC; color: var(--primary-blue); }
+        .menu-item img { width: 24px; }
     </style>
 </head>
 <body>
 
-    <div class="sky-decorations">
+    <!-- Fundo Ilustrado -->
+    <div class="scenery">
         <div class="cloud cloud-1"></div>
         <div class="cloud cloud-2"></div>
-        <div class="star-decor"></div>
-        <div class="plane-wrapper"><div class="plane-icon"></div></div>
+        <i class="fas fa-star star" style="top:20%; left:15%"></i>
+        <i class="fas fa-star star" style="top:10%; right:20%"></i>
+        <div class="grass"></div>
     </div>
 
     <header>
-        <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
-        <div id="dropdownMenu" class="menu-dropdown"></div>
-        <div class="header-center">
-            <img id="header-icon" src="" alt="Logo">
-            <div class="title-group">
-                <div id="txt-titulo1"></div>
-                <div id="txt-titulo2"></div>
-                <div id="txt-subtitulo"></div>
+        <button class="nav-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
+        <div id="dropdownMenu" class="dropdown"></div>
+        
+        <div class="logo-center">
+            <img id="header-icon" src="" alt="Exploradores">
+            <div class="logo-text">
+                <span class="t1" id="txt-logo-1"></span>
+                <span class="t2" id="txt-logo-2"></span>
             </div>
         </div>
-        <div class="header-right"><img id="icon-voltar-top" src="" alt="Voltar" onclick="window.history.back()"></div>
+        
+        <button class="nav-btn" onclick="window.history.back()"><i class="fas fa-arrow-left"></i></button>
     </header>
 
-    <div class="sub-header"><div class="intro-text" id="txt-intro"></div></div>
+    <main>
+        <div class="title-section">
+            <h1 class="intro-title" id="txt-intro"></h1>
+        </div>
+        <div class="game-grid" id="gameGrid"></div>
+    </main>
 
-    <main><div class="game-wrapper" id="gamesGrid"></div></main>
-
-    <footer><div class="footer-text" id="txt-rodape"></div></footer>
+    <footer id="txt-rodape"></footer>
 
     <script src="dados.js"></script>
     <script>
         function toggleMenu(e) {
-            if(e) e.stopPropagation();
+            e.stopPropagation();
             const menu = document.getElementById('dropdownMenu');
             menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
         }
+        
         window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
 
         window.onload = () => {
-            if (typeof JOGO_CONFIG !== 'undefined') {
-                const config = JOGO_CONFIG;
-                document.getElementById('txt-titulo1').innerText = config.textos.tituloLinha1;
-                document.getElementById('txt-titulo2').innerText = config.textos.tituloLinha2;
-                document.getElementById('txt-subtitulo').innerText = config.textos.subtitulo;
-                document.getElementById('txt-intro').innerText = config.textos.intro;
-                document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
-                document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu.ano1;
-                document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + config.iconesMenu.voltar;
+            const config = JOGO_CONFIG;
+            
+            // Textos
+            document.getElementById('txt-logo-1').innerText = config.textos.tituloLinha1;
+            document.getElementById('txt-logo-2').innerText = config.textos.subtitulo;
+            document.getElementById('txt-intro').innerText = config.textos.intro;
+            document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
+            
+            // Ícones Cabeçalho
+            document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu.ano1;
 
-                const menuBox = document.getElementById('dropdownMenu');
-                const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
-                Object.keys(config.links).forEach(key => {
-                    const a = document.createElement('a'); a.className = 'menu-item'; a.href = config.links[key];
-                    a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
-                    menuBox.appendChild(a);
-                });
-                const btnVoltar = document.createElement('a'); btnVoltar.className = 'menu-item'; btnVoltar.href = "../";
-                btnVoltar.style.borderTop = "2px solid #f0f4f8";
-                btnVoltar.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
-                menuBox.appendChild(btnVoltar);
+            // Gerar Menu
+            const menu = document.getElementById('dropdownMenu');
+            const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
+            Object.keys(config.links).forEach(key => {
+                const a = document.createElement('a');
+                a.className = 'menu-item'; a.href = config.links[key];
+                a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key] || 'icon1.png'}"> ${labels[key]}`;
+                menu.appendChild(a);
+            });
 
-                const grid = document.getElementById('gamesGrid');
-                config.listaJogos.forEach(jogo => {
-                    const tema = config.temaCores[jogo.tema];
-                    const card = document.createElement('a');
-                    card.className = 'game-card'; card.href = jogo.link; card.style.setProperty('--theme-color', tema.borda);
-                    card.innerHTML = `
-                        <div class="card-top" style="background-color: ${tema.fundo};">
-                            <img src="${config.caminhoIconsJogos}${jogo.icon}">
+            // Gerar Cartões
+            const grid = document.getElementById('gameGrid');
+            config.listaJogos.forEach(jogo => {
+                const tema = config.temaCores[jogo.tema];
+                const card = document.createElement('a');
+                card.className = 'card';
+                card.href = jogo.link;
+                card.style.borderColor = tema.border;
+                
+                card.innerHTML = `
+                    <div class="card-inner" style="background-color: ${tema.fundo}">
+                        <div class="card-img-wrap">
+                            <img src="${config.caminhoIconsJogos}${jogo.icon}" alt="${jogo.nome}">
                         </div>
-                        <div class="card-bottom">
-                            <h2>${jogo.nome}</h2>
-                            <div class="btn-circle"><i class="fas fa-arrow-right"></i></div>
+                        <h2 style="color: ${tema.principal}">${jogo.nome}</h2>
+                        <div class="action-btn" style="background-color: ${tema.principal}">
+                            <i class="fas fa-arrow-right"></i>
                         </div>
-                    `;
-                    grid.appendChild(card);
-                });
-            }
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
         };
     </script>
 </body>
