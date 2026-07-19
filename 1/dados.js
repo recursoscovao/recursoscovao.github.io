@@ -27,9 +27,9 @@ const JOGO_CONFIG = {
         ano4: "../4/"
     },
     temaCores: {
-        azul: { borda: "#5ba4e5", fundo: "#e1f0ff" },
-        verde: { borda: "#58bc8c", fundo: "#e8f7f0" },
-        castanho: { borda: "#e2922e", fundo: "#fff5e6" }
+        azul: { borda: "#5ba4e5", fundo: "#e1f0ff", texto: "#0066ff" },
+        verde: { borda: "#58bc8c", fundo: "#e8f7f0", texto: "#008e4d" },
+        castanho: { borda: "#e2922e", fundo: "#fff5e6", texto: "#c15d00" }
     },
     listaJogos: [
         { nome: "Português", icon: "pt.png", link: "pt/", tema: "azul" },
