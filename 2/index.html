@@ -30,7 +30,6 @@
         .cloud-1 { top: 15%; left: -2%; width: 12vw; height: 3vh; min-width: 80px; }
         .cloud-2 { top: 10%; right: 5%; width: 10vw; height: 2.5vh; min-width: 60px; }
 
-        /* ----- HEADER ----- */
         header { 
             background: white; border-radius: 0 0 clamp(20px, 3vw, 40px) clamp(20px, 3vw, 40px);
             display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; 
@@ -43,8 +42,6 @@
         #header-icon { height: clamp(55px, 9vh, 80px); object-fit: contain; }
         
         .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.9; }
-        
-        /* TAMANHOS REDUZIDOS AQUI */
         #txt-titulo1 { color: var(--primary-blue); font-weight: 900; font-size: clamp(1.1rem, 2vw, 1.6rem); }
         #txt-titulo2 { color: var(--text-grey); font-weight: 900; font-size: clamp(1.1rem, 2vw, 1.6rem); }
         #txt-subtitulo { color: var(--text-grey); font-weight: 700; font-size: clamp(9px, 1.2vh, 11px); margin-top: 3px; }
@@ -56,10 +53,12 @@
             position: absolute; top: clamp(80px, 11vh, 95px); left: 20px; 
             display: none; flex-direction: column; gap: 6px; z-index: 2000; 
         }
+        
+        /* COR DA LETRA ALTERADA PARA CINZA AQUI */
         .menu-item { 
             display: flex; align-items: center; gap: 12px; padding: 12px 18px; 
             background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
-            text-decoration: none; color: #444; font-weight: 700; min-width: 220px;
+            text-decoration: none; color: var(--text-grey); font-weight: 700; min-width: 220px;
         }
         .menu-item:hover { background: var(--primary-blue); color: white; }
         .menu-item img { height: 24px; width: 24px; object-fit: contain; }
@@ -173,7 +172,9 @@
                 btnVoltar.className = 'menu-item';
                 btnVoltar.href = "#";
                 btnVoltar.onclick = (e) => { e.preventDefault(); window.history.back(); };
-                btnVoltar.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span style="color: #E1251B;">VOLTAR</span>`;
+                
+                /* REMOVIDA A COR VERMELHA DO TEXTO VOLTAR AQUI */
+                btnVoltar.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
                 menuBox.appendChild(btnVoltar);
 
                 const grid = document.getElementById('gamesGrid');
