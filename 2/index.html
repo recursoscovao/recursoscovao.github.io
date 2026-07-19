@@ -72,7 +72,7 @@
             background-size: 100% 100%; z-index: -1;
         }
 
-        /* ----- MAIN E CARTÕES (DEFAULT / DESKTOP) ----- */
+        /* ----- MAIN E CARTÕES (DEFAULT / DESKTOP / TABLET) ----- */
         main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 0 20px; z-index: 10; min-height: 0; }
         .game-wrapper { display: flex; gap: 25px; width: 100%; max-width: 1100px; justify-content: center; align-items: center; height: 100%; max-height: 400px; }
 
@@ -83,8 +83,14 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: transform 0.3s;
         }
         .game-card:hover { transform: translateY(-10px); }
-        .card-top { flex: 1.2; width: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        
+        /* ADICIONADA COR DE FUNDO AQUI PARA PC/TABLET */
+        .card-top { 
+            flex: 1.2; width: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; 
+            background-color: var(--theme-bg); 
+        }
         .card-top img { max-width: 85%; max-height: 90%; object-fit: contain; }
+        
         .card-bottom { 
             background: white; width: 100%; flex: 0.8; border-radius: 35px 35px 0 0;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
@@ -95,13 +101,10 @@
 
         /* ==========================================================
            AJUSTES EXCLUSIVOS PARA TELEMÓVEL NA VERTICAL (PORTRAIT)
-           - Reduz o ícone do header
-           - Transforma os cartões em "pill" horizontal
-           - Preenche o espaço exato sem precisar de scroll
            ========================================================== */
         @media (orientation: portrait) {
             header { grid-template-columns: 60px 1fr 60px; height: 72px; padding: 0 12px; }
-            #header-icon { height: 42px; } /* Ícone menor no telemóvel */
+            #header-icon { height: 42px; } 
             
             .sub-header { padding: 12px 0 6px 0; }
             .intro-text { font-size: 1.1rem; }
@@ -120,14 +123,14 @@
                 width: 100%; 
                 max-width: none;
                 height: auto; 
-                flex: 1; /* Divide o ecrã perfeitamente pelos 3 cartões */
+                flex: 1; 
                 min-height: 0;
                 border-radius: 40px; 
                 border-width: 2.5px;
                 padding: 6px; 
                 box-shadow: 0 4px 10px rgba(0,0,0,0.04);
             }
-            .game-card:hover { transform: none; } /* Sem efeito hover no toque do telemóvel */
+            .game-card:hover { transform: none; }
 
             .card-top { 
                 width: auto; 
