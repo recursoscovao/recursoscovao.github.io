@@ -78,14 +78,14 @@
         .btn-circle { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; background-color: var(--theme-color); }
 
 /* ==========================================================
-           MODO VERTICAL (PORTRAIT) - ÍCONES MAXIMIZADOS E NUVENS
+           MODO VERTICAL (PORTRAIT) - CARTÕES LARGOS E CENTRADOS
            ========================================================== */
         @media (orientation: portrait) {
             header { 
                 grid-template-columns: 60px 1fr 60px; 
                 height: 75px; 
                 padding: 0 15px; 
-                position: relative; /* Para ficar à frente das nuvens */
+                position: relative;
             }
 
             #header-icon { height: 42px; } 
@@ -94,28 +94,29 @@
             .intro-text { font-size: 1.4rem; font-weight: 900; }
 
             main { 
-                padding: 0 0 30px 0; 
+                padding: 0 8px 30px 8px; /* Padding lateral reduzido para os cartões terem espaço */
                 display: flex;
                 flex-direction: column;
                 align-items: center;
                 overflow-y: auto;
                 position: relative;
-                z-index: 10; /* Garante que os cartões ficam por cima das nuvens */
+                z-index: 10;
             }
 
             .game-wrapper { 
                 display: flex;
                 flex-direction: column; 
                 align-items: center;
-                gap: 18px; 
+                gap: 16px; 
                 width: 100%; 
             }
 
+            /* CARTÃO MAIS LARGO (96%) */
             .game-card { 
                 display: flex;
                 flex-direction: row; 
-                width: 92%; 
-                height: 125px; 
+                width: 96%; /* Aumentado de 92% para 96% */
+                height: 120px; 
                 border-radius: 35px; 
                 border: 3.5px solid var(--theme-color); 
                 background-color: white; 
@@ -125,32 +126,33 @@
             }
 
             .card-top { 
-                width: 32%; 
+                width: 30%; 
                 height: 100%; 
                 background-color: var(--theme-bg); 
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 5px; /* Reduzi o padding para a imagem poder crescer */
+                padding: 5px;
                 flex: none;
             }
 
-            /* ÍCONE DOS CARTÕES (AUMENTADO) */
             .card-top img { 
-                max-width: 105%; /* Ligeiramente maior que o contentor para destaque */
-                max-height: 95%; 
+                max-width: 100%; 
+                max-height: 90%; 
                 object-fit: contain;
-                transform: scale(1.1); /* Aumenta visualmente o ícone */
+                transform: scale(1.15); /* Ícone ligeiramente maior */
             }
 
+            /* CONTENTOR DO TEXTO E SETA - CENTRO VERTICAL TOTAL */
             .card-bottom { 
                 flex: 1;
-                height: 100%;
+                height: 100%; /* Ocupa a altura total do cartão */
                 display: flex;
                 flex-direction: row !important; 
                 justify-content: space-between;
-                align-items: center;
-                padding: 0 20px 0 15px;
+                align-items: center; /* CENTRA VERTICALMENTE TUDO O QUE ESTÁ LÁ DENTRO */
+                padding: 0 20px 0 18px;
+                margin: 0;
             }
 
             .card-bottom h2 { 
@@ -160,19 +162,21 @@
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
                 margin: 0;
+                line-height: 1; /* Garante que o texto não tenha "ar" extra em cima ou baixo */
             }
 
+            /* SETA REDONDA E CENTRADA */
             .btn-circle { 
-                width: 48px; 
-                height: 48px; 
-                border-radius: 50%;
+                width: 46px; 
+                height: 46px; 
+                border-radius: 50%; /* Círculo perfeito */
                 background-color: var(--theme-color); 
                 color: white;
                 font-size: 1.1rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                flex-shrink: 0;
+                flex-shrink: 0; /* Impede que a seta fique oval */
             }
         }
         
