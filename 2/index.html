@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jovens Exploradores - 2º Ano</title>
+    <title>Jovens Exploradores</title>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
-            --primary-blue: #5EA2E6; /* Azul da imagem */
-            --text-grey: #A5B4C4;    /* Cinza da imagem */
+            --primary-blue: #5EA2E6; 
+            --text-grey: #A5B4C4;
             --sky-blue: #EAF4FE;
         }
 
@@ -25,14 +25,12 @@
             position: relative;
         }
 
-        /* ----- CENÁRIO DE FUNDO ----- */
         .sky-decorations { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
         .cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.6; }
         .cloud-1 { top: 15%; left: -2%; width: 12vw; height: 3vh; min-width: 80px; }
         .cloud-2 { top: 10%; right: 5%; width: 10vw; height: 2.5vh; min-width: 60px; }
-        .star-decor { position: absolute; top: 20%; left: 10%; width: 25px; height: 25px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFC107'%3E%3Cpath d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/%3E%3C/svg%3E"); background-repeat: no-repeat; }
 
-        /* ----- HEADER (IGUAL À IMAGEM) ----- */
+        /* ----- HEADER ----- */
         header { 
             background: white; border-radius: 0 0 clamp(20px, 3vw, 40px) clamp(20px, 3vw, 40px);
             display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; 
@@ -47,26 +45,26 @@
         .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.9; }
         #txt-titulo1 { color: var(--primary-blue); font-weight: 900; font-size: clamp(1.4rem, 2.5vw, 2rem); }
         #txt-titulo2 { color: var(--text-grey); font-weight: 900; font-size: clamp(1.4rem, 2.5vw, 2rem); }
-        #txt-subtitulo { color: var(--text-grey); font-weight: 700; font-size: clamp(10px, 1.4vh, 13px); margin-top: 5px; letter-spacing: 0.5px; }
+        #txt-subtitulo { color: var(--text-grey); font-weight: 700; font-size: clamp(10px, 1.4vh, 13px); margin-top: 5px; }
 
         .header-right { display: flex; justify-content: flex-end; }
-        #icon-voltar-top { height: 45px; cursor: pointer; transition: transform 0.2s; }
-        #icon-voltar-top:active { transform: scale(0.9); }
+        #icon-voltar-top { height: 45px; cursor: pointer; }
 
         /* ----- MENU DROPDOWN ----- */
         .menu-dropdown { 
-            position: absolute; top: 90px; left: 20px; 
+            position: absolute; top: clamp(80px, 11vh, 95px); left: 20px; 
             display: none; flex-direction: column; gap: 6px; z-index: 2000; 
         }
         .menu-item { 
             display: flex; align-items: center; gap: 12px; padding: 12px 18px; 
             background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
-            text-decoration: none; color: #444; font-weight: 700; min-width: 220px; transition: 0.2s;
+            text-decoration: none; color: #444; font-weight: 700; min-width: 220px;
         }
         .menu-item:hover { background: var(--primary-blue); color: white; }
         .menu-item img { height: 24px; width: 24px; object-fit: contain; }
+        .menu-sep { border-top: 2px solid #f0f4f8; margin: 4px 0; }
 
-        /* ----- TEXTO INTRO ----- */
+        /* ----- MAIN GRELHA ----- */
         .sub-header { text-align: center; padding: 25px 0 10px 0; z-index: 10; flex-shrink: 0; }
         .intro-text { color: #1a4a7a; font-size: clamp(1.2rem, 3vh, 1.8rem); font-weight: 800; position: relative; display: inline-block; }
         .intro-text::after {
@@ -75,11 +73,9 @@
             background-size: 100% 100%; z-index: -1;
         }
 
-        /* ----- MAIN GRELHA ----- */
         main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 0 20px; z-index: 10; min-height: 0; }
         .game-wrapper { display: flex; gap: 25px; width: 100%; max-width: 1100px; justify-content: center; align-items: center; height: 100%; max-height: 400px; }
 
-        /* DESIGN LANDSCAPE */
         .game-card { 
             background: white; border-radius: 35px; border: 4px solid var(--theme-color); 
             text-decoration: none; flex: 1; max-width: 320px; height: 100%;
@@ -95,71 +91,44 @@
             gap: 15px; margin-top: -35px; position: relative; padding: 15px;
         }
         .card-bottom h2 { font-size: 1.3rem; font-weight: 900; color: var(--theme-text); text-transform: uppercase; }
-        .btn-circle { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; background-color: var(--theme-color); font-size: 1.2rem; }
+        .btn-circle { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; background-color: var(--theme-color); }
 
-        /* DESIGN MOBILE VERTICAL */
         @media (orientation: portrait) {
-            header { grid-template-columns: 60px 1fr 60px; height: 85px; padding: 0 15px; }
-            main { align-items: flex-start; padding-top: 10px; }
+            header { grid-template-columns: 60px 1fr 60px; height: 85px; }
             .game-wrapper { flex-direction: column; gap: 15px; height: auto; max-height: none; }
-            .game-card { 
-                flex-direction: row; width: 100%; height: 100px; border-radius: 50px;
-                flex: none; align-items: center; padding-right: 20px;
-            }
-            .card-top { width: 110px; height: 100%; padding: 15px; flex: none; border-radius: 0; }
-            .card-bottom { margin-top: 0; border-radius: 0; height: 100%; flex: 1; flex-direction: row; justify-content: space-between; padding: 0 10px 0 15px; background: transparent; }
-            .btn-circle { width: 45px; height: 45px; }
-            .star-decor, .cloud { display: none; }
+            .game-card { flex-direction: row; width: 100%; height: 100px; border-radius: 50px; flex: none; padding-right: 20px; }
+            .card-top { width: 110px; height: 100%; flex: none; }
+            .card-bottom { margin-top: 0; flex: 1; flex-direction: row; justify-content: space-between; background: transparent; }
         }
 
-        /* ----- FOOTER ----- */
         footer {
-            height: clamp(60px, 10vh, 90px); width: 100%; position: relative; flex-shrink: 0; 
-            display: flex; align-items: flex-end; justify-content: center;
-            padding-bottom: 12px; z-index: 20;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath fill='%23CAE6FF' d='M200,120 Q720,40 1240,120 Z'/%3E%3Cpath fill='%23A6D746' d='M0,50 Q300,70 650,120 L0,120 Z'/%3E%3Cpath fill='%23A6D746' d='M1440,50 Q1140,70 790,120 L1440,120 Z'/%3E%3Cpath fill='%238AC63F' d='M0,80 Q250,90 550,120 L0,120 Z'/%3E%3Cpath fill='%238AC63F' d='M1440,80 Q1190,90 890,120 L1440,120 Z'/%3E%3C/svg%3E");
-            background-size: 100% 100%; background-repeat: no-repeat;
+            height: 70px; width: 100%; position: relative; flex-shrink: 0; 
+            display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath fill='%23CAE6FF' d='M200,120 Q720,40 1240,120 Z'/%3E%3Cpath fill='%23A6D746' d='M0,50 Q300,70 650,120 L0,120 Z'/%3E%3Cpath fill='%23A6D746' d='M1440,50 Q1140,70 790,120 L1440,120 Z'/%3E%3C/svg%3E");
+            background-size: 100% 100%;
         }
         .footer-text { color: #2d5a88; font-size: 0.8rem; font-weight: 800; z-index: 2; }
     </style>
 </head>
 <body>
 
-    <div class="sky-decorations">
-        <div class="cloud cloud-1"></div>
-        <div class="cloud cloud-2"></div>
-        <div class="star-decor"></div>
-    </div>
+    <div class="sky-decorations"><div class="cloud cloud-1"></div><div class="cloud cloud-2"></div></div>
 
     <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
-
         <div class="header-center">
-            <img id="header-icon" src="" alt="Ícone Ano">
+            <img id="header-icon" src="" alt="Logo">
             <div class="title-group">
-                <div id="txt-titulo1"></div>
-                <div id="txt-titulo2"></div>
-                <div id="txt-subtitulo"></div>
+                <div id="txt-titulo1"></div><div id="txt-titulo2"></div><div id="txt-subtitulo"></div>
             </div>
         </div>
-
-        <div class="header-right">
-            <img id="icon-voltar-top" src="" alt="Voltar" onclick="window.history.back()">
-        </div>
+        <div class="header-right"><img id="icon-voltar-top" src="" alt="Voltar" onclick="window.history.back()"></div>
     </header>
 
-    <div class="sub-header">
-        <div class="intro-text" id="txt-intro"></div>
-    </div>
-
-    <main>
-        <div class="game-wrapper" id="gamesGrid"></div>
-    </main>
-
-    <footer>
-        <div class="footer-text" id="txt-rodape"></div>
-    </footer>
+    <div class="sub-header"><div class="intro-text" id="txt-intro"></div></div>
+    <main><div class="game-wrapper" id="gamesGrid"></div></main>
+    <footer><div class="footer-text" id="txt-rodape"></div></footer>
 
     <script src="dados.js"></script>
     <script>
@@ -174,18 +143,18 @@
             if (typeof JOGO_CONFIG !== 'undefined') {
                 const config = JOGO_CONFIG;
 
-                // Preencher Textos
                 document.getElementById('txt-titulo1').innerText = config.textos.tituloLinha1;
                 document.getElementById('txt-titulo2').innerText = config.textos.tituloLinha2;
                 document.getElementById('txt-subtitulo').innerText = config.textos.subtitulo;
                 document.getElementById('txt-intro').innerText = config.textos.intro;
                 document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
 
-                // Preencher Ícones do Header (MUDADO PARA ANO 2 - TARTARUGA)
-                document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu.ano2;
+                // DEFINE ÍCONE DINÂMICO BASEADO NO ANO ATIVO
+                const ano = config.anoAtivo || 'ano1';
+                document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[ano];
                 document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + config.iconesMenu.voltar;
 
-                // Construir Menu Dropdown
+                // MENU DROPDOWN
                 const menuBox = document.getElementById('dropdownMenu');
                 const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
                 
@@ -199,7 +168,18 @@
                     }
                 });
 
-                // Construir Grelha de Jogos
+                // ADICIONAR BOTÃO VOLTAR NO FINAL DO MENU
+                const sep = document.createElement('div'); sep.className = 'menu-sep';
+                menuBox.appendChild(sep);
+
+                const btnVoltar = document.createElement('a');
+                btnVoltar.className = 'menu-item';
+                btnVoltar.href = "#";
+                btnVoltar.onclick = (e) => { e.preventDefault(); window.history.back(); };
+                btnVoltar.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span style="color: #E1251B;">VOLTAR</span>`;
+                menuBox.appendChild(btnVoltar);
+
+                // GRELHA DE JOGOS
                 const grid = document.getElementById('gamesGrid');
                 config.listaJogos.forEach(jogo => {
                     const tema = config.temaCores[jogo.tema];
@@ -208,16 +188,12 @@
                     card.href = jogo.link;
                     card.style.setProperty('--theme-color', tema.borda);
                     card.style.setProperty('--theme-text', tema.texto);
-                    
                     card.innerHTML = `
-                        <div class="card-top" style="background-color: ${tema.fundo};">
-                            <img src="${config.caminhoIconsJogos}${jogo.icon}" alt="${jogo.nome}">
-                        </div>
+                        <div class="card-top" style="background-color: ${tema.fundo};"><img src="${config.caminhoIconsJogos}${jogo.icon}"></div>
                         <div class="card-bottom">
                             <h2>${jogo.nome}</h2>
                             <div class="btn-circle"><i class="fas fa-arrow-right"></i></div>
-                        </div>
-                    `;
+                        </div>`;
                     grid.appendChild(card);
                 });
             }
