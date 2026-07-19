@@ -1,1 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pequenos Exploradores - Atividades</title>
+    
+    <!-- Fontes e Ícones -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --primary-blue: #5EA2E6; 
+            --text-grey: #A5B4C4;
+            --sky-blue: #EAF4FE;
+        }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
+        
+        html, body {
+            height: 100dvh; width: 100vw;
+            overflow: hidden; 
+            background-color: var(--sky-blue);
+            display: flex; flex-direction: column;
+            position: relative;
+        }
+
+        /* ----- CENÁRIO DE FUNDO ----- */
+        .sky-decorations { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
+        .cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.6; }
+        .cloud-1 { top: 15%; left: -2%; width: 12vw; height: 3vh; min-width: 80px; }
+        .cloud-2 { top: 10%; right: 5%; width: 10vw; height: 2.5vh; min-width: 60px; }
+        .star-decor { position: absolute; top: 20%; left: 10%; width: 25px; height: 25px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFC107'%3E%3Cpath d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/%3E%3C/svg%3E"); background-repeat: no-repeat; }
+        .plane-wrapper { position: absolute; top: 10%; right: 10%; width: 15vw; height: 6vh; max-width: 150px; }
+        .plane-icon { position: absolute; top: 0; right: 0; width: 35px; height: 35px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235B9EE5'%3E%3Cpath d='M2.01 21L23 12 2.01 3 2 10l15 2-15 2z'/%3E%3C/svg%3E"); background-repeat: no-repeat; transform: rotate(-15deg); }
+
+        /* ----- HEADER ----- */
+        header { 
+            background: white; border-radius: 0 0 clamp(20px, 3vw, 40px) clamp(20px, 3vw, 40px);
+            display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; 
+            padding: 0 20px; height: clamp(70px, 11vh, 90px); z-index: 1000; flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        }
+        .hamburger-btn { background: none; border: none; color: var(--primary-blue); font-size: clamp(24px, 4vh, 30px); cursor: pointer; transition: 0.2s; }
+        .header-center { display: flex; align-items: center; justify-content: center; gap: clamp(10px, 2vw, 15px); }
+        #header-icon { height: clamp(50px, 8vh, 70px); }
+        .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.85; }
+        #txt-titulo1, #txt-titulo2 { font-weight: 900; font-size: clamp(1.1rem, 2.2vw, 1.7rem); text-transform: uppercase; }
+        #txt-titulo1 { color: #E1251B; } /* Vermelho conforme o dado inicial */
+        #txt-titulo2 { color: #1A499C; } /* Azul conforme o dado inicial */
+        #txt-subtitulo { color: var(--text-grey); font-weight: 700; font-size: clamp(8px, 1.2vh, 11px); margin-top: 5px; }
+        .header-right { display: flex; justify-content: flex-end; }
+        .header-right img { height: clamp(35px, 5.5vh, 48px); cursor: pointer; transition: transform 0.2s; }
+        .header-right img:active { transform: scale(0.9); }
+
+        /* ----- MENU DROPDOWN ----- */
+        .menu-dropdown { 
+            position: absolute; top: clamp(75px, 11.5vh, 95px); left: 20px; 
+            display: none; flex-direction: column; gap: 6px; z-index: 2000; 
+        }
+        .menu-item { 
+            display: flex; align-items: center; gap: 12px; padding: 10px 18px; 
+            background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+            text-decoration: none; color: #2d5a88; font-weight: 700; min-width: 220px; 
+            transition: 0.2s; font-size: 0.95rem; 
+        }
+        .menu-item:hover { background: var(--primary-blue); color: white; }
+        .menu-item img { height: 24px; width: 24px; object-fit: contain; }
+
+        /* ----- INTRO TEXT ----- */
+        .sub-header { text-align: center; padding: clamp(10px, 3vh, 25px) 0; z-index: 10; flex-shrink: 0; }
+        .intro-text { color: #1a4a7a; font-size: clamp(1.2rem, 3.5vh, 1.8rem); font-weight: 900; position: relative; display: inline-block; }
+        .intro-text::after {
+            content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 8px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 25' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='8' stroke-linecap='round' fill='transparent'/%3E%3C/svg%3E");
+            background-size: 100% 100%; z-index: -1;
+        }
+
+        /* ----- GRELHA DE JOGOS ----- */
+        main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 0 clamp(10px, 3vw, 40px) 20px; z-index: 10; min-height: 0; }
+        .game-wrapper { display: flex; gap: clamp(15px, 3vw, 30px); width: 100%; max-width: 1200px; justify-content: center; height: 100%; max-height: 450px; align-items: center; }
+
+        /* ESTILO DESKTOP / TABLET */
+        .game-card { 
+            background: white; border-radius: clamp(20px, 3vw, 35px); border: 4px solid var(--theme-color); 
+            text-decoration: none; flex: 1; max-width: 350px; height: 100%;
+            display: flex; flex-direction: column; overflow: hidden;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: transform 0.3s ease;
+        }
+        .game-card:hover { transform: translateY(-8px); }
+        
+        .card-top { flex: 1.2; width: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .card-top img { max-width: 85%; max-height: 90%; object-fit: contain; filter: drop-shadow(0 5px 8px rgba(0,0,0,0.1)); }
+        
+        .card-bottom { 
+            background: white; width: 100%; flex: 0.8; border-radius: 35px 35px 0 0;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            gap: 15px; margin-top: -35px; position: relative; padding: 15px;
+        }
+        .card-bottom h2 { font-size: clamp(1rem, 2.5vh, 1.4rem); font-weight: 900; color: var(--theme-text); text-align: center; }
+        .btn-circle { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; background-color: var(--theme-color); font-size: 1.2rem; }
+
+        /* ----- MOBILE VERTICAL (DESIGN PILL) ----- */
+        @media (orientation: portrait) {
+            header { grid-template-columns: 60px 1fr 60px; height: 80px; padding: 0 15px; }
+            main { align-items: flex-start; padding-top: 10px; }
+            .game-wrapper { flex-direction: column; gap: 15px; height: auto; max-height: none; }
+            .game-card { 
+                flex-direction: row; width: 100%; height: clamp(85px, 12vh, 110px); border-radius: 50px; border-width: 3px;
+                flex: none; max-width: none; align-items: center; padding-right: 15px;
+            }
+            .card-top { width: 100px; height: 100%; padding: 12px; flex: none; border-radius: 0; }
+            .card-bottom { margin-top: 0; border-radius: 0; height: 100%; flex: 1; flex-direction: row; justify-content: space-between; padding: 0 10px 0 15px; background: transparent; }
+            .card-bottom h2 { font-size: 1.2rem; text-align: left; }
+            .btn-circle { width: 42px; height: 42px; flex-shrink: 0; }
+            .plane-wrapper, .cloud, .star-decor { display: none !important; }
+        }
+
+        /* ----- FOOTER ----- */
+        footer {
+            height: clamp(60px, 12vh, 90px); width: 100%; position: relative; flex-shrink: 0; 
+            display: flex; align-items: flex-end; justify-content: center;
+            padding-bottom: 10px; z-index: 20;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath fill='%23CAE6FF' d='M200,120 Q720,40 1240,120 Z'/%3E%3Cpath fill='%23A6D746' d='M0,50 Q300,70 650,120 L0,120 Z'/%3E%3Cpath fill='%23A6D746' d='M1440,50 Q1140,70 790,120 L1440,120 Z'/%3E%3Cpath fill='%238AC63F' d='M0,80 Q250,90 550,120 L0,120 Z'/%3E%3Cpath fill='%238AC63F' d='M1440,80 Q1190,90 890,120 L1440,120 Z'/%3E%3C/svg%3E");
+            background-size: 100% 100%; background-repeat: no-repeat;
+        }
+        .footer-text { color: #2d5a88; font-size: 0.8rem; font-weight: 800; z-index: 2; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <div class="sky-decorations">
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+        <div class="star-decor"></div>
+        <div class="plane-wrapper"><div class="plane-icon"></div></div>
+    </div>
+
+    <header>
+        <button class="hamburger-btn" aria-label="Menu" onclick="toggleMenu(event)">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <div id="dropdownMenu" class="menu-dropdown">
+            <!-- Menu dinâmico via JS -->
+        </div>
+
+        <div class="header-center">
+            <img id="header-icon" src="" alt="Logo">
+            <div class="title-group">
+                <div class="title-text">
+                    <span id="txt-titulo1"></span>
+                    <span id="txt-titulo2"></span>
+                </div>
+                <div id="txt-subtitulo"></div>
+            </div>
+        </div>
+
+        <div class="header-right">
+            <img id="icon-voltar-top" src="" alt="Voltar" onclick="window.history.back()">
+        </div>
+    </header>
+
+    <div class="sub-header">
+        <div class="intro-text" id="txt-intro"></div>
+    </div>
+
+    <main>
+        <div class="game-wrapper" id="gamesGrid">
+            <!-- Jogos dinâmicos via JS -->
+        </div>
+    </main>
+
+    <footer>
+        <div class="footer-text" id="txt-rodape"></div>
+    </footer>
+
+    <script src="dados.js"></script>
+    <script>
+        // Função para abrir/fechar menu
+        function toggleMenu(e) {
+            if(e) e.stopPropagation();
+            const menu = document.getElementById('dropdownMenu');
+            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        // Fechar menu ao clicar fora
+        window.onclick = () => {
+            document.getElementById('dropdownMenu').style.display = 'none';
+        };
+
+        // Carregar dados da CONFIG
+        window.onload = () => {
+            if (typeof JOGO_CONFIG !== 'undefined') {
+                const config = JOGO_CONFIG;
+
+                // 1. Textos e Header
+                document.getElementById('txt-titulo1').innerText = config.textos.tituloLinha1;
+                document.getElementById('txt-titulo2').innerText = config.textos.tituloLinha2;
+                document.getElementById('txt-subtitulo').innerText = config.textos.subtitulo;
+                document.getElementById('txt-intro').innerText = config.textos.intro;
+                document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
+                
+                // Usamos o ícone do 1º ano como destaque no header para esta página
+                document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu.ano1;
+                document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + config.iconesMenu.voltar;
+
+                // 2. Construir Menu hambúrguer
+                const menuBox = document.getElementById('dropdownMenu');
+                const menuLabels = { 
+                    home: "Início", pre: "Pré-Escolar", 
+                    ano1: "1º Ano", ano2: "2º Ano", 
+                    ano3: "3º Ano", ano4: "4º Ano", 
+                    voltar: "Voltar" 
+                };
+
+                Object.keys(config.links).forEach(key => {
+                    if (config.iconesMenu[key]) {
+                        const a = document.createElement('a');
+                        a.className = 'menu-item';
+                        a.href = config.links[key];
+                        a.innerHTML = `
+                            <img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}" alt="${key}">
+                            <span>${menuLabels[key] || key.toUpperCase()}</span>
+                        `;
+                        menuBox.appendChild(a);
+                    }
+                });
+
+                // 3. Construir Grelha de Jogos
+                const grid = document.getElementById('gamesGrid');
+                config.listaJogos.forEach(jogo => {
+                    const tema = config.temaCores[jogo.tema];
+                    const card = document.createElement('a');
+                    card.className = 'game-card';
+                    card.href = jogo.link;
+                    
+                    // Definir cores do tema para CSS
+                    card.style.setProperty('--theme-color', tema.borda);
+                    card.style.setProperty('--theme-text', tema.texto);
+                    
+                    card.innerHTML = `
+                        <div class="card-top" style="background-color: ${tema.fundo};">
+                            <img src="${config.caminhoIconsJogos}${jogo.icon}" alt="${jogo.nome}">
+                        </div>
+                        <div class="card-bottom">
+                            <h2>${jogo.nome}</h2>
+                            <div class="btn-circle">
+                                <i class="fas fa-arrow-right"></i>
+                            </div>
+                        </div>
+                    `;
+                    grid.appendChild(card);
+                });
+            }
+        };
+    </script>
+</body>
+</html>
