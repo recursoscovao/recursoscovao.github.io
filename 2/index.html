@@ -78,18 +78,17 @@
         .btn-circle { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; background-color: var(--theme-color); }
 
 /* ==========================================================
-           MODO VERTICAL (PORTRAIT) - COM TEXTO E ÍCONE REDUZIDOS
+           MODO VERTICAL (PORTRAIT) - TEXTO CENTRADO E BOTÃO REDONDO
            ========================================================== */
         @media (orientation: portrait) {
             header { 
                 grid-template-columns: 60px 1fr 60px; 
-                height: 75px; /* Ligeiramente mais baixo */
+                height: 75px; 
                 padding: 0 15px; 
             }
 
-            /* ÍCONE DO TÍTULO (MAIS PEQUENO) */
             #header-icon { 
-                height: 42px; /* Reduzido de 50px para 42px */
+                height: 42px; 
             } 
 
             .sub-header { padding: 30px 0 20px 0; }
@@ -115,8 +114,8 @@
                 display: flex;
                 flex-direction: row; 
                 width: 92%; 
-                height: 125px; /* Altura ligeiramente reduzida para acompanhar o texto */
-                border-radius: 30px; 
+                height: 120px; /* Ajuste ligeiro para harmonia visual */
+                border-radius: 35px; /* Bordas arredondadas estilo cápsula */
                 border: 3.5px solid var(--theme-color); 
                 background-color: white; 
                 overflow: hidden; 
@@ -125,49 +124,58 @@
             }
 
             .card-top { 
-                width: 32%; 
+                width: 30%; 
                 height: 100%; 
                 background-color: var(--theme-bg); 
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 12px;
+                padding: 10px;
                 flex: none;
             }
             .card-top img { 
-                max-width: 100%; 
-                max-height: 90%; 
+                max-width: 90%; 
+                max-height: 85%; 
+                object-fit: contain;
             }
 
+            /* Contentor Direita - Garante o centro vertical */
             .card-bottom { 
                 flex: 1;
+                height: 100%; /* Ocupa a altura total para centrar o conteúdo */
                 display: flex;
                 flex-direction: row !important; 
                 justify-content: space-between;
-                align-items: center;
-                padding: 0 20px 0 15px;
+                align-items: center; /* CENTRA VERTICALMENTE O TEXTO E O BOTÃO */
+                padding: 0 20px;
+                background: transparent;
+                margin: 0;
             }
 
-            /* TEXTO DOS CARTÕES (MAIS PEQUENO) */
             .card-bottom h2 { 
-                font-size: 1.05rem; /* Reduzido de 1.4rem para 1.05rem */
+                font-size: 1.05rem; 
                 font-weight: 900;
                 color: var(--theme-color); 
                 text-transform: uppercase;
                 letter-spacing: 0.5px;
-                margin: 0;
+                margin: 0; /* Remove margens que podem desalinhá-lo */
+                line-height: 1.2; /* Melhora o centro ótico */
             }
 
+            /* BOTÃO DA SETA - Círculo perfeito */
             .btn-circle { 
-                width: 45px; /* Botão também ligeiramente menor */
+                width: 45px; 
                 height: 45px; 
-                border-radius: 50%;
+                min-width: 45px; /* Garante que não encolhe */
+                min-height: 45px; /* Garante que não achata */
+                border-radius: 50%; /* Faz o círculo */
                 background-color: var(--theme-color); 
                 color: white;
                 font-size: 1.1rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;
+                flex-shrink: 0; /* IMPEDE QUE FIQUE OVAL */
             }
         }
         
