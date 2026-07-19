@@ -17,7 +17,6 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* IMPEDE SCROLL TOTAL */
         html, body {
             height: 100vh; width: 100vw;
             overflow: hidden; 
@@ -26,7 +25,7 @@
             position: relative;
         }
 
-        /* ----- CENÁRIO DE FUNDO (REPOSTO) ----- */
+        /* ----- CENÁRIO DE FUNDO ----- */
         .sky-decorations { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
         .cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.6; }
         .cloud-1 { top: 10%; left: 5%; width: 120px; height: 35px; }
@@ -35,7 +34,7 @@
         .plane-trail { position: absolute; top: 25%; right: 25%; width: 100%; height: 50%; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 50' preserveAspectRatio='none'%3E%3Cpath d='M0,50 Q40,-10 100,20' fill='none' stroke='%2388C0ED' stroke-width='4' stroke-dasharray='5,7' stroke-linecap='round'/%3E%3C/svg%3E"); }
         .plane-icon { position: absolute; top: 0; right: 0; width: 35px; height: 35px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235B9EE5'%3E%3Cpath d='M2.01 21L23 12 2.01 3 2 10l15 2-15 2z'/%3E%3C/svg%3E"); background-repeat: no-repeat; transform: rotate(-15deg); }
 
-        /* ----- HEADER (DISTRIBUIÇÃO FIXA) ----- */
+        /* ----- HEADER ----- */
         header { 
             background: white; border-radius: 0 0 30px 30px;
             display: flex; align-items: center; justify-content: space-between;
@@ -52,11 +51,16 @@
         .header-right { width: 50px; display: flex; justify-content: flex-end; }
         .header-right img { height: 35px; cursor: pointer; }
 
-        /* ----- MENU DROPDOWN ----- */
+        /* ----- MENU DROPDOWN (ALTURA REDUZIDA) ----- */
         .menu-dropdown { position: absolute; top: 80px; left: 20px; display: none; flex-direction: column; gap: 8px; z-index: 2000; }
-        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: white; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-decoration: none; color: #2d5a88; font-weight: 700; min-width: 220px; transition: 0.2s; }
+        .menu-item { 
+            display: flex; align-items: center; gap: 12px; 
+            padding: 8px 18px; /* ALTURA REDUZIDA AQUI */
+            background: white; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+            text-decoration: none; color: #2d5a88; font-weight: 700; min-width: 220px; transition: 0.2s;
+        }
         .menu-item:hover { background: var(--primary-blue); color: white; }
-        .menu-item img { height: 24px; width: 24px; object-fit: contain; }
+        .menu-item img { height: 22px; width: 22px; object-fit: contain; }
 
         /* ----- SUB-HEADER ----- */
         .sub-header { text-align: center; padding: 15px 0; z-index: 10; flex-shrink: 0; }
@@ -68,17 +72,16 @@
         }
         .intro-text::before { left: -35px; } .intro-text::after { right: -35px; transform: translateY(-50%) scaleX(-1); }
 
-        /* ----- MAIN AREA (AJUSTE DINÂMICO SEM SCROLL) ----- */
+        /* ----- MAIN AREA (ZERO SCROLL) ----- */
         main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 0 20px; z-index: 10; min-height: 0; }
         .game-wrapper { display: flex; gap: 20px; width: 100%; max-width: 1100px; justify-content: center; height: 100%; align-items: center; }
 
-        /* DESIGN PC / TABLET LANDSCAPE (CARTÕES VERTICAIS) */
         .game-card { 
             background: white; border-radius: 35px; border: 4px solid; 
             text-decoration: none; flex: 1; max-width: 320px;
             display: flex; flex-direction: column; overflow: hidden;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: 0.3s;
-            height: 85%; /* Garante que cabe no tablet e PC sem scroll */
+            height: 85%; 
         }
         .card-top { flex: 1.2; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; }
         .card-top img { max-width: 85%; max-height: 90%; object-fit: contain; }
@@ -90,20 +93,13 @@
         .card-bottom h2 { font-size: 1.2rem; font-weight: 900; text-transform: uppercase; text-align: center; }
         .btn-circle { width: 42px; height: 42px; border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 18px; }
 
-        /* ----- MOBILE VERTICAL (DESIGN PILL IGUAL À IMAGEM) ----- */
+        /* ----- MOBILE RESPONSIVE ----- */
         @media (max-width: 768px) {
             header { height: 75px; }
-            .intro-text { font-size: 1.2rem; }
             .game-wrapper { flex-direction: column; gap: 12px; }
-            .game-card { 
-                flex-direction: row; width: 100%; height: 95px; border-radius: 25px; border-width: 3px;
-                flex: none; max-width: none;
-            }
+            .game-card { flex-direction: row; width: 100%; height: 95px; border-radius: 25px; flex: none; max-width: none; }
             .card-top { width: 100px; height: 100%; padding: 10px; flex: none; }
-            .card-bottom { 
-                margin-top: 0; border-radius: 0; height: 100%; flex: 1; 
-                flex-direction: row; justify-content: space-between; padding: 0 20px; box-shadow: none; 
-            }
+            .card-bottom { margin-top: 0; border-radius: 0; height: 100%; flex: 1; flex-direction: row; justify-content: space-between; padding: 0 20px; box-shadow: none; }
             .card-bottom h2 { font-size: 1rem; text-align: left; }
             .btn-circle { width: 36px; height: 36px; font-size: 14px; }
             .plane-wrapper, .cloud { display: none; }
