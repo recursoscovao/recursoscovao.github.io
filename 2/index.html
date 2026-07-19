@@ -53,18 +53,16 @@
         .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-decoration: none; color: var(--text-grey); font-weight: 700; min-width: 220px; }
         .menu-item:hover { background: var(--primary-blue); color: white; }
         .menu-item img { height: 24px; width: 24px; object-fit: contain; }
-        .menu-sep { border-top: 2px solid #f0f4f8; margin: 4px 0; }
 
         /* ----- INTRO ----- */
         .sub-header { text-align: center; padding: 25px 0 10px 0; z-index: 10; flex-shrink: 0; }
         .intro-text { color: #1a4a7a; font-size: clamp(1.2rem, 3vh, 1.8rem); font-weight: 800; position: relative; display: inline-block; }
         .intro-text::after { content: ''; position: absolute; bottom: -5px; left: 0; width: 100%; height: 8px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 25' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='8' stroke-linecap='round' fill='transparent'/%3E%3C/svg%3E"); background-size: 100% 100%; z-index: -1; }
 
-        /* ----- MAIN E CARTÕES (PC / TABLET) ----- */
+        /* ----- MAIN (DEFAULT / PC / TABLET) ----- */
         main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 0 20px; z-index: 10; min-height: 0; }
         .game-wrapper { display: flex; gap: 25px; width: 100%; max-width: 1100px; justify-content: center; align-items: center; height: 100%; max-height: 400px; }
         .game-card { background: white; border-radius: 35px; border: 4px solid var(--theme-color); text-decoration: none; flex: 1; max-width: 320px; height: 100%; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 20px rgba(0,0,0,0.05); transition: transform 0.3s; }
-        .game-card:hover { transform: translateY(-10px); }
         .card-top { flex: 1.2; width: 100%; display: flex; align-items: center; justify-content: center; padding: 20px; background-color: var(--theme-bg); }
         .card-top img { max-width: 85%; max-height: 90%; object-fit: contain; }
         .card-bottom { background: white; width: 100%; flex: 0.8; border-radius: 35px 35px 0 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 15px; margin-top: -35px; position: relative; padding: 15px; }
@@ -78,59 +76,55 @@
             header { grid-template-columns: 60px 1fr 60px; height: 72px; padding: 0 12px; }
             #header-icon { height: 42px; } 
             .sub-header { padding: 12px 0 6px 0; }
-            .intro-text { font-size: 1.1rem; }
             main { padding: 0 15px 12px 15px; align-items: stretch; }
             .game-wrapper { flex-direction: column; gap: 10px; height: 100%; max-height: none; }
             .game-card { flex-direction: row; width: 100%; max-width: none; height: auto; flex: 1; min-height: 0; border-radius: 40px; border-width: 2.5px; padding: 6px; box-shadow: 0 4px 10px rgba(0,0,0,0.04); }
             .card-top { width: auto; height: 100%; aspect-ratio: 1/1; flex: none; padding: 6px; border-radius: 30px; background-color: var(--theme-bg); }
-            .card-top img { max-width: 85%; max-height: 85%; }
             .card-bottom { margin-top: 0; border-radius: 0; height: 100%; flex: 1; flex-direction: row; justify-content: space-between; background: transparent; padding: 0 10px 0 12px; gap: 5px; }
             .card-bottom h2 { font-size: 1rem; text-align: left; }
-            .btn-circle { width: 38px; height: 38px; font-size: 0.9rem; }
+            .btn-circle { width: 38px; height: 38px; }
         }
 
         /* ==========================================================
-           TELEMOVEL HORIZONTAL (LANDSCAPE) - CARTÕES MAIS ALTOS
+           TELEMOVEL HORIZONTAL (LANDSCAPE) - AJUSTES PEDIDOS
            ========================================================== */
         @media (orientation: landscape) and (max-height: 500px) {
-            header { height: 44px; padding: 0 15px; border-radius: 0 0 15px 15px; }
-            #header-icon { height: 26px; }
-            .hamburger-btn { font-size: 18px; }
+            header { height: 42px; padding: 0 15px; border-radius: 0 0 15px 15px; }
+            #header-icon { height: 24px; }
+            .hamburger-btn { font-size: 16px; }
             #txt-titulo1, #txt-titulo2 { font-size: 0.8rem; }
-            #txt-subtitulo { display: none; } 
-            #icon-voltar-top { height: 26px; }
+            #txt-subtitulo { display: none; } /* Linha única no header */
+            #icon-voltar-top { height: 24px; }
 
             .sub-header { padding: 2px 0; }
             .intro-text { font-size: 0.75rem; }
             .intro-text::after { height: 2px; bottom: -1px; }
 
-            /* Main cresce para dar altura aos cartões */
-            main { padding: 0 10px 2px 10px; align-items: stretch; }
-            .game-wrapper { gap: 8px; max-height: none; height: 100%; flex-direction: row; }
+            main { padding: 0 8px 4px 8px; align-items: stretch; }
+            .game-wrapper { gap: 8px; height: 100%; flex-direction: row; max-height: none; }
+            .game-card { border-radius: 15px; border-width: 1.5px; flex: 1; }
             
-            .game-card { border-radius: 18px; border-width: 2px; }
+            /* Icons ainda mais reduzidos */
+            .card-top { padding: 4px; flex: 1; } 
+            .card-top img { max-height: 55%; } 
             
-            /* Aumentada a proporção flex da imagem */
-            .card-top { padding: 4px; flex: 1.4; } 
-            .card-top img { max-height: 85%; } 
-            
+            /* Afastamento da seta do limite */
             .card-bottom { 
-                margin-top: -12px; 
+                margin-top: -10px; 
                 border-radius: 12px 12px 0 0; 
-                padding: 2px 4px; 
-                flex: 1; 
+                padding: 4px 4px 8px 4px; /* Mais padding em baixo */
+                flex: 1.2; 
                 flex-direction: column !important; 
-                justify-content: center; 
-                gap: 1px; 
+                justify-content: space-evenly; 
+                gap: 2px; 
             }
-            .card-bottom h2 { font-size: 0.65rem; text-align: center; line-height: 1; }
+            .card-bottom h2 { font-size: 0.65rem; text-align: center; }
             .btn-circle { width: 22px; height: 22px; font-size: 0.6rem; }
 
-            footer { height: 36px; padding-bottom: 2px; }
+            footer { height: 32px; padding-bottom: 2px; }
             .footer-text { font-size: 0.55rem; }
         }
 
-        /* ----- FOOTER ----- */
         footer {
             height: 70px; width: 100%; position: relative; flex-shrink: 0; 
             display: flex; align-items: flex-end; justify-content: center; padding-bottom: 12px;
