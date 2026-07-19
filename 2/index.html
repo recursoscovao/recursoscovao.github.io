@@ -181,40 +181,38 @@
         }
         
 /* ==========================================================
-           MODO HORIZONTAL (LANDSCAPE) - FOCO NO ÍCONE (MAIOR)
+           MODO HORIZONTAL (LANDSCAPE) - PARTE BRANCA MINIMIZADA
            ========================================================== */
         @media (orientation: landscape) and (max-height: 500px) {
             footer { display: none !important; }
 
             header { 
-                height: 50px; 
+                height: 42px; /* Header ainda mais baixo */
                 padding: 0 15px; 
-                border-radius: 0 0 15px 15px; 
+                border-radius: 0 0 12px 12px; 
                 flex-shrink: 0;
             }
-            #header-icon { height: 32px; }
-            #txt-titulo1, #txt-titulo2 { font-size: 0.85rem; }
+            #header-icon { height: 28px; }
+            #txt-titulo1, #txt-titulo2 { font-size: 0.8rem; }
             #txt-subtitulo { display: none; } 
 
-            .sub-header { padding: 5px 0; flex-shrink: 0; }
-            .intro-text { font-size: 0.95rem; }
+            .sub-header { padding: 2px 0; flex-shrink: 0; }
+            .intro-text { font-size: 0.9rem; }
 
             main { 
-                padding: 5px 10px 20px 10px; 
+                padding: 5px 10px 15px 10px; 
                 display: flex; 
                 align-items: flex-start; 
                 justify-content: center; 
                 overflow-y: auto !important; 
-                flex: 1;
             }
 
             .game-wrapper { 
                 display: flex;
                 flex-direction: row; 
-                gap: 12px; 
+                gap: 10px; 
                 width: 100%; 
-                max-width: 980px;
-                height: auto; 
+                max-width: 1000px;
                 justify-content: center;
             }
 
@@ -222,46 +220,46 @@
                 flex: 1;
                 display: flex;
                 flex-direction: column; 
-                max-width: 200px;
-                min-height: 185px; /* Altura mínima controlada */
-                border-radius: 30px; 
-                border: 3px solid var(--theme-color); 
+                max-width: 180px; /* Cartões ligeiramente mais estreitos para caberem melhor */
+                min-height: 165px; 
+                border-radius: 25px; 
+                border: 2.5px solid var(--theme-color); 
                 background-color: white; 
                 overflow: hidden;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             }
 
-            /* PARTE COLORIDA - AGORA MAIOR */
+            /* ÁREA DO ÍCONE - MÁXIMO DE ESPAÇO */
             .card-top { 
                 width: 100%; 
-                height: 115px; /* Aumentado para mostrar bem o boneco */
+                height: 115px; /* Mantém o foco no boneco */
                 background-color: var(--theme-bg); 
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 10px;
+                padding: 6px;
                 flex: none;
             }
             .card-top img { 
                 max-width: 95%; 
                 max-height: 95%; 
-                transform: scale(1.1); /* Dá destaque ao icon */
+                transform: scale(1.1);
             }
 
-            /* PARTE BRANCA - AGORA MAIS BAIXA (SLIM) */
+            /* PARTE BRANCA MINIMIZADA (SLIM) */
             .card-bottom { 
                 flex: 1;
-                width: 80%;
+                width: 100%;
                 display: flex;
                 flex-direction: column !important; 
-                justify-content: center; /* Centraliza verticalmente o grupo */
+                justify-content: center; 
                 align-items: center; 
-                padding: 6px 4px; /* Padding reduzido para poupar altura */
-                gap: 4px; /* Espaço curto entre texto e seta */
+                padding: 2px 4px 4px 4px; /* PADDING INFERIOR REDUZIDO AO MÍNIMO */
+                gap: 2px; /* Texto e seta colados */
+                margin-top: 0;
             }
 
             .card-bottom h2 { 
-                font-size: 0.75rem; /* Texto ligeiramente menor para caber em menos altura */
+                font-size: 0.65rem; /* Texto pequeno para ocupar pouca altura */
                 font-weight: 900;
                 color: var(--theme-color); 
                 text-transform: uppercase;
@@ -270,19 +268,21 @@
                 line-height: 1;
             }
 
+            /* SETA REDUZIDA */
             .btn-circle { 
-                width: 30px; 
-                height: 30px; 
-                min-width: 30px;
-                min-height: 30px;
+                width: 26px; /* Seta menor para a parte branca encolher */
+                height: 26px; 
+                min-width: 26px;
+                min-height: 26px;
                 border-radius: 50%;
                 background-color: var(--theme-color); 
                 color: white;
-                font-size: 0.75rem;
+                font-size: 0.65rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 flex-shrink: 0;
+                margin-bottom: 0; /* Colado ao fundo */
             }
         }
         
