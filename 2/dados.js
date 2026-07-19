@@ -1,8 +1,11 @@
 const JOGO_CONFIG = {
+    // MODIFICA AQUI: "pre", "ano1", "ano2", "ano3" ou "ano4"
+    anoAtivo: "ano2", 
+
     textos: {
         tituloLinha1: "JOVENS",
         tituloLinha2: "EXPLORADORES",
-        subtitulo: "ATIVIDADES | 2º ANO",
+        subtitulo: "ATIVIDADES | 2º ANO", // Podes automatizar isto no JS se quiseres
         intro: "O que vamos aprender hoje?",
         rodape: "&copy; Jovens Exploradores - Recursos Educativos"
     },
@@ -12,7 +15,7 @@ const JOGO_CONFIG = {
         home: "home.png",
         pre: "iconpre.png",
         ano1: "icon1.png",
-        ano2: "icon2.png", // Este é o ícone da tartaruga
+        ano2: "icon2.png", // Ícone da tartaruga
         ano3: "icon3.png",
         ano4: "icon4.png",
         voltar: "voltar_az.png"
