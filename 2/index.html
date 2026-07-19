@@ -180,41 +180,107 @@
             }
         }
         
-        /* ==========================================================
-           MODO HORIZONTAL (LANDSCAPE) - AJUSTES PEDIDOS
+/* ==========================================================
+           MODO HORIZONTAL (LANDSCAPE) - ESTILO CÁPSULA EM COLUNAS
            ========================================================== */
         @media (orientation: landscape) and (max-height: 500px) {
-            header { height: 62px; padding: 0 15px; border-radius: 0 0 20px 20px; }
-            #header-icon { height: 38px; }
-            #txt-titulo1, #txt-titulo2 { font-size: 1rem; }
-            #txt-subtitulo { display: block !important; font-size: 9px; margin-top: 2px; } 
-            #icon-voltar-top { height: 38px; }
-
-            .sub-header { padding: 6px 0; }
-            .intro-text { font-size: 0.95rem; }
-
-            main { padding: 0 10px 5px 10px; display: flex; align-items: center; justify-content: center; }
-            .game-wrapper { gap: 10px; height: 75%; max-height: 240px; flex-direction: row; align-items: center; }
-            
-            .game-card { border-radius: 25px; border-width: 2px; flex: 1; height: 100%; }
-            
-            .card-top { padding: 4px 4px 10px 4px; flex: 1.6; align-items: center; } 
-            .card-top img { max-height: 85%; transform: translateY(-6px); } 
-            
-            .card-bottom { 
-                margin-top: -20px; 
-                border-radius: 20px 20px 0 0; 
-                padding: 4px 4px 14px 4px; 
-                flex: 1.1; 
-                flex-direction: column !important; 
-                justify-content: space-evenly; 
-                gap: 2px; 
+            header { 
+                height: 55px; 
+                padding: 0 15px; 
+                border-radius: 0 0 20px 20px; 
             }
-            .card-bottom h2 { font-size: 0.75rem; text-align: center; }
-            .btn-circle { display: flex !important; width: 28px; height: 28px; font-size: 0.75rem; flex-shrink: 0; }
+            #header-icon { height: 35px; }
+            #txt-titulo1, #txt-titulo2 { font-size: 0.9rem; }
+            #txt-subtitulo { display: none; } 
 
-            footer { height: 42px; padding-bottom: 5px; }
-            .footer-text { font-size: 0.65rem; }
+            .sub-header { padding: 5px 0; }
+            .intro-text { font-size: 1rem; }
+
+            main { 
+                padding: 5px 15px; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+            }
+
+            .game-wrapper { 
+                display: flex;
+                flex-direction: row; 
+                gap: 15px; 
+                width: 100%; 
+                max-width: 900px;
+                height: 85%; 
+                justify-content: center;
+            }
+
+            .game-card { 
+                flex: 1;
+                display: flex;
+                flex-direction: column; 
+                max-width: 220px;
+                height: 100%;
+                border-radius: 30px; 
+                border: 3px solid var(--theme-color); 
+                background-color: white; 
+                overflow: hidden;
+                text-decoration: none;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+            }
+
+            .card-top { 
+                width: 100%; 
+                height: 52%; 
+                background-color: var(--theme-bg); 
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 8px;
+                flex: none;
+            }
+            .card-top img { 
+                max-width: 80%; 
+                max-height: 80%; 
+                object-fit: contain;
+                transform: scale(1.1);
+            }
+
+            .card-bottom { 
+                flex: 1;
+                width: 100%;
+                display: flex;
+                flex-direction: column !important; 
+                justify-content: center;
+                align-items: center; 
+                padding: 5px;
+                gap: 4px;
+            }
+
+            .card-bottom h2 { 
+                font-size: 0.8rem; 
+                font-weight: 900;
+                color: var(--theme-color); 
+                text-transform: uppercase;
+                text-align: center;
+                margin: 0;
+                line-height: 1.1;
+            }
+
+            .btn-circle { 
+                width: 30px; 
+                height: 30px; 
+                min-width: 30px;
+                min-height: 30px;
+                border-radius: 50%;
+                background-color: var(--theme-color); 
+                color: white;
+                font-size: 0.75rem;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                flex-shrink: 0;
+            }
+
+            footer { display: none; } 
         }
 
         /* ----- FOOTER ----- */
