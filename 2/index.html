@@ -181,14 +181,24 @@
         }
         
 /* ==========================================================
-           MODO HORIZONTAL (LANDSCAPE) - COM SCROLL ATIVADO
+           MODO HORIZONTAL (LANDSCAPE) - SEM FOOTER E COM SCROLL
            ========================================================== */
         @media (orientation: landscape) and (max-height: 500px) {
+            /* Forçar o footer a desaparecer totalmente */
+            footer { 
+                display: none !important; 
+                height: 0 !important; 
+                padding: 0 !important; 
+                margin: 0 !important;
+                visibility: hidden !important;
+            }
+
             header { 
                 height: 55px; 
                 padding: 0 15px; 
                 border-radius: 0 0 20px 20px; 
-                flex-shrink: 0; /* Impede o header de encolher com o scroll */
+                flex-shrink: 0;
+                z-index: 1000;
             }
             #header-icon { height: 35px; }
             #txt-titulo1, #txt-titulo2 { font-size: 0.9rem; }
@@ -197,14 +207,16 @@
             .sub-header { padding: 8px 0; flex-shrink: 0; }
             .intro-text { font-size: 1rem; }
 
-            /* ATIVA O SCROLL APENAS NESTA ZONA */
+            /* ZONA DE SCROLL */
             main { 
-                padding: 5px 15px 20px 15px; 
+                padding: 5px 15px 25px 15px; 
                 display: flex; 
-                align-items: flex-start; /* Alinha ao topo para o scroll fazer sentido */
+                align-items: flex-start; /* Alinha ao topo para scroll */
                 justify-content: center; 
-                overflow-y: auto; /* PERMITE SCROLL VERTICAL */
-                -webkit-overflow-scrolling: touch; /* Scroll suave no iPhone */
+                overflow-y: auto !important; /* Permite scroll vertical */
+                height: auto;
+                flex: 1;
+                -webkit-overflow-scrolling: touch;
             }
 
             .game-wrapper { 
@@ -212,78 +224,79 @@
                 flex-direction: row; 
                 gap: 15px; 
                 width: 100%; 
-                max-width: 900px;
-                height: auto; /* ALTURA AUTOMÁTICA PARA PODER FAZER SCROLL */
+                max-width: 950px;
+                height: auto; 
                 justify-content: center;
                 padding-top: 5px;
             }
 
+            /* O CARTÃO ESTILO CÁPSULA VERTICAL */
             .game-card { 
                 flex: 1;
                 display: flex;
                 flex-direction: column; 
                 max-width: 220px;
-                min-height: 180px; /* Garante um tamanho mínimo confortável */
-                height: auto;
-                border-radius: 30px; 
+                min-height: 190px; /* Altura mínima para garantir que o conteúdo cabe */
+                border-radius: 35px; 
                 border: 3px solid var(--theme-color); 
                 background-color: white; 
                 overflow: hidden;
                 text-decoration: none;
-                box-shadow: 0 4px 10px rgba(0,0,0,0.08);
+                box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             }
 
+            /* Parte de Cima (Cor e Ícone) */
             .card-top { 
                 width: 100%; 
-                height: 90px; /* Altura fixa para os ícones no scroll */
+                height: 100px; 
                 background-color: var(--theme-bg); 
                 display: flex;
                 align-items: center;
                 justify-content: center;
-                padding: 8px;
+                padding: 10px;
                 flex: none;
             }
             .card-top img { 
-                max-width: 80%; 
-                max-height: 80%; 
-                object-fit: contain;
+                max-width: 85%; 
+                max-height: 85%; 
                 transform: scale(1.1);
             }
 
+            /* Parte de Baixo (Texto e Seta) */
             .card-bottom { 
                 flex: 1;
                 width: 100%;
                 display: flex;
                 flex-direction: column !important; 
-                justify-content: center;
+                justify-content: space-evenly;
                 align-items: center; 
                 padding: 10px 5px;
-                gap: 6px;
             }
 
             .card-bottom h2 { 
-                font-size: 0.8rem; 
+                font-size: 0.85rem; 
                 font-weight: 900;
                 color: var(--theme-color); 
                 text-transform: uppercase;
                 text-align: center;
                 margin: 0;
+                line-height: 1.1;
             }
 
             .btn-circle { 
-                width: 32px; 
-                height: 32px; 
+                width: 34px; 
+                height: 34px; 
+                min-width: 34px;
+                min-height: 34px;
                 border-radius: 50%;
                 background-color: var(--theme-color); 
                 color: white;
-                font-size: 0.8rem;
+                font-size: 0.85rem;
                 display: flex;
                 align-items: center;
                 justify-content: center;
                 flex-shrink: 0;
             }
-
-            footer { display: none; } 
         }
 
         /* ----- FOOTER ----- */
