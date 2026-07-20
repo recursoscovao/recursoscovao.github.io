@@ -77,132 +77,113 @@
         }
 
 /* =========================================
-   CONFIGURAÇÕES PC & TABLET LANDSCAPE
-   Largura 260px | Proporção 60-40 | Destaques Brancos
+   CONFIGURAÇÃO PC & TABLET LANDSCAPE
    ========================================= */
 @media (min-width: 768px) and (orientation: landscape) {
     
-    /* Grelha de Disciplinas */
+    /* Contentor Main - Garante que tudo fica alinhado ao centro */
+    main {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        gap: 20px;
+        padding: 10px 20px;
+        flex: 1;
+    }
+
+    /* Grelha de Disciplinas (3 Cartões Largos) */
     .game-wrapper { 
         display: flex; 
         justify-content: center; 
-        gap: clamp(15px, 3vw, 40px); 
+        gap: 30px; 
         width: auto; 
-        margin-bottom: 2vh;
     }
 
     .game-card {
-        /* LARGURA AUMENTADA: 260px no PC | 200px no Tablet */
-        width: clamp(200px, 22vw, 260px); 
-        height: clamp(300px, 42vh, 380px); 
+        width: 260px; /* Largura que pediste */
+        height: clamp(300px, 40vh, 360px); 
         background: white; 
         border-radius: 35px; 
         border: 3px solid var(--theme-color);
-        display: flex; 
-        flex-direction: column; 
-        overflow: hidden; 
-        text-decoration: none;
+        display: flex; flex-direction: column; 
+        overflow: hidden; text-decoration: none;
         box-shadow: inset 0 0 0 6px white, 0 10px 25px rgba(0,0,0,0.05);
         transition: transform 0.2s ease;
         position: relative;
     }
 
-    .game-card:hover { transform: translateY(-10px); }
+    .game-card:hover { transform: translateY(-8px); }
 
-    /* ZONA COLORIDA (EXATOS 60%) */
+    /* PARTE COLORIDA (60%) */
     .card-top { 
         height: 60% !important; 
         background-color: var(--theme-bg); 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        position: relative; 
-        overflow: hidden;
+        display: flex; align-items: center; justify-content: center; 
+        position: relative; overflow: hidden;
     }
 
-    /* IMAGEM DE FUNDO CINZENTA (Marca d'água) */
+    /* Marca d'água cinza no fundo */
     .card-top::before {
-        content: "";
-        position: absolute;
-        top: 50%; left: 50%;
-        transform: translate(-50%, -50%);
-        width: 85%; height: 85%;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: contain;
-        filter: grayscale(1) brightness(0.7);
-        opacity: 0.12; 
-        z-index: 1;
+        content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+        width: 80%; height: 80%; background-repeat: no-repeat; background-position: center; background-size: contain;
+        filter: grayscale(1) brightness(0.8); opacity: 0.12; z-index: 1;
     }
-
-    /* Imagens de fundo por cartão (Exemplos) */
     .game-card:nth-child(1) .card-top::before { background-image: url('../icons/bg_letras.png'); }
     .game-card:nth-child(2) .card-top::before { background-image: url('../icons/bg_numeros.png'); }
     .game-card:nth-child(3) .card-top::before { background-image: url('../icons/bg_mundo.png'); }
 
-    /* Onda branca (Proporcional aos 60%) */
+    /* Onda branca */
     .card-top::after { 
-        content: ""; 
-        position: absolute; 
-        bottom: -1px; left: 0; width: 100%; height: 50px; 
-        background: white; 
-        clip-path: ellipse(75% 100% at 50% 100%); 
-        z-index: 2;
+        content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 45px; 
+        background: white; clip-path: ellipse(75% 100% at 50% 100%); z-index: 2;
     }
 
-    .card-top img { 
-        max-width: 65%; max-height: 65%; 
-        object-fit: contain; z-index: 3; 
-        filter: drop-shadow(0 5px 12px rgba(0,0,0,0.1));
-    }
+    .card-top img { max-width: 60%; max-height: 60%; object-fit: contain; z-index: 3; }
 
-    /* ZONA BRANCA (EXATOS 40%) */
+    /* PARTE BRANCA (40%) */
     .card-bottom { 
-        height: 40% !important; 
-        background: white;
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: space-evenly; 
-        padding: 5px 0 15px 0; 
-        z-index: 4; 
+        height: 40% !important; background: white;
+        display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; 
+        padding-bottom: 10px; z-index: 4; 
     }
-
-    .card-bottom h2 { 
-        color: var(--theme-color); 
-        font-size: 1.3rem; 
-        font-weight: 900; 
-        text-transform: uppercase;
-        text-align: center;
-    }
-
-    .btn-circle { 
-        width: 48px; height: 48px; 
-        border-radius: 50%; 
-        background: var(--theme-color); 
-        color: white; 
-        display: flex; align-items: center; justify-content: center; 
-    }
+    .card-bottom h2 { color: var(--theme-color); font-size: 1.2rem; font-weight: 900; text-transform: uppercase; }
+    .btn-circle { width: 45px; height: 45px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
 
     /* =========================================
-       JOGOS EM DESTAQUE (CAIXA BRANCA CENTRADA)
+       SECÇÃO DESTAQUES - CORRIGIDA
        ========================================= */
     .destaques-wrapper {
-        background: white !important; /* Forçado fundo branco */
+        background: white !important; /* Fundo branco garantido */
         border-radius: 30px; 
-        padding: 15px 30px; 
+        padding: 20px 30px; 
         width: 100%; 
-        max-width: 1100px; /* Alinhado com a largura dos 3 cartões largos */
-        box-shadow: 0 4px 20px rgba(0,0,0,0.04);
-        margin-bottom: 4vh; /* Padding para o footer azul não colar */
+        max-width: 1000px; /* Largura fixa para não desconfigurar */
+        box-shadow: 0 4px 15px rgba(0,0,0,0.04);
+        margin-bottom: 30px; /* Espaço para o footer */
         flex-shrink: 0;
     }
 
-    .destaques-grid { 
-        display: grid; 
-        grid-template-columns: repeat(6, 1fr); 
-        gap: 15px; 
+    .destaques-header { 
+        display: flex; align-items: center; justify-content: center; 
+        gap: 10px; margin-bottom: 15px; 
     }
+    .destaques-header h3 { color: var(--primary-blue); font-size: 1rem; font-weight: 800; }
+
+    .destaques-grid { 
+        display: flex; /* Mudado para flex para melhor controlo horizontal */
+        justify-content: space-around; 
+        align-items: center; 
+        width: 100%;
+    }
+
+    .destaque-item { 
+        display: flex; flex-direction: column; align-items: center; 
+        text-decoration: none; width: 100px; 
+    }
+    .destaque-item img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 5px; }
+    .destaque-item p { font-size: 0.75rem; font-weight: 800; color: #444; text-align: center; }
+    .stars { color: var(--accent-yellow); font-size: 9px; }
 }
 
         /* =========================================
