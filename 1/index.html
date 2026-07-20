@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pequenos Exploradores</title>
+    <title>Jovens Exploradores</title>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
@@ -11,139 +11,187 @@
     <style>
         :root {
             --primary-blue: #5EA2E6; 
-            --text-grey: #A5B4C4;
+            --text-grey: #8792a1;
             --sky-blue: #EAF4FE;
+            --accent-yellow: #FFC107;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
-        /* BLOQUEIO TOTAL DE SCROLL */
-        html, body {
-            height: 100vh; width: 100vw;
-            overflow: hidden; 
-            background-color: var(--sky-blue);
+        body, html {
+            height: 100dvh; width: 100vw;
+            overflow-x: hidden; background-color: var(--sky-blue);
             display: flex; flex-direction: column;
-            position: relative;
         }
-
-        /* ----- CENÁRIO DE FUNDO (ESTRUTURA SVG) ----- */
-        .sky-decorations { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; overflow: hidden; }
-        .cloud { position: absolute; background: white; border-radius: 50px; opacity: 0.6; }
-        .cloud-1 { top: 15%; left: -2%; width: 12vw; height: 3vh; min-width: 80px; }
-        .cloud-2 { top: 10%; right: 5%; width: 10vw; height: 2.5vh; min-width: 60px; }
-        .star-decor { position: absolute; top: 20%; left: 10%; width: 25px; height: 25px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23FFC107'%3E%3Cpath d='M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z'/%3E%3C/svg%3E"); background-repeat: no-repeat; }
-        .plane-wrapper { position: absolute; top: 10%; right: 10%; width: 15vw; height: 6vh; max-width: 150px; }
-        .plane-icon { position: absolute; top: 0; right: 0; width: 35px; height: 35px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%235B9EE5'%3E%3Cpath d='M2.01 21L23 12 2.01 3 2 10l15 2-15 2z'/%3E%3C/svg%3E"); background-repeat: no-repeat; transform: rotate(-15deg); }
 
         /* ----- HEADER ----- */
         header { 
-            background: white; border-radius: 0 0 clamp(20px, 3vw, 40px) clamp(20px, 3vw, 40px);
-            display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; 
-            padding: 0 20px; height: clamp(70px, 11vh, 90px); z-index: 1000; flex-shrink: 0;
+            background: white; border-radius: 0 0 40px 40px;
+            display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; 
+            padding: 0 20px; height: 75px; z-index: 1000; flex-shrink: 0;
             box-shadow: 0 4px 15px rgba(0,0,0,0.04);
         }
-        .hamburger-btn { background: none; border: none; color: var(--primary-blue); font-size: clamp(24px, 4vh, 30px); cursor: pointer; transition: 0.2s; }
-        .header-center { display: flex; align-items: center; justify-content: center; gap: clamp(10px, 2vw, 15px); }
-        #header-icon { height: clamp(50px, 8vh, 70px); }
-        .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.85; }
-        #txt-titulo1, #txt-titulo2 { font-weight: 900; font-size: clamp(1.1rem, 2.2vw, 1.7rem); }
-        #txt-titulo1 { color: var(--primary-blue); } #txt-titulo2 { color: var(--text-grey); }
-        #txt-subtitulo { color: var(--primary-blue); font-weight: 700; font-size: clamp(8px, 1.2vh, 11px); margin-top: 3px; }
-        .header-right { display: flex; justify-content: flex-end; }
-        .header-right img { height: clamp(30px, 5vh, 42px); cursor: pointer; }
+        .hamburger-btn { background: none; border: none; color: var(--primary-blue); font-size: 24px; cursor: pointer; }
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
+        #header-icon { height: 50px; object-fit: contain; }
+        .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.9; }
+        #txt-titulo1 { color: var(--primary-blue); font-weight: 900; font-size: 1.2rem; }
+        #txt-titulo2 { color: var(--text-grey); font-weight: 900; font-size: 1.2rem; }
+        #txt-subtitulo { color: var(--text-grey); font-weight: 700; font-size: 0.75rem; margin-top: 3px; }
+        #icon-voltar-top { height: 35px; cursor: pointer; }
 
-        /* ----- MENU ----- */
-        .menu-dropdown { position: absolute; top: clamp(70px, 11vh, 90px); left: 20px; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
-        .menu-item { display: flex; align-items: center; gap: 10px; padding: 8px 18px; background: white; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-decoration: none; color: #2d5a88; font-weight: 700; min-width: 220px; transition: 0.2s; font-size: 0.9rem; }
-        .menu-item:hover { background: var(--primary-blue); color: white; }
-        .menu-item img { height: 22px; width: 22px; object-fit: contain; }
-
-        /* ----- INTRO ----- */
-        .sub-header { text-align: center; padding: clamp(8px, 2vh, 20px) 0; z-index: 10; flex-shrink: 0; }
-        .intro-text { color: #1a4a7a; font-size: clamp(1.1rem, 3vh, 1.6rem); font-weight: 800; position: relative; display: inline-block; }
-        .intro-text::before, .intro-text::after {
-            content: ""; position: absolute; width: 25px; height: 25px; top: 50%; transform: translateY(-50%);
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cpath d='M3 12h3M5 5l2 2M5 19l2-2' stroke='%23ffcc00' stroke-width='3' stroke-linecap='round'/%3E%3C/svg%3E");
-            background-repeat: no-repeat; background-size: contain;
+        /* ----- MENU DROPDOWN ----- */
+        .menu-dropdown { position: absolute; top: 80px; left: 20px; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
+        .menu-item { 
+            display: flex; align-items: center; gap: 12px; padding: 12px 18px; 
+            background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
+            text-decoration: none; color: var(--text-grey); font-weight: 700; 
+            min-width: 220px; transition: all 0.2s ease; 
         }
-        .intro-text::before { left: -35px; } .intro-text::after { right: -35px; transform: translateY(-50%) scaleX(-1); }
+        .menu-item:hover { background: var(--primary-blue); color: white; transform: translateX(5px); }
+        .menu-item img { height: 24px; width: 24px; object-fit: contain; }
 
-        /* ----- MAIN (ESPAÇO DINÂMICO) ----- */
-        main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 0 clamp(10px, 3vw, 40px); z-index: 10; min-height: 0; }
-        .game-wrapper { display: flex; gap: clamp(10px, 2vw, 25px); width: 100%; max-width: 1300px; justify-content: center; height: 100%; align-items: center; }
-
-        /* DESIGN PC & TABLET LANDSCAPE */
-        .game-card { 
-            background: white; border-radius: clamp(20px, 3vw, 35px); border: 4px solid var(--theme-color); 
-            text-decoration: none; flex: 1; max-width: 380px; height: 90%;
-            display: flex; flex-direction: column; overflow: hidden;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05); transition: 0.3s;
+        /* ----- INTRO COM SUBLINHADO CURVO (INVERTIDO) ----- */
+        .sub-header { text-align: center; margin: 20px 0; flex-shrink: 0; }
+        .intro-text { color: #1a4a7a; font-size: 1.6rem; font-weight: 800; position: relative; display: inline-block; }
+        .intro-text::after {
+            content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 12px;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+            background-size: 100% 100%; background-repeat: no-repeat;
         }
-        .card-top { flex: 1.3; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; }
-        .card-top img { max-width: 85%; max-height: 90%; object-fit: contain; }
-        .card-bottom { 
-            background: white; width: 100%; flex: 0.7; border-radius: 35px 35px 0 0;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            gap: 12px; margin-top: -35px; position: relative; padding: 10px;
-        }
-        .card-bottom h2 { font-size: clamp(0.9rem, 2vh, 1.3rem); font-weight: 900; text-transform: uppercase; color: var(--theme-color); }
-        .btn-circle { width: clamp(35px, 6vh, 45px); height: clamp(35px, 6vh, 45px); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; background-color: var(--theme-color); }
 
-        /* ----- MOBILE VERTICAL (DESIGN PILL) ----- */
-        @media (max-width: 768px) and (orientation: portrait) {
-            header { grid-template-columns: 60px 1fr 60px; height: 80px; }
-            main { align-items: flex-start; padding: 5px 20px; }
-            .game-wrapper { flex-direction: column; gap: 12px; padding-bottom: 120px; }
-            .game-card { 
-                flex-direction: row; width: 100%; height: clamp(90px, 13vh, 115px); border-radius: 25px; border-width: 3px;
-                flex: none; max-width: none; align-items: center; padding-right: 15px;
+        /* ----- MAIN E GRIDS ----- */
+        main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 20px; min-height: 0; }
+
+        /* =========================================
+           CONFIGURAÇÕES PC (LANDSCAPE)
+           ========================================= */
+        @media (min-width: 1200px) and (orientation: landscape) {
+            .game-wrapper { display: flex; justify-content: center; gap: 20px; width: auto; margin-bottom: 20px; }
+            .game-card {
+                width: 190px; height: 310px; background: white; border-radius: 35px; 
+                border: 3px solid var(--theme-color); text-decoration: none; 
+                display: flex; flex-direction: column; overflow: hidden;
+                transition: transform 0.2s ease; box-shadow: inset 0 0 0 5px white, 0 8px 20px rgba(0,0,0,0.06);
             }
-            .card-top { width: clamp(90px, 30vw, 130px); height: 100%; padding: 10px; flex: none; }
-            .card-bottom { margin-top: 0; border-radius: 0; height: 100%; flex: 1; flex-direction: row; justify-content: space-between; padding: 0 10px 0 15px; box-shadow: none; background: transparent; }
-            .card-bottom h2 { font-size: 1.1rem; text-align: left; }
-            .btn-circle { width: 40px; height: 40px; flex-shrink: 0; }
-            .plane-wrapper, .cloud, .star-decor { display: none !important; }
+            .game-card:hover { transform: translateY(-8px); }
+            .card-top { height: 60%; background-color: var(--theme-bg); display: flex; align-items: center; justify-content: center; position: relative; }
+            .card-top::after { content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 40px; background: white; clip-path: ellipse(75% 100% at 50% 100%); }
+            .card-top img { max-width: 65%; max-height: 65%; object-fit: contain; z-index: 2; }
+            .card-bottom { height: 40%; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding-bottom: 10px; z-index: 3; background: white; }
+            .card-bottom h2 { font-weight: 900; color: var(--theme-color); font-size: 1.1rem; text-transform: uppercase; }
+            .btn-circle { width: 42px; height: 42px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
         }
 
-        /* ----- FOOTER ----- */
-        footer {
-            height: clamp(70px, 16vh, 110px); width: 100%; position: relative; flex-shrink: 0; 
-            display: flex; align-items: flex-end; justify-content: center;
-            padding-bottom: 12px; z-index: 20;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1440 120' preserveAspectRatio='none'%3E%3Cpath fill='%23CAE6FF' d='M200,120 Q720,40 1240,120 Z'/%3E%3Cpath fill='%23A6D746' d='M0,50 Q300,70 650,120 L0,120 Z'/%3E%3Cpath fill='%23A6D746' d='M1440,50 Q1140,70 790,120 L1440,120 Z'/%3E%3Cpath fill='%238AC63F' d='M0,80 Q250,90 550,120 L0,120 Z'/%3E%3Cpath fill='%238AC63F' d='M1440,80 Q1190,90 890,120 L1440,120 Z'/%3E%3C/svg%3E");
-            background-size: 100% 100%; background-position: bottom center; background-repeat: no-repeat;
+        /* =========================================
+           CONFIGURAÇÕES TABLET LANDSCAPE
+           ========================================= */
+        @media (min-width: 768px) and (max-width: 1199px) and (orientation: landscape) {
+            .game-wrapper { display: flex; gap: 12px; }
+            .game-card { width: 160px; height: 270px; border-radius: 30px; border: 3px solid var(--theme-color); box-shadow: inset 0 0 0 5px white, 0 6px 15px rgba(0,0,0,0.05); }
+            .card-bottom h2 { font-size: 0.95rem; }
+            .btn-circle { width: 34px; height: 34px; }
         }
-        .footer-text { color: #2d5a88; font-size: clamp(0.6rem, 1.2vh, 0.85rem); font-weight: 800; z-index: 2; text-align: center; }
+
+        /* =========================================
+           TELEMÓVEL PORTRAIT (PÍLULAS)
+           ========================================= */
+        @media (orientation: portrait) {
+            main { justify-content: flex-start; overflow-y: auto; }
+            .intro-text { font-size: 1.2rem; }
+            .game-wrapper { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 450px; }
+            .game-card { 
+                display: flex; flex-direction: row; align-items: center; height: 75px; 
+                border-radius: 50px; border: 2.5px solid var(--theme-color); text-decoration: none;
+                background: white; padding: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            }
+            .card-top { width: 65px; height: 65px; border-radius: 50%; background: var(--theme-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+            .card-top img { width: 70%; height: 70%; object-fit: contain; }
+            .card-bottom { flex: 1; display: flex; flex-direction: row !important; align-items: center; justify-content: space-between; padding: 0 15px; margin: 0; background: none; }
+            .card-bottom h2 { font-size: 1rem; color: var(--theme-color); }
+            .btn-circle { width: 32px; height: 32px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
+        }
+
+        /* =========================================
+           TELEMÓVEL LANDSCAPE (COMPACTO)
+           ========================================= */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header { height: 45px; border-radius: 0 0 20px 20px; }
+            #header-icon { height: 32px; }
+            .sub-header { margin: 8px 0; }
+            .intro-text { font-size: 0.95rem; }
+            .game-wrapper, .destaques-wrapper { width: 85% !important; margin: 0 auto; }
+            .game-card { height: 150px; flex: 1; border-radius: 20px; }
+            .card-top::after { height: 15px; }
+            .card-bottom h2 { font-size: 0.7rem; }
+            .btn-circle { width: 24px; height: 24px; }
+            footer { display: none; }
+        }
+
+        /* =========================================
+           SECÇÃO DESTAQUES (IGUAL À HOME)
+           ========================================= */
+        .destaques-wrapper {
+            background: white; border-radius: 30px; padding: 15px 20px; width: 100%; max-width: 1000px;
+            margin-top: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); flex-shrink: 0;
+        }
+        .destaques-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; }
+        .destaques-header img { height: 20px; }
+        .destaques-header h3 { color: var(--primary-blue); font-size: 0.95rem; font-weight: 800; }
+        .destaques-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+        .destaque-item { text-decoration: none; display: flex; flex-direction: column; align-items: center; }
+        .destaque-item img { width: 42px; height: 42px; object-fit: contain; margin-bottom: 3px; }
+        .destaque-item p { font-size: 0.7rem; font-weight: 800; color: #444; }
+        .stars { color: var(--accent-yellow); font-size: 8px; }
+
+        /* ----- FOOTER BARRA TOTAL ----- */
+        footer { 
+            background: white; width: 100%; padding: 12px 0; 
+            display: flex; justify-content: center; align-items: center;
+            margin-top: auto; box-shadow: 0 -4px 10px rgba(0,0,0,0.03); flex-shrink: 0;
+        }
+        .footer-text { color: var(--text-grey); font-weight: 500; font-size: 0.85rem; text-align: center; }
+
+        .btn-circle svg, .btn-circle i { font-size: 14px; }
     </style>
 </head>
 <body>
-
-    <div class="sky-decorations">
-        <div class="cloud cloud-1"></div>
-        <div class="cloud cloud-2"></div>
-        <div class="star-decor"></div>
-        <div class="plane-wrapper"><div class="plane-icon"></div></div>
-    </div>
 
     <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
         <div class="header-center">
-            <img id="header-icon" src="" alt="Logo">
+            <img id="header-icon" src="" alt="Ano">
             <div class="title-group">
                 <div id="txt-titulo1"></div>
                 <div id="txt-titulo2"></div>
                 <div id="txt-subtitulo"></div>
             </div>
         </div>
-        <div class="header-right"><img id="icon-voltar-top" src="" alt="Voltar" onclick="window.history.back()"></div>
+        <div class="header-right">
+            <img id="icon-voltar-top" src="" alt="Voltar" onclick="window.history.back()">
+        </div>
     </header>
 
     <div class="sub-header"><div class="intro-text" id="txt-intro"></div></div>
 
-    <main><div class="game-wrapper" id="gamesGrid"></div></main>
+    <main>
+        <!-- Disciplinas Principais -->
+        <div class="game-wrapper" id="gamesGrid"></div>
 
-    <footer><div class="footer-text" id="txt-rodape"></div></footer>
+        <!-- Jogos em Destaque -->
+        <section class="destaques-wrapper">
+            <div class="destaques-header">
+                <img id="mini-logo" src="" alt="">
+                <h3>Jogos em destaque</h3>
+            </div>
+            <div class="destaques-grid" id="destaquesGrid"></div>
+        </section>
+    </main>
+
+    <footer>
+        <span class="footer-text" id="txt-rodape"></span>
+    </footer>
 
     <script src="dados.js"></script>
     <script>
@@ -155,43 +203,64 @@
         window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
 
         window.onload = () => {
-            if (typeof JOGO_CONFIG !== 'undefined') {
-                const config = JOGO_CONFIG;
-                document.getElementById('txt-titulo1').innerText = config.textos.tituloLinha1;
-                document.getElementById('txt-titulo2').innerText = config.textos.tituloLinha2;
-                document.getElementById('txt-subtitulo').innerText = config.textos.subtitulo;
-                document.getElementById('txt-intro').innerText = config.textos.intro;
-                document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
-                document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu.ano1;
-                document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + config.iconesMenu.voltar;
+            const config = JOGO_CONFIG;
+            
+            // Textos
+            document.getElementById('txt-titulo1').innerText = config.textos.tituloLinha1;
+            document.getElementById('txt-titulo2').innerText = config.textos.tituloLinha2;
+            document.getElementById('txt-subtitulo').innerText = config.textos.subtitulo;
+            document.getElementById('txt-intro').innerText = config.textos.intro;
+            document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
 
-                const menuBox = document.getElementById('dropdownMenu');
-                const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
-                Object.keys(config.links).forEach(key => {
+            // Ícones Cabeçalho
+            const anoAtivo = config.anoAtivo;
+            document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[anoAtivo];
+            document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + config.iconesMenu.voltar;
+            document.getElementById('mini-logo').src = config.caminhoIconsMenu + config.iconesMenu.controller;
+
+            // Menu Dropdown
+            const menuBox = document.getElementById('dropdownMenu');
+            const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
+            Object.keys(config.links).forEach(key => {
+                if (config.iconesMenu[key]) {
                     const a = document.createElement('a'); a.className = 'menu-item'; a.href = config.links[key];
                     a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
                     menuBox.appendChild(a);
-                });
-                const btnVoltar = document.createElement('a'); btnVoltar.className = 'menu-item'; btnVoltar.href = "../";
-                btnVoltar.style.borderTop = "2px solid #f0f4f8";
-                btnVoltar.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
-                menuBox.appendChild(btnVoltar);
+                }
+            });
 
-                const grid = document.getElementById('gamesGrid');
-                config.listaJogos.forEach(jogo => {
-                    const tema = config.temaCores[jogo.tema];
-                    const card = document.createElement('a');
-                    card.className = 'game-card'; card.href = jogo.link; card.style.setProperty('--theme-color', tema.borda);
-                    card.innerHTML = `
-                        <div class="card-top" style="background-color: ${tema.fundo};">
-                            <img src="${config.caminhoIconsJogos}${jogo.icon}">
-                        </div>
-                        <div class="card-bottom">
-                            <h2>${jogo.nome}</h2>
-                            <div class="btn-circle"><i class="fas fa-arrow-right"></i></div>
-                        </div>
+            // Grelha de Disciplinas (Cartões Principais)
+            const grid = document.getElementById('gamesGrid');
+            config.listaJogos.forEach(jogo => {
+                const tema = config.temaCores[jogo.tema];
+                const card = document.createElement('a');
+                card.className = 'game-card'; card.href = jogo.link;
+                card.style.setProperty('--theme-color', tema.borda);
+                card.style.setProperty('--theme-bg', tema.fundo);
+                card.style.setProperty('--theme-text', tema.texto);
+                card.innerHTML = `
+                    <div class="card-top"><img src="${config.caminhoIconsJogos}${jogo.icon}"></div>
+                    <div class="card-bottom">
+                        <h2>${jogo.nome}</h2>
+                        <div class="btn-circle"><i class="fas fa-arrow-right"></i></div>
+                    </div>`;
+                grid.appendChild(card);
+            });
+
+            // Grelha de Destaques
+            const dGrid = document.getElementById('destaquesGrid');
+            if(config.listaDestaques) {
+                config.listaDestaques.forEach(jogo => {
+                    const item = document.createElement('a');
+                    item.className = 'destaque-item';
+                    item.href = jogo.link;
+                    const estrelas = '★'.repeat(jogo.estrelas) + '☆'.repeat(5 - jogo.estrelas);
+                    item.innerHTML = `
+                        <img src="${config.caminhoIconsJogos}${jogo.icon}">
+                        <p>${jogo.nome}</p>
+                        <div class="stars">${estrelas}</div>
                     `;
-                    grid.appendChild(card);
+                    dGrid.appendChild(item);
                 });
             }
         };
