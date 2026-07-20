@@ -150,6 +150,96 @@
     .card-bottom h2 { color: var(--theme-color); font-size: 1.2rem; font-weight: 900; text-transform: uppercase; }
     .btn-circle { width: 45px; height: 45px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
 
+/* =========================================
+   TELEMÓVEL LANDSCAPE (HORIZONTAL) - COLA AQUI
+   ========================================= */
+@media (max-height: 500px) and (orientation: landscape) {
+    
+    /* 1. Ajustes de Estrutura para ganhar altura */
+    header { 
+        height: 45px; 
+        padding: 0 15px; 
+        border-radius: 0 0 20px 20px; 
+    }
+    #header-icon { height: 32px; }
+    #txt-titulo1, #txt-titulo2 { font-size: 0.9rem; }
+    #txt-subtitulo { display: none; } 
+    #icon-voltar-top { height: 28px; }
+
+    .sub-header { margin: 8px 0; }
+    .intro-text { font-size: 0.9rem; }
+    .intro-text::after { height: 8px; bottom: -5px; }
+
+    main { 
+        padding: 5px 10px; 
+        gap: 12px; 
+        justify-content: flex-start;
+    }
+
+    /* 2. Cartões de Disciplinas (Compactos) */
+    .game-wrapper { 
+        display: flex; 
+        flex-direction: row; 
+        gap: 10px; 
+        width: 100%; 
+        max-width: 750px; 
+        justify-content: center;
+    }
+
+    .game-card {
+        flex: 1;
+        max-width: 180px; 
+        height: 165px; 
+        border-radius: 25px;
+        border: 2px solid var(--theme-color);
+        box-shadow: inset 0 0 0 4px white, 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    .card-top { height: 60% !important; }
+    .card-top::after { height: 18px; }
+    .card-top img { max-width: 50%; max-height: 50%; }
+
+    .card-bottom { 
+        height: 40% !important; 
+        padding: 2px 0 5px 0; 
+        gap: 2px;
+    }
+    .card-bottom h2 { font-size: 0.65rem; }
+    
+    .btn-circle { width: 24px; height: 24px; }
+    .btn-circle i { font-size: 10px; }
+
+    /* 3. Caixa de Destaques */
+    .destaques-wrapper {
+        background: white !important;
+        border-radius: 20px;
+        padding: 10px 15px;
+        width: 100%;
+        max-width: 750px;
+        margin-top: 5px;
+        margin-bottom: 15px;
+    }
+
+    .destaques-header { margin-bottom: 8px; }
+    .destaques-header img { height: 14px; }
+    .destaques-header h3 { font-size: 0.8rem; }
+
+    .destaques-grid { 
+        grid-template-columns: repeat(6, 1fr); 
+        gap: 8px; 
+    }
+
+    .destaque-item img { width: 28px; height: 28px; }
+    .destaque-item p { font-size: 0.55rem; }
+    .stars { font-size: 6px; }
+
+    /* 4. Footer Slim */
+    footer { padding: 8px 0; }
+    .footer-text { font-size: 0.7rem; }
+}
+
+
+    
    /* =========================================
        SECÇÃO DESTAQUES - ÍCONES REDUZIDOS
        ========================================= */
