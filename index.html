@@ -11,98 +11,125 @@
             --mundo-red: #E1251B;
             --jogos-blue: #1A499C;
             --sky-blue: #EAF4FE;
-            --bg-destaque: #FFFFFF;
+            --accent-yellow: #FFC107;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
         body, html {
-            min-height: 100vh; width: 100vw;
+            min-height: 100dvh; width: 100vw;
             overflow-x: hidden; background-color: var(--sky-blue);
             display: flex; flex-direction: column;
         }
 
-        /* ----- HEADER & DECORAÇÕES ----- */
+        /* ----- HEADER ----- */
         .header-wrapper {
-            background: white; border-radius: 0 0 30px 30px;
+            background: white; border-radius: 0 0 40px 40px;
             display: flex; align-items: center; justify-content: center; 
-            padding: 15px; position: relative; z-index: 10; box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: clamp(10px, 2vh, 20px); position: relative; z-index: 10; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
         .header-content { display: flex; align-items: center; gap: 15px; }
-        #header-icon { height: clamp(40px, 7vh, 60px); }
-        .title-main { font-weight: 900; font-size: clamp(1.2rem, 3vh, 2rem); line-height: 1; }
-        .title-sub { color: var(--text-grey); font-weight: 700; font-size: 0.8rem; display: block; margin-top: 4px; }
+        #header-icon { height: clamp(45px, 7vh, 65px); width: auto; object-fit: contain; }
+        .title-group { line-height: 0.9; }
+        .title-main { font-weight: 900; font-size: clamp(1.4rem, 3.5vh, 2.2rem); }
+        .title-sub { color: var(--text-grey); font-weight: 700; font-size: clamp(0.7rem, 1.5vh, 0.9rem); display: block; margin-top: 4px; }
 
-        .intro-container { text-align: center; margin: 25px 0; font-weight: 900; font-size: clamp(1.1rem, 3vh, 1.8rem); color: var(--jogos-blue); }
-        .destaque-underline { color: #1A499C; border-bottom: 3px solid #FFC107; }
+        /* ----- INTRO ----- */
+        .intro-container { 
+            text-align: center; margin: clamp(20px, 4vh, 40px) 0; 
+            font-weight: 900; font-size: clamp(1.2rem, 3vh, 2rem); color: var(--jogos-blue); 
+        }
+        .destaque-underline { 
+            position: relative; display: inline-block; padding-bottom: 5px;
+        }
+        .destaque-underline::after {
+            content: ""; position: absolute; left: 0; bottom: 0; width: 100%; height: 4px;
+            background: var(--accent-yellow); border-radius: 2px;
+        }
 
         /* =========================================
-           ESTILOS PARA DESKTOP / TABLET (PAISAGEM)
+           LAYOUT PRINCIPAL (ANOS)
            ========================================= */
+        main { padding: 0 20px 30px 20px; display: flex; flex-direction: column; align-items: center; width: 100%; }
+
+        /* MODO PAISAGEM (DESKTOP / TABLET) */
         @media (orientation: landscape) {
-            main { padding: 0 5% 20px 5%; display: flex; flex-direction: column; align-items: center; }
-            
             .years-grid { 
                 display: flex; justify-content: center; gap: 20px; width: 100%; max-width: 1200px; margin-bottom: 40px;
             }
             .year-card {
-                flex: 1; background: white; border-radius: 25px; border: 2px solid var(--card-color);
-                padding: 10px; text-decoration: none; display: flex; flex-direction: column; align-items: center;
-                transition: transform 0.2s; box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+                flex: 1; max-width: 200px; background: white; border-radius: 30px; 
+                border: 2px solid var(--card-color); padding: 12px; text-decoration: none;
+                display: flex; flex-direction: column; align-items: center;
+                transition: transform 0.2s; box-shadow: 0 8px 20px rgba(0,0,0,0.04);
             }
             .year-card:hover { transform: translateY(-5px); }
+            
+            /* CONTENTOR DO ANIMAL - CORRIGE TAMANHOS */
             .img-box { 
-                width: 100%; aspect-ratio: 1; background: var(--card-color); 
-                border-radius: 20px; display: flex; align-items: center; justify-content: center;
+                width: 100%; height: clamp(100px, 15vh, 140px); background: var(--card-color); 
+                border-radius: 22px; display: flex; align-items: center; justify-content: center;
+                overflow: hidden; margin-bottom: 15px;
             }
-            .img-box img { width: 80%; height: 80%; object-fit: contain; }
-            .year-card span { margin: 15px 0; font-weight: 900; color: var(--card-color); font-size: 1.1rem; }
-            .btn-circle { width: 35px; height: 35px; border-radius: 50%; background: var(--card-color); color: white; display: flex; align-items: center; justify-content: center; }
+            .img-box img { width: 75%; height: 75%; object-fit: contain; }
+            .year-card span { font-weight: 900; color: var(--card-color); font-size: 1.2rem; margin-bottom: 15px; }
         }
 
-        /* =========================================
-           ESTILOS PARA TELEMÓVEL (PORTRAIT)
-           ========================================= */
+        /* MODO RETRATO (TELEMÓVEL) */
         @media (orientation: portrait) {
-            main { padding: 10px 20px; }
-            .years-grid { display: flex; flex-direction: column; gap: 12px; }
+            .years-grid { display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 400px; }
             .year-card {
                 display: flex; align-items: center; background: white; border: 2px solid var(--card-color);
-                border-radius: 50px; padding: 5px 15px 5px 5px; text-decoration: none;
+                border-radius: 50px; padding: 6px 15px 6px 6px; text-decoration: none;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.04);
             }
             .img-box { 
-                width: 50px; height: 50px; background: var(--card-color); 
+                width: 55px; height: 55px; background: var(--card-color); 
                 border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
             }
-            .img-box img { width: 70%; height: 70%; }
-            .year-card span { flex: 1; margin-left: 15px; font-weight: 800; color: var(--card-color); font-size: 1.1rem; }
-            .btn-circle { width: 30px; height: 30px; border-radius: 50%; background: var(--card-color); color: white; display: flex; align-items: center; justify-content: center; }
+            .img-box img { width: 65%; height: 65%; object-fit: contain; }
+            .year-card span { flex: 1; margin-left: 15px; font-weight: 900; color: var(--card-color); font-size: 1.1rem; }
         }
+
+        /* BOTÃO SETA (COMUM) */
+        .btn-circle { 
+            width: 35px; height: 35px; border-radius: 50%; background: var(--card-color); 
+            color: white; display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+        }
+        .btn-circle svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 3; }
 
         /* =========================================
-           SECÇÃO JOGOS EM DESTAQUE (CAIXA BRANCA)
+           SECÇÃO JOGOS EM DESTAQUE
            ========================================= */
         .destaques-wrapper {
-            background: white; border-radius: 30px; padding: 20px; width: 100%; max-width: 1000px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-top: 10px;
+            background: white; border-radius: 35px; padding: 25px; width: 100%; max-width: 1000px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); margin-top: 20px;
         }
-        .destaques-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 20px; }
-        .destaques-header img { height: 20px; }
-        .destaques-header h3 { color: var(--jogos-blue); font-size: 1rem; font-weight: 800; }
+        .destaques-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 25px; }
+        #mini-controller { height: 22px; width: auto; }
+        .destaques-header h3 { color: var(--jogos-blue); font-size: 1.1rem; font-weight: 800; }
 
         .destaques-grid { 
-            display: grid; grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); gap: 15px; text-align: center;
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); 
+            gap: 20px; justify-items: center;
         }
-        .destaque-item { text-decoration: none; display: flex; flex-direction: column; align-items: center; }
-        .destaque-item img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 5px; }
-        .destaque-item p { font-size: 0.75rem; font-weight: 800; color: #444; margin-bottom: 2px; }
-        .stars { color: #FFC107; font-size: 10px; }
+        
+        .destaque-item { text-decoration: none; display: flex; flex-direction: column; align-items: center; width: 100px; }
+        
+        /* TAMANHO FIXO PARA ÍCONES DE DESTAQUE */
+        .destaque-item img { 
+            width: 52px; height: 52px; object-fit: contain; margin-bottom: 8px; 
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.05));
+        }
+        .destaque-item p { font-size: 0.8rem; font-weight: 800; color: #444; margin-bottom: 4px; white-space: nowrap; }
+        .stars { color: var(--accent-yellow); font-size: 11px; letter-spacing: 1px; }
 
         /* FOOTER */
-        footer { text-align: center; padding: 20px; margin-top: auto; }
-        footer a { color: var(--jogos-blue); text-decoration: none; font-weight: 800; font-size: 0.9rem; }
+        footer { text-align: center; padding: 25px; margin-top: auto; }
+        #txt-rodape { color: var(--jogos-blue); text-decoration: none; font-weight: 800; font-size: 0.95rem; }
 
-        .btn-circle svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 3; }
     </style>
 </head>
 <body>
@@ -126,17 +153,17 @@
     </div>
 
     <main>
-        <!-- Grelha de Anos (Pré ao 4º) -->
+        <!-- Grelha de Anos -->
         <div class="years-grid" id="yearsGrid"></div>
 
         <!-- Caixa de Destaques -->
-        <div class="destaques-wrapper">
+        <section class="destaques-wrapper">
             <div class="destaques-header">
-                <img id="mini-controller" src="" alt="">
+                <img id="mini-controller" src="" alt="Destaques">
                 <h3>Jogos em destaque</h3>
             </div>
             <div class="destaques-grid" id="destaquesGrid"></div>
-        </div>
+        </section>
     </main>
 
     <footer>
@@ -146,21 +173,24 @@
     <script src="dados.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            if (typeof JOGO_CONFIG === 'undefined') return;
             const config = JOGO_CONFIG;
 
-            // Preencher Textos
+            // 1. Textos e Identidade
             document.getElementById('txt-titulo1').textContent = config.textos.tituloLinha1;
             document.getElementById('txt-titulo2').textContent = config.textos.tituloLinha2;
             document.getElementById('txt-subtitulo').textContent = config.textos.subtitulo;
             document.getElementById('txt-intro-normal').textContent = config.textos.introNormal;
             document.getElementById('txt-intro-destaque').textContent = config.textos.introDestaque;
             document.getElementById('txt-rodape').textContent = config.textos.rodape;
-            document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu.logo;
-            document.getElementById('mini-controller').src = config.caminhoIconsMenu + config.iconesMenu.logo;
+            
+            const logoPath = config.caminhoIconsMenu + config.iconesMenu.logo;
+            document.getElementById('header-icon').src = logoPath;
+            document.getElementById('mini-controller').src = logoPath;
 
             const iconSeta = `<div class="btn-circle"><svg viewBox="0 0 24 24"><path d="M5 12h14m-7-7 7 7-7 7" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`;
 
-            // 1. Renderizar Categorias de Anos
+            // 2. Gerar Categorias (Anos)
             const yearsGrid = document.getElementById('yearsGrid');
             config.listaAnos.forEach(ano => {
                 const cor = config.temaCores[ano.tema].fundo;
@@ -169,14 +199,16 @@
                 card.href = ano.link;
                 card.style.setProperty('--card-color', cor);
                 card.innerHTML = `
-                    <div class="img-box"><img src="${config.caminhoIconsJogos}${ano.icon}"></div>
+                    <div class="img-box">
+                        <img src="${config.caminhoIconsJogos}${ano.icon}" alt="${ano.nome}">
+                    </div>
                     <span>${ano.nome}</span>
                     ${iconSeta}
                 `;
                 yearsGrid.appendChild(card);
             });
 
-            // 2. Renderizar Jogos em Destaque
+            // 3. Gerar Jogos em Destaque
             const destaquesGrid = document.getElementById('destaquesGrid');
             config.listaDestaques.forEach(jogo => {
                 const item = document.createElement('a');
@@ -184,7 +216,7 @@
                 item.href = jogo.link;
                 const estrelas = '★'.repeat(jogo.estrelas) + '☆'.repeat(5 - jogo.estrelas);
                 item.innerHTML = `
-                    <img src="${config.caminhoIconsJogos}${jogo.icon}">
+                    <img src="${config.caminhoIconsJogos}${jogo.icon}" alt="${jogo.nome}">
                     <p>${jogo.nome}</p>
                     <div class="stars">${estrelas}</div>
                 `;
