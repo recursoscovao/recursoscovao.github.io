@@ -17,7 +17,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
         body, html {
-            height: 100dvh; width: 100vw;
+            min-height: 100dvh; width: 100vw;
             overflow-x: hidden; background-color: var(--sky-blue);
             display: flex; flex-direction: column;
         }
@@ -33,15 +33,13 @@
         #header-icon { height: 50px; width: auto; }
         .title-main { font-weight: 900; font-size: 1.7rem; line-height: 1; }
 
-        /* ----- INTRO COM SUBLINHADO CURVO (INVERTIDO) ----- */
+        /* ----- INTRO COM SUBLINHADO CURVO INVERTIDO ----- */
         .intro-container { 
-            text-align: center; margin: 25px 0; 
-            font-weight: 900; font-size: 1.5rem; color: var(--jogos-blue); 
+            text-align: center; margin: 20px 0; 
+            font-weight: 900; font-size: 1.2rem; color: var(--jogos-blue); 
             flex-shrink: 0;
         }
-        .destaque-curvo { 
-            position: relative; display: inline-block; padding: 0 5px;
-        }
+        .destaque-curvo { position: relative; display: inline-block; padding: 0 5px; }
         .destaque-curvo::after {
             content: ""; position: absolute; left: 0; bottom: -10px; width: 100%; height: 15px;
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
@@ -49,146 +47,98 @@
         }
 
         /* =========================================
-           ESTRUTURA DE CENTRAMENTO (MAIN)
+           ESTILO BASE (MOBILE PORTRAIT - PÍLULAS)
+           Este estilo é o padrão para evitar o erro da imagem
            ========================================= */
         main { 
-            width: 100%; 
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-            padding: 10px 20px; flex: 1; /* Ocupa o espaço entre header e footer */
+            width: 100%; display: flex; flex-direction: column; align-items: center; 
+            padding: 10px 15px; flex: 1; 
+        }
+
+        .years-grid { 
+            display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 500px; 
+        }
+
+        .year-card { 
+            display: flex; align-items: center; width: 100%; 
+            background: white; border: 2.5px solid var(--card-color); 
+            border-radius: 50px; padding: 5px; text-decoration: none; 
+            height: 75px; box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
+
+        .card-top { 
+            width: 65px; height: 65px; background: var(--card-color); 
+            border-radius: 50%; display: flex; align-items: center; 
+            justify-content: center; flex-shrink: 0; 
+        }
+        .card-top img { width: 70%; height: 70%; object-fit: contain; }
+
+        .card-bottom { 
+            flex: 1; display: flex; align-items: center; 
+            justify-content: space-between; padding: 0 15px; 
+        }
+        .card-bottom span { 
+            font-weight: 900; color: var(--card-color); 
+            font-size: 1.1rem; text-decoration: none;
+        }
+
+        .btn-circle { 
+            width: 35px; height: 35px; border-radius: 50%; 
+            background: var(--card-color); color: white; 
+            display: flex; align-items: center; justify-content: center; 
         }
 
         /* =========================================
-           CARTÕES PRINCIPAIS (PC / DESKTOP)
+           CONFIGURAÇÃO PC / TABLET (LANDSCAPE)
+           Ativa-se em ecrãs maiores de 768px
            ========================================= */
-        @media (min-width: 1200px) and (orientation: landscape) {
-            .years-grid { display: flex; justify-content: center; align-items: center; gap: 20px; width: auto; margin: 0 auto; }
+        @media (min-width: 768px) and (orientation: landscape) {
+            .years-grid { 
+                flex-direction: row; justify-content: center; 
+                width: auto; max-width: 1300px; gap: 20px; 
+            }
+
             .year-card {
-                width: 190px; height: 305px; background: white; border-radius: 35px; 
-                border: 3px solid var(--card-color); text-decoration: none; 
-                display: flex; flex-direction: column; overflow: hidden;
-                transition: transform 0.2s ease; box-shadow: inset 0 0 0 5px white, 0 8px 20px rgba(0,0,0,0.06);
+                width: 190px; height: clamp(250px, 32vh, 310px); 
+                border-radius: 35px; flex-direction: column; padding: 0; 
+                box-shadow: inset 0 0 0 5px white, 0 8px 20px rgba(0,0,0,0.06);
+                transition: transform 0.2s ease;
             }
             .year-card:hover { transform: translateY(-8px); }
-            .card-top { height: 60%; background-color: var(--card-color); display: flex; align-items: center; justify-content: center; position: relative; }
-            .card-top::after { content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 40px; background: white; clip-path: ellipse(75% 100% at 50% 100%); }
-            .card-top img { max-width: 65%; max-height: 65%; object-fit: contain; z-index: 2; }
-            .card-bottom { height: 40%; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding-bottom: 10px; z-index: 3; }
-            .card-bottom span { font-weight: 900; color: var(--card-color); font-size: 1.4rem; }
-            .btn-circle { width: 42px; height: 42px; border-radius: 50%; background: var(--card-color); color: white; display: flex; align-items: center; justify-content: center; }
-        }
 
-/* =========================================
-   TELEMÓVEL LANDSCAPE (AJUSTE FINAL CARTÕES)
-   ========================================= */
-@media (max-height: 500px) and (orientation: landscape) {
-    
-    /* 1. Alinhamento de largura (85% para encolher os cartões lateralmente) */
-    .years-grid, .destaques-wrapper {
-        width: 85%;        /* Reduzi para 85% para os cartões ficarem mais estreitos */
-        max-width: 750px;  /* Limite para ecrãs muito largos */
-        margin: 0 auto;    /* Centra os blocos no meio do azul */
-    }
-
-    /* 2. Grelha de Cartões */
-    .years-grid { 
-        display: flex; 
-        flex-direction: row; 
-        gap: 8px;          /* Espaço entre cartões */
-        margin-bottom: 8px;
-    }
-
-    .year-card {
-        flex: 1;
-        height: 150px;     /* Altura uniforme e compacta */
-        background: white; 
-        border-radius: 20px; 
-        border: 2px solid var(--card-color);
-        display: flex; 
-        flex-direction: column; 
-        overflow: hidden;
-        box-shadow: inset 0 0 0 4px white, 0 4px 10px rgba(0,0,0,0.05);
-    }
-
-    /* 3. Proporções Internas Uniformes (60/40) */
-    .card-top { 
-        height: 60%; 
-        background-color: var(--card-color); 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        position: relative;
-    }
-    
-    /* Onda branca pequena para não ocupar espaço do ícone */
-    .card-top::after { 
-        content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 15px; 
-        background: white; clip-path: ellipse(80% 100% at 50% 100%); 
-    }
-
-    /* Ícones bem centrados e do mesmo tamanho */
-    .card-top img { 
-        max-width: 50%; 
-        max-height: 50%; 
-        object-fit: contain;
-        z-index: 2; 
-    }
-
-    .card-bottom { 
-        height: 40%; 
-        background: white; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-        justify-content: center; /* Centra texto e seta verticalmente */
-        gap: 3px; 
-        padding-bottom: 2px; 
-    }
-
-    /* Texto do Ano (Tamanho ajustado para a largura menor) */
-    .card-bottom span { 
-        font-weight: 900; 
-        color: var(--card-color); 
-        font-size: 0.75rem; 
-        line-height: 1;
-    }
-
-    /* Seta pequena */
-    .btn-circle { 
-        width: 24px; 
-        height: 24px; 
-        background: var(--card-color);
-    }
-
-    /* 4. Caixa de Destaques (Mesma largura de 85% para uniformidade) */
-    .destaques-wrapper { 
-        background: white; 
-        border-radius: 20px; 
-        padding: 8px 15px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-    }
-}
-        
-
-        /* =========================================
-           CARTÕES PARA TABLET LANDSCAPE
-           ========================================= */
-        @media (min-width: 768px) and (max-width: 1199px) and (orientation: landscape) {
-            .years-grid { display: flex; justify-content: center; align-items: center; gap: 12px; width: auto; }
-            .year-card {
-                width: 160px; height: 270px; background: white; border-radius: 30px; border: 3px solid var(--card-color);
-                text-decoration: none; display: flex; flex-direction: column; overflow: hidden;
-                box-shadow: inset 0 0 0 5px white, 0 6px 15px rgba(0,0,0,0.05); flex-shrink: 0;
+            .card-top { height: 60%; width: 100%; border-radius: 0; position: relative; }
+            .card-top::after { 
+                content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 40px; 
+                background: white; clip-path: ellipse(75% 100% at 50% 100%); 
             }
-            .card-top { height: 60%; background-color: var(--card-color); display: flex; align-items: center; justify-content: center; position: relative; }
-            .card-top::after { content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 35px; background: white; clip-path: ellipse(75% 100% at 50% 100%); }
-            .card-top img { max-width: 60%; max-height: 60%; object-fit: contain; z-index: 2; }
-            .card-bottom { height: 40%; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding-bottom: 5px; z-index: 3; }
-            .card-bottom span { font-weight: 900; color: var(--card-color); font-size: 1.1rem; }
-            .btn-circle { width: 34px; height: 34px; border-radius: 50%; background: var(--card-color); color: white; display: flex; align-items: center; justify-content: center; }
+            .card-top img { max-width: 65%; max-height: 65%; }
+
+            .card-bottom { 
+                height: 40%; width: 100%; flex-direction: column; 
+                justify-content: space-evenly; padding: 5px 0 10px 0; 
+            }
+            .card-bottom span { font-size: 1.4rem; }
+            .btn-circle { width: 42px; height: 42px; }
         }
 
         /* =========================================
-           JOGOS EM DESTAQUE (CAIXA BRANCA)
+           TELEMÓVEL LANDSCAPE (COMPACTO)
+           ========================================= */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .years-grid, .destaques-wrapper { width: 85% !important; max-width: 750px; }
+            .years-grid { flex-direction: row; gap: 8px; }
+            .year-card { flex: 1; height: 150px; border-radius: 20px; flex-direction: column; padding: 0; box-shadow: inset 0 0 0 4px white; }
+            .card-top { height: 60%; width: 100%; border-radius: 0; }
+            .card-top::after { height: 15px; }
+            .card-top img { max-width: 50%; max-height: 50%; }
+            .card-bottom { height: 40%; flex-direction: column; justify-content: center; gap: 3px; padding-bottom: 2px; }
+            .card-bottom span { font-size: 0.75rem; }
+            .btn-circle { width: 24px; height: 24px; }
+        }
+
+        /* =========================================
+           DESTAQUES & FOOTER
            ========================================= */
         .destaques-wrapper {
             background: white; border-radius: 30px; padding: 15px 20px; width: 100%; max-width: 1000px;
@@ -198,125 +148,22 @@
         .destaques-header img { height: 20px; }
         .destaques-header h3 { color: var(--jogos-blue); font-size: 0.95rem; font-weight: 800; }
         .destaques-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+        
+        @media (orientation: portrait) { .destaques-grid { grid-template-columns: repeat(3, 1fr); gap: 15px; } }
+
         .destaque-item { text-decoration: none; display: flex; flex-direction: column; align-items: center; }
         .destaque-item img { width: 42px; height: 42px; object-fit: contain; margin-bottom: 3px; }
         .destaque-item p { font-size: 0.7rem; font-weight: 800; color: #444; }
         .stars { color: var(--accent-yellow); font-size: 8px; }
 
-/* =========================================
-   TELEMÓVEL VERTICAL (PORTRAIT) - LARGURA TOTAL
-   ========================================= */
-@media (orientation: portrait) {
-    /* 1. Garantir que o main estica os filhos */
-    main { 
-        padding: 10px 15px; /* Margens laterais do ecrã */
-        width: 100%; 
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
-
-    /* 2. Intro: Letra pequena */
-    .intro-container { 
-        margin: 15px 0; 
-        font-size: 1.2rem; 
-    }
-
-    /* 3. Grelha de Anos: Ocupar a largura toda */
-    .years-grid { 
-        display: flex; 
-        flex-direction: column; 
-        gap: 12px; 
-        width: 100%; /* Ocupa 100% do espaço do main */
-        max-width: 500px; /* Impede que fique exagerado em tablets verticais */
-    }
-
-    /* 4. Cartão: Largura total e altura fixa */
-    .year-card { 
-        display: flex; 
-        align-items: center; 
-        width: 100%; /* Garante que o cartão estica de ponta a ponta */
-        background: white; 
-        border: 2px solid var(--card-color); 
-        border-radius: 50px; 
-        padding: 5px; 
-        text-decoration: none; 
-        height: 75px; 
-        box-shadow: 0 4px 10px rgba(0,0,0,0.04);
-    }
-
-    /* 5. Círculo do Ícone (65px) */
-    .card-top { 
-        width: 65px; 
-        height: 65px; 
-        background: var(--card-color); 
-        border-radius: 50%; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        flex-shrink: 0; 
-    }
-
-    /* 6. Ícones de Animais Uniformes */
-    .card-top img { 
-        width: 70%; 
-        height: 70%; 
-        object-fit: contain; 
-    }
-
-    /* 7. Texto e Seta */
-    .card-bottom { 
-        flex: 1; 
-        display: flex; 
-        align-items: center; 
-        justify-content: space-between; 
-        padding: 0 15px; 
-    }
-
-    .card-bottom span { 
-        font-weight: 900; 
-        color: var(--card-color); 
-        font-size: 1.1rem; 
-    }
-
-    /* 8. Jogos em Destaque (Larga também) */
-    .destaques-wrapper { 
-        margin: 20px 0; 
-        padding: 15px; 
-        width: 100%; /* Ocupa a largura total */
-    }
-    
-    .destaques-grid { 
-        grid-template-columns: repeat(3, 1fr); 
-        gap: 15px; 
-    }
-}
-        /* =========================================
-           NOVO FOOTER: BARRA BRANCA TOTAL
-           ========================================= */
         footer { 
-            background: white; 
-            width: 100%; 
-            padding: 10px 0; 
-            display: flex; 
-            justify-content: center; 
-            align-items: center;
-            margin-top: auto; 
-            box-shadow: 0 -4px 10px rgba(0,0,0,0.03); /* Sombra para cima para separar do azul */
-            flex-shrink: 0;
+            background: white; width: 100%; padding: 10px 0; 
+            display: flex; justify-content: center; align-items: center;
+            margin-top: auto; box-shadow: 0 -4px 10px rgba(0,0,0,0.03); flex-shrink: 0;
         }
-        #txt-rodape { 
-    color: var(--text-grey); 
-    font-weight: 600; /* ALTERA AQUI: de 800 para 600 ou 500 */
-    font-size: 0.85rem; 
-    text-align: center;
-}
-        
+        #txt-rodape { color: var(--text-grey); font-weight: 600; font-size: 0.85rem; text-align: center; }
 
-        /* BOTÃO SETA */
-        .btn-circle { width: 35px; height: 35px; border-radius: 50%; background: var(--card-color); color: white; display: flex; align-items: center; justify-content: center; }
         .btn-circle svg { width: 60%; height: 60%; fill: none; stroke: currentColor; stroke-width: 4; }
-
     </style>
 </head>
 <body>
@@ -358,7 +205,9 @@
     <script src="dados.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
+            if (typeof JOGO_CONFIG === 'undefined') return;
             const config = JOGO_CONFIG;
+
             document.getElementById('txt-titulo1').textContent = config.textos.tituloLinha1;
             document.getElementById('txt-titulo2').textContent = config.textos.tituloLinha2;
             document.getElementById('txt-subtitulo').textContent = config.textos.subtitulo;
@@ -387,8 +236,9 @@
                 const item = document.createElement('a');
                 item.className = 'destaque-item';
                 item.href = jogo.link;
+                const estrelas = '★'.repeat(jogo.estrelas) + '☆'.repeat(5 - jogo.estrelas);
                 item.innerHTML = `<img src="${config.caminhoIconsJogos}${jogo.icon}"><p>${jogo.nome}</p>
-                                  <div class="stars">${'★'.repeat(jogo.estrelas)}${'☆'.repeat(5-jogo.estrelas)}</div>`;
+                                  <div class="stars">${estrelas}</div>`;
                 dGrid.appendChild(item);
             });
         });
