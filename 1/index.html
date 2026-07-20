@@ -19,38 +19,43 @@
         
         body, html { height: 100dvh; width: 100vw; background-color: var(--sky-blue); display: flex; flex-direction: column; overflow: hidden; }
 
-        /* ----- HEADER BASE ----- */
+        /* ----- HEADER ----- */
         header { 
             background: white; border-radius: 0 0 35px 35px;
-            display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; 
-            padding: 0 10px; height: 10vh; min-height: 70px; z-index: 1000; flex-shrink: 0;
+            display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; 
+            padding: 0 15px; height: 10vh; min-height: 75px; z-index: 1000; flex-shrink: 0;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
-        .hamburger-btn { justify-self: start; background: none; border: none; color: var(--primary-blue); font-size: 22px; cursor: pointer; }
+        /* Tamanho igualado para Hambúrguer e Seta */
+        .hamburger-btn { justify-self: start; background: none; border: none; color: var(--primary-blue); font-size: 32px; cursor: pointer; height: 40px; display: flex; align-items: center; }
+        #icon-voltar-top { height: 40px; width: auto; justify-self: end; cursor: pointer; transition: transform 0.2s; }
+        #icon-voltar-top:hover { transform: scale(1.1); }
+
         .header-center { display: flex; align-items: center; justify-content: center; gap: 10px; }
         #header-icon { height: 50px; object-fit: contain; }
         .title-group { display: flex; flex-direction: column; line-height: 0.9; }
         #txt-titulo1, #txt-titulo2 { color: var(--primary-blue); font-weight: 900; font-size: 1.1rem; }
-        #icon-voltar-top { height: 35px; justify-self: end; cursor: pointer; }
 
         /* ----- MENU DROPDOWN ----- */
-        .menu-dropdown { position: absolute; top: 75px; left: 10px; display: none; flex-direction: column; gap: 5px; z-index: 2000; }
-        .menu-item { display: flex; align-items: center; gap: 10px; padding: 10px 15px; background: white; border-radius: 12px; text-decoration: none; color: var(--text-grey); font-weight: 700; min-width: 200px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
-        .menu-item:hover { background: var(--back-blue); color: white; }
-        .menu-item img { height: 20px; }
+        .menu-dropdown { position: absolute; top: 80px; left: 15px; display: none; flex-direction: column; gap: 5px; z-index: 2000; }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: white; border-radius: 12px; text-decoration: none; color: var(--text-grey); font-weight: 700; min-width: 220px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; }
+        /* Rollover com a cor do icon hamburguer */
+        .menu-item:hover { background-color: var(--primary-blue); color: white; }
+        .menu-item img { height: 22px; width: 22px; object-fit: contain; }
+        .menu-sep { border-top: 2px solid #f0f4f8; margin: 4px 0; }
 
         /* ----- INTRO ----- */
         .sub-header { text-align: center; margin: 15px 0; flex-shrink: 0; }
-        .intro-text { color: #1a4a7a; font-size: 1.4rem; font-weight: 800; position: relative; display: inline-block; }
+        .intro-text { color: #1a4a7a; font-size: 1.5rem; font-weight: 800; position: relative; display: inline-block; }
         .intro-text::after { content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 10px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-size: 100% 100%; }
 
         main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; min-height: 0; }
 
         /* =========================================
-           PC & TABLET LANDSCAPE (260px / 60-40)
+           PC & TABLET LANDSCAPE (DEFINIÇÕES)
            ========================================= */
         @media (min-width: 1025px) and (orientation: landscape) {
-            .game-wrapper { display: flex; gap: 30px; }
+            .game-wrapper { display: flex; gap: 30px; margin-bottom: 5px; }
             .game-card {
                 width: 260px; height: clamp(300px, 38vh, 360px); 
                 background: white; border-radius: 35px; border: 3px solid var(--theme-color);
@@ -58,74 +63,36 @@
                 box-shadow: inset 0 0 0 6px white, 0 10px 20px rgba(0,0,0,0.05); transition: 0.2s;
             }
             .game-card:hover { transform: translateY(-8px); }
+
+            /* Proporção 60/40 */
             .card-top { height: 60% !important; background-color: var(--theme-bg); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
-            /* Marca d'água */
+            /* Marca d'água cinza */
             .card-top::before { content: ""; position: absolute; width: 80%; height: 80%; background-repeat: no-repeat; background-position: center; background-size: contain; filter: grayscale(1); opacity: 0.12; }
             .game-card:nth-child(1) .card-top::before { background-image: url('../icons/bg_letras.png'); }
             .game-card:nth-child(2) .card-top::before { background-image: url('../icons/bg_numeros.png'); }
             .game-card:nth-child(3) .card-top::before { background-image: url('../icons/bg_mundo.png'); }
-            
+
             .card-top::after { content: ""; position: absolute; bottom: -1px; width: 100%; height: 40px; background: white; clip-path: ellipse(75% 100% at 50% 100%); }
             .card-top img { max-width: 60%; max-height: 60%; z-index: 2; }
+            
             .card-bottom { height: 40% !important; background: white; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; }
             .card-bottom h2 { color: var(--theme-color); font-size: 1.1rem; font-weight: 900; text-transform: uppercase; }
             .btn-circle { width: 42px; height: 42px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
 
-            .destaques-wrapper { background: white !important; border-radius: 30px; padding: 15px 30px; width: 840px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
+            /* Secção Destaques com o Padding (Margin) pedido */
+            .destaques-wrapper { 
+                background: white !important; border-radius: 30px; padding: 20px 30px; 
+                width: 840px; margin-top: 25px; /* PADDING/GAP DE PELO MENOS 10PX */
+                margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); 
+                flex-shrink: 0;
+            }
             .destaques-grid { display: flex; justify-content: space-around; width: 100%; }
             .destaque-item img { width: 32px; height: 32px; object-fit: contain; }
         }
 
-        /* =========================================
-           TELEMÓVEL VERTICAL (PÍLULAS FIXO)
-           ========================================= */
-        @media (max-width: 767px) and (orientation: portrait) {
-            body, html { overflow-y: auto; height: auto; }
-            header { grid-template-columns: 40px 1fr 40px; padding: 0 10px; height: 65px; }
-            .hamburger-btn { font-size: 20px; }
-            #icon-voltar-top { height: 28px; }
-            #header-icon { height: 38px; }
-            .intro-text { font-size: 1.1rem; }
-
-            .game-wrapper, .destaques-wrapper { width: 92%; margin: 0 auto; }
-            .game-card { 
-                display: flex; flex-direction: row; align-items: center; height: 75px; 
-                background: white; border-radius: 50px; border: 2.5px solid var(--theme-color); 
-                margin-bottom: 10px; text-decoration: none; padding: 5px;
-            }
-            .card-top { width: 65px; height: 65px; border-radius: 50%; background: var(--theme-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-            .card-top img { width: 70%; height: 70%; }
-            .card-bottom { flex: 1; display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 0 15px; }
-            .card-bottom h2 { font-size: 0.95rem; color: var(--theme-color); }
-            .btn-circle { width: 30px; height: 30px; font-size: 10px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
-
-            .destaques-wrapper { background: white !important; border-radius: 20px; padding: 15px; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-            .destaques-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-            .destaque-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; }
-            .destaque-item img { width: 32px !important; height: 32px !important; }
-            .destaque-item p { font-size: 0.6rem; font-weight: 800; color: #444; }
-        }
-
-        /* =========================================
-           TELEMÓVEL LANDSCAPE (SCROLL)
-           ========================================= */
-        @media (max-height: 500px) and (orientation: landscape) {
-            body, html { height: auto; overflow-y: auto; }
-            header { height: 45px; grid-template-columns: 45px 1fr 45px; }
-            .game-wrapper, .destaques-wrapper { width: 90%; margin: 0 auto; }
-            .game-card { height: 160px; flex: 1; border-radius: 25px; border: 2px solid var(--theme-color); background: white; overflow: hidden; display: flex; flex-direction: column; }
-            .card-top { height: 60% !important; background-color: var(--theme-bg); display: flex; align-items: center; justify-content: center; }
-            .card-top img { max-width: 50%; max-height: 50%; }
-            .card-bottom { height: 40% !important; background: white; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; }
-            .card-bottom h2 { font-size: 0.7rem; }
-            .destaques-wrapper { background: white !important; margin-top: 10px; padding: 10px; }
-            .destaques-grid { display: grid; grid-template-columns: repeat(6, 1fr); }
-            .destaque-item img { width: 28px; height: 28px; }
-        }
-
         /* ----- FOOTER ----- */
         footer { background: white; width: 100%; padding: 12px 0; display: flex; justify-content: center; margin-top: auto; box-shadow: 0 -4px 10px rgba(0,0,0,0.02); }
-        .footer-text { color: var(--text-grey); font-weight: 500; font-size: 0.8rem; }
+        .footer-text { color: var(--text-grey); font-weight: 500; font-size: 0.85rem; }
         .stars { color: var(--accent-yellow); font-size: 8px; }
     </style>
 </head>
@@ -148,7 +115,7 @@
     <main>
         <div class="game-wrapper" id="gamesGrid"></div>
         <section class="destaques-wrapper">
-            <div class="destaques-header" style="display:flex; justify-content:center; gap:8px; margin-bottom:10px;">
+            <div class="destaques-header" style="display:flex; justify-content:center; gap:8px; margin-bottom:12px;">
                 <img id="mini-logo" src="" style="height:14px;">
                 <h3 style="font-size:0.85rem; color:var(--primary-blue); font-weight:800;">Jogos em destaque</h3>
             </div>
@@ -175,13 +142,24 @@
             document.getElementById('mini-logo').src = config.caminhoIconsMenu + config.iconesMenu.controller;
 
             const menuBox = document.getElementById('dropdownMenu');
+            const labels = { home: "Página Inicial", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
+            
             Object.keys(config.links).forEach(key => {
                 if (config.iconesMenu[key]) {
                     const a = document.createElement('a'); a.className = 'menu-item'; a.href = config.links[key];
-                    a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${key}</span>`;
+                    a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
                     menuBox.appendChild(a);
                 }
             });
+
+            // BOTÃO VOLTAR NO MENU HAMBÚRGUER (PEDIDO)
+            const sep = document.createElement('div'); sep.className = 'menu-sep';
+            menuBox.appendChild(sep);
+            const btnMenuVoltar = document.createElement('a');
+            btnMenuVoltar.className = 'menu-item'; btnMenuVoltar.href = "#";
+            btnMenuVoltar.onclick = (e) => { e.preventDefault(); voltarPagina(); };
+            btnMenuVoltar.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
+            menuBox.appendChild(btnMenuVoltar);
 
             const grid = document.getElementById('gamesGrid');
             config.listaJogos.forEach(jogo => {
