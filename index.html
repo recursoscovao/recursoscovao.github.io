@@ -112,48 +112,44 @@
         .stars { color: var(--accent-yellow); font-size: 8px; }
 
 /* =========================================
-   TELEMÓVEL VERTICAL (PORTRAIT)
+   TELEMÓVEL VERTICAL (PORTRAIT) - LARGURA TOTAL
    ========================================= */
 @media (orientation: portrait) {
-    /* 1. Bloqueio de Scroll lateral, permite vertical */
-    body, html {
-        overflow-x: hidden;
-        overflow-y: auto;
-        height: auto;
+    /* 1. Garantir que o main estica os filhos */
+    main { 
+        padding: 10px 15px; /* Margens laterais do ecrã */
+        width: 100%; 
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
 
-    /* 2. Intro: Letra pequena e discreta */
+    /* 2. Intro: Letra pequena */
     .intro-container { 
         margin: 15px 0; 
-        font-size: 1.2rem; /* Letra reduzida */
-        padding: 0 10px;
+        font-size: 1.2rem; 
     }
 
-    /* 3. Sublinhado Curvo Invertido (Adaptado à letra pequena) */
-    .destaque-curvo::after {
-        content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 10px;
-        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-        background-size: 100% 100%; background-repeat: no-repeat;
-    }
-
-    /* 4. Grelha de Anos em Pílulas */
+    /* 3. Grelha de Anos: Ocupar a largura toda */
     .years-grid { 
         display: flex; 
         flex-direction: column; 
         gap: 12px; 
-        width: 100%; 
-        max-width: 90%; /* Margem lateral no telemóvel */
+        width: 100%; /* Ocupa 100% do espaço do main */
+        max-width: 500px; /* Impede que fique exagerado em tablets verticais */
     }
 
+    /* 4. Cartão: Largura total e altura fixa */
     .year-card { 
         display: flex; 
         align-items: center; 
+        width: 100%; /* Garante que o cartão estica de ponta a ponta */
         background: white; 
         border: 2px solid var(--card-color); 
         border-radius: 50px; 
         padding: 5px; 
         text-decoration: none; 
-        height: 75px; /* Altura ajustada para o ícone de 65px */
+        height: 75px; 
         box-shadow: 0 4px 10px rgba(0,0,0,0.04);
     }
 
@@ -171,12 +167,12 @@
 
     /* 6. Ícones de Animais Uniformes */
     .card-top img { 
-        width: 70%; /* Garante que todos ocupam o mesmo espaço visual */
+        width: 70%; 
         height: 70%; 
         object-fit: contain; 
     }
 
-    /* 7. Texto e Seta da Pílula */
+    /* 7. Texto e Seta */
     .card-bottom { 
         flex: 1; 
         display: flex; 
@@ -191,39 +187,18 @@
         font-size: 1.1rem; 
     }
 
-    .btn-circle { 
-        width: 32px; 
-        height: 32px; 
-        border-radius: 50%; 
-        background: var(--card-color); 
-        color: white; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-    }
-
-    /* 8. Jogos em Destaque (Compacto para Telemóvel) */
+    /* 8. Jogos em Destaque (Larga também) */
     .destaques-wrapper { 
         margin: 20px 0; 
         padding: 15px; 
-        width: 95%; 
+        width: 100%; /* Ocupa a largura total */
     }
     
     .destaques-grid { 
-        grid-template-columns: repeat(3, 1fr); /* 3 colunas no telemóvel */
+        grid-template-columns: repeat(3, 1fr); 
         gap: 15px; 
     }
-
-    .destaque-item img {
-        width: 40px;
-        height: 40px;
-    }
-
-    .destaque-item p {
-        font-size: 0.65rem;
-    }
 }
-
         /* =========================================
            NOVO FOOTER: BARRA BRANCA TOTAL
            ========================================= */
@@ -244,6 +219,7 @@
     font-size: 0.85rem; 
     text-align: center;
 }
+        
 
         /* BOTÃO SETA */
         .btn-circle { width: 35px; height: 35px; border-radius: 50%; background: var(--card-color); color: white; display: flex; align-items: center; justify-content: center; }
