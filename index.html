@@ -46,21 +46,37 @@
             background-size: 100% 100%; background-repeat: no-repeat;
         }
 
-    /* =========================================
-   CARTÕES PRINCIPAIS (APENAS PC / PAISAGEM)
+/* =========================================
+   ESTRUTURA DE CENTRAMENTO (PAI)
+   ========================================= */
+main { 
+    width: 100%; 
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; /* Centra a grelha horizontalmente no ecrã */
+    justify-content: center;
+    padding: 20px;
+    flex-grow: 1; /* Garante que ocupa o espaço entre header e footer */
+}
+
+/* =========================================
+   CARTÕES PRINCIPAIS (PC / PAISAGEM)
    ========================================= */
 @media (orientation: landscape) {
     .years-grid { 
         display: flex; 
-        justify-content: center; 
-        gap: 15px; 
-        width: 100%; 
-        max-width: 1200px; 
+        flex-direction: row; /* Garante que fiquem lado a lado */
+        justify-content: center; /* Centra os cartões uns em relação aos outros */
+        align-items: center;
+        gap: 20px; 
+        width: auto; /* Deixa a grelha ter apenas o tamanho dos cartões */
+        max-width: 1300px; 
+        margin: 0 auto; /* Reforço de centramento */
     }
 
     .year-card {
-        flex: 1; 
-        height: 310px; /* Mantive a altura que tinhas gostado */
+        width: 190px; /* Largura fixa para garantir uniformidade e centramento */
+        height: 310px; 
         background: white; 
         border-radius: 35px; 
         border: 3px solid var(--card-color);
@@ -69,40 +85,33 @@
         flex-direction: column; 
         overflow: hidden;
         transition: transform 0.2s ease;
-        /* Efeito de borda dupla (espaço branco entre a borda e a cor) */
-        box-shadow: inset 0 0 0 5px white, 0 8px 20px rgba(0,0,0,0.06); 
+        box-shadow: inset 0 0 0 5px white, 0 8px 20px rgba(0,0,0,0.06);
+        position: relative;
     }
 
     .year-card:hover { transform: translateY(-8px); }
 
     /* PARTE SUPERIOR COLORIDA (60%) */
     .card-top {
-        height: 60%; /* Proporção exata */
+        height: 60%; 
+        width: 100%;
         background-color: var(--card-color);
         display: flex; 
         align-items: center; 
         justify-content: center; 
         position: relative;
-        padding-top: 10px; /* Espaço extra para o icon não bater no topo */
     }
 
-    /* CURVA DE TRANSIÇÃO (Efeito Onda) */
+    /* CURVA BRANCA */
     .card-top::after {
-        content: ""; 
-        position: absolute; 
-        bottom: -1px; 
-        left: 0; 
-        width: 100%; 
-        height: 50px; /* Altura da curva */
-        background: white; 
-        clip-path: ellipse(75% 100% at 50% 100%);
-        z-index: 1;
+        content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 40px;
+        background: white; clip-path: ellipse(75% 100% at 50% 100%);
     }
 
-    /* ÍCONES UNIFORMES E MAIS PEQUENOS */
+    /* ICONS UNIFORMES */
     .card-top img { 
-        width: 65%; /* Reduzido para uniformidade */
-        height: 65%; 
+        max-width: 70%; 
+        max-height: 70%; 
         object-fit: contain; 
         z-index: 2;
         filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
@@ -110,36 +119,36 @@
 
     /* PARTE INFERIOR BRANCA (40%) */
     .card-bottom {
-        height: 40%; /* Proporção exata */
+        height: 40%; 
+        width: 100%;
         background: white; 
         display: flex; 
         flex-direction: column; 
         align-items: center; 
-        justify-content: center; /* Centraliza conteúdo verticalmente */
-        gap: 8px; /* Espaço entre texto e seta */
-        padding-bottom: 10px;
+        justify-content: space-evenly; /* Distribui texto e seta uniformemente */
+        padding: 5px 0 15px 0;
         z-index: 3;
     }
 
-    /* TEXTO DO ANO */
+    /* TEXTO */
     .card-bottom span { 
         font-weight: 900; 
         color: var(--card-color); 
-        font-size: 1.3rem;
-        line-height: 1;
+        font-size: 1.4rem; 
+        text-align: center;
+        width: 100%;
     }
 
-    /* SETA (BOTÃO CIRCULAR) */
+    /* SETA */
     .btn-circle { 
-        width: 40px; 
-        height: 40px; 
+        width: 42px; 
+        height: 42px; 
         border-radius: 50%; 
         background: var(--card-color); 
         color: white; 
         display: flex; 
         align-items: center; 
         justify-content: center;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.1);
     }
 }
 
