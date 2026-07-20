@@ -111,18 +111,86 @@
         .destaque-item p { font-size: 0.7rem; font-weight: 800; color: #444; }
         .stars { color: var(--accent-yellow); font-size: 8px; }
 
-        /* =========================================
-           TELEMÓVEL (PORTRAIT)
-           ========================================= */
-        @media (orientation: portrait) {
-            .years-grid { display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 400px; }
-            .year-card { display: flex; align-items: center; background: white; border: 2px solid var(--card-color); border-radius: 50px; padding: 5px; text-decoration: none; }
-            .card-top { width: 50px; height: 50px; background: var(--card-color); border-radius: 50%; display: flex; align-items: center; justify-content: center; }
-            .card-top img { width: 70%; height: 70%; }
-            .card-bottom { flex: 1; display: flex; align-items: center; justify-content: space-between; padding: 0 15px; }
-            .card-bottom span { font-weight: 900; color: var(--card-color); font-size: 1rem; }
-            .destaques-grid { grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        }
+/* =========================================
+   TELEMÓVEL (PORTRAIT) - AJUSTES FINAIS
+   ========================================= */
+@media (orientation: portrait) {
+    /* Intro mais pequena e discreta */
+    .intro-container { 
+        margin: 15px 0; /* Menos espaço vertical */
+        font-size: 1.2rem; /* Letra reduzida para não ocupar o ecrã todo */
+    }
+    
+    /* Ajuste do sublinhado para a letra menor */
+    .destaque-curvo::after {
+        height: 10px;
+        bottom: -6px;
+    }
+
+    .years-grid { 
+        display: flex; 
+        flex-direction: column; 
+        gap: 10px; 
+        width: 100%; 
+        max-width: 400px; 
+    }
+
+    .year-card { 
+        display: flex; 
+        align-items: center; 
+        background: white; 
+        border: 2px solid var(--card-color); 
+        border-radius: 50px; 
+        padding: 5px; 
+        text-decoration: none; 
+        height: 60px; /* Altura fixa da "pílula" */
+    }
+
+    /* Contentor do Ícone (Círculo) */
+    .card-top { 
+        width: 50px; 
+        height: 50px; 
+        background: var(--card-color); 
+        border-radius: 50%; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        flex-shrink: 0; /* Impede que o círculo achate */
+    }
+
+    /* Ícones UNIFORMES */
+    .card-top img { 
+        width: 65%; /* Todos os animais terão o mesmo peso visual */
+        height: 65%; 
+        object-fit: contain; /* Garante que não distorce */
+    }
+
+    /* Texto e Seta */
+    .card-bottom { 
+        flex: 1; 
+        display: flex; 
+        align-items: center; 
+        justify-content: space-between; 
+        padding: 0 15px; 
+    }
+
+    .card-bottom span { 
+        font-weight: 900; 
+        color: var(--card-color); 
+        font-size: 1rem; 
+    }
+
+    /* Jogos em destaque no Telemóvel */
+    .destaques-grid { 
+        grid-template-columns: repeat(3, 1fr); 
+        gap: 12px; 
+    }
+    
+    .destaque-item img {
+        width: 38px;
+        height: 38px;
+    }
+}
 
         /* =========================================
            NOVO FOOTER: BARRA BRANCA TOTAL
