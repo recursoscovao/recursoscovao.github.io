@@ -81,52 +81,72 @@
    TELEMÓVEL LANDSCAPE (HORIZONTAL)
    ========================================= */
 @media (max-height: 500px) and (orientation: landscape) {
-    /* 1. Compactar o topo para ganhar espaço */
-    .header-wrapper { padding: 5px; border-radius: 0 0 20px 20px; }
+    /* 1. Ajustes de Página (Evitar Scroll) */
+    body, html { overflow-y: auto; height: auto; }
+    
+    .header-wrapper { padding: 5px; border-radius: 0 0 20px 20px; flex-shrink: 0; }
     #header-icon { height: 35px; }
     .title-main { font-size: 1.2rem; }
-    .title-sub { display: none; } /* Esconde o subtítulo para ganhar altura */
+    .title-sub { display: none; }
 
-    /* 2. Intro mínima */
-    .intro-container { margin: 10px 0; font-size: 1.1rem; }
+    .intro-container { margin: 8px 0; font-size: 1.1rem; flex-shrink: 0; }
     .destaque-curvo::after { height: 8px; bottom: -5px; }
 
-    /* 3. Grelha de Cartões */
-    main { padding: 5px 10px; }
+    main { padding: 5px 0; gap: 10px; }
+
+    /* 2. Grelha de Anos e Caixa de Destaques com a MESMA LARGURA */
+    .years-grid, .destaques-wrapper {
+        width: 95%;        /* Ocupam 95% da largura do telemóvel */
+        max-width: 850px;  /* Limite para não esticar demais em ecrãs ultra-wide */
+        margin: 0 auto;    /* Centra ambos na horizontal */
+    }
+
     .years-grid { 
-        gap: 10px; 
-        width: 100%; 
+        display: flex; 
+        flex-direction: row; 
+        gap: 8px; 
         justify-content: center; 
     }
 
+    /* 3. Cartões Dinâmicos (Dividem a largura da área por 5) */
     .year-card {
-        width: 135px; /* Largura adaptada */
-        height: 225px; /* Altura reduzida conforme pedido */
-        border-radius: 25px;
+        flex: 1;           /* Cada cartão ocupa 1/5 da largura da área */
+        height: 215px;     /* Altura compacta para ecrãs horizontais */
+        background: white; 
+        border-radius: 25px; 
         border: 2px solid var(--card-color);
+        display: flex; flex-direction: column; overflow: hidden;
         box-shadow: inset 0 0 0 4px white, 0 4px 10px rgba(0,0,0,0.05);
     }
 
-    /* 4. Proporções 60/40 compactas */
-    .card-top { height: 60%; }
-    .card-top::after { height: 25px; clip-path: ellipse(85% 100% at 50% 100%); }
-    .card-top img { max-width: 55%; max-height: 55%; }
+    /* Proporção 60/40 */
+    .card-top { height: 60%; background-color: var(--card-color); position: relative; display: flex; align-items: center; justify-content: center; }
+    .card-top::after { content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 25px; background: white; clip-path: ellipse(85% 100% at 50% 100%); }
+    .card-top img { max-width: 55%; max-height: 55%; z-index: 2; }
 
-    .card-bottom { height: 40%; padding-bottom: 5px; }
-    .card-bottom span { font-size: 0.95rem; }
+    .card-bottom { height: 40%; background: white; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding-bottom: 5px; }
+    .card-bottom span { font-weight: 900; color: var(--card-color); font-size: 0.9rem; text-align: center; }
     
-    .btn-circle { width: 28px; height: 28px; }
+    .btn-circle { width: 26px; height: 26px; }
 
-    /* 5. Jogos em destaque (Miniatura) */
-    .destaques-wrapper { margin-top: 10px; padding: 10px; }
-    .destaques-grid { grid-template-columns: repeat(6, 1fr); gap: 8px; }
-    .destaque-item img { width: 30px; height: 30px; }
+    /* 4. Caixa de Destaques (Já configurada para a mesma largura acima) */
+    .destaques-wrapper { 
+        background: white; border-radius: 25px; padding: 10px; margin-top: 5px; 
+    }
+    .destaques-header { margin-bottom: 8px; gap: 8px; }
+    .destaques-header img { height: 18px; }
+    .destaques-header h3 { font-size: 0.85rem; }
+
+    .destaques-grid { grid-template-columns: repeat(6, 1fr); gap: 10px; }
+    .destaque-item img { width: 32px; height: 32px; margin-bottom: 2px; }
     .destaque-item p { font-size: 0.6rem; }
-    
-    /* 6. Footer discreto */
-    footer { padding: 8px 0; }
-    #txt-rodape { font-size: 0.75rem; }
+    .stars { font-size: 7px; }
+
+    /* 5. Footer Compacto */
+    footer { padding: 10px 0; }
+    #txt-rodape { font-size: 0.75rem; font-weight: 500; }
 }
+        
 
         /* =========================================
            CARTÕES PARA TABLET LANDSCAPE
