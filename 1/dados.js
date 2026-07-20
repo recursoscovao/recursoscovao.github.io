@@ -22,8 +22,8 @@ const JOGO_CONFIG = {
     links: {
         home: "../index.html", 
         pre: "../pre/index.html",
-        ano1: "../1/index.html",
-        ano2: "./index.html",
+        ano1: "./index.html",
+        ano2: "../2/index.html",
         ano3: "../3/index.html",
         ano4: "../4/index.html"
     },
