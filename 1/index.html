@@ -76,24 +76,25 @@
             padding: 0 20px; min-height: 0; gap: 2vh;
         }
 
-        /* =========================================
+/* =========================================
    CONFIGURAÇÕES PC & TABLET LANDSCAPE
+   Largura 260px | Proporção 60-40 | Destaques Brancos
    ========================================= */
 @media (min-width: 768px) and (orientation: landscape) {
     
-    /* Contentor principal - Ajuste de largura */
+    /* Grelha de Disciplinas */
     .game-wrapper { 
         display: flex; 
         justify-content: center; 
-        gap: clamp(15px, 2.5vw, 30px); 
+        gap: clamp(15px, 3vw, 40px); 
         width: auto; 
-        flex-shrink: 0; 
+        margin-bottom: 2vh;
     }
 
     .game-card {
-        /* Cartão mais largo no PC (240px) e Tablet (180px) */
-        width: clamp(180px, 20vw, 240px); 
-        height: clamp(280px, 40vh, 360px); 
+        /* LARGURA AUMENTADA: 260px no PC | 200px no Tablet */
+        width: clamp(200px, 22vw, 260px); 
+        height: clamp(300px, 42vh, 380px); 
         background: white; 
         border-radius: 35px; 
         border: 3px solid var(--theme-color);
@@ -108,115 +109,101 @@
 
     .game-card:hover { transform: translateY(-10px); }
 
-    /* ZONA COLORIDA (60%) */
+    /* ZONA COLORIDA (EXATOS 60%) */
     .card-top { 
-        height: 60%; 
+        height: 60% !important; 
         background-color: var(--theme-bg); 
         display: flex; 
         align-items: center; 
         justify-content: center; 
         position: relative; 
-        overflow: hidden; /* Para não sair o fundo cinza */
+        overflow: hidden;
     }
 
     /* IMAGEM DE FUNDO CINZENTA (Marca d'água) */
     .card-top::before {
         content: "";
         position: absolute;
-        top: 10%;
-        left: 10%;
-        width: 80%;
-        height: 80%;
+        top: 50%; left: 50%;
+        transform: translate(-50%, -50%);
+        width: 85%; height: 85%;
         background-repeat: no-repeat;
         background-position: center;
         background-size: contain;
-        /* Efeito Cinza e Transparente */
-        filter: grayscale(1) brightness(0.8);
-        opacity: 0.15; 
+        filter: grayscale(1) brightness(0.7);
+        opacity: 0.12; 
         z-index: 1;
     }
 
-    /* DEFINIR IMAGENS POR DISCIPLINA (Exemplos) */
-    /* 1º Cartão (Português - Letras) */
-    .game-card:nth-child(1) .card-top::before {
-        background-image: url('../icons/bg_letras.png'); /* Caminho da tua imagem de letras */
-    }
-    /* 2º Cartão (Matemática - Números) */
-    .game-card:nth-child(2) .card-top::before {
-        background-image: url('../icons/bg_numeros.png'); /* Caminho da tua imagem de números */
-    }
-    /* 3º Cartão (Estudo do Meio - Natureza/Mundo) */
-    .game-card:nth-child(3) .card-top::before {
-        background-image: url('../icons/bg_mundo.png'); /* Caminho da tua imagem de natureza */
-    }
+    /* Imagens de fundo por cartão (Exemplos) */
+    .game-card:nth-child(1) .card-top::before { background-image: url('../icons/bg_letras.png'); }
+    .game-card:nth-child(2) .card-top::before { background-image: url('../icons/bg_numeros.png'); }
+    .game-card:nth-child(3) .card-top::before { background-image: url('../icons/bg_mundo.png'); }
 
-    /* Onda branca de transição */
+    /* Onda branca (Proporcional aos 60%) */
     .card-top::after { 
         content: ""; 
         position: absolute; 
-        bottom: -1px; 
-        left: 0; 
-        width: 100%; 
-        height: 45px; 
+        bottom: -1px; left: 0; width: 100%; height: 50px; 
         background: white; 
         clip-path: ellipse(75% 100% at 50% 100%); 
         z-index: 2;
     }
 
-    /* Imagem principal do animal/disciplina */
     .card-top img { 
-        max-width: 65%; 
-        max-height: 65%; 
-        object-fit: contain; 
-        z-index: 3; 
-        filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
+        max-width: 65%; max-height: 65%; 
+        object-fit: contain; z-index: 3; 
+        filter: drop-shadow(0 5px 12px rgba(0,0,0,0.1));
     }
 
-    /* ZONA BRANCA (40%) */
+    /* ZONA BRANCA (EXATOS 40%) */
     .card-bottom { 
-        height: 40%; 
+        height: 40% !important; 
+        background: white;
         display: flex; 
         flex-direction: column; 
         align-items: center; 
         justify-content: space-evenly; 
-        background: white; 
-        padding-bottom: 10px; 
+        padding: 5px 0 15px 0; 
         z-index: 4; 
     }
 
     .card-bottom h2 { 
         color: var(--theme-color); 
-        font-size: clamp(0.9rem, 1.5vw, 1.2rem); 
+        font-size: 1.3rem; 
         font-weight: 900; 
         text-transform: uppercase;
         text-align: center;
-        padding: 0 10px;
     }
 
     .btn-circle { 
-        width: clamp(35px, 5vh, 48px); 
-        height: clamp(35px, 5vh, 48px); 
+        width: 48px; height: 48px; 
         border-radius: 50%; 
         background: var(--theme-color); 
         color: white; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
+        display: flex; align-items: center; justify-content: center; 
+    }
+
+    /* =========================================
+       JOGOS EM DESTAQUE (CAIXA BRANCA CENTRADA)
+       ========================================= */
+    .destaques-wrapper {
+        background: white !important; /* Forçado fundo branco */
+        border-radius: 30px; 
+        padding: 15px 30px; 
+        width: 100%; 
+        max-width: 1100px; /* Alinhado com a largura dos 3 cartões largos */
+        box-shadow: 0 4px 20px rgba(0,0,0,0.04);
+        margin-bottom: 4vh; /* Padding para o footer azul não colar */
+        flex-shrink: 0;
+    }
+
+    .destaques-grid { 
+        display: grid; 
+        grid-template-columns: repeat(6, 1fr); 
+        gap: 15px; 
     }
 }
-
-        /* =========================================
-           JOGOS EM DESTAQUE (Geral)
-           ========================================= */
-        .destaques-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; }
-        .destaques-header img { height: 20px; }
-        .destaques-header h3 { color: var(--primary-blue); font-size: 1rem; font-weight: 800; }
-        .destaques-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; text-align: center; }
-        .destaque-item { text-decoration: none; color: inherit; transition: transform 0.2s; }
-        .destaque-item:hover { transform: scale(1.05); }
-        .destaque-item img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 5px; }
-        .destaque-item p { font-size: 0.75rem; font-weight: 800; color: #444; }
-        .stars { color: var(--accent-yellow); font-size: 9px; }
 
         /* =========================================
            FOOTER (Barra Branca)
@@ -228,6 +215,7 @@
             box-shadow: 0 -4px 10px rgba(0,0,0,0.02);
         }
         .footer-text { color: var(--text-grey); font-weight: 500; font-size: 0.85rem; }
+        
 
         /* =========================================
            RESPONSIVIDADE TELEMÓVEL (PORTRAIT)
