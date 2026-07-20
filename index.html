@@ -78,40 +78,39 @@
         }
 
 /* =========================================
-   TELEMÓVEL LANDSCAPE (HORIZONTAL)
+   TELEMÓVEL LANDSCAPE (HORIZONTAL) - CORRIGIDO
    ========================================= */
 @media (max-height: 500px) and (orientation: landscape) {
-    /* 1. Ajustes de Página (Evitar Scroll) */
-    body, html { overflow-y: auto; height: auto; }
     
-    .header-wrapper { padding: 5px; border-radius: 0 0 20px 20px; flex-shrink: 0; }
-    #header-icon { height: 35px; }
-    .title-main { font-size: 1.2rem; }
+    /* 1. Limpeza de espaço no topo */
+    .header-wrapper { padding: 4px; border-radius: 0 0 20px 20px; }
+    #header-icon { height: 32px; }
+    .title-main { font-size: 1.1rem; }
     .title-sub { display: none; }
+    .intro-container { margin: 6px 0; font-size: 1rem; }
+    .destaque-curvo::after { height: 7px; bottom: -4px; }
 
-    .intro-container { margin: 8px 0; font-size: 1.1rem; flex-shrink: 0; }
-    .destaque-curvo::after { height: 8px; bottom: -5px; }
+    /* 2. O Contentor Principal */
+    main { padding: 5px 0; gap: 8px; }
 
-    main { padding: 5px 0; gap: 10px; }
-
-    /* 2. Grelha de Anos e Caixa de Destaques com a MESMA LARGURA */
+    /* 3. A LARGURA COMUM (O segredo do alinhamento) */
+    /* Definimos uma largura máxima mais estreita para o telemóvel deitado */
     .years-grid, .destaques-wrapper {
-        width: 95%;        /* Ocupam 95% da largura do telemóvel */
-        max-width: 850px;  /* Limite para não esticar demais em ecrãs ultra-wide */
-        margin: 0 auto;    /* Centra ambos na horizontal */
+        width: 80%;        /* Reduzi para 80% para os cartões ficarem menores */
+        max-width: 700px;  /* Limite para não esticar em ecrãs grandes */
+        margin: 0 auto;    /* Centra ambos */
     }
 
+    /* 4. REDUÇÃO DOS 5 CARTÕES */
     .years-grid { 
         display: flex; 
         flex-direction: row; 
-        gap: 8px; 
-        justify-content: center; 
+        gap: 10px; 
     }
 
-    /* 3. Cartões Dinâmicos (Dividem a largura da área por 5) */
     .year-card {
-        flex: 1;           /* Cada cartão ocupa 1/5 da largura da área */
-        height: 215px;     /* Altura compacta para ecrãs horizontais */
+        flex: 1;           /* Divide o espaço de 80% por 5 automaticamente */
+        height: 200px;     /* Altura reduzida como pedido */
         background: white; 
         border-radius: 25px; 
         border: 2px solid var(--card-color);
@@ -119,32 +118,32 @@
         box-shadow: inset 0 0 0 4px white, 0 4px 10px rgba(0,0,0,0.05);
     }
 
-    /* Proporção 60/40 */
-    .card-top { height: 60%; background-color: var(--card-color); position: relative; display: flex; align-items: center; justify-content: center; }
-    .card-top::after { content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 25px; background: white; clip-path: ellipse(85% 100% at 50% 100%); }
-    .card-top img { max-width: 55%; max-height: 55%; z-index: 2; }
+    /* Proporções e Ícones dentro dos cartões reduzidos */
+    .card-top { height: 60%; position: relative; display: flex; align-items: center; justify-content: center; }
+    .card-top::after { content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 20px; background: white; clip-path: ellipse(85% 100% at 50% 100%); }
+    .card-top img { max-width: 50%; max-height: 50%; z-index: 2; } /* Ícones menores e uniformes */
 
-    .card-bottom { height: 40%; background: white; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding-bottom: 5px; }
-    .card-bottom span { font-weight: 900; color: var(--card-color); font-size: 0.9rem; text-align: center; }
-    
-    .btn-circle { width: 26px; height: 26px; }
+    .card-bottom { height: 40%; background: white; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding-bottom: 4px; }
+    .card-bottom span { font-weight: 900; color: var(--card-color); font-size: 0.85rem; }
+    .btn-circle { width: 24px; height: 24px; }
+    .btn-circle svg { stroke-width: 5; }
 
-    /* 4. Caixa de Destaques (Já configurada para a mesma largura acima) */
+    /* 5. Caixa de Destaques (Agora alinhada com os cartões acima) */
     .destaques-wrapper { 
-        background: white; border-radius: 25px; padding: 10px; margin-top: 5px; 
+        background: white; border-radius: 20px; padding: 8px 15px; margin-top: 5px; 
     }
-    .destaques-header { margin-bottom: 8px; gap: 8px; }
-    .destaques-header img { height: 18px; }
-    .destaques-header h3 { font-size: 0.85rem; }
+    .destaques-header { margin-bottom: 5px; gap: 6px; }
+    .destaques-header img { height: 16px; }
+    .destaques-header h3 { font-size: 0.8rem; }
 
     .destaques-grid { grid-template-columns: repeat(6, 1fr); gap: 10px; }
-    .destaque-item img { width: 32px; height: 32px; margin-bottom: 2px; }
-    .destaque-item p { font-size: 0.6rem; }
-    .stars { font-size: 7px; }
+    .destaque-item img { width: 28px; height: 28px; margin-bottom: 2px; }
+    .destaque-item p { font-size: 0.55rem; }
+    .stars { font-size: 6px; }
 
-    /* 5. Footer Compacto */
-    footer { padding: 10px 0; }
-    #txt-rodape { font-size: 0.75rem; font-weight: 500; }
+    /* 6. Footer (Barra branca total preservada) */
+    footer { padding: 8px 0; }
+    #txt-rodape { font-size: 0.7rem; font-weight: 500; }
 }
         
 
