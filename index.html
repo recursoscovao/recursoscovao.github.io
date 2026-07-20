@@ -112,27 +112,37 @@
         .stars { color: var(--accent-yellow); font-size: 8px; }
 
 /* =========================================
-   TELEMÓVEL (PORTRAIT) - AJUSTES FINAIS
+   TELEMÓVEL VERTICAL (PORTRAIT)
    ========================================= */
 @media (orientation: portrait) {
-    /* Intro mais pequena e discreta */
-    .intro-container { 
-        margin: 15px 0; /* Menos espaço vertical */
-        font-size: 1.2rem; /* Letra reduzida para não ocupar o ecrã todo */
-    }
-    
-    /* Ajuste do sublinhado para a letra menor */
-    .destaque-curvo::after {
-        height: 10px;
-        bottom: -6px;
+    /* 1. Bloqueio de Scroll lateral, permite vertical */
+    body, html {
+        overflow-x: hidden;
+        overflow-y: auto;
+        height: auto;
     }
 
+    /* 2. Intro: Letra pequena e discreta */
+    .intro-container { 
+        margin: 15px 0; 
+        font-size: 1.2rem; /* Letra reduzida */
+        padding: 0 10px;
+    }
+
+    /* 3. Sublinhado Curvo Invertido (Adaptado à letra pequena) */
+    .destaque-curvo::after {
+        content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 10px;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
+        background-size: 100% 100%; background-repeat: no-repeat;
+    }
+
+    /* 4. Grelha de Anos em Pílulas */
     .years-grid { 
         display: flex; 
         flex-direction: column; 
-        gap: 10px; 
+        gap: 12px; 
         width: 100%; 
-        max-width: 400px; 
+        max-width: 90%; /* Margem lateral no telemóvel */
     }
 
     .year-card { 
@@ -143,29 +153,30 @@
         border-radius: 50px; 
         padding: 5px; 
         text-decoration: none; 
-        height: 60px; /* Altura fixa da "pílula" */
+        height: 75px; /* Altura ajustada para o ícone de 65px */
+        box-shadow: 0 4px 10px rgba(0,0,0,0.04);
     }
 
-    /* Contentor do Ícone (Círculo) */
+    /* 5. Círculo do Ícone (65px) */
     .card-top { 
-        width: 50px; 
-        height: 50px; 
+        width: 65px; 
+        height: 65px; 
         background: var(--card-color); 
         border-radius: 50%; 
         display: flex; 
         align-items: center; 
         justify-content: center; 
-        flex-shrink: 0; /* Impede que o círculo achate */
+        flex-shrink: 0; 
     }
 
-    /* Ícones UNIFORMES */
+    /* 6. Ícones de Animais Uniformes */
     .card-top img { 
-        width: 65%; /* Todos os animais terão o mesmo peso visual */
-        height: 65%; 
-        object-fit: contain; /* Garante que não distorce */
+        width: 70%; /* Garante que todos ocupam o mesmo espaço visual */
+        height: 70%; 
+        object-fit: contain; 
     }
 
-    /* Texto e Seta */
+    /* 7. Texto e Seta da Pílula */
     .card-bottom { 
         flex: 1; 
         display: flex; 
@@ -177,18 +188,39 @@
     .card-bottom span { 
         font-weight: 900; 
         color: var(--card-color); 
-        font-size: 1rem; 
+        font-size: 1.1rem; 
     }
 
-    /* Jogos em destaque no Telemóvel */
-    .destaques-grid { 
-        grid-template-columns: repeat(3, 1fr); 
-        gap: 12px; 
+    .btn-circle { 
+        width: 32px; 
+        height: 32px; 
+        border-radius: 50%; 
+        background: var(--card-color); 
+        color: white; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+    }
+
+    /* 8. Jogos em Destaque (Compacto para Telemóvel) */
+    .destaques-wrapper { 
+        margin: 20px 0; 
+        padding: 15px; 
+        width: 95%; 
     }
     
+    .destaques-grid { 
+        grid-template-columns: repeat(3, 1fr); /* 3 colunas no telemóvel */
+        gap: 15px; 
+    }
+
     .destaque-item img {
-        width: 38px;
-        height: 38px;
+        width: 40px;
+        height: 40px;
+    }
+
+    .destaque-item p {
+        font-size: 0.65rem;
     }
 }
 
