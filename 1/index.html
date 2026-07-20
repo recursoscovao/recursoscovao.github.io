@@ -11,7 +11,7 @@
     <style>
         :root {
             --primary-blue: #5EA2E6; 
-            --back-blue: #1A499C; /* Cor da seta voltar para o hover */
+            --back-blue: #1A499C; 
             --text-grey: #8792a1;
             --sky-blue: #EAF4FE;
             --accent-yellow: #FFC107;
@@ -21,12 +21,12 @@
         
         body, html {
             height: 100dvh; width: 100vw;
-            overflow: hidden; 
+            overflow-x: hidden; 
             background-color: var(--sky-blue);
             display: flex; flex-direction: column;
         }
 
-        /* ----- HEADER ----- */
+        /* ----- HEADER GERAL ----- */
         header { 
             background: white; border-radius: 0 0 35px 35px;
             display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; 
@@ -41,22 +41,11 @@
         #txt-titulo2 { color: var(--text-grey); font-weight: 900; font-size: 1.2rem; }
         #txt-subtitulo { color: var(--text-grey); font-weight: 700; font-size: 0.75rem; margin-top: 3px; }
         #icon-voltar-top { height: 42px; cursor: pointer; justify-self: end; transition: transform 0.2s; }
-        #icon-voltar-top:hover { transform: scale(1.1); }
 
-        /* ----- MENU DROPDOWN ----- */
+        /* ----- MENU ----- */
         .menu-dropdown { position: absolute; top: 80px; left: 20px; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
-        .menu-item { 
-            display: flex; align-items: center; gap: 12px; padding: 12px 18px; 
-            background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
-            text-decoration: none; color: var(--text-grey); font-weight: 700; 
-            min-width: 220px; transition: all 0.2s ease; 
-        }
-        /* Hover com a cor da seta voltar */
-        .menu-item:hover { 
-            background-color: var(--back-blue); 
-            color: white; 
-            transform: translateX(8px); 
-        }
+        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); text-decoration: none; color: var(--text-grey); font-weight: 700; min-width: 220px; transition: all 0.2s ease; }
+        .menu-item:hover { background-color: var(--back-blue); color: white; transform: translateX(8px); }
         .menu-item img { height: 24px; width: 24px; object-fit: contain; }
         .menu-sep { border-top: 2px solid #f0f4f8; margin: 5px 0; }
 
@@ -69,288 +58,110 @@
             background-size: 100% 100%; background-repeat: no-repeat;
         }
 
-        /* ----- MAIN ----- */
-        main { 
-            flex: 1; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; 
-            padding: 0 20px; min-height: 0; gap: 2vh;
-        }
-
-/* =========================================
-   CONFIGURAÇÃO PC & TABLET LANDSCAPE
-   ========================================= */
-@media (min-width: 768px) and (orientation: landscape) {
-    
-    /* Contentor Main - Garante que tudo fica alinhado ao centro */
-    main {
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-        justify-content: center;
-        gap: 20px;
-        padding: 10px 20px;
-        flex: 1;
-    }
-
-    /* Grelha de Disciplinas (3 Cartões Largos) */
-    .game-wrapper { 
-        display: flex; 
-        justify-content: center; 
-        gap: 30px; 
-        width: auto; 
-    }
-
-    .game-card {
-        width: 260px; /* Largura que pediste */
-        height: clamp(300px, 40vh, 360px); 
-        background: white; 
-        border-radius: 35px; 
-        border: 3px solid var(--theme-color);
-        display: flex; flex-direction: column; 
-        overflow: hidden; text-decoration: none;
-        box-shadow: inset 0 0 0 6px white, 0 10px 25px rgba(0,0,0,0.05);
-        transition: transform 0.2s ease;
-        position: relative;
-    }
-
-    .game-card:hover { transform: translateY(-8px); }
-
-    /* PARTE COLORIDA (60%) */
-    .card-top { 
-        height: 60% !important; 
-        background-color: var(--theme-bg); 
-        display: flex; align-items: center; justify-content: center; 
-        position: relative; overflow: hidden;
-    }
-
-    /* Marca d'água cinza no fundo */
-    .card-top::before {
-        content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-        width: 80%; height: 80%; background-repeat: no-repeat; background-position: center; background-size: contain;
-        filter: grayscale(1) brightness(0.8); opacity: 0.12; z-index: 1;
-    }
-    .game-card:nth-child(1) .card-top::before { background-image: url('../icons/bg_letras.png'); }
-    .game-card:nth-child(2) .card-top::before { background-image: url('../icons/bg_numeros.png'); }
-    .game-card:nth-child(3) .card-top::before { background-image: url('../icons/bg_mundo.png'); }
-
-    /* Onda branca */
-    .card-top::after { 
-        content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 45px; 
-        background: white; clip-path: ellipse(75% 100% at 50% 100%); z-index: 2;
-    }
-
-    .card-top img { max-width: 60%; max-height: 60%; object-fit: contain; z-index: 3; }
-
-    /* PARTE BRANCA (40%) */
-    .card-bottom { 
-        height: 40% !important; background: white;
-        display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; 
-        padding-bottom: 10px; z-index: 4; 
-    }
-    .card-bottom h2 { color: var(--theme-color); font-size: 1.2rem; font-weight: 900; text-transform: uppercase; }
-    .btn-circle { width: 45px; height: 45px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
-
-/* =========================================
-   TELEMÓVEL LANDSCAPE (HORIZONTAL)
-   ========================================= */
-@media (max-height: 500px) and (orientation: landscape) {
-    
-    /* 1. Ícones do Header mais próximos dos limites */
-    header { 
-        height: 50px; 
-        padding: 0 8px; /* Reduzi o padding lateral ao mínimo */
-        grid-template-columns: 45px 1fr 45px; /* Colunas laterais estreitas para empurrar ícones */
-        border-radius: 0 0 20px 20px; 
-    }
-    .hamburger-btn { justify-self: start; padding-left: 5px; }
-    .header-right { justify-self: end; padding-right: 5px; }
-    #header-icon { height: 35px; }
-    #txt-titulo1, #txt-titulo2 { font-size: 0.95rem; }
-    #icon-voltar-top { height: 30px; }
-
-    /* 2. Sincronização de Largura (Cartões e Destaques iguais) */
-    .game-wrapper, .destaques-wrapper {
-        width: 92%;        /* Ocupam a mesma largura total do ecrã */
-        max-width: 800px;  /* Limite comum para alinhar as bordas */
-        margin: 0 auto;    /* Centra ambos */
-    }
-
-    /* 3. Cartões (Proporção 60/40 com altura compacta) */
-    .game-wrapper { display: flex; flex-direction: row; gap: 12px; margin-bottom: 12px; }
-    .game-card {
-        flex: 1;
-        height: 165px; 
-        background: white; border-radius: 25px; border: 2px solid var(--theme-color);
-        display: flex; flex-direction: column; overflow: hidden;
-        box-shadow: inset 0 0 0 4px white, 0 4px 10px rgba(0,0,0,0.05);
-    }
-    .card-top { height: 60% !important; background-color: var(--theme-bg); position: relative; display: flex; align-items: center; justify-content: center; }
-    .card-top::after { content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 18px; background: white; clip-path: ellipse(80% 100% at 50% 100%); }
-    .card-top img { max-width: 50%; max-height: 50%; z-index: 2; }
-    .card-bottom { height: 40% !important; background: white; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding-bottom: 4px; }
-    .card-bottom h2 { font-weight: 900; color: var(--theme-color); font-size: 0.7rem; }
-    .btn-circle { width: 24px; height: 24px; }
-
-    /* 4. Caixa de Destaques (Igual aos cartões acima) */
-    .destaques-wrapper { 
-        background: white !important; 
-        border-radius: 20px; 
-        padding: 12px 20px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-    }
-    .destaques-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
-    .destaque-item img { width: 30px; height: 30px; margin-bottom: 2px; }
-    .destaque-item p { font-size: 0.55rem; }
-
-    /* 5. Ativar Scroll Vertical */
-    body, html { height: auto; overflow-y: auto; overflow-x: hidden; }
-    main { height: auto; padding: 10px 0 30px 0; gap: 15px; justify-content: flex-start; }
-    footer { padding: 8px 0; margin-top: 15px; }
-}
-
-
-/* =========================================
-   TELEMÓVEL VERTICAL (PORTRAIT) - AJUSTES
-   ========================================= */
-@media (orientation: portrait) {
-    body, html { height: auto; overflow-y: auto; overflow-x: hidden; }
-
-    /* 1. Header: Ícones menores e a 10px dos limites */
-    header { 
-        height: 65px; 
-        padding: 0 10px; /* Distância de 10px das bordas */
-        grid-template-columns: 40px 1fr 40px; 
-        border-radius: 0 0 25px 25px;
-        flex-shrink: 0;
-    }
-    .hamburger-btn { 
-        justify-self: start; 
-        font-size: 20px; /* Ícone menor */
-        padding: 0;
-    }
-    .header-right { justify-self: end; }
-    #icon-voltar-top { 
-        height: 28px; /* Seta menor */
-        display: block;
-    }
-    #header-icon { height: 38px; }
-    #txt-titulo1, #txt-titulo2 { font-size: 1rem; }
-    #txt-subtitulo { font-size: 0.6rem; }
-
-    /* 2. Intro e Contentor */
-    .sub-header { margin: 12px 0; }
-    .intro-text { font-size: 1.1rem; }
-
-    main { 
-        padding: 10px 15px; 
-        gap: 15px; 
-        display: flex; 
-        flex-direction: column; 
-        align-items: center; 
-    }
-
-    /* 3. Sincronização de Largura (88% do ecrã para ambos) */
-    .game-wrapper, .destaques-wrapper {
-        width: 100%; 
-        max-width: 400px; 
-        margin: 0 auto;
-    }
-
-    /* 4. Cartões em Pílula */
-    .game-wrapper { display: flex; flex-direction: column; gap: 10px; }
-    .game-card { 
-        display: flex; flex-direction: row; align-items: center; 
-        height: 70px; border-radius: 40px; 
-        border: 2.5px solid var(--theme-color); background: white; 
-        padding: 4px; text-decoration: none;
-        box-shadow: 0 4px 8px rgba(0,0,0,0.04);
-    }
-    .card-top { 
-        width: 60px; height: 60px; border-radius: 50%; 
-        background: var(--theme-bg); display: flex; 
-        align-items: center; justify-content: center; flex-shrink: 0; 
-    }
-    .card-top img { width: 70%; height: 70%; }
-    .card-bottom { 
-        flex: 1; display: flex; flex-direction: row !important; 
-        align-items: center; justify-content: space-between; 
-        padding: 0 15px; background: none;
-    }
-    .card-bottom h2 { font-size: 0.95rem; color: var(--theme-color); }
-    .btn-circle { width: 30px; height: 30px; font-size: 10px; }
-
-    /* 5. Caixa de Destaques (Fundo Branco e Ícones de 32px) */
-    .destaques-wrapper { 
-        background: white !important; /* Garante o fundo branco */
-        border-radius: 20px; 
-        padding: 15px 10px; 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-    }
-    .destaques-header { margin-bottom: 12px; gap: 6px; }
-    .destaques-header img { height: 14px; }
-    .destaques-header h3 { font-size: 0.85rem; }
-
-    .destaques-grid { 
-        display: grid; 
-        grid-template-columns: repeat(3, 1fr); /* 3 colunas */
-        gap: 12px; 
-    }
-    .destaque-item img { 
-        width: 32px;  /* Ícone menor conforme pedido */
-        height: 32px; 
-        margin-bottom: 3px; 
-    }
-    .destaque-item p { font-size: 0.6rem; }
-
-    /* 6. Footer */
-    footer { margin-top: 15px; padding: 12px 0; }
-}
-    
-   /* =========================================
-       SECÇÃO DESTAQUES - ÍCONES REDUZIDOS
-       ========================================= */
-    .destaques-wrapper {
-        background: white !important;
-        border-radius: 30px; 
-        padding: 15px 25px; 
-        width: 100%; 
-        max-width: 1000px;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-        margin-bottom: 30px;
-        flex-shrink: 0;
-    }
-
-    .destaques-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; }
-    .destaques-header img { height: 16px; } /* Ícone do título (comando) */
-    .destaques-header h3 { color: var(--primary-blue); font-size: 0.9rem; font-weight: 800; }
-
-    .destaques-grid { 
-        display: flex;
-        justify-content: space-around; 
-        align-items: center; 
-        width: 100%;
-    }
-
-    .destaque-item { 
-        display: flex; flex-direction: column; align-items: center; 
-        text-decoration: none; width: 90px; 
-    }
-
-    /* TAMANHO DOS ÍCONES REDUZIDO AQUI */
-    .destaque-item img { 
-        width: 32px;  /* Era 45px, agora 32px */
-        height: 32px; /* Era 45px, agora 32px */
-        object-fit: contain; 
-        margin-bottom: 4px; 
-    }
-
-    .destaque-item p { font-size: 0.7rem; font-weight: 800; color: #444; text-align: center; line-height: 1.1; }
-    .stars { color: var(--accent-yellow); font-size: 8px; margin-top: 2px; }
-}
+        main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 20px; min-height: 0; gap: 2vh; }
 
         /* =========================================
-           FOOTER (Barra Branca)
+           PC & TABLET LANDSCAPE
            ========================================= */
+        @media (min-width: 1025px) and (orientation: landscape) {
+            .game-wrapper { display: flex; justify-content: center; gap: 30px; width: auto; }
+            .game-card {
+                width: 260px; height: clamp(300px, 40vh, 360px); 
+                background: white; border-radius: 35px; border: 3px solid var(--theme-color);
+                display: flex; flex-direction: column; overflow: hidden; text-decoration: none;
+                box-shadow: inset 0 0 0 6px white, 0 10px 25px rgba(0,0,0,0.05); transition: transform 0.2s ease;
+            }
+            .game-card:hover { transform: translateY(-8px); }
+            .card-top { height: 60% !important; background-color: var(--theme-bg); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
+            .card-top::after { content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 45px; background: white; clip-path: ellipse(75% 100% at 50% 100%); z-index: 2; }
+            .card-top img { max-width: 60%; max-height: 60%; object-fit: contain; z-index: 3; }
+            .card-bottom { height: 40% !important; background: white; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding-bottom: 10px; z-index: 4; }
+            .card-bottom h2 { color: var(--theme-color); font-size: 1.2rem; font-weight: 900; text-transform: uppercase; }
+            .btn-circle { width: 45px; height: 45px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
+
+            .destaques-wrapper { background: white !important; border-radius: 30px; padding: 20px 30px; width: 100%; max-width: 1000px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); margin-bottom: 30px; flex-shrink: 0; }
+            .destaques-grid { display: flex; justify-content: space-around; align-items: center; width: 100%; }
+            .destaque-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; width: 90px; }
+            .destaque-item img { width: 32px; height: 32px; object-fit: contain; margin-bottom: 4px; }
+            .destaque-item p { font-size: 0.7rem; font-weight: 800; color: #444; text-align: center; }
+        }
+
+        /* =========================================
+           TELEMÓVEL LANDSCAPE
+           ========================================= */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body, html { height: auto; overflow-y: auto; }
+            header { height: 50px; padding: 0 8px; grid-template-columns: 45px 1fr 45px; }
+            .hamburger-btn { justify-self: start; }
+            #header-icon { height: 35px; }
+            #icon-voltar-top { height: 30px; justify-self: end; }
+            .game-wrapper, .destaques-wrapper { width: 92%; max-width: 800px; margin: 0 auto; }
+            .game-wrapper { display: flex; flex-direction: row; gap: 12px; }
+            .game-card { flex: 1; height: 165px; border-radius: 25px; border: 2px solid var(--theme-color); background: white; overflow: hidden; display: flex; flex-direction: column; }
+            .card-top { height: 60% !important; background-color: var(--theme-bg); position: relative; display: flex; align-items: center; justify-content: center; }
+            .card-top img { max-width: 50%; max-height: 50%; }
+            .card-bottom { height: 40% !important; background: white; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; }
+            .card-bottom h2 { font-size: 0.7rem; }
+            .destaques-wrapper { background: white !important; padding: 12px 20px; }
+            .destaques-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+            .destaque-item img { width: 30px; height: 30px; }
+        }
+
+        /* =========================================
+           TELEMÓVEL VERTICAL (PORTRAIT) - FIXO
+           ========================================= */
+        @media (orientation: portrait) {
+            body, html { height: auto; overflow-y: auto; overflow-x: hidden; }
+
+            /* Header: Icons a 10px e menores */
+            header { 
+                height: 65px; 
+                padding: 0 10px !important; 
+                grid-template-columns: 40px 1fr 40px !important; 
+                border-radius: 0 0 25px 25px;
+            }
+            .hamburger-btn { justify-self: start; font-size: 20px !important; padding: 0; }
+            .header-right { justify-self: end; display: flex; align-items: center; }
+            #icon-voltar-top { height: 28px !important; width: auto; display: block; }
+            #header-icon { height: 38px; }
+            #txt-titulo1, #txt-titulo2 { font-size: 1rem; }
+
+            main { padding: 10px 15px; gap: 15px; display: flex; flex-direction: column; align-items: center; }
+
+            /* Cartões Pílula e Destaques Alinhados */
+            .game-wrapper, .destaques-wrapper { width: 100%; max-width: 400px; margin: 0 auto; }
+            
+            .game-card { 
+                display: flex; flex-direction: row; align-items: center; 
+                height: 70px; border-radius: 40px; border: 2.5px solid var(--theme-color); 
+                background: white; padding: 4px; text-decoration: none;
+            }
+            .card-top { width: 60px; height: 60px; border-radius: 50%; background: var(--theme-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+            .card-top img { width: 70%; height: 70%; object-fit: contain; }
+            .card-bottom { flex: 1; display: flex; flex-direction: row !important; align-items: center; justify-content: space-between; padding: 0 15px; background: none; }
+            .card-bottom h2 { font-size: 0.95rem; color: var(--theme-color); text-decoration: none; }
+            .btn-circle { width: 30px; height: 30px; font-size: 10px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--theme-color); color: white; }
+
+            /* Caixa Destaques com Fundo Branco */
+            .destaques-wrapper { 
+                background: white !important; 
+                border-radius: 20px; 
+                padding: 15px 10px; 
+                box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+                margin-top: 10px;
+                display: block !important;
+            }
+            .destaques-header { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; }
+            .destaques-header img { height: 14px; }
+            .destaques-header h3 { font-size: 0.85rem; color: var(--primary-blue); font-weight: 800; }
+            
+            .destaques-grid { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 12px !important; }
+            .destaque-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; }
+            .destaque-item img { width: 32px !important; height: 32px !important; margin-bottom: 3px; }
+            .destaque-item p { font-size: 0.6rem; font-weight: 800; color: #444; }
+        }
+
+        /* ----- FOOTER ----- */
         footer { 
             background: white; width: 100%; padding: 12px 0; 
             display: flex; justify-content: center; align-items: center;
@@ -358,23 +169,7 @@
             box-shadow: 0 -4px 10px rgba(0,0,0,0.02);
         }
         .footer-text { color: var(--text-grey); font-weight: 500; font-size: 0.85rem; }
-        
-
-        /* =========================================
-           RESPONSIVIDADE TELEMÓVEL (PORTRAIT)
-           ========================================= */
-        @media (orientation: portrait) {
-            body, html { overflow-y: auto; height: auto; }
-            main { justify-content: flex-start; padding: 15px; }
-            .game-wrapper { display: flex; flex-direction: column; gap: 10px; width: 100%; }
-            .game-card { display: flex; flex-direction: row; align-items: center; height: 75px; border-radius: 50px; border: 2.5px solid var(--theme-color); background: white; padding: 5px; text-decoration: none; }
-            .card-top { width: 65px; height: 65px; border-radius: 50%; background: var(--theme-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-            .card-top img { width: 70%; height: 70%; }
-            .card-bottom { flex: 1; display: flex; flex-direction: row; align-items: center; justify-content: space-between; padding: 0 15px; }
-            .card-bottom h2 { font-size: 1rem; color: var(--theme-color); }
-            .btn-circle { width: 34px; height: 34px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
-            .destaques-grid { grid-template-columns: repeat(3, 1fr); gap: 15px; }
-        }
+        .stars { color: var(--accent-yellow); font-size: 8px; }
     </style>
 </head>
 <body>
@@ -391,7 +186,6 @@
             </div>
         </div>
         <div class="header-right">
-            <!-- Seta voltar aponta para a home configurada nos dados -->
             <img id="icon-voltar-top" src="" alt="Voltar" onclick="voltarPagina()">
         </div>
     </header>
@@ -418,10 +212,7 @@
 
     <script src="dados.js"></script>
     <script>
-        // Função para voltar para o nível anterior (Página Inicial)
-        function voltarPagina() {
-            window.location.href = JOGO_CONFIG.links.home;
-        }
+        function voltarPagina() { window.location.href = JOGO_CONFIG.links.home; }
 
         function toggleMenu(e) {
             if(e) e.stopPropagation();
@@ -443,7 +234,6 @@
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + config.iconesMenu.voltar;
             document.getElementById('mini-logo').src = config.caminhoIconsMenu + config.iconesMenu.controller;
 
-            // Menu Dropdown
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Página Inicial", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
@@ -457,17 +247,6 @@
                 }
             });
 
-            // Botão Voltar dentro do Menu
-            const sep = document.createElement('div'); sep.className = 'menu-sep';
-            menuBox.appendChild(sep);
-            const btnMenuVoltar = document.createElement('a');
-            btnMenuVoltar.className = 'menu-item';
-            btnMenuVoltar.href = "#";
-            btnMenuVoltar.onclick = (e) => { e.preventDefault(); voltarPagina(); };
-            btnMenuVoltar.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
-            menuBox.appendChild(btnMenuVoltar);
-
-            // Grelha de Disciplinas
             const grid = document.getElementById('gamesGrid');
             config.listaJogos.forEach(jogo => {
                 const tema = config.temaCores[jogo.tema];
@@ -484,16 +263,17 @@
                 grid.appendChild(card);
             });
 
-            // Grelha de Destaques
             const dGrid = document.getElementById('destaquesGrid');
-            config.listaDestaques.forEach(jogo => {
-                const item = document.createElement('a');
-                item.className = 'destaque-item';
-                item.href = jogo.link;
-                const estrelas = '★'.repeat(jogo.estrelas) + '☆'.repeat(5 - jogo.estrelas);
-                item.innerHTML = `<img src="${config.caminhoIconsJogos}${jogo.icon}"><p>${jogo.nome}</p><div class="stars">${estrelas}</div>`;
-                dGrid.appendChild(item);
-            });
+            if(config.listaDestaques) {
+                config.listaDestaques.forEach(jogo => {
+                    const item = document.createElement('a');
+                    item.className = 'destaque-item';
+                    item.href = jogo.link;
+                    const estrelas = '★'.repeat(jogo.estrelas) + '☆'.repeat(5 - jogo.estrelas);
+                    item.innerHTML = `<img src="${config.caminhoIconsJogos}${jogo.icon}"><p>${jogo.nome}</p><div class="stars">${estrelas}</div>`;
+                    dGrid.appendChild(item);
+                });
+            }
         };
     </script>
 </body>
