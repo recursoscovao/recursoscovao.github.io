@@ -208,6 +208,115 @@
     footer { padding: 8px 0; margin-top: 15px; }
 }
 
+
+    /* =========================================
+   TELEMÓVEL VERTICAL (PORTRAIT)
+   ========================================= */
+@media (orientation: portrait) {
+    /* 1. Ativar Scroll Vertical e Bloquear Horizontal */
+    body, html {
+        height: auto;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    /* 2. Header: Ícones próximos dos limites */
+    header { 
+        height: 70px; 
+        padding: 0 8px; /* Padding mínimo lateral */
+        grid-template-columns: 45px 1fr 45px; /* Colunas estreitas para empurrar ícones */
+        border-radius: 0 0 30px 30px;
+        flex-shrink: 0;
+    }
+    .hamburger-btn { justify-self: start; padding-left: 5px; font-size: 22px; }
+    #header-icon { height: 42px; }
+    .header-right { justify-self: end; padding-right: 5px; }
+    #icon-voltar-top { height: 32px; }
+
+    #txt-titulo1, #txt-titulo2 { font-size: 1.05rem; }
+    #txt-subtitulo { font-size: 0.65rem; }
+
+    /* 3. Intro Compacta */
+    .sub-header { margin: 15px 0; }
+    .intro-text { font-size: 1.2rem; }
+    .intro-text::after { height: 10px; bottom: -6px; }
+
+    /* 4. Contentor Principal */
+    main { 
+        padding: 10px 15px; 
+        gap: 20px; 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+    }
+
+    /* 5. Sincronização de Largura (Cartões e Destaques iguais) */
+    .game-wrapper, .destaques-wrapper {
+        width: 100%;        /* Ocupam o máximo permitido pelo padding do main */
+        max-width: 450px;   /* Limite para não esticar em tablets verticais */
+        margin: 0 auto;
+    }
+
+    /* 6. Cartões em formato Pílula */
+    .game-wrapper { display: flex; flex-direction: column; gap: 12px; }
+    .game-card { 
+        display: flex; 
+        flex-direction: row; 
+        align-items: center; 
+        height: 75px; 
+        border-radius: 50px; 
+        border: 2.5px solid var(--theme-color); 
+        background: white; 
+        padding: 5px; 
+        text-decoration: none;
+        box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+    }
+
+    /* Ícone circular de 65px */
+    .card-top { 
+        width: 65px; 
+        height: 65px; 
+        border-radius: 50%; 
+        background: var(--theme-bg); 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        flex-shrink: 0; 
+    }
+    .card-top img { width: 70%; height: 70%; object-fit: contain; }
+
+    /* Texto e Seta alinhados horizontalmente */
+    .card-bottom { 
+        flex: 1; 
+        display: flex; 
+        flex-direction: row !important; 
+        align-items: center; 
+        justify-content: space-between; 
+        padding: 0 15px; 
+        background: none;
+    }
+    .card-bottom h2 { font-size: 1rem; color: var(--theme-color); margin: 0; }
+    .btn-circle { width: 32px; height: 32px; font-size: 12px; }
+
+    /* 7. Caixa de Destaques (Uniforme com as pílulas acima) */
+    .destaques-wrapper { 
+        background: white !important; 
+        border-radius: 25px; 
+        padding: 15px; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+    }
+    .destaques-grid { 
+        display: grid; 
+        grid-template-columns: repeat(3, 1fr); /* 3 colunas no vertical */
+        gap: 15px; 
+    }
+    .destaque-item img { width: 38px; height: 38px; }
+    .destaque-item p { font-size: 0.65rem; }
+
+    /* 8. Footer Barra Branca */
+    footer { margin-top: 20px; padding: 15px 0; }
+}
+
     
    /* =========================================
        SECÇÃO DESTAQUES - ÍCONES REDUZIDOS
