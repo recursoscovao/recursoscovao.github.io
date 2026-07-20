@@ -150,28 +150,26 @@
     .card-bottom h2 { color: var(--theme-color); font-size: 1.2rem; font-weight: 900; text-transform: uppercase; }
     .btn-circle { width: 45px; height: 45px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
 
-    /* =========================================
-       SECÇÃO DESTAQUES - CORRIGIDA
+   /* =========================================
+       SECÇÃO DESTAQUES - ÍCONES REDUZIDOS
        ========================================= */
     .destaques-wrapper {
-        background: white !important; /* Fundo branco garantido */
+        background: white !important;
         border-radius: 30px; 
-        padding: 20px 30px; 
+        padding: 15px 25px; 
         width: 100%; 
-        max-width: 1000px; /* Largura fixa para não desconfigurar */
+        max-width: 1000px;
         box-shadow: 0 4px 15px rgba(0,0,0,0.04);
-        margin-bottom: 30px; /* Espaço para o footer */
+        margin-bottom: 30px;
         flex-shrink: 0;
     }
 
-    .destaques-header { 
-        display: flex; align-items: center; justify-content: center; 
-        gap: 10px; margin-bottom: 15px; 
-    }
-    .destaques-header h3 { color: var(--primary-blue); font-size: 1rem; font-weight: 800; }
+    .destaques-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 12px; }
+    .destaques-header img { height: 16px; } /* Ícone do título (comando) */
+    .destaques-header h3 { color: var(--primary-blue); font-size: 0.9rem; font-weight: 800; }
 
     .destaques-grid { 
-        display: flex; /* Mudado para flex para melhor controlo horizontal */
+        display: flex;
         justify-content: space-around; 
         align-items: center; 
         width: 100%;
@@ -179,11 +177,19 @@
 
     .destaque-item { 
         display: flex; flex-direction: column; align-items: center; 
-        text-decoration: none; width: 100px; 
+        text-decoration: none; width: 90px; 
     }
-    .destaque-item img { width: 45px; height: 45px; object-fit: contain; margin-bottom: 5px; }
-    .destaque-item p { font-size: 0.75rem; font-weight: 800; color: #444; text-align: center; }
-    .stars { color: var(--accent-yellow); font-size: 9px; }
+
+    /* TAMANHO DOS ÍCONES REDUZIDO AQUI */
+    .destaque-item img { 
+        width: 32px;  /* Era 45px, agora 32px */
+        height: 32px; /* Era 45px, agora 32px */
+        object-fit: contain; 
+        margin-bottom: 4px; 
+    }
+
+    .destaque-item p { font-size: 0.7rem; font-weight: 800; color: #444; text-align: center; line-height: 1.1; }
+    .stars { color: var(--accent-yellow); font-size: 8px; margin-top: 2px; }
 }
 
         /* =========================================
