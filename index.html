@@ -77,6 +77,57 @@
             .btn-circle { width: 42px; height: 42px; border-radius: 50%; background: var(--card-color); color: white; display: flex; align-items: center; justify-content: center; }
         }
 
+/* =========================================
+   TELEMÓVEL LANDSCAPE (HORIZONTAL)
+   ========================================= */
+@media (max-height: 500px) and (orientation: landscape) {
+    /* 1. Compactar o topo para ganhar espaço */
+    .header-wrapper { padding: 5px; border-radius: 0 0 20px 20px; }
+    #header-icon { height: 35px; }
+    .title-main { font-size: 1.2rem; }
+    .title-sub { display: none; } /* Esconde o subtítulo para ganhar altura */
+
+    /* 2. Intro mínima */
+    .intro-container { margin: 10px 0; font-size: 1.1rem; }
+    .destaque-curvo::after { height: 8px; bottom: -5px; }
+
+    /* 3. Grelha de Cartões */
+    main { padding: 5px 10px; }
+    .years-grid { 
+        gap: 10px; 
+        width: 100%; 
+        justify-content: center; 
+    }
+
+    .year-card {
+        width: 135px; /* Largura adaptada */
+        height: 225px; /* Altura reduzida conforme pedido */
+        border-radius: 25px;
+        border: 2px solid var(--card-color);
+        box-shadow: inset 0 0 0 4px white, 0 4px 10px rgba(0,0,0,0.05);
+    }
+
+    /* 4. Proporções 60/40 compactas */
+    .card-top { height: 60%; }
+    .card-top::after { height: 25px; clip-path: ellipse(85% 100% at 50% 100%); }
+    .card-top img { max-width: 55%; max-height: 55%; }
+
+    .card-bottom { height: 40%; padding-bottom: 5px; }
+    .card-bottom span { font-size: 0.95rem; }
+    
+    .btn-circle { width: 28px; height: 28px; }
+
+    /* 5. Jogos em destaque (Miniatura) */
+    .destaques-wrapper { margin-top: 10px; padding: 10px; }
+    .destaques-grid { grid-template-columns: repeat(6, 1fr); gap: 8px; }
+    .destaque-item img { width: 30px; height: 30px; }
+    .destaque-item p { font-size: 0.6rem; }
+    
+    /* 6. Footer discreto */
+    footer { padding: 8px 0; }
+    #txt-rodape { font-size: 0.75rem; }
+}
+
         /* =========================================
            CARTÕES PARA TABLET LANDSCAPE
            ========================================= */
