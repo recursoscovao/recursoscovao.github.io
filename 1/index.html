@@ -104,69 +104,37 @@
             .destaque-item img { width: 28px !important; height: 28px !important; }
         }
 
-      /* =========================================
-   2. TELEMÓVEL VERTICAL (HEADER/FOOTER FIXOS)
-   ========================================= */
-@media (max-width: 767px) and (orientation: portrait) {
-    /* Bloqueia o scroll na página inteira para fixar o monitor */
-    body, html { 
-        height: 100dvh; 
-        overflow: hidden; 
-        display: flex; 
-        flex-direction: column; 
-    }
+        /* =========================================
+           2. TELEMÓVEL VERTICAL
+           ========================================= */
+        @media (max-width: 767px) and (orientation: portrait) {
+            body, html { height: auto; overflow-y: auto; }
+            header { grid-template-columns: 45px 1fr 45px; height: 75px; }
+            
+            .game-wrapper, .destaques-wrapper { width: 92%; margin: 0 auto; }
+            
+            .game-card { 
+                display: flex; flex-direction: row; align-items: center; 
+                height: 85px; background: white; border-radius: 50px; 
+                border: 3px solid var(--theme-color); margin-bottom: 15px; 
+                text-decoration: none; padding: 6px; 
+                box-shadow: 0 5px 12px rgba(0,0,0,0.05); 
+            }
+            
+            .card-top { width: 73px; height: 73px; border-radius: 50%; background: var(--theme-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+            .card-top img { width: 65%; height: 65%; }
+            
+            .card-bottom { flex: 1; display: flex; flex-direction: row !important; align-items: center; justify-content: space-between; padding: 0 15px 0 15px; background: none; }
+            .card-bottom h2 { font-size: 1.05rem; color: var(--theme-color); font-weight: 900; }
+            
+            .btn-circle { width: 34px; height: 34px; font-size: 11px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--theme-color); color: white; }
 
-    header { 
-        grid-template-columns: 45px 1fr 45px; 
-        height: 95px; /* Altura aumentada para os 3 títulos */
-        flex-shrink: 0; /* Impede o header de encolher */
-        z-index: 1000;
-    }
-
-    /* Estilo dos títulos conforme a imagem */
-    .title-group { line-height: 0.85; text-align: left; text-transform: uppercase; }
-    #txt-titulo1 { color: var(--primary-blue); font-weight: 800; font-size: 1.1rem; letter-spacing: -0.5px; }
-    #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 1.85rem; }
-    #txt-subtitulo-header { color: var(--text-grey); font-weight: 700; font-size: 0.65rem; margin-top: 4px; }
-
-    /* Scroll permitido APENAS aqui dentro */
-    main { 
-        flex: 1; 
-        overflow-y: auto; 
-        padding: 10px; 
-        -webkit-overflow-scrolling: touch; 
-    }
-
-    footer { 
-        flex-shrink: 0; /* Impede o footer de encolher */
-        z-index: 1000; 
-    }
-
-    /* Estrutura de cartões e destaques que já tinhas */
-    .game-wrapper, .destaques-wrapper { width: 92%; margin: 0 auto; }
-    
-    .game-card { 
-        display: flex; flex-direction: row; align-items: center; 
-        height: 85px; background: white; border-radius: 50px; 
-        border: 3px solid var(--theme-color); margin-bottom: 15px; 
-        text-decoration: none; padding: 6px; 
-        box-shadow: 0 5px 12px rgba(0,0,0,0.05); 
-    }
-    
-    .card-top { width: 73px; height: 73px; border-radius: 50%; background: var(--theme-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .card-top img { width: 65%; height: 65%; }
-    
-    .card-bottom { flex: 1; display: flex; flex-direction: row !important; align-items: center; justify-content: space-between; padding: 0 15px; background: none; }
-    .card-bottom h2 { font-size: 1.05rem; color: var(--theme-color); font-weight: 900; }
-    
-    .btn-circle { width: 34px; height: 34px; font-size: 11px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--theme-color); color: white; }
-
-    .destaques-wrapper { background: white !important; border-radius: 30px; padding: 20px 10px; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-    .destaques-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px 5px; justify-items: center; align-items: start; width: 100%; }
-    .destaque-item { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
-    .destaque-item img { width: 32px !important; height: 32px !important; object-fit: contain; margin-bottom: 5px; }
-    .destaque-item p { font-size: 0.65rem; line-height: 1.1; margin-bottom: 2px; }
-}
+            .destaques-wrapper { background: white !important; border-radius: 30px; padding: 20px 10px; margin-top: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+            .destaques-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px 5px; justify-items: center; align-items: start; width: 100%; }
+            .destaque-item { display: flex; flex-direction: column; align-items: center; text-align: center; width: 100%; }
+            .destaque-item img { width: 32px !important; height: 32px !important; object-fit: contain; margin-bottom: 5px; }
+            .destaque-item p { font-size: 0.65rem; line-height: 1.1; margin-bottom: 2px; }
+        }
 
         /* =========================================
            3. TELEMÓVEL LANDSCAPE (HORIZONTAL)
