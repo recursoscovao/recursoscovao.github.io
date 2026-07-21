@@ -18,60 +18,86 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        /* PERMITE SCROLL VERTICAL MAS ESCONDE A BARRA NO PC */
         body, html { 
-            min-height: 100dvh; width: 100vw; 
+            height: 100dvh; width: 100vw; 
             background-color: var(--sky-blue); 
             display: flex; flex-direction: column; 
-            overflow-x: hidden;
-            overflow-y: auto;
-            scrollbar-width: none;
+            overflow: hidden; 
         }
-        body::-webkit-scrollbar { display: none; }
 
         /* =========================================
-           HEADER (FIXO NO TOPO)
+           HEADER (FIXO E MINUCIOSO)
            ========================================= */
         header { 
             height: 75px; background: white; display: grid; grid-template-columns: 50px 1fr 50px; 
             align-items: center; padding: 0 10px; z-index: 3000; flex-shrink: 0;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-radius: 0 0 35px 35px;
-            position: sticky; top: 0;
+            position: relative;
         }
-        .hamburger-btn { justify-self: start; background: none; border: none; color: var(--primary-blue); font-size: 26px; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; }
-        
+
+        /* Botões do Header - 40px e alinhados */
+        .hamburger-btn { 
+            justify-self: start; background: none; border: none; color: var(--primary-blue); 
+            font-size: 28px; cursor: pointer; width: 40px; height: 40px; 
+            display: flex; align-items: center; justify-content: center;
+        }
+
         .header-center { display: flex; align-items: center; justify-content: center; gap: 10px; }
         #head-logo { height: 45px; object-fit: contain; }
         .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.9; }
         #tit-l1, #tit-l2 { color: var(--primary-blue); font-weight: 900; font-size: 1.1rem; }
         #sub-tit { color: var(--text-grey); font-weight: 700; font-size: 0.65rem; margin-top: 2px; text-transform: uppercase; }
-        
-        .btn-voltar { justify-self: end; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-        #header-back { height: 38px; width: 38px; object-fit: contain; }
 
-        /* ----- MENU DROPDOWN & OVERLAY ----- */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); display: none; z-index: 3500; }
-        .menu-dropdown { position: fixed; top: 75px; left: 10px; display: none; flex-direction: column; gap: 5px; z-index: 4000; }
-        .menu-item { display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: white; border-radius: 12px; text-decoration: none; color: var(--text-grey); font-weight: 700; min-width: 210px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; }
+        .btn-voltar { justify-self: end; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        #header-back { height: 40px; width: 40px; object-fit: contain; }
+
+        /* =========================================
+           MENU HAMBÚRGUER (CORRIGIDO)
+           ========================================= */
+        .overlay { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.2); display: none; z-index: 3500; 
+        }
+        
+        .menu-dropdown { 
+            position: fixed; top: 75px; left: 10px; 
+            display: none; flex-direction: column; gap: 5px; z-index: 4000; 
+        }
+
+        .menu-item { 
+            display: flex; align-items: center; gap: 10px; padding: 12px 18px; 
+            background: white; border-radius: 12px; text-decoration: none; 
+            color: var(--text-grey); font-weight: 700; min-width: 210px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; 
+        }
+        
+        /* Hover com a cor do botão voltar/icon */
         .menu-item:hover { background-color: var(--primary-blue); color: white; }
         .menu-item img { height: 22px; width: 22px; object-fit: contain; }
         .menu-sep { border-top: 2px solid #f0f4f8; margin: 4px 0; }
 
-        /* ----- CONTEÚDO ----- */
-        main { flex: 1; padding: 30px 20px; max-width: 1300px; margin: 0 auto; width: 100%; }
+        /* =========================================
+           CONTEÚDO PRINCIPAL (SCROLL INVISÍVEL)
+           ========================================= */
+        main { 
+            flex: 1; padding: 30px 20px; max-width: 1400px; margin: 0 auto; width: 100%; 
+            overflow-y: auto; scrollbar-width: none; 
+        }
+        main::-webkit-scrollbar { display: none; }
+
         .intro-container { text-align: center; margin-bottom: 40px; }
         .intro-text { color: #1a4a7a; font-size: 1.3rem; font-weight: 800; position: relative; display: inline-block; }
         .intro-text::after { content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 10px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-size: 100% 100%; }
 
-        /* ----- ESTRUTURA DE FASES (GRID) ----- */
+        /* CONTENTOR DE FASES */
         .phase-section {
             background: rgba(255,255,255,0.4); border: 2px solid white; border-radius: 40px;
             padding: 50px 25px 30px 25px; margin-bottom: 60px; position: relative;
-            display: grid; gap: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.02);
+            display: grid; gap: 25px; box-shadow: 0 10px 30px rgba(0,0,0,0.02);
         }
         .phase-label { position: absolute; top: -20px; left: 25px; background: var(--fase-color); color: white; padding: 10px 30px; border-radius: 50px; font-weight: 900; font-size: 0.85rem; text-transform: uppercase; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
-        /* ----- CARTÃO QUADRADO ----- */
+        /* CARTÃO QUADRADO */
         .game-card {
             background: white; aspect-ratio: 1 / 1.1; border-radius: 35px;
             display: flex; flex-direction: column; align-items: center;
@@ -81,48 +107,48 @@
         .game-card:hover { transform: translateY(-10px); }
         .card-img-box { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; }
         .card-img-box img { max-width: 90%; max-height: 90%; object-fit: contain; }
-        .game-card h2 { width: 100%; padding: 0 10px 18px 10px; color: #1A499C; font-size: 0.75rem; font-weight: 900; text-transform: uppercase; text-align: center; }
+        .game-card h2 { width: 100%; padding: 0 10px 18px 10px; color: #1A499C; font-size: 0.82rem; font-weight: 900; text-transform: uppercase; text-align: center; }
         .card-footer-bar { width: 100%; height: 12px; background-color: var(--item-color); }
 
         /* =========================================
-           RESPONSIVIDADE (CARTÕES POR LINHA)
+           RESPONSIVIDADE (5 CARTÕES POR LINHA NO PC)
            ========================================= */
 
-        /* 1. PC & TABLET LANDSCAPE (5 CARTÕES POR LINHA) */
+        /* PC & TABLET LANDSCAPE */
         @media (min-width: 1025px) and (orientation: landscape) {
             .phase-section { grid-template-columns: repeat(5, 1fr); }
         }
 
-        /* 2. TABLET PORTRAIT / MINI PC (3 CARTÕES POR LINHA) */
-        @media (min-width: 768px) and (max-width: 1024px) {
+        /* TABLET PORTRAIT */
+        @media (min-width: 651px) and (max-width: 1024px) {
             .phase-section { grid-template-columns: repeat(3, 1fr); }
         }
 
-        /* 3. TELEMÓVEL LANDSCAPE (4 CARTÕES POR LINHA) */
+        /* MOBILE LANDSCAPE */
         @media (max-height: 500px) and (orientation: landscape) {
             .phase-section { grid-template-columns: repeat(4, 1fr); padding: 40px 15px 15px 15px; }
             header { height: 60px; }
-            #head-logo { height: 35px; }
         }
 
-        /* 4. TELEMÓVEL VERTICAL (2 CARTÕES POR LINHA) */
-        @media (max-width: 600px) and (orientation: portrait) {
-            .phase-section { grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 45px 15px 20px 15px; }
-            .game-card { border-radius: 25px; }
-            .game-card h2 { font-size: 0.65rem; padding-bottom: 12px; }
+        /* MOBILE PORTRAIT */
+        @media (max-width: 650px) {
+            .phase-section { grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 45px 15px 15px 15px; }
+            .game-card h2 { font-size: 0.65rem; }
+            .logo-text { display: none; }
         }
 
         /* ----- FOOTER ----- */
-        footer { background: white; width: 100%; padding: 15px 0; text-align: center; color: var(--text-grey); font-size: 0.8rem; box-shadow: 0 -4px 10px rgba(0,0,0,0.02); margin-top: auto; flex-shrink: 0; }
+        footer { background: white; width: 100%; padding: 15px 0; text-align: center; color: var(--text-grey); font-size: 0.8rem; margin-top: auto; flex-shrink: 0; }
     </style>
 </head>
 <body>
 
-    <div class="overlay" id="overlay" onclick="toggleMenu(event)"></div>
+    <div class="overlay" id="overlay" onclick="closeMenu()"></div>
 
     <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
+        
         <div class="header-center">
             <img id="head-logo" src="" alt="">
             <div class="title-group">
@@ -131,12 +157,13 @@
                 <div id="sub-tit"></div>
             </div>
         </div>
+
         <div class="btn-voltar" onclick="window.history.back()">
             <img id="header-back" src="" alt="Voltar">
         </div>
     </header>
 
-    <main id="fasesContainer">
+    <main id="mainContent">
         <div class="intro-container">
             <div class="intro-text" id="intro-sub"></div>
         </div>
@@ -147,15 +174,22 @@
 
     <script src="biblioteca.js"></script>
     <script src="dados.js"></script>
+    
     <script>
-        // Função do Menu Corrigida
+        // Lógica do Menu (Prevenindo Bloqueios)
         function toggleMenu(e) {
             if(e) e.stopPropagation();
             const m = document.getElementById('dropdownMenu');
             const o = document.getElementById('overlay');
             const isOpen = m.style.display === 'flex';
+            
             m.style.display = isOpen ? 'none' : 'flex';
             o.style.display = isOpen ? 'none' : 'block';
+        }
+
+        function closeMenu() {
+            document.getElementById('dropdownMenu').style.display = 'none';
+            document.getElementById('overlay').style.display = 'none';
         }
 
         function initUI() {
@@ -166,6 +200,7 @@
             const info = BIBLIOTECA_CONTEUDO[conf.anoAtivo][conf.areaAtiva];
             const root = document.documentElement;
 
+            // Cores e Textos
             root.style.setProperty('--primary-blue', tema.corPrimaria);
             root.style.setProperty('--sky-blue', tema.corPagina);
             
@@ -174,29 +209,28 @@
             document.getElementById('sub-tit').innerText = info.sub;
             document.getElementById('intro-sub').innerText = info.intro;
             document.getElementById('txt-rodape').innerHTML = info.rodape;
+            
             document.getElementById('head-logo').src = conf.caminhoIconsMenu + conf.iconesMenu[conf.anoAtivo];
             document.getElementById('header-back').src = conf.caminhoIconsMenu + tema.voltarMobile;
 
-            // Menu
+            // Menu Hambúrguer
             const menuBox = document.getElementById('dropdownMenu');
             menuBox.innerHTML = '';
             const labels = { home: 'Início', pre: 'Pré-Escolar', ano1: '1º Ano', ano2: '2º Ano', ano3: '3º Ano', ano4: '4º Ano' };
-            Object.keys(conf.links).forEach(k => {
-                if(conf.iconesMenu[k]) {
+            ['home', 'pre', 'ano1', 'ano2', 'ano3', 'ano4'].forEach(k => {
+                if(conf.links[k]) {
                     const a = document.createElement('a'); a.className = 'menu-item'; a.href = conf.links[k];
                     a.innerHTML = `<img src="${conf.caminhoIconsMenu}${conf.iconesMenu[k]}"><span>${labels[k]}</span>`;
                     menuBox.appendChild(a);
                 }
             });
-            const sep = document.createElement('div'); sep.className = 'menu-sep'; menuBox.appendChild(sep);
             const btnV = document.createElement('a'); btnV.className = 'menu-item'; btnV.href = "#";
             btnV.onclick = (e) => { e.preventDefault(); window.history.back(); };
             btnV.innerHTML = `<img src="${conf.caminhoIconsMenu}${conf.iconesMenu.voltar}"><span>VOLTAR</span>`;
             menuBox.appendChild(btnV);
 
-            // Gerar Fases e Jogos
-            const container = document.getElementById('fasesGrid');
-            container.innerHTML = '';
+            // Gerar Fases
+            const grid = document.getElementById('fasesGrid');
             conf.listaFases.forEach(fase => {
                 const section = document.createElement('section');
                 section.className = 'phase-section';
@@ -214,9 +248,10 @@
                     `;
                     section.appendChild(card);
                 });
-                container.appendChild(section);
+                grid.appendChild(section);
             });
         }
+
         window.onload = initUI;
     </script>
 </body>
