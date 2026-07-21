@@ -3,101 +3,133 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Carregando...</title>
+    <title>Jogos Educativos</title>
     
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         :root { 
             --bg-page: #ffffff; --primary-blue: #5ba4e5; --primary-dark: #3d7db8; 
-            --white: #ffffff; --text-grey: #5d7082; 
-            --header-h: 100px; 
-            --outer-shadow: 0px 4px 15px rgba(176, 196, 217, 0.4);
+            --white: #ffffff; --text-grey: #5d7082; --header-h: 85px; 
         }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-page); height: 100dvh; width: 100vw; overflow: hidden; display: flex; flex-direction: column; transition: background 0.3s; }
+        
+        body { background-color: var(--bg-page); height: 100dvh; width: 100vw; display: flex; flex-direction: column; overflow-x: hidden; transition: background 0.3s; }
 
+        /* ----- HEADER ----- */
         header { 
-            height: var(--header-h); background: #fbfdff; display: flex; align-items: center; 
-            justify-content: space-between; padding: 0 25px; z-index: 2500; flex-shrink: 0;
-            box-shadow: var(--outer-shadow); position: relative;
+            height: var(--header-h); background: white; display: flex; align-items: center; 
+            justify-content: space-between; padding: 0 20px; z-index: 2500; flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); position: relative; border-radius: 0 0 35px 35px;
         }
-        .logo-center { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; pointer-events: none; white-space: nowrap; }
-        .logo-center img { height: 65px; width: auto; } 
-        .logo-text h1 { font-size: 22px; color: var(--primary-blue); font-weight: 900; text-transform: uppercase; line-height: 0.9; }
-        
-        .logo-text p { 
-            font-size: 9px; 
-            color: #7A8B9A !important; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            letter-spacing: 0.5px;
-        }
+        .logo-center { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; white-space: nowrap; }
+        .logo-center img { height: 55px; width: auto; } 
+        .logo-text h1 { font-size: 1.1rem; color: var(--primary-blue); font-weight: 900; text-transform: uppercase; line-height: 0.9; }
+        .logo-text p { font-size: 0.65rem; color: var(--text-grey); font-weight: 700; text-transform: uppercase; margin-top: 2px; }
 
-        .hamburger-btn { font-size: 32px; color: var(--primary-blue); cursor: pointer; padding: 5px; z-index: 3001; }
-        
-        /* BOTÃO VOLTAR - UNIFICADO (Estilo Mobile para todos) */
-        .btn-voltar-mobile { 
-            display: flex; 
-            align-items: center; 
-            text-decoration: none; 
-            padding: 5px; 
-            z-index: 3001; 
-            transition: transform 0.2s ease;
-        }
-        .btn-voltar-mobile:hover { transform: scale(1.1); }
-        .btn-voltar-mobile img { height: 45px; width: auto; } /* Tamanho padrão para Desktop */
+        .hamburger-btn { font-size: 26px; color: var(--primary-blue); cursor: pointer; padding: 10px; z-index: 3001; }
+        .btn-voltar-img { height: 40px; transition: 0.2s; cursor: pointer; }
 
-        .menu-dropdown { position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 6px; z-index: 3000; }
-        .menu-item { display: flex; align-items: center; gap: 12px; padding: 12px 18px; background: white; border-radius: 12px; box-shadow: 2px 4px 10px rgba(0,0,0,0.1); text-decoration: none; color: #5d7082; font-weight: 700; font-size: 0.9rem; min-width: 200px; transition: 0.2s; }
-        .menu-item:hover { background: var(--primary-blue); color: white; }
+        /* ----- MENU ----- */
+        .menu-dropdown { position: absolute; top: 80px; left: 15px; display: none; flex-direction: column; gap: 5px; z-index: 3000; }
+        .menu-item { display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-decoration: none; color: var(--text-grey); font-weight: 700; min-width: 210px; transition: 0.2s; }
+        .menu-item:hover { background-color: var(--primary-blue); color: white; }
         .menu-item img { height: 22px; width: 22px; object-fit: contain; }
-        .menu-item-voltar { background: var(--primary-blue) !important; color: white !important; }
-        .menu-item-voltar img { filter: brightness(0) invert(1); }
 
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.1); display: none; z-index: 2000; }
+        /* ----- CONTEÚDO ----- */
+        main { flex: 1; overflow-y: auto; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
+        .intro-container { text-align: center; margin-bottom: 40px; }
+        .intro-text { color: #1a4a7a; font-size: 1.3rem; font-weight: 800; position: relative; display: inline-block; }
+        .intro-text::after { content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 10px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-size: 100% 100%; }
 
-        main { flex: 1; overflow-y: auto; padding: 25px; display: flex; flex-direction: column; align-items: center; }
-        .intro-container { text-align: center; margin-bottom: 30px; }
-        .intro-container p { color: var(--text-grey); font-weight: 700; font-size: 18px; } 
-
-        .game-wrapper { width: 100%; max-width: 1100px; display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 25px; justify-items: center; padding-bottom: 40px; }
-        .game-card { background: #ffffff; width: 100%; max-width: 170px; min-height: 160px; border-radius: 30px; box-shadow: 0 8px 20px rgba(176,196,217,0.3); display: flex; flex-direction: column; align-items: center; text-decoration: none; padding: 18px; text-align: center; transition: all 0.2s ease; border: 2px solid white; }
-        .game-card:hover { transform: translateY(-5px); border-color: var(--primary-blue); }
-        .card-img-container { width: 100%; height: 90px; display: flex; align-items: center; justify-content: center; margin-bottom: 12px; }
-        .card-img-container img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        
-        .game-card h2 { 
-            color: var(--primary-blue); 
-            font-size: 0.75rem; 
-            font-weight: 900; 
-            margin-top: auto; 
-            text-transform: uppercase; 
+        /* ----- ESTRUTURA DE FASES ----- */
+        .phase-section {
+            background: rgba(255,255,255,0.45);
+            border: 2px solid white;
+            border-radius: 35px;
+            padding: 45px 20px 25px 20px;
+            margin-bottom: 60px;
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
+            gap: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.02);
         }
 
-        footer { padding: 15px; text-align: center; color: var(--text-grey); font-weight: 700; font-size: 0.8rem; border-top: 1px solid rgba(176,196,217,0.3); }
+        .phase-label {
+            position: absolute;
+            top: -20px; left: 20px;
+            background: var(--fase-color);
+            color: white;
+            padding: 10px 28px;
+            border-radius: 50px;
+            font-weight: 900;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
 
-        @media (max-width: 650px) { 
-            header { height: 80px; padding: 0 15px; }
-            .btn-voltar-mobile img { height: 35px; } /* Ícone menor no mobile */
-            .logo-text p { font-size: 8px; margin-top: 2px; }
-            .logo-text h1 { font-size: 18px; }
-            .logo-center img { height: 50px; }
-            .game-wrapper { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 15px; }
-            .game-card h2 { font-size: 0.7rem; }
+        /* ----- CARTÃO DO JOGO ----- */
+        .game-card {
+            background: white;
+            height: 115px;
+            border-radius: 25px;
+            display: flex;
+            align-items: center;
+            padding: 15px;
+            text-decoration: none;
+            transition: 0.2s ease;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
+            border-bottom: 8px solid var(--game-color); /* BARRA COLORIDA DA IMAGEM */
+        }
+        .game-card:hover { transform: translateY(-5px); }
+
+        .game-icon-box {
+            width: 75px; height: 75px;
+            background: #f8fbff;
+            border-radius: 18px;
+            display: flex; align-items: center; justify-content: center;
+            flex-shrink: 0;
+        }
+        .game-icon-box img { width: 75%; height: 75%; object-fit: contain; }
+
+        .game-info { flex: 1; padding: 0 18px; overflow: hidden; }
+        .game-info h2 { font-size: 1.1rem; color: #333; font-weight: 900; margin-bottom: 3px; }
+        .game-info p { font-size: 0.78rem; color: #777; font-weight: 600; line-height: 1.2; }
+
+        .play-btn {
+            width: 40px; height: 40px;
+            background-color: var(--game-color);
+            border: 2px solid white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            color: white; flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+
+        footer { 
+            background: white; width: 100%; padding: 15px 0; 
+            display: flex; justify-content: center; align-items: center;
+            margin-top: auto; box-shadow: 0 -4px 10px rgba(0,0,0,0.02);
+            color: var(--text-grey); font-weight: 600; font-size: 0.8rem;
+        }
+
+        @media (max-width: 650px) {
+            .phase-section { grid-template-columns: 1fr; padding-top: 45px; }
+            .game-card { height: 100px; }
+            .game-icon-box { width: 65px; height: 65px; }
+            .logo-text { display: none; }
         }
     </style>
 </head>
 <body>
 
-    <div class="overlay" id="overlay" onclick="closeMenus()"></div>
-
     <header>
-        <div class="header-left">
-            <i class="fas fa-bars hamburger-btn" onclick="toggleHamburger(event)"></i>
-            <div id="dropdownMenu" class="menu-dropdown"></div>
-        </div>
+        <i class="fas fa-bars hamburger-btn" onclick="toggleMenu(event)"></i>
+        <div id="dropdownMenu" class="menu-dropdown"></div>
         
         <div class="logo-center">
             <img id="head-logo" src="" alt="Logo">
@@ -109,18 +141,17 @@
         </div>
 
         <div class="header-right">
-            <!-- Removido o botão de texto, mantido apenas o de ícone dinâmico -->
-            <a href="../" id="link-voltar-mobile" class="btn-voltar-mobile">
-                <img id="header-back-mobile" src="" alt="Voltar">
+            <a href="#" onclick="window.history.back()">
+                <img id="header-back-img" class="btn-voltar-img" src="" alt="Voltar">
             </a>
         </div>
     </header>
 
     <main>
         <div class="intro-container">
-            <p id="hub-intro-sub"></p>
+            <div class="intro-text" id="intro-sub"></div>
         </div>
-        <div class="game-wrapper" id="gamesGrid"></div>
+        <div id="fasesGrid"></div>
     </main>
 
     <footer id="txt-rodape"></footer>
@@ -129,70 +160,78 @@
     <script src="dados.js"></script>
     
     <script>
-        function initUI() {
-            if (typeof JOGO_CONFIG === 'undefined' || typeof BIBLIOTECA_TEMAS === 'undefined' || typeof BIBLIOTECA_CONTEUDO === 'undefined') return;
-            
+        function init() {
             const conf = JOGO_CONFIG;
             const tema = BIBLIOTECA_TEMAS[conf.areaAtiva];
             const info = BIBLIOTECA_CONTEUDO[conf.anoAtivo][conf.areaAtiva];
-            const pIconsMenu = conf.caminhoIconsMenu;
-            const pIconsJogos = conf.caminhoIconsJogos;
             const root = document.documentElement;
 
+            // Aplicar Cores e Textos da Biblioteca
             root.style.setProperty('--bg-page', tema.corPagina);
             root.style.setProperty('--primary-blue', tema.corPrimaria);
-            root.style.setProperty('--primary-dark', tema.corEscura);
             root.style.setProperty('--text-grey', tema.corTexto);
 
-            document.title = info.t1 + " " + info.t2;
             document.getElementById('tit-l1').innerText = info.t1;
             document.getElementById('tit-l2').innerText = info.t2;
             document.getElementById('sub-tit').innerText = info.sub;
-            document.getElementById('hub-intro-sub').innerText = info.intro;
+            document.getElementById('intro-sub').innerText = info.intro;
             document.getElementById('txt-rodape').innerHTML = info.rodape;
             
-            document.getElementById('head-logo').src = pIconsMenu + conf.iconesMenu[conf.anoAtivo];
-            
-            // Atribui o ícone de voltar colorido definido na biblioteca (voltarMobile)
-            document.getElementById('header-back-mobile').src = pIconsMenu + tema.voltarMobile;
+            document.getElementById('head-logo').src = conf.caminhoIconsMenu + conf.iconesMenu[conf.anoAtivo];
+            document.getElementById('header-back-img').src = conf.caminhoIconsMenu + tema.voltarMobile;
 
+            // Gerar Menu
             const menuBox = document.getElementById('dropdownMenu');
-            menuBox.innerHTML = ''; 
-            const menuLabels = { home: 'Início', pre: 'Pré-Escolar', ano1: '1º Ano', ano2: '2º Ano', ano3: '3º Ano', ano4: '4º Ano' };
+            const labels = { home: 'Início', pre: 'Pré-Escolar', ano1: '1º Ano', ano2: '2º Ano', ano3: '3º Ano', ano4: '4º Ano' };
             ['home', 'pre', 'ano1', 'ano2', 'ano3', 'ano4'].forEach(k => {
                 if(conf.links[k]) {
                     const a = document.createElement('a'); a.className = 'menu-item'; a.href = conf.links[k];
-                    a.innerHTML = `<img src="${pIconsMenu}${conf.iconesMenu[k]}"><span>${menuLabels[k]}</span>`;
+                    a.innerHTML = `<img src="${conf.caminhoIconsMenu}${conf.iconesMenu[k]}"><span>${labels[k]}</span>`;
                     menuBox.appendChild(a);
                 }
             });
-            const btnV = document.createElement('a'); btnV.className = 'menu-item menu-item-voltar'; btnV.href = "../"; 
-            btnV.innerHTML = `<img src="${pIconsMenu}${conf.iconesMenu.voltar}"> <span>VOLTAR</span>`;
-            menuBox.appendChild(btnV);
 
-            const grid = document.getElementById('gamesGrid');
-            grid.innerHTML = ''; 
-            conf.listaJogos.forEach(jogo => {
-                const card = document.createElement('a'); card.className = 'game-card'; card.href = jogo.link;
-                card.innerHTML = `<div class="card-img-container"><img src="${pIconsJogos}${jogo.icon}"></div><h2>${jogo.nome}</h2>`;
-                grid.appendChild(card);
+            // Gerar Fases e Jogos
+            const container = document.getElementById('fasesGrid');
+            let gameIndex = 1;
+
+            conf.listaFases.forEach(fase => {
+                const section = document.createElement('section');
+                section.className = 'phase-section';
+                section.style.setProperty('--fase-color', fase.corEtiqueta);
+                section.innerHTML = `<div class="phase-label">${fase.tituloFase}</div>`;
+
+                fase.jogos.forEach(jogo => {
+                    const card = document.createElement('a');
+                    card.className = 'game-card';
+                    card.href = jogo.link;
+                    card.style.setProperty('--game-color', jogo.cor);
+
+                    card.innerHTML = `
+                        <div class="game-icon-box">
+                            <img src="${conf.caminhoIconsJogos}${jogo.icon}">
+                        </div>
+                        <div class="game-info">
+                            <h2>${gameIndex}. ${jogo.nome}</h2>
+                            <p>${jogo.desc}</p>
+                        </div>
+                        <div class="play-btn"><i class="fas fa-play"></i></div>
+                    `;
+                    section.appendChild(card);
+                    gameIndex++;
+                });
+                container.appendChild(section);
             });
         }
 
-        function toggleHamburger(e) {
+        function toggleMenu(e) {
             e.stopPropagation();
             const m = document.getElementById('dropdownMenu');
-            const ov = document.getElementById('overlay');
-            if(m.style.display === 'flex') { closeMenus(); } 
-            else { m.style.display = 'flex'; ov.style.display = 'block'; }
+            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
         }
+        window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
 
-        function closeMenus() {
-            document.getElementById('dropdownMenu').style.display = 'none';
-            document.getElementById('overlay').style.display = 'none';
-        }
-
-        window.onload = initUI;
+        window.onload = init;
     </script>
 </body>
 </html>
