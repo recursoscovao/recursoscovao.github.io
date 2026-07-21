@@ -12,6 +12,7 @@
             --jogos-blue: #1A499C;
             --sky-blue: #EAF4FE;
             --accent-yellow: #FFC107;
+            --line-blue: #A5D1FF;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
@@ -48,7 +49,6 @@
 
         /* =========================================
            ESTILO BASE (MOBILE PORTRAIT - PÍLULAS)
-           Este estilo é o padrão para evitar o erro da imagem
            ========================================= */
         main { 
             width: 100%; display: flex; flex-direction: column; align-items: center; 
@@ -89,96 +89,45 @@
             display: flex; align-items: center; justify-content: center; 
         }
 
- /* =========================================
+        /* =========================================
            CONFIGURAÇÃO PC / TABLET (LANDSCAPE)
-           Proporção exata: 60% Cor / 40% Branco
            ========================================= */
         @media (min-width: 768px) and (orientation: landscape) {
             .years-grid { 
-                flex-direction: row; 
-                justify-content: center; 
-                width: auto; 
-                max-width: 1300px; 
-                gap: 22px; 
+                flex-direction: row; justify-content: center; 
+                width: auto; max-width: 1300px; gap: 22px; 
             }
 
             .year-card {
                 width: 210px; 
-                height: clamp(280px, 38vh, 340px); /* Altura dinâmica */
+                height: clamp(280px, 38vh, 340px); 
                 border-radius: 38px; 
-                display: flex; 
-                flex-direction: column; 
-                padding: 0; 
-                text-decoration: none;
+                display: flex; flex-direction: column; 
+                padding: 0; text-decoration: none;
                 overflow: hidden;
                 box-shadow: inset 0 0 0 6px white, 0 8px 20px rgba(0,0,0,0.06);
                 transition: transform 0.2s ease;
             }
             .year-card:hover { transform: translateY(-10px); }
 
-            /* PARTE COLORIDA - 60% */
             .card-top { 
-                height: 60% !important; /* Força os 60% */
-                width: 100%; 
-                border-radius: 0; 
-                position: relative; 
-                display: flex; 
-                align-items: center; 
-                justify-content: center;
+                height: 60% !important; width: 100%; border-radius: 0; 
+                position: relative; display: flex; align-items: center; justify-content: center;
                 background-color: var(--card-color);
             }
-
-            /* Onda branca na transição */
             .card-top::after { 
-                content: ""; 
-                position: absolute; 
-                bottom: -1px; 
-                left: 0; 
-                width: 100%; 
-                height: 45px; 
-                background: white; 
-                clip-path: ellipse(75% 100% at 50% 100%); 
-                z-index: 1;
+                content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 45px; 
+                background: white; clip-path: ellipse(75% 100% at 50% 100%); z-index: 1;
             }
+            .card-top img { max-width: 65%; max-height: 65%; z-index: 2; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1)); }
 
-            .card-top img { 
-                max-width: 65%; 
-                max-height: 65%; 
-                object-fit: contain;
-                z-index: 2;
-                filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));
-            }
-
-            /* PARTE BRANCA - 40% */
             .card-bottom { 
-                height: 40% !important; /* Força os 40% */
-                width: 100%; 
-                background: white;
-                display: flex; 
-                flex-direction: column; 
-                align-items: center; 
-                justify-content: space-evenly; 
-                padding: 5px 0 15px 0; 
-                z-index: 3;
+                height: 40% !important; width: 100%; background: white;
+                display: flex; flex-direction: column; align-items: center; 
+                justify-content: space-evenly; padding: 5px 0 15px 0; z-index: 3;
             }
-
-            .card-bottom span { 
-                font-size: 1.45rem; 
-                font-weight: 900;
-                color: var(--card-color);
-                text-decoration: none;
-            }
-
-            .btn-circle { 
-                width: 45px; 
-                height: 45px; 
-                border-radius: 50%;
-                background-color: var(--card-color);
-                color: white;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            }
+            .card-bottom span { font-size: 1.45rem; font-weight: 900; color: var(--card-color); text-decoration: none; }
+            .btn-circle { width: 45px; height: 45px; }
         }
 
         /* =========================================
@@ -197,24 +146,74 @@
         }
 
         /* =========================================
-           DESTAQUES & FOOTER
+           DESIGN DOS DESTAQUES (FIEL À IMAGEM)
            ========================================= */
         .destaques-wrapper {
-            background: white; border-radius: 30px; padding: 15px 20px; width: 100%; max-width: 1000px;
-            margin-top: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            background: white !important;
+            border-radius: 40px; 
+            padding: 25px 40px; 
+            width: 100%; 
+            max-width: 1100px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            margin: 20px auto 30px auto;
+            flex-shrink: 0;
         }
-        .destaques-header { display: flex; align-items: center; justify-content: center; gap: 10px; margin-bottom: 10px; }
-        .destaques-header img { height: 20px; }
-        .destaques-header h3 { color: var(--jogos-blue); font-size: 0.95rem; font-weight: 800; }
-        .destaques-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
+
+        /* Linhas azuis laterais do título */
+        .destaques-header {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            margin-bottom: 25px;
+            width: 100%;
+        }
+        .destaques-header::before, .destaques-header::after {
+            content: "";
+            flex: 1;
+            height: 2px;
+            background-color: var(--line-blue);
+        }
+        .destaques-header h3 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1rem;
+            font-weight: 800;
+            color: var(--jogos-blue);
+            white-space: nowrap;
+        }
+        .destaques-header img { height: 22px; width: auto; object-fit: contain; }
+
+        .destaques-grid {
+            display: flex;
+            justify-content: space-around;
+            align-items: flex-start;
+            width: 100%;
+            gap: 15px;
+        }
+
+        @media (max-width: 767px) {
+            .destaques-header::before, .destaques-header::after { display: none; }
+            .destaques-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; justify-items: center; }
+        }
+
+        .destaque-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            width: 120px;
+            transition: transform 0.2s;
+        }
+        .destaque-item:hover { transform: translateY(-5px); }
+        .destaque-item img { width: 55px; height: 55px; object-fit: contain; margin-bottom: 10px; }
+        .destaque-item p { font-size: 0.8rem; font-weight: 800; color: var(--jogos-blue); margin-bottom: 4px; text-align: center; }
         
-        @media (orientation: portrait) { .destaques-grid { grid-template-columns: repeat(3, 1fr); gap: 15px; } }
+        /* Estrelas Douradas */
+        .stars { color: #FFC107; font-size: 12px; letter-spacing: 2px; }
 
-        .destaque-item { text-decoration: none; display: flex; flex-direction: column; align-items: center; }
-        .destaque-item img { width: 42px; height: 42px; object-fit: contain; margin-bottom: 3px; }
-        .destaque-item p { font-size: 0.7rem; font-weight: 800; color: #444; }
-        .stars { color: var(--accent-yellow); font-size: 8px; }
-
+        /* ----- FOOTER ----- */
         footer { 
             background: white; width: 100%; padding: 10px 0; 
             display: flex; justify-content: center; align-items: center;
@@ -250,8 +249,11 @@
 
         <section class="destaques-wrapper">
             <div class="destaques-header">
-                <img id="mini-logo" src="" alt="">
-                <h3>Jogos em destaque</h3>
+                <!-- As linhas laterais são criadas pelo CSS ::before e ::after -->
+                <h3>
+                    <img id="mini-logo" src="" alt=""> 
+                    Jogos em destaque
+                </h3>
             </div>
             <div class="destaques-grid" id="destaquesGrid"></div>
         </section>
