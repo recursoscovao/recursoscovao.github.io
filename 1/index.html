@@ -4,10 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Pequenos Exploradores</title>
-    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
-    
     <style>
         :root {
             --primary-blue: #5EA2E6; 
@@ -19,204 +17,121 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
-        body, html {
-            height: 100dvh; width: 100vw;
-            overflow: hidden; 
-            background-color: var(--sky-blue);
-            display: flex; flex-direction: column;
-        }
+        body, html { height: 100dvh; width: 100vw; background-color: var(--sky-blue); display: flex; flex-direction: column; overflow-x: hidden; }
 
-        /* ----- HEADER ----- */
+        /* =========================================
+           HEADER (IGUAL EM TODAS AS VERSÕES)
+           ========================================= */
         header { 
             background: white; border-radius: 0 0 35px 35px;
-            display: grid; grid-template-columns: 80px 1fr 80px; align-items: center; 
-            padding: 0 20px; height: 10vh; min-height: 75px; z-index: 1000; flex-shrink: 0;
+            display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; 
+            padding: 0 10px; height: 75px; z-index: 1000; flex-shrink: 0;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
-        
-        /* Ícones do Header - Tamanhos Visualmente Iguais */
         .hamburger-btn { 
-            background: none; border: none; color: var(--primary-blue); 
-            font-size: 32px; /* Aumentado para igualar a seta */
-            cursor: pointer; transition: transform 0.2s; 
-            display: flex; align-items: center; justify-content: flex-start;
+            justify-self: start; background: none; border: none; color: var(--primary-blue); 
+            font-size: 28px; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;
         }
-        .hamburger-btn:hover { transform: scale(1.1); }
-        
-        #icon-voltar-top { 
-            height: 35px; /* Tamanho igualado ao hamburguer */
-            cursor: pointer; justify-self: end; transition: transform 0.2s; 
-        }
-        #icon-voltar-top:hover { transform: scale(1.1); }
+        #icon-voltar-top { height: 40px; width: 40px; object-fit: contain; justify-self: end; cursor: pointer; }
 
-        .header-center { display: flex; align-items: center; justify-content: center; gap: 15px; }
-        #header-icon { height: 6.5vh; min-height: 50px; object-fit: contain; }
-        .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.9; }
-        #txt-titulo1 { color: var(--primary-blue); font-weight: 900; font-size: 1.2rem; }
-        #txt-titulo2 { color: var(--text-grey); font-weight: 900; font-size: 1.2rem; }
-        #txt-subtitulo { color: var(--text-grey); font-weight: 700; font-size: 0.75rem; margin-top: 3px; }
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 10px; }
+        #header-icon { height: 45px; object-fit: contain; }
+        #txt-titulo1, #txt-titulo2 { color: var(--primary-blue); font-weight: 900; font-size: 1.1rem; line-height: 1; }
 
         /* ----- MENU DROPDOWN ----- */
-        .menu-dropdown { position: absolute; top: 80px; left: 20px; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
-        .menu-item { 
-            display: flex; align-items: center; gap: 12px; padding: 12px 18px; 
-            background: white; border-radius: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); 
-            text-decoration: none; color: var(--text-grey); font-weight: 700; 
-            min-width: 220px; transition: all 0.2s ease; 
-        }
-        /* Hover com a cor do Icon Hamburguer (--primary-blue) */
-        .menu-item:hover { 
-            background-color: var(--primary-blue); 
-            color: white; 
-            transform: translateX(8px); 
-        }
-        .menu-item img { height: 24px; width: 24px; object-fit: contain; }
-        .menu-sep { border-top: 2px solid #f0f4f8; margin: 5px 0; }
+        .menu-dropdown { position: absolute; top: 75px; left: 10px; display: none; flex-direction: column; gap: 5px; z-index: 2000; }
+        .menu-item { display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: white; border-radius: 12px; text-decoration: none; color: var(--text-grey); font-weight: 700; min-width: 210px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; }
+        .menu-item:hover { background-color: var(--primary-blue); color: white; } /* Cor do hover igual ao icon */
+        .menu-item img { height: 22px; width: 22px; object-fit: contain; }
+        .menu-sep { border-top: 2px solid #f0f4f8; margin: 4px 0; }
 
         /* ----- INTRO ----- */
-        .sub-header { text-align: center; margin: 2vh 0; flex-shrink: 0; }
-        .intro-text { color: #1a4a7a; font-size: clamp(1.1rem, 3.2vh, 1.7rem); font-weight: 800; position: relative; display: inline-block; }
-        .intro-text::after {
-            content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 12px;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");
-            background-size: 100% 100%; background-repeat: no-repeat;
+        .sub-header { text-align: center; margin: 15px 0; flex-shrink: 0; }
+        .intro-text { color: #1a4a7a; font-size: 1.3rem; font-weight: 800; position: relative; display: inline-block; }
+        .intro-text::after { content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 10px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-size: 100% 100%; }
+
+        main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; min-height: 0; }
+
+        /* =========================================
+           1. CONFIGURAÇÃO PC / TABLET LANDSCAPE
+           ========================================= */
+        @media (min-width: 1025px) and (orientation: landscape) {
+            body, html { overflow: hidden; }
+            .game-wrapper { display: flex; gap: 30px; margin-bottom: 5px; }
+            .game-card {
+                width: 260px; height: clamp(300px, 38vh, 360px); 
+                background: white; border-radius: 35px; border: 3px solid var(--theme-color);
+                display: flex; flex-direction: column; overflow: hidden; text-decoration: none;
+                box-shadow: inset 0 0 0 6px white, 0 10px 20px rgba(0,0,0,0.05); transition: 0.2s;
+            }
+            .game-card:hover { transform: translateY(-8px); }
+
+            .card-top { height: 60% !important; background-color: var(--theme-bg); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+            /* Marca d'água cinza */
+            .card-top::before { content: ""; position: absolute; width: 80%; height: 80%; background-repeat: no-repeat; background-position: center; background-size: contain; filter: grayscale(1); opacity: 0.12; }
+            .game-card:nth-child(1) .card-top::before { background-image: url('../icons/bg_letras.png'); }
+            .game-card:nth-child(2) .card-top::before { background-image: url('../icons/bg_numeros.png'); }
+            .game-card:nth-child(3) .card-top::before { background-image: url('../icons/bg_mundo.png'); }
+            
+            .card-top::after { content: ""; position: absolute; bottom: -1px; width: 100%; height: 40px; background: white; clip-path: ellipse(75% 100% at 50% 100%); z-index: 2; }
+            .card-top img { max-width: 60%; max-height: 60%; z-index: 3; }
+            
+            .card-bottom { height: 40% !important; background: white; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; }
+            .card-bottom h2 { color: var(--theme-color); font-size: 1.1rem; font-weight: 900; text-transform: uppercase; }
+            .btn-circle { width: 42px; height: 42px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
+
+            .destaques-wrapper { background: white !important; border-radius: 30px; padding: 15px 30px; width: 840px; margin-top: 25px; margin-bottom: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); flex-shrink: 0; }
+            .destaques-grid { display: flex; justify-content: space-around; width: 100%; }
+            .destaque-item img { width: 28px !important; height: 28px !important; object-fit: contain; } /* Reduzido para 28px no PC */
         }
 
-        /* ----- MAIN ----- */
-        main { 
-            flex: 1; display: flex; flex-direction: column; 
-            align-items: center; justify-content: center; 
-            padding: 0 20px; min-height: 0; gap: 2vh;
+        /* =========================================
+           2. TELEMÓVEL VERTICAL (PORTRAIT)
+           ========================================= */
+        @media (max-width: 767px) and (orientation: portrait) {
+            body, html { height: auto; overflow-y: auto; }
+            header { grid-template-columns: 45px 1fr 45px; height: 65px; }
+            .hamburger-btn { font-size: 24px; }
+            #icon-voltar-top { height: 32px; width: 32px; }
+
+            .game-wrapper, .destaques-wrapper { width: 92%; margin: 0 auto; }
+            .game-card { display: flex; flex-direction: row; align-items: center; height: 75px; background: white; border-radius: 50px; border: 2.5px solid var(--theme-color); margin-bottom: 10px; text-decoration: none; padding: 5px; }
+            .card-top { width: 65px; height: 65px; border-radius: 50%; background: var(--theme-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+            .card-top img { width: 70%; height: 70%; }
+            .card-bottom { flex: 1; display: flex; flex-direction: row !important; align-items: center; justify-content: space-between; padding: 0 15px; background: none; }
+            .card-bottom h2 { font-size: 0.95rem; color: var(--theme-color); }
+            .btn-circle { width: 30px; height: 30px; font-size: 10px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--theme-color); color: white; }
+
+            .destaques-wrapper { background: white !important; border-radius: 20px; padding: 15px; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
+            .destaques-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+            .destaque-item img { width: 32px !important; height: 32px !important; } /* 32px no Mobile */
+            .destaque-item p { font-size: 0.6rem; font-weight: 800; color: #444; }
         }
 
-/* =========================================
-   CONFIGURAÇÃO PC & TABLET LANDSCAPE
-   ========================================= */
-@media (min-width: 768px) and (orientation: landscape) {
-    main {
-        display: flex; flex-direction: column; align-items: center;
-        justify-content: center; gap: 20px; padding: 10px 20px; flex: 1;
-    }
-
-    /* Ícones no PC (Tamanhos iguais) */
-    header { grid-template-columns: 50px 1fr 50px; padding: 0 10px; }
-    .hamburger-btn { height: 38px; font-size: 34px; display: flex; align-items: center; justify-content: center; }
-    #icon-voltar-top { height: 38px; width: auto; }
-
-    .game-wrapper { display: flex; justify-content: center; gap: 30px; width: auto; }
-
-    .game-card {
-        width: 260px; height: clamp(300px, 40vh, 360px); 
-        background: white; border-radius: 35px; border: 3px solid var(--theme-color);
-        display: flex; flex-direction: column; overflow: hidden; text-decoration: none;
-        box-shadow: inset 0 0 0 6px white, 0 10px 25px rgba(0,0,0,0.05);
-        transition: transform 0.2s ease; position: relative;
-    }
-    .game-card:hover { transform: translateY(-8px); }
-
-    .card-top { height: 60% !important; background-color: var(--theme-bg); display: flex; align-items: center; justify-content: center; position: relative; overflow: hidden; }
-    .card-top::before { content: ""; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 80%; height: 80%; background-repeat: no-repeat; background-position: center; background-size: contain; filter: grayscale(1) brightness(0.8); opacity: 0.12; z-index: 1; }
-    .game-card:nth-child(1) .card-top::before { background-image: url('../icons/bg_letras.png'); }
-    .game-card:nth-child(2) .card-top::before { background-image: url('../icons/bg_numeros.png'); }
-    .game-card:nth-child(3) .card-top::before { background-image: url('../icons/bg_mundo.png'); }
-    .card-top::after { content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 45px; background: white; clip-path: ellipse(75% 100% at 50% 100%); z-index: 2; }
-    .card-top img { max-width: 60%; max-height: 60%; object-fit: contain; z-index: 3; }
-    .card-bottom { height: 40% !important; background: white; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding-bottom: 10px; z-index: 4; }
-    .card-bottom h2 { color: var(--theme-color); font-size: 1.2rem; font-weight: 900; text-transform: uppercase; }
-    .btn-circle { width: 45px; height: 45px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
-
-    .destaques-wrapper { 
-        background: white !important; border-radius: 30px; padding: 15px 30px; 
-        width: 840px; margin-top: 25px; margin-bottom: 30px; 
-        box-shadow: 0 4px 15px rgba(0,0,0,0.04); flex-shrink: 0; 
-    }
-    .destaques-grid { display: flex; justify-content: space-around; width: 100%; align-items: center; }
-    .destaque-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; width: 90px; }
-    .destaque-item img { width: 28px !important; height: 28px !important; object-fit: contain; margin-bottom: 4px; }
-    .destaque-item p { font-size: 0.7rem; font-weight: 800; color: #444; text-align: center; line-height: 1.1; }
-    .stars { color: var(--accent-yellow); font-size: 8px; margin-top: 2px; }
-}
-
-/* =========================================
-   TELEMÓVEL LANDSCAPE (HORIZONTAL)
-   ========================================= */
-@media (max-height: 500px) and (orientation: landscape) {
-    header { height: 50px; padding: 0 8px; grid-template-columns: 45px 1fr 45px; border-radius: 0 0 20px 20px; }
-    
-    /* Ícones no Telemóvel Horizontal (Tamanhos iguais) */
-    .hamburger-btn { font-size: 28px; justify-self: start; padding-left: 5px; display: flex; align-items: center; }
-    #icon-voltar-top { height: 30px; justify-self: end; padding-right: 5px; }
-    
-    #header-icon { height: 35px; }
-    #txt-titulo1, #txt-titulo2 { font-size: 0.95rem; }
-
-    .game-wrapper, .destaques-wrapper { width: 92%; max-width: 800px; margin: 0 auto; }
-    .game-wrapper { display: flex; flex-direction: row; gap: 12px; margin-bottom: 12px; }
-    .game-card { flex: 1; height: 165px; background: white; border-radius: 25px; border: 2px solid var(--theme-color); display: flex; flex-direction: column; overflow: hidden; box-shadow: inset 0 0 0 4px white, 0 4px 10px rgba(0,0,0,0.05); }
-    .card-top { height: 60% !important; background-color: var(--theme-bg); position: relative; display: flex; align-items: center; justify-content: center; }
-    .card-top::after { content: ""; position: absolute; bottom: -1px; left: 0; width: 100%; height: 18px; background: white; clip-path: ellipse(80% 100% at 50% 100%); }
-    .card-top img { max-width: 50%; max-height: 50%; z-index: 2; }
-    .card-bottom { height: 40% !important; background: white; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; padding-bottom: 4px; }
-    .card-bottom h2 { font-weight: 900; color: var(--theme-color); font-size: 0.7rem; }
-    .btn-circle { width: 24px; height: 24px; }
-    .destaques-wrapper { background: white !important; border-radius: 20px; padding: 12px 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-    .destaques-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
-    .destaque-item img { width: 30px; height: 30px; margin-bottom: 2px; }
-    .destaque-item p { font-size: 0.55rem; }
-    body, html { height: auto; overflow-y: auto; overflow-x: hidden; }
-    main { height: auto; padding: 10px 0 30px 0; gap: 15px; justify-content: flex-start; }
-    footer { padding: 8px 0; margin-top: 15px; }
-}
-
-/* =========================================
-   TELEMÓVEL VERTICAL (PORTRAIT)
-   ========================================= */
-@media (orientation: portrait) {
-    body, html { height: auto; overflow-y: auto; overflow-x: hidden; }
-
-    header { height: 65px; padding: 0 10px !important; grid-template-columns: 40px 1fr 40px !important; border-radius: 0 0 25px 25px; flex-shrink: 0; }
-    
-    /* Ícones no Telemóvel Vertical (Tamanhos iguais) */
-    .hamburger-btn { font-size: 28px !important; justify-self: start; padding: 0; display: flex; align-items: center; }
-    #icon-voltar-top { height: 30px !important; justify-self: end; display: block; }
-    
-    #header-icon { height: 38px; }
-    #txt-titulo1, #txt-titulo2 { font-size: 1rem; }
-    #txt-subtitulo { font-size: 0.6rem; }
-    .sub-header { margin: 12px 0; }
-    .intro-text { font-size: 1.1rem; }
-    main { padding: 10px 15px; gap: 15px; display: flex; flex-direction: column; align-items: center; }
-    .game-wrapper, .destaques-wrapper { width: 100%; max-width: 400px; margin: 0 auto; }
-    .game-wrapper { display: flex; flex-direction: column; gap: 10px; }
-    .game-card { display: flex; flex-direction: row; align-items: center; height: 70px; border-radius: 40px; border: 2.5px solid var(--theme-color); background: white; padding: 4px; text-decoration: none; }
-    .card-top { width: 60px; height: 60px; border-radius: 50%; background: var(--theme-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-    .card-top img { width: 70%; height: 70%; object-fit: contain; }
-    .card-bottom { flex: 1; display: flex; flex-direction: row !important; align-items: center; justify-content: space-between; padding: 0 15px; background: none; }
-    .card-bottom h2 { font-size: 0.95rem; color: var(--theme-color); text-decoration: none; }
-    .btn-circle { width: 30px; height: 30px; font-size: 10px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--theme-color); color: white; }
-    .destaques-wrapper { background: white !important; border-radius: 20px; padding: 15px 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-top: 10px; }
-    .destaques-header { display: flex; align-items: center; justify-content: center; gap: 6px; margin-bottom: 12px; }
-    .destaques-header img { height: 14px; }
-    .destaques-header h3 { font-size: 0.85rem; }
-    .destaques-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
-    .destaque-item img { width: 32px !important; height: 32px !important; margin-bottom: 3px; }
-    .destaque-item p { font-size: 0.6rem; }
-    footer { margin-top: 15px; padding: 12px 0; }
-}
+        /* =========================================
+           3. TELEMÓVEL LANDSCAPE
+           ========================================= */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body, html { height: auto; overflow-y: auto; }
+            header { height: 45px; grid-template-columns: 45px 1fr 45px; }
+            .game-wrapper, .destaques-wrapper { width: 90%; margin: 0 auto; }
+            .game-card { height: 160px; flex: 1; border-radius: 25px; border: 2px solid var(--theme-color); background: white; overflow: hidden; display: flex; flex-direction: column; }
+            .card-top { height: 60% !important; background-color: var(--theme-bg); position: relative; display: flex; align-items: center; justify-content: center; }
+            .card-top img { max-width: 50%; max-height: 50%; }
+            .card-bottom { height: 40% !important; background: white; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; }
+            .card-bottom h2 { font-size: 0.7rem; }
+            .destaques-wrapper { background: white !important; margin-top: 10px; padding: 10px; }
+            .destaques-grid { display: grid; grid-template-columns: repeat(6, 1fr); }
+            .destaque-item img { width: 28px; height: 28px; }
+        }
 
         /* ----- FOOTER ----- */
-        footer { 
-            background: white; width: 100%; padding: 12px 0; 
-            display: flex; justify-content: center; align-items: center;
-            margin-top: auto; flex-shrink: 0;
-            box-shadow: 0 -4px 10px rgba(0,0,0,0.02);
-        }
+        footer { background: white; width: 100%; padding: 12px 0; display: flex; justify-content: center; margin-top: auto; box-shadow: 0 -4px 10px rgba(0,0,0,0.02); flex-shrink: 0; }
         .footer-text { color: var(--text-grey); font-weight: 500; font-size: 0.85rem; }
-
+        .stars { color: var(--accent-yellow); font-size: 8px; }
     </style>
 </head>
 <body>
-
     <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
@@ -225,87 +140,62 @@
             <div class="title-group">
                 <div id="txt-titulo1"></div>
                 <div id="txt-titulo2"></div>
-                <div id="txt-subtitulo"></div>
             </div>
         </div>
-        <div class="header-right">
-            <img id="icon-voltar-top" src="" alt="Voltar" onclick="voltarPagina()">
-        </div>
+        <div class="header-right"><img id="icon-voltar-top" src="" alt="Voltar" onclick="voltarPagina()"></div>
     </header>
 
-    <div class="sub-header">
-        <div class="intro-text" id="txt-intro"></div>
-    </div>
+    <div class="sub-header"><div class="intro-text" id="txt-intro"></div></div>
 
     <main>
         <div class="game-wrapper" id="gamesGrid"></div>
-
         <section class="destaques-wrapper">
-            <div class="destaques-header">
-                <img id="mini-logo" src="" alt="">
-                <h3>Jogos em destaque</h3>
+            <div class="destaques-header" style="display:flex; justify-content:center; gap:8px; margin-bottom:10px;">
+                <img id="mini-logo" src="" style="height:14px;">
+                <h3 style="font-size:0.85rem; color:var(--primary-blue); font-weight:800;">Jogos em destaque</h3>
             </div>
             <div class="destaques-grid" id="destaquesGrid"></div>
         </section>
     </main>
 
-    <footer>
-        <span class="footer-text" id="txt-rodape"></span>
-    </footer>
+    <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
     <script src="dados.js"></script>
     <script>
-        function voltarPagina() {
-            window.location.href = JOGO_CONFIG.links.home;
-        }
-
-        function toggleMenu(e) {
-            if(e) e.stopPropagation();
-            const menu = document.getElementById('dropdownMenu');
-            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex';
-        }
+        function voltarPagina() { window.location.href = JOGO_CONFIG.links.home; }
+        function toggleMenu(e) { if(e) e.stopPropagation(); const menu = document.getElementById('dropdownMenu'); menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex'; }
         window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
 
         window.onload = () => {
             const config = JOGO_CONFIG;
             document.getElementById('txt-titulo1').innerText = config.textos.tituloLinha1;
             document.getElementById('txt-titulo2').innerText = config.textos.tituloLinha2;
-            document.getElementById('txt-subtitulo').innerText = config.textos.subtitulo;
             document.getElementById('txt-intro').innerText = config.textos.intro;
             document.getElementById('txt-rodape').innerHTML = config.textos.rodape;
-
-            const anoAtivo = config.anoAtivo;
-            document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[anoAtivo];
+            document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + config.iconesMenu.voltar;
             document.getElementById('mini-logo').src = config.caminhoIconsMenu + config.iconesMenu.controller;
 
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Página Inicial", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
-            // Popula os links do menu normal
             Object.keys(config.links).forEach(key => {
                 if (config.iconesMenu[key]) {
-                    const a = document.createElement('a'); 
-                    a.className = 'menu-item'; 
-                    a.href = config.links[key];
+                    const a = document.createElement('a'); a.className = 'menu-item'; a.href = config.links[key];
                     a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
                     menuBox.appendChild(a);
                 }
             });
 
-            // ADICIONA O BOTÃO "VOLTAR" AO FINAL DO MENU HAMBÚRGUER
-            const sep = document.createElement('div'); 
-            sep.className = 'menu-sep';
+            // Botão VOLTAR no menu hambúrguer
+            const sep = document.createElement('div'); sep.className = 'menu-sep';
             menuBox.appendChild(sep);
-            
             const btnMenuVoltar = document.createElement('a');
-            btnMenuVoltar.className = 'menu-item';
-            btnMenuVoltar.href = "#";
+            btnMenuVoltar.className = 'menu-item'; btnMenuVoltar.href = "#";
             btnMenuVoltar.onclick = (e) => { e.preventDefault(); voltarPagina(); };
             btnMenuVoltar.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnMenuVoltar);
 
-            // Grelha de Disciplinas
             const grid = document.getElementById('gamesGrid');
             config.listaJogos.forEach(jogo => {
                 const tema = config.temaCores[jogo.tema];
@@ -313,19 +203,18 @@
                 card.className = 'game-card'; card.href = jogo.link;
                 card.style.setProperty('--theme-color', tema.borda);
                 card.style.setProperty('--theme-bg', tema.fundo);
-                card.innerHTML = `
-                    <div class="card-top"><img src="${config.caminhoIconsJogos}${jogo.icon}"></div>
-                    <div class="card-bottom">
-                        <h2>${jogo.nome}</h2>
-                        <div class="btn-circle"><i class="fas fa-arrow-right"></i></div>
-                    </div>`;
+                card.innerHTML = `<div class="card-top"><img src="${config.caminhoIconsJogos}${jogo.icon}"></div><div class="card-bottom"><h2>${jogo.nome}</h2><div class="btn-circle"><i class="fas fa-arrow-right"></i></div></div>`;
                 grid.appendChild(card);
             });
 
-            // Grelha de Destaques
             const dGrid = document.getElementById('destaquesGrid');
             config.listaDestaques.forEach(jogo => {
                 const item = document.createElement('a');
-                item.className = 'destaque-item';
-                item.href = jogo.link;
-                co
+                item.className = 'destaque-item'; item.href = jogo.link;
+                item.innerHTML = `<img src="${config.caminhoIconsJogos}${jogo.icon}"><p>${jogo.nome}</p><div class="stars">${'★'.repeat(jogo.estrelas)}${'☆'.repeat(5-jogo.estrelas)}</div>`;
+                dGrid.appendChild(item);
+            });
+        };
+    </script>
+</body>
+</html>
