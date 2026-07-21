@@ -49,57 +49,67 @@
 
         main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; min-height: 0; }
 
-     /* =========================================
+    /* =========================================
            1. CONFIGURAÇÃO PC & TABLET LANDSCAPE
            ========================================= */
         @media (min-width: 1025px) and (orientation: landscape) {
-            .game-wrapper { display: flex; gap: 30px; }
+            /* Header: Botões com tamanho igual e nos limites (10px) */
+            header { 
+                grid-template-columns: 50px 1fr 50px; 
+                padding: 0 10px; 
+            }
+            .hamburger-btn { height: 38px; font-size: 24px; display: flex; align-items: center; justify-content: center; }
+            #icon-voltar-top { height: 38px; width: auto; }
+
+            /* Cartões Disciplinas (260px | 60-40) */
+            .game-wrapper { display: flex; gap: 30px; margin-bottom: 5px; }
             .game-card {
-                width: 260px; height: clamp(300px, 38vh, 360px); 
+                width: 260px; height: clamp(300px, 38vh, 350px); 
                 background: white; border-radius: 35px; border: 3px solid var(--theme-color);
                 display: flex; flex-direction: column; overflow: hidden; text-decoration: none;
                 box-shadow: inset 0 0 0 6px white, 0 10px 20px rgba(0,0,0,0.05); transition: 0.2s;
             }
             .game-card:hover { transform: translateY(-8px); }
-            
-            /* Proporção 60/40 */
+
             .card-top { height: 60% !important; background-color: var(--theme-bg); position: relative; display: flex; align-items: center; justify-content: center; overflow: hidden; }
             
-            /* Marca d'água */
-            .card-top::before { content: ""; position: absolute; width: 80%; height: 80%; background-repeat: no-repeat; background-position: center; background-size: contain; filter: grayscale(1); opacity: 0.12; }
+            /* Marca d'água cinza */
+            .card-top::before { content: ""; position: absolute; width: 80%; height: 80%; background-repeat: no-repeat; background-position: center; background-size: contain; filter: grayscale(1); opacity: 0.12; z-index: 1; }
             .game-card:nth-child(1) .card-top::before { background-image: url('../icons/bg_letras.png'); }
             .game-card:nth-child(2) .card-top::before { background-image: url('../icons/bg_numeros.png'); }
             .game-card:nth-child(3) .card-top::before { background-image: url('../icons/bg_mundo.png'); }
             
-            .card-top::after { content: ""; position: absolute; bottom: -1px; width: 100%; height: 40px; background: white; clip-path: ellipse(75% 100% at 50% 100%); }
-            .card-top img { max-width: 60%; max-height: 60%; z-index: 2; }
+            .card-top::after { content: ""; position: absolute; bottom: -1px; width: 100%; height: 40px; background: white; clip-path: ellipse(75% 100% at 50% 100%); z-index: 2; }
+            .card-top img { max-width: 60%; max-height: 60%; z-index: 3; }
             
-            .card-bottom { height: 40% !important; background: white; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; }
+            .card-bottom { height: 40% !important; background: white; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; z-index: 4; }
             .card-bottom h2 { color: var(--theme-color); font-size: 1.1rem; font-weight: 900; text-transform: uppercase; }
             .btn-circle { width: 42px; height: 42px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
 
-            /* ----- SECÇÃO DESTAQUES (AJUSTADA) ----- */
+            /* ----- SECÇÃO DESTAQUES (ICONS REDUZIDOS) ----- */
             .destaques-wrapper { 
                 background: white !important; 
                 border-radius: 30px; 
                 padding: 15px 30px; 
-                width: 840px; /* Largura alinhada com os 3 cartões */
-                margin-top: 25px;
+                width: 840px; /* Largura total: (260x3) + (30x2) */
+                margin-top: 25px; /* Padding entre cartões e destaques */
                 margin-bottom: 30px; 
                 box-shadow: 0 4px 15px rgba(0,0,0,0.04); 
                 flex-shrink: 0; 
             }
             .destaques-grid { display: flex; justify-content: space-around; width: 100%; align-items: center; }
             
-            /* ÍCONES REDUZIDOS PARA 32PX */
             .destaque-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; width: 90px; }
+            
+            /* ÍCONES MINIATURA (28PX) */
             .destaque-item img { 
-                width: 32px !important; 
-                height: 32px !important; 
+                width: 28px !important; 
+                height: 28px !important; 
                 object-fit: contain; 
-                margin-bottom: 5px; 
+                margin-bottom: 4px; 
             }
-            .destaque-item p { font-size: 0.72rem; font-weight: 800; color: #444; text-align: center; line-height: 1.1; }
+            .destaque-item p { font-size: 0.7rem; font-weight: 800; color: #444; text-align: center; line-height: 1.1; }
+            .stars { color: var(--accent-yellow); font-size: 8px; margin-top: 2px; }
         }
 
         /* =========================================
