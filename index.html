@@ -47,53 +47,47 @@
             background-size: 100% 100%; background-repeat: no-repeat;
         }
 
-     /* =========================================
-   CORREÇÃO DESTAQUES TELEMÓVEL VERTICAL
-   ========================================= */
-@media (max-width: 767px) {
-    .destaques-wrapper {
-        width: 92% !important; /* Margem lateral para não bater nos limites */
-        padding: 20px 10px !important;
-        margin: 10px auto 30px auto !important;
-        border-radius: 30px !important;
-    }
+        /* =========================================
+           ESTILO BASE (MOBILE PORTRAIT - PÍLULAS)
+           ========================================= */
+        main { 
+            width: 100%; display: flex; flex-direction: column; align-items: center; 
+            padding: 10px 15px; flex: 1; 
+        }
 
-    /* Esconde as linhas azuis laterais no telemóvel para ganhar espaço */
-    .destaques-header::before, 
-    .destaques-header::after { 
-        display: none !important; 
-    }
+        .years-grid { 
+            display: flex; flex-direction: column; gap: 12px; width: 100%; max-width: 500px; 
+        }
 
-    .destaques-grid {
-        display: grid !important;
-        grid-template-columns: repeat(3, 1fr) !important; /* 3 colunas = 2 linhas de 3 */
-        gap: 15px 5px !important; /* Espaço entre itens */
-        justify-items: center !important; /* Centra o item na coluna */
-        width: 100% !important;
-    }
+        .year-card { 
+            display: flex; align-items: center; width: 100%; 
+            background: white; border: 2.5px solid var(--card-color); 
+            border-radius: 50px; padding: 5px; text-decoration: none; 
+            height: 75px; box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+            overflow: hidden;
+        }
 
-    .destaque-item {
-        width: 100% !important;
-        max-width: 90px !important;
-    }
+        .card-top { 
+            width: 65px; height: 65px; background: var(--card-color); 
+            border-radius: 50%; display: flex; align-items: center; 
+            justify-content: center; flex-shrink: 0; 
+        }
+        .card-top img { width: 70%; height: 70%; object-fit: contain; }
 
-    .destaque-item img {
-        width: 40px !important; /* Tamanho ideal para 3 colunas */
-        height: 40px !important;
-        margin-bottom: 6px !important;
-    }
+        .card-bottom { 
+            flex: 1; display: flex; align-items: center; 
+            justify-content: space-between; padding: 0 15px; 
+        }
+        .card-bottom span { 
+            font-weight: 900; color: var(--card-color); 
+            font-size: 1.1rem; text-decoration: none;
+        }
 
-    .destaque-item p {
-        font-size: 0.65rem !important;
-        line-height: 1.1 !important;
-        white-space: normal !important; /* Permite quebra de linha para não empurrar */
-    }
-
-    .stars {
-        font-size: 10px !important;
-        letter-spacing: 1px !important;
-    }
-}
+        .btn-circle { 
+            width: 35px; height: 35px; border-radius: 50%; 
+            background: var(--card-color); color: white; 
+            display: flex; align-items: center; justify-content: center; 
+        }
 
         /* =========================================
            CONFIGURAÇÃO PC / TABLET (LANDSCAPE)
