@@ -78,24 +78,116 @@
             .destaque-item img { width: 28px !important; height: 28px !important; }
         }
 
-        /* =========================================
-           2. TELEMÓVEL VERTICAL (PORTRAIT)
-           ========================================= */
-        @media (max-width: 767px) and (orientation: portrait) {
-            body, html { height: auto; overflow-y: auto; }
-            header { grid-template-columns: 45px 1fr 45px; height: 70px; }
-            #txt-subtitulo-header { font-size: 0.55rem; }
-            .game-wrapper, .destaques-wrapper { width: 92%; margin: 0 auto; }
-            .game-card { display: flex; flex-direction: row; align-items: center; height: 75px; background: white; border-radius: 50px; border: 2.5px solid var(--theme-color); margin-bottom: 10px; text-decoration: none; padding: 5px; }
-            .card-top { width: 65px; height: 65px; border-radius: 50%; background: var(--theme-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-            .card-top img { width: 70%; height: 70%; }
-            .card-bottom { flex: 1; display: flex; flex-direction: row !important; align-items: center; justify-content: space-between; padding: 0 15px; background: none; }
-            .card-bottom h2 { font-size: 0.95rem; color: var(--theme-color); }
-            .btn-circle { width: 30px; height: 30px; font-size: 10px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: var(--theme-color); color: white; }
-            .destaques-wrapper { background: white !important; border-radius: 20px; padding: 15px; margin-top: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.03); }
-            .destaques-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-            .destaque-item img { width: 32px !important; height: 32px !important; }
-        }
+    /* =========================================
+   2. TELEMÓVEL VERTICAL (PORTRAIT) - PÍLULAS COM DESTAQUE
+   ========================================= */
+@media (max-width: 767px) and (orientation: portrait) {
+    body, html { height: auto; overflow-y: auto; overflow-x: hidden; }
+
+    /* Header: Ícones a 10px dos limites e menores */
+    header { 
+        height: 70px; 
+        padding: 0 10px !important; 
+        grid-template-columns: 40px 1fr 40px !important; 
+        border-radius: 0 0 25px 25px;
+    }
+    .hamburger-btn { justify-self: start; font-size: 20px !important; padding: 0; width: 30px; }
+    #icon-voltar-top { height: 28px !important; width: 28px; display: block; justify-self: end; }
+    #header-icon { height: 40px; }
+    #txt-titulo1, #txt-titulo2 { font-size: 1rem; }
+    #txt-subtitulo-header { font-size: 0.55rem; display: block; }
+
+    /* Intro */
+    .sub-header { margin: 15px 0 10px 0; }
+    .intro-text { font-size: 1.1rem; }
+
+    main { 
+        padding: 10px 15px; 
+        gap: 25px; /* MAIS ESPAÇO ENTRE AS DISCIPLINAS E OS DESTAQUES */
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+    }
+
+    /* Sincronização de Largura */
+    .game-wrapper, .destaques-wrapper { width: 100%; max-width: 400px; margin: 0 auto; }
+
+    /* CARTÕES EM FORMATO PÍLULA ROBUSTA */
+    .game-wrapper { 
+        display: flex !important; 
+        flex-direction: column !important; 
+        gap: 20px !important; /* MAIS PADDING/ESPAÇO ENTRE CARTÕES */
+    }
+    
+    .game-card { 
+        display: flex !important; 
+        flex-direction: row !important; 
+        align-items: center !important; 
+        height: 85px !important; /* Altura aumentada para mais destaque */
+        border-radius: 50px !important; /* Formato Pílula */
+        border: 3px solid var(--theme-color) !important; 
+        background: white !important; 
+        padding: 6px; 
+        text-decoration: none !important;
+        box-shadow: 0 5px 12px rgba(0,0,0,0.05) !important;
+    }
+
+    /* Ícone circular dentro da pílula */
+    .card-top { 
+        width: 73px !important; 
+        height: 73px !important; 
+        border-radius: 50% !important; 
+        background: var(--theme-bg) !important; 
+        display: flex !important; 
+        align-items: center; 
+        justify-content: center; 
+        flex-shrink: 0; 
+    }
+    .card-top img { width: 65%; height: 65%; object-fit: contain; }
+
+    /* Texto e Seta */
+    .card-bottom { 
+        flex: 1 !important; 
+        display: flex !important; 
+        flex-direction: row !important; 
+        align-items: center !important; 
+        justify-content: space-between !important; 
+        padding: 0 20px 0 15px; 
+        background: none !important;
+    }
+    .card-bottom h2 { font-size: 1.05rem !important; color: var(--theme-color) !important; font-weight: 900; margin: 0; }
+    
+    .btn-circle { 
+        width: 34px !important; 
+        height: 34px !important; 
+        background: var(--theme-color); 
+        color: white; 
+        border-radius: 50%; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        font-size: 11px;
+    }
+
+    /* SECÇÃO DESTAQUES (BRANCA COM ICONS 32PX) */
+    .destaques-wrapper { 
+        background: white !important; 
+        border-radius: 25px; 
+        padding: 15px 10px; 
+        box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        margin-top: 5px;
+    }
+    .destaques-header { display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 12px; }
+    .destaques-header img { height: 14px; }
+    .destaques-header h3 { font-size: 0.85rem; color: var(--primary-blue); font-weight: 800; }
+    
+    .destaques-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+    .destaque-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; }
+    .destaque-item img { width: 32px !important; height: 32px !important; margin-bottom: 3px; }
+    .destaque-item p { font-size: 0.6rem; font-weight: 800; color: #444; }
+
+    footer { margin-top: 20px; padding: 15px 0; }
+}
 
         /* =========================================
            3. TELEMÓVEL LANDSCAPE (HORIZONTAL)
