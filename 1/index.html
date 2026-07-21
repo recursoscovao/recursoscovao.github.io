@@ -26,7 +26,6 @@
             display: flex; flex-direction: column; overflow-x: hidden; 
         }
 
-        /* HEADER */
         header { 
             background: white; border-radius: 0 0 35px 35px;
             display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; 
@@ -45,30 +44,34 @@
         .hamburger-btn { background: none; border: none; color: var(--primary-blue); font-size: 28px; cursor: pointer; }
         #icon-voltar-top { height: 40px; width: 40px; object-fit: contain; cursor: pointer; justify-self: end;}
 
-        /* MENU HAMBURGER (VOLTAR NO FUNDO + PADDING 5px) */
+        /* MENU SEM FORMA BRANCA NO FUNDO */
         .menu-dropdown { 
             position: absolute; top: 85px; left: 15px; display: none; 
             flex-direction: column; 
-            gap: 5px; /* Padding/Espaçamento entre botões conforme pedido */
+            gap: 5px; /* Espaço de 5px entre cada botão */
             z-index: 2000; 
-            background: white; padding: 10px; border-radius: 18px;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+            background: none; /* Fundo removido conforme pedido */
+            padding: 0;
+            box-shadow: none;
         }
         .menu-item { 
             display: flex; align-items: center; gap: 12px; 
             height: var(--menu-item-h); padding: 0 20px;
             text-decoration: none; color: var(--text-grey); 
-            font-weight: 800; border-radius: 12px;
-            transition: all 0.2s ease; min-width: 230px;
+            font-weight: 800; 
+            background: white; /* Fundo agora é individual do botão */
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            transition: background 0.2s ease, color 0.2s ease; 
+            min-width: 230px;
         }
         .menu-item:hover { 
             background-color: var(--primary-blue); 
             color: white; 
         }
-        .menu-item:hover img { filter: brightness(0) invert(1); }
+        /* Ícones permanecem na cor original (sem filtro de cor no hover) */
         .menu-item img { width: 24px; height: 24px; object-fit: contain; }
 
-        /* INTRO */
         .sub-header { text-align: center; margin: 30px 0; flex-shrink: 0; }
         .intro-text { color: #1a4a7a; font-size: 1.4rem; font-weight: 800; position: relative; display: inline-block; }
         .intro-text::after { 
@@ -79,7 +82,7 @@
 
         main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; }
 
-        /* ESTILOS DE CARDS (PC) */
+        /* PC / TABLET */
         @media (min-width: 1025px) {
             .game-wrapper { display: flex; gap: 30px; }
             .game-card { 
@@ -122,12 +125,10 @@
             #txt-titulo1 { font-size: 1.1rem; }
             #txt-titulo2 { font-size: 0.9rem; }
             
-            /* Ajuste para 3 cartões lado a lado */
             .game-wrapper { 
                 display: grid !important; 
                 grid-template-columns: repeat(3, 1fr) !important; 
-                gap: 12px; 
-                width: 95%; 
+                gap: 12px; width: 95%; 
             }
             .game-card { height: 160px; border-radius: 20px; flex-direction: column; text-decoration: none; width: 100%; }
             .card-top { height: 60%; position: relative; display: flex; align-items: center; justify-content: center; width: 100%; }
@@ -135,12 +136,12 @@
             .card-top img { max-width: 45%; }
             .card-bottom { height: 40%; flex-direction: column !important; justify-content: center; gap: 5px; }
             .card-bottom h2 { font-size: 0.75rem; text-align: center; }
-            .btn-circle { width: 24px; height: 24px; font-size: 10px; }
+            .btn-circle { width: 24px; height: 24px; }
 
             .destaques-grid { display: grid; grid-template-columns: repeat(6, 1fr); }
         }
 
-        /* ÍCONES DESTAQUES (FIXO 45px) */
+        /* DESTAQUES ICONS FIXOS */
         .destaque-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; }
         .destaque-item img { 
             width: var(--destaque-icon-size) !important; 
@@ -209,7 +210,7 @@
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Página Inicial", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
-            // Itens de Navegação
+            // Itens do menu
             Object.keys(config.links).forEach(key => {
                 if (config.iconesMenu[key] && key !== 'home') {
                     const a = document.createElement('a');
@@ -220,7 +221,7 @@
                 }
             });
 
-            // BOTÃO VOLTAR NO FUNDO DO MENU
+            // Botão voltar no FUNDO do menu
             const btnVoltarMenu = document.createElement('a');
             btnVoltarMenu.className = 'menu-item';
             btnVoltarMenu.href = "#";
@@ -228,7 +229,6 @@
             btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnVoltarMenu);
 
-            // Grelha de Jogos
             const grid = document.getElementById('gamesGrid');
             config.listaJogos.forEach(jogo => {
                 const tema = config.temaCores[jogo.tema];
@@ -240,7 +240,6 @@
                 grid.appendChild(card);
             });
 
-            // Destaques
             const dGrid = document.getElementById('destaquesGrid');
             config.listaDestaques.forEach(jogo => {
                 const item = document.createElement('a');
