@@ -146,6 +146,69 @@
         }
 
         /* =========================================
+   DESTAQUES TELEMÓVEL VERTICAL (3 COLUNAS + LINHAS)
+   ========================================= */
+@media (orientation: portrait) {
+    /* 1. Ajuste da largura da caixa para ganhar espaço interno */
+    .destaques-wrapper {
+        padding: 20px 10px !important; /* Menos padding lateral */
+        width: 95% !important;
+        margin: 10px auto !important;
+    }
+
+    /* 2. Manter linhas azuis e centralizar título */
+    .destaques-header {
+        display: flex !important;
+        gap: 8px !important; /* Espaço menor entre linhas e texto */
+    }
+    
+    .destaques-header::before, 
+    .destaques-header::after { 
+        display: block !important; /* Garante que as linhas aparecem */
+        height: 1.5px !important;
+    }
+
+    .destaques-header h3 {
+        font-size: 0.8rem !important; /* Texto um pouco menor para caber com as linhas */
+    }
+
+    /* 3. Grelha em 3 colunas perfeitamente centrada */
+    .destaques-grid {
+        display: grid !important;
+        grid-template-columns: repeat(3, 1fr) !important; /* 3 colunas exatas */
+        justify-items: center !important; /* Centra cada item na sua coluna */
+        gap: 15px 5px !important; /* Espaço entre linhas e colunas */
+        width: 100% !important;
+    }
+
+    /* 4. Ajuste do tamanho dos itens para caberem nas colunas */
+    .destaque-item {
+        width: 100% !important;
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    .destaque-item img {
+        width: 38px !important; /* Tamanho calculado para não estourar a largura */
+        height: 38px !important;
+        margin-bottom: 5px !important;
+    }
+
+    .destaque-item p {
+        font-size: 0.6rem !important;
+        white-space: normal !important; /* Permite que o nome do jogo quebre em 2 linhas se for grande */
+        line-height: 1.1 !important;
+        width: 90% !important;
+    }
+
+    .stars {
+        font-size: 9px !important;
+        letter-spacing: 0.5px !important;
+    }
+}
+
+        /* =========================================
            DESIGN DOS DESTAQUES (FIEL À IMAGEM)
            ========================================= */
         .destaques-wrapper {
