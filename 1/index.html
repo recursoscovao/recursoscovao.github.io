@@ -8,31 +8,20 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        /* ============================================================
-           1. CONFIGURAÇÕES RÁPIDAS (ALTERA AQUI)
-           ============================================================ */
         :root {
-            /* Cores */
             --primary-blue: #5EA2E6; 
             --back-blue: #1A499C; 
             --text-grey: #8792a1;
             --sky-blue: #EAF4FE;
             --accent-yellow: #FFC107;
             --line-blue: #A5D1FF;
-
-            /* Header */
-            --header-h: 95px;
-            --header-radius: 0 0 35px 35px;
-
-            /* Cards Desktop */
-            --card-w: 300px;
-            --card-h: 380px;
-            --card-radius: 35px;
+            
+            /* Altura fixa dos itens do menu */
+            --menu-item-h: 55px;
+            /* Tamanho fixo dos ícones em destaque */
+            --destaque-icon-size: 45px;
         }
 
-        /* ============================================================
-           2. ESTILOS BASE (MANTENDO O TEU DESIGN)
-           ============================================================ */
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
         body, html { 
@@ -40,26 +29,48 @@
             display: flex; flex-direction: column; overflow-x: hidden; 
         }
 
-        /* HEADER ORIGINAL */
+        /* HEADER */
         header { 
-            background: white; border-radius: var(--header-radius);
+            background: white; border-radius: 0 0 35px 35px;
             display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; 
-            padding: 0 15px; height: var(--header-h); z-index: 1000; flex-shrink: 0;
+            padding: 0 15px; height: 95px; z-index: 1000; flex-shrink: 0;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
 
-        .title-group { display: flex; flex-direction: column; line-height: 0.85; text-align: left; text-transform: uppercase; }
-        #txt-titulo1 { color: var(--primary-blue); font-weight: 800; font-size: 1.65rem; letter-spacing: -0.5px; }
-        #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 1.4rem; }
-        #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; letter-spacing: 0.5px; opacity: 0.9; }
-
-        .hamburger-btn { background: none; border: none; color: var(--primary-blue); font-size: 28px; cursor: pointer; }
-        #icon-voltar-top { height: 40px; width: 40px; object-fit: contain; cursor: pointer; justify-self: end;}
-
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         #header-icon { height: 70px; object-fit: contain; }
+        
+        .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
+        #txt-titulo1 { color: var(--primary-blue); font-weight: 900; font-size: 1.65rem; }
+        #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 1.4rem; }
+        #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
 
-        /* INTRO TEXT COM ONDINHA AMARELA */
+        .hamburger-btn { background: none; border: none; color: var(--primary-blue); font-size: 28px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+        #icon-voltar-top { height: 40px; width: 40px; object-fit: contain; cursor: pointer; justify-self: end;}
+
+        /* MENU HAMBURGER MELHORADO */
+        .menu-dropdown { 
+            position: absolute; top: 85px; left: 15px; display: none; 
+            flex-direction: column; gap: 4px; z-index: 2000; 
+            background: white; padding: 8px; border-radius: 18px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.15);
+        }
+        .menu-item { 
+            display: flex; align-items: center; gap: 12px; 
+            height: var(--menu-item-h); padding: 0 20px;
+            text-decoration: none; color: var(--text-grey); 
+            font-weight: 800; border-radius: 12px;
+            transition: all 0.2s ease; min-width: 230px;
+        }
+        /* Rollover com a cor do hamburger */
+        .menu-item:hover { 
+            background-color: var(--primary-blue); 
+            color: white; 
+        }
+        .menu-item:hover img { filter: brightness(0) invert(1); }
+        .menu-item img { width: 24px; height: 24px; object-fit: contain; }
+
+        /* INTRO */
         .sub-header { text-align: center; margin: 30px 0; flex-shrink: 0; }
         .intro-text { color: #1a4a7a; font-size: 1.4rem; font-weight: 800; position: relative; display: inline-block; }
         .intro-text::after { 
@@ -70,104 +81,73 @@
 
         main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px; }
 
-        /* ============================================================
-           3. DESKTOP DESIGN (HORIZONTAL)
-           ============================================================ */
+        /* ESTILOS DE CARDS (PC) */
         @media (min-width: 1025px) {
             .game-wrapper { display: flex; gap: 30px; }
             .game-card { 
-                width: var(--card-w); height: var(--card-h); background: white; border-radius: var(--card-radius); 
+                width: 300px; height: 380px; background: white; border-radius: 35px; 
                 border: 3px solid var(--theme-color); display: flex; flex-direction: column; overflow: hidden; 
                 text-decoration: none; box-shadow: inset 0 0 0 6px white, 0 10px 20px rgba(0,0,0,0.05); transition: 0.2s; 
             }
             .game-card:hover { transform: translateY(-8px); }
-            
             .card-top { height: 60%; background-color: var(--theme-bg); position: relative; display: flex; align-items: center; justify-content: center; }
-            /* O efeito da curva branca no fundo do card */
             .card-top::after { content: ""; position: absolute; bottom: -1px; width: 100%; height: 40px; background: white; clip-path: ellipse(75% 100% at 50% 100%); z-index: 2; }
-            .card-top img { max-width: 60%; max-height: 60%; z-index: 3; }
-            
+            .card-top img { max-width: 60%; z-index: 3; }
             .card-bottom { height: 40%; background: white; display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; }
             .card-bottom h2 { color: var(--theme-color); font-size: 1.1rem; font-weight: 900; text-transform: uppercase; }
-            
             .btn-circle { width: 42px; height: 42px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
-
-            .destaques-wrapper { background: white; border-radius: 40px; padding: 25px 40px; width: 840px; margin-top: 30px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
+            .destaques-wrapper { background: white; border-radius: 40px; padding: 25px 40px; width: 840px; margin-top: 30px; }
             .destaques-grid { display: flex; justify-content: space-around; width: 100%; }
         }
 
-        /* ============================================================
-           4. MOBILE PORTRAIT (VERTICAL - CARDS EM LINHA)
-           ============================================================ */
+        /* MOBILE VERTICAL */
         @media (max-width: 1024px) and (orientation: portrait) {
-            header { height: 75px; }
-            #txt-titulo1 { font-size: 1.2rem; }
-            #txt-titulo2 { font-size: 1rem; }
-
             .game-wrapper { width: 92%; }
             .game-card { 
                 display: flex; flex-direction: row; align-items: center; height: 85px; 
                 background: white; border-radius: 50px; border: 3px solid var(--theme-color); 
-                margin-bottom: 15px; text-decoration: none; padding: 6px; width: 100%;
+                margin-bottom: 15px; padding: 6px; width: 100%; text-decoration: none;
             }
             .card-top { width: 73px; height: 73px; border-radius: 50%; background: var(--theme-bg); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-            .card-top::after { display: none; } /* Remove curva no mobile vertical */
             .card-top img { width: 65%; }
-            
             .card-bottom { flex: 1; display: flex; flex-direction: row !important; align-items: center; justify-content: space-between; padding: 0 15px; }
-            .card-bottom h2 { font-size: 1.05rem; color: var(--theme-color); }
-            .btn-circle { width: 34px; height: 34px; font-size: 12px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
-
-            .destaques-wrapper { background: white; border-radius: 30px; padding: 20px 10px; width: 92%; margin-top: 10px; }
+            .card-bottom h2 { font-size: 1rem; color: var(--theme-color); font-weight: 900; }
+            .btn-circle { width: 34px; height: 34px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
+            .destaques-wrapper { background: white; border-radius: 30px; padding: 20px 10px; width: 92%; }
             .destaques-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px 5px; }
-            .destaque-item img { width: 32px !important; height: 32px !important; }
         }
 
-        /* ============================================================
-           5. MOBILE LANDSCAPE (HORIZONTAL - CARDS PEQUENOS)
-           ============================================================ */
+        /* MOBILE LANDSCAPE */
         @media (max-height: 500px) and (orientation: landscape) {
-            header { height: 62px; border-radius: 0 0 20px 20px; }
-            #txt-titulo1 { font-size: 0.9rem; }
-            #txt-titulo2 { font-size: 0.8rem; }
-            #txt-subtitulo-header { display: none; }
+            header { height: 65px; border-radius: 0 0 20px 20px; }
             #header-icon { height: 45px; }
-
+            #txt-titulo1 { font-size: 1.1rem; }
+            #txt-titulo2 { font-size: 0.9rem; }
             .game-wrapper { flex-direction: row; gap: 12px; width: 95%; }
-            .game-card { flex: 1; height: 160px; border-radius: 20px; border: 2px solid var(--theme-color); flex-direction: column; }
-            .card-top { height: 60%; }
-            .card-top::after { height: 20px; clip-path: ellipse(80% 100% at 50% 100%); }
+            .game-card { flex: 1; height: 160px; border-radius: 20px; flex-direction: column; text-decoration: none; }
+            .card-top { height: 60%; position: relative; display: flex; align-items: center; justify-content: center; width: 100%; }
+            .card-top::after { content: ""; position: absolute; bottom: -1px; width: 100%; height: 20px; background: white; clip-path: ellipse(80% 100% at 50% 100%); }
+            .card-top img { max-width: 45%; }
             .card-bottom h2 { font-size: 0.75rem; }
-            .btn-circle { width: 25px; height: 25px; font-size: 10px; }
-
-            .destaques-wrapper { padding: 10px; width: 95%; }
             .destaques-grid { display: grid; grid-template-columns: repeat(6, 1fr); }
         }
 
-        /* COMPONENTES DESTAQUES */
-        .destaques-header { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; margin-bottom: 15px; }
-        .destaques-header::before, .destaques-header::after { content: ""; flex: 1; height: 2px; background-color: var(--line-blue); }
-        .destaques-header h3 { font-size: 0.9rem; color: var(--back-blue); font-weight: 800; white-space: nowrap; }
-        
+        /* ÍCONES DESTAQUES (TAMANHO FIXO EM TODO O LADO) */
         .destaque-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; }
+        .destaque-item img { 
+            width: var(--destaque-icon-size) !important; 
+            height: var(--destaque-icon-size) !important; 
+            object-fit: contain;
+        }
         .destaque-item p { font-size: 0.75rem; font-weight: 800; color: var(--back-blue); margin: 5px 0; text-align: center; }
         .stars { color: var(--accent-yellow); font-size: 10px; }
 
-        /* FOOTER */
+        .destaques-header { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; margin-bottom: 15px; }
+        .destaques-header::before, .destaques-header::after { content: ""; flex: 1; height: 2px; background-color: var(--line-blue); }
+        .destaques-header h3 { font-size: 0.85rem; color: var(--back-blue); font-weight: 800; }
+
         footer { background: white; padding: 15px; text-align: center; margin-top: auto; }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 600; }
-
-        /* MENU DROPDOWN */
-        .menu-dropdown { 
-            position: absolute; top: 80px; left: 10px; display: none; 
-            flex-direction: column; gap: 5px; z-index: 2000; 
-        }
-        .menu-item { 
-            display: flex; align-items: center; gap: 10px; padding: 12px 18px; 
-            background: white; border-radius: 12px; text-decoration: none; 
-            color: var(--text-grey); font-weight: 700; min-width: 220px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-        }
     </style>
 </head>
 <body>
@@ -195,7 +175,7 @@
         
         <section class="destaques-wrapper">
             <div class="destaques-header">
-                <h3><i class="fas fa-gamepad"></i> JOGOS EM DESTAQUE</h3>
+                <h3><i class="fas fa-star"></i> JOGOS EM DESTAQUE</h3>
             </div>
             <div class="destaques-grid" id="destaquesGrid"></div>
         </section>
@@ -206,11 +186,13 @@
     <script src="dados.js"></script>
     <script>
         function voltarPagina() { window.location.href = JOGO_CONFIG.links.home; }
+        
         function toggleMenu(e) { 
             if(e) e.stopPropagation(); 
             const menu = document.getElementById('dropdownMenu');
             menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex'; 
         }
+
         window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
 
         window.onload = () => {
@@ -224,15 +206,28 @@
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + config.iconesMenu.voltar;
 
             const menuBox = document.getElementById('dropdownMenu');
+            
+            // 1. ADICIONAR BOTÃO VOLTAR NO TOPO DO MENU
+            const btnVoltarMenu = document.createElement('a');
+            btnVoltarMenu.className = 'menu-item';
+            btnVoltarMenu.href = "#";
+            btnVoltarMenu.onclick = (e) => { e.preventDefault(); voltarPagina(); };
+            btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
+            menuBox.appendChild(btnVoltarMenu);
+
+            // 2. ADICIONAR OUTROS ITENS
             const labels = { home: "Página Inicial", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             Object.keys(config.links).forEach(key => {
-                if (config.iconesMenu[key]) {
-                    const a = document.createElement('a'); a.className = 'menu-item'; a.href = config.links[key];
-                    a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}" width="22"> <span>${labels[key] || key}</span>`;
+                if (config.iconesMenu[key] && key !== 'home') { // Evitar duplicar o home/voltar se necessário
+                    const a = document.createElement('a');
+                    a.className = 'menu-item';
+                    a.href = config.links[key];
+                    a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
                     menuBox.appendChild(a);
                 }
             });
 
+            // Gerar Grid de Jogos
             const grid = document.getElementById('gamesGrid');
             config.listaJogos.forEach(jogo => {
                 const tema = config.temaCores[jogo.tema];
@@ -240,25 +235,16 @@
                 card.className = 'game-card'; card.href = jogo.link;
                 card.style.setProperty('--theme-color', tema.borda);
                 card.style.setProperty('--theme-bg', tema.fundo);
-                card.innerHTML = `
-                    <div class="card-top">
-                        <img src="${config.caminhoIconsJogos}${jogo.icon}">
-                    </div>
-                    <div class="card-bottom">
-                        <h2>${jogo.nome}</h2>
-                        <div class="btn-circle"><i class="fas fa-arrow-right"></i></div>
-                    </div>`;
+                card.innerHTML = `<div class="card-top"><img src="${config.caminhoIconsJogos}${jogo.icon}"></div><div class="card-bottom"><h2>${jogo.nome}</h2><div class="btn-circle"><i class="fas fa-arrow-right"></i></div></div>`;
                 grid.appendChild(card);
             });
 
+            // Gerar Destaques
             const dGrid = document.getElementById('destaquesGrid');
             config.listaDestaques.forEach(jogo => {
                 const item = document.createElement('a');
                 item.className = 'destaque-item'; item.href = jogo.link;
-                item.innerHTML = `
-                    <img src="${config.caminhoIconsJogos}${jogo.icon}">
-                    <p>${jogo.nome}</p>
-                    <div class="stars">${'★'.repeat(jogo.estrelas)}${'☆'.repeat(5-jogo.estrelas)}</div>`;
+                item.innerHTML = `<img src="${config.caminhoIconsJogos}${jogo.icon}"><p>${jogo.nome}</p><div class="stars">${'★'.repeat(jogo.estrelas)}${'☆'.repeat(5-jogo.estrelas)}</div>`;
                 dGrid.appendChild(item);
             });
         };
