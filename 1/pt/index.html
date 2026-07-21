@@ -7,59 +7,56 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { 
+        :root {
             --primary-blue: #5EA2E6; 
             --back-blue: #1A499C; 
-            --text-grey: #8792a1; 
-            --sky-blue: #EAF4FE; 
+            --text-grey: #8792a1;
+            --sky-blue: #EAF4FE;
+            --accent-yellow: #FFC107;
+            --line-blue: #A5D1FF;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
         
-        body, html { 
-            height: 100dvh; width: 100vw; 
-            background-color: var(--sky-blue); 
-            display: flex; flex-direction: column; 
-            overflow: hidden; 
-        }
+        body, html { height: 100dvh; width: 100vw; background-color: var(--sky-blue); display: flex; flex-direction: column; overflow: hidden; }
 
-        /* ----- HEADER (FIXO COM Z-INDEX ALTO) ----- */
+        /* =========================================
+           HEADER (3 LINHAS E ÍCONES A 10PX)
+           ========================================= */
         header { 
             height: 75px; background: white; display: grid; grid-template-columns: 50px 1fr 50px; 
             align-items: center; padding: 0 10px; z-index: 4000; flex-shrink: 0;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-radius: 0 0 35px 35px;
             position: relative;
         }
+        .hamburger-btn { justify-self: start; background: none; border: none; color: var(--primary-blue); font-size: 28px; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; z-index: 4001; }
+        #icon-voltar-top { height: 40px; width: 40px; object-fit: contain; justify-self: end; cursor: pointer; transition: transform 0.2s; z-index: 4001; }
+        #icon-voltar-top:hover { transform: scale(1.1); }
 
-        .hamburger-btn { justify-self: start; background: none; border: none; color: var(--primary-blue); font-size: 26px; cursor: pointer; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; z-index: 4001; }
         .header-center { display: flex; align-items: center; justify-content: center; gap: 10px; }
-        #head-logo { height: 45px; object-fit: contain; }
-        .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.9; }
-        #tit-l1, #tit-l2 { color: var(--primary-blue); font-weight: 900; font-size: 1.1rem; }
-        #sub-tit { color: var(--text-grey); font-weight: 700; font-size: 0.65rem; margin-top: 2px; text-transform: uppercase; }
-        .btn-voltar { justify-self: end; cursor: pointer; z-index: 4001; }
-        #header-back { height: 40px; width: 40px; object-fit: contain; }
+        #header-icon { height: 45px; object-fit: contain; }
+        .title-group { display: flex; flex-direction: column; line-height: 0.9; text-align: left; }
+        #txt-titulo1, #txt-titulo2 { color: var(--primary-blue); font-weight: 900; font-size: 1.1rem; }
+        #txt-subtitulo-header { color: var(--text-grey); font-weight: 700; font-size: 0.65rem; margin-top: 2px; text-transform: uppercase; }
 
-        /* ----- MENU (FIXO NO TOPO DE TUDO) ----- */
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: none; z-index: 4500; }
+        /* ----- MENU DROPDOWN & OVERLAY (SEM BLOQUEIOS) ----- */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); display: none; z-index: 4500; }
         .menu-dropdown { position: fixed; top: 75px; left: 10px; display: none; flex-direction: column; gap: 5px; z-index: 5000; pointer-events: auto; }
         .menu-item { display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: white; border-radius: 12px; text-decoration: none; color: var(--text-grey); font-weight: 700; min-width: 210px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; }
         .menu-item:hover { background-color: var(--primary-blue); color: white; }
         .menu-item img { height: 22px; width: 22px; object-fit: contain; }
         .menu-sep { border-top: 2px solid #f0f4f8; margin: 4px 0; }
 
-        /* ----- CONTEÚDO (SCROLL SEM BARRA) ----- */
-        main { 
-            flex: 1; padding: 30px 20px; max-width: 1400px; margin: 0 auto; width: 100%; 
-            overflow-y: auto; scrollbar-width: none; 
-        }
-        main::-webkit-scrollbar { display: none; }
-
-        .intro-container { text-align: center; margin-bottom: 40px; }
+        /* ----- INTRO COM CURVA INVERTIDA ----- */
+        .sub-header { text-align: center; margin: 15px 0; flex-shrink: 0; }
         .intro-text { color: #1a4a7a; font-size: 1.3rem; font-weight: 800; position: relative; display: inline-block; }
         .intro-text::after { content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 10px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-size: 100% 100%; }
 
-        /* ----- FASES ----- */
+        /* ----- MAIN (SCROLL INVISÍVEL) ----- */
+        main { flex: 1; padding: 10px 20px; max-width: 1400px; margin: 0 auto; width: 100%; overflow-y: auto; scrollbar-width: none; }
+        main::-webkit-scrollbar { display: none; }
+
+        /* ----- FASES GRID ----- */
         .phase-section {
             background: rgba(255,255,255,0.4); border: 2px solid white; border-radius: 40px;
             padding: 50px 25px 30px 25px; margin-bottom: 60px; position: relative;
@@ -67,7 +64,7 @@
         }
         .phase-label { position: absolute; top: -20px; left: 25px; background: var(--fase-color); color: white; padding: 10px 30px; border-radius: 50px; font-weight: 900; font-size: 0.85rem; text-transform: uppercase; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
-        /* ----- CARTÃO QUADRADO ----- */
+        /* CARTÃO QUADRADO (IMAGEM 1) */
         .game-card {
             background: white; aspect-ratio: 1 / 1.1; border-radius: 35px;
             display: flex; flex-direction: column; align-items: center;
@@ -77,24 +74,54 @@
         .game-card:hover { transform: translateY(-10px); }
         .card-img-box { flex: 1; width: 100%; display: flex; align-items: center; justify-content: center; padding: 15px; }
         .card-img-box img { max-width: 90%; max-height: 90%; object-fit: contain; }
-        .game-card h2 { width: 100%; padding: 0 10px 18px 10px; color: #1A499C; font-size: 0.8rem; font-weight: 900; text-transform: uppercase; text-align: center; }
+        .game-card h2 { width: 100%; padding: 0 10px 18px 10px; color: #1A499C; font-size: 0.82rem; font-weight: 900; text-transform: uppercase; text-align: center; }
         .card-footer-bar { width: 100%; height: 12px; background-color: var(--item-color); }
 
         /* =========================================
-           RESPONSIVIDADE (5 CARTÕES PC/TABLET LANDSCAPE)
+           1. PC / TABLET LANDSCAPE (5 POR LINHA)
            ========================================= */
         @media (min-width: 1025px) and (orientation: landscape) {
             .phase-section { grid-template-columns: repeat(5, 1fr); }
-        }
-        @media (min-width: 768px) and (max-width: 1024px) {
-            .phase-section { grid-template-columns: repeat(3, 1fr); }
-        }
-        @media (max-width: 600px) {
-            .phase-section { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-            .logo-text { display: none; }
+            .destaques-wrapper { width: 840px; margin: 20px auto 40px auto; }
         }
 
-        /* ----- FOOTER ----- */
+        /* =========================================
+           2. TELEMÓVEL VERTICAL (PÍLULAS 85PX)
+           ========================================= */
+        @media (max-width: 767px) and (orientation: portrait) {
+            header { grid-template-columns: 45px 1fr 45px; height: 70px; }
+            .phase-section { grid-template-columns: 1fr; padding: 45px 15px 15px 15px; }
+            .game-card { display: flex; flex-direction: row; height: 85px; aspect-ratio: auto; border-radius: 50px; padding: 6px; }
+            .card-img-box { width: 73px; height: 73px; border-radius: 50%; background: #F8F9FA; padding: 5px; flex: none; }
+            .game-card h2 { flex: 1; text-align: left; padding: 0 15px; font-size: 0.95rem; }
+            .card-footer-bar { width: 8px; height: 100%; margin-top: 0; }
+            .destaques-grid { grid-template-columns: repeat(3, 1fr) !important; justify-items: center; }
+        }
+
+        /* =========================================
+           3. TELEMÓVEL LANDSCAPE (3 TÍTULOS)
+           ========================================= */
+        @media (max-height: 500px) and (orientation: landscape) {
+            header { height: 58px; }
+            #txt-subtitulo-header { display: block; font-size: 0.52rem; }
+            .phase-section { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+            .destaques-grid { grid-template-columns: repeat(6, 1fr) !important; }
+        }
+
+        /* =========================================
+           DESIGN DESTAQUES (IMAGEM)
+           ========================================= */
+        .destaques-wrapper { background: white !important; border-radius: 40px; padding: 25px 40px; width: 92%; max-width: 1100px; box-shadow: 0 10px 30px rgba(0,0,0,0.04); flex-shrink: 0; margin: 20px auto; }
+        .destaques-header { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; margin-bottom: 20px; }
+        .destaques-header::before, .destaques-header::after { content: ""; flex: 1; height: 2px; background-color: var(--line-blue); }
+        .destaques-header h3 { display: flex; align-items: center; gap: 8px; font-size: 0.9rem; color: var(--back-blue); font-weight: 800; white-space: nowrap; }
+        .destaques-header img { height: 20px; width: auto; object-fit: contain; }
+        .destaques-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; width: 100%; }
+        .destaque-item { display: flex; flex-direction: column; align-items: center; text-decoration: none; text-align: center; }
+        .destaque-item img { width: 32px; height: 32px; object-fit: contain; }
+        .destaque-item p { font-size: 0.7rem; font-weight: 800; color: var(--back-blue); margin: 5px 0 2px 0; }
+        .stars { color: var(--accent-yellow); font-size: 10px; letter-spacing: 1px; }
+
         footer { background: white; width: 100%; padding: 15px 0; text-align: center; color: var(--text-grey); font-size: 0.8rem; margin-top: auto; flex-shrink: 0; box-shadow: 0 -4px 10px rgba(0,0,0,0.02); }
     </style>
 </head>
@@ -106,43 +133,45 @@
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
         <div class="header-center">
-            <img id="head-logo" src="" alt="">
+            <img id="header-icon" src="" alt="">
             <div class="title-group">
-                <h1 id="tit-l1"></h1>
-                <h1 id="tit-l2"></h1>
-                <div id="sub-tit"></div>
+                <div id="txt-titulo1"></div>
+                <div id="txt-titulo2"></div>
+                <div id="txt-subtitulo-header"></div>
             </div>
         </div>
-        <div class="btn-voltar" onclick="window.history.back()">
-            <img id="header-back" src="" alt="Voltar">
-        </div>
+        <div class="header-right"><img id="icon-voltar-top" src="" alt="Voltar" onclick="voltarPagina()"></div>
     </header>
 
-    <main id="mainContainer">
-        <div class="intro-container"><div class="intro-text" id="intro-sub"></div></div>
+    <main id="fasesContainer">
+        <div class="sub-header"><div class="intro-text" id="txt-intro"></div></div>
         <div id="fasesGrid"></div>
+        
+        <section class="destaques-wrapper">
+            <div class="destaques-header">
+                <h3><img id="mini-logo" src="" alt=""> Jogos em destaque</h3>
+            </div>
+            <div class="destaques-grid" id="destaquesGrid"></div>
+        </section>
     </main>
 
-    <footer id="txt-rodape"></footer>
+    <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
     <script src="biblioteca.js"></script>
     <script src="dados.js"></script>
-    
     <script>
-        // Função do Menu Blindada
+        function voltarPagina() { window.location.href = JOGO_CONFIG.links.home; }
+        
         function toggleMenu(e) {
             if(e) e.stopPropagation();
             const m = document.getElementById('dropdownMenu');
             const o = document.getElementById('overlay');
-            const isOpen = (m.style.display === 'flex');
-            
+            const isOpen = m.style.display === 'flex';
             m.style.display = isOpen ? 'none' : 'flex';
             o.style.display = isOpen ? 'none' : 'block';
         }
 
-        function initUI() {
-            if (typeof JOGO_CONFIG === 'undefined' || typeof BIBLIOTECA_TEMAS === 'undefined') return;
-
+        window.onload = () => {
             const conf = JOGO_CONFIG;
             const tema = BIBLIOTECA_TEMAS[conf.areaAtiva];
             const info = BIBLIOTECA_CONTEUDO[conf.anoAtivo][conf.areaAtiva];
@@ -150,56 +179,57 @@
 
             root.style.setProperty('--primary-blue', tema.corPrimaria);
             root.style.setProperty('--sky-blue', tema.corPagina);
-            
-            document.getElementById('tit-l1').innerText = info.t1;
-            document.getElementById('tit-l2').innerText = info.t2;
-            document.getElementById('sub-tit').innerText = info.sub;
-            document.getElementById('intro-sub').innerText = info.intro;
-            document.getElementById('txt-rodape').innerHTML = info.rodape;
-            document.getElementById('head-logo').src = conf.caminhoIconsMenu + conf.iconesMenu[conf.anoAtivo];
-            document.getElementById('header-back').src = conf.caminhoIconsMenu + tema.voltarMobile;
 
-            // Menu Hambúrguer Completo
+            document.getElementById('txt-titulo1').innerText = info.t1;
+            document.getElementById('txt-titulo2').innerText = info.t2;
+            document.getElementById('txt-subtitulo-header').innerText = info.sub;
+            document.getElementById('txt-intro').innerText = info.intro;
+            document.getElementById('txt-rodape').innerHTML = info.rodape;
+            document.getElementById('header-icon').src = conf.caminhoIconsMenu + conf.iconesMenu[conf.anoAtivo];
+            document.getElementById('icon-voltar-top').src = conf.caminhoIconsMenu + conf.iconesMenu.voltar;
+            document.getElementById('mini-logo').src = conf.caminhoIconsMenu + conf.iconesMenu.home; // comando
+
             const menuBox = document.getElementById('dropdownMenu');
-            menuBox.innerHTML = '';
-            const labels = { home: 'Início', pre: 'Pré-Escolar', ano1: '1º Ano', ano2: '2º Ano', ano3: '3º Ano', ano4: '4º Ano' };
-            ['home', 'pre', 'ano1', 'ano2', 'ano3', 'ano4'].forEach(k => {
-                if(conf.links[k]) {
-                    const a = document.createElement('a'); a.className = 'menu-item'; a.href = conf.links[k];
-                    a.innerHTML = `<img src="${conf.caminhoIconsMenu}${conf.iconesMenu[k]}"><span>${labels[k]}</span>`;
+            const labels = { home: "Página Inicial", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
+            Object.keys(conf.links).forEach(key => {
+                if (conf.iconesMenu[key]) {
+                    const a = document.createElement('a'); a.className = 'menu-item'; a.href = conf.links[key];
+                    a.innerHTML = `<img src="${conf.caminhoIconsMenu}${conf.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
                     menuBox.appendChild(a);
                 }
             });
-            // Botão VOLTAR no final do menu
-            const sep = document.createElement('div'); sep.className = 'menu-sep'; menuBox.appendChild(sep);
+            // Botão Voltar no Menu
             const btnV = document.createElement('a'); btnV.className = 'menu-item'; btnV.href = "#";
-            btnV.onclick = (e) => { e.preventDefault(); window.history.back(); };
-            btnV.innerHTML = `<img src="${conf.caminhoIconsMenu}${conf.iconesMenu.voltar}"><span>VOLTAR</span>`;
+            btnV.onclick = (e) => { e.preventDefault(); voltarPagina(); };
+            btnV.innerHTML = `<img src="${conf.caminhoIconsMenu}${conf.iconesMenu.voltar}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnV);
 
-            // Gerar Fases e Cartões
-            const container = document.getElementById('fasesGrid');
+            // Gerar Fases
+            const grid = document.getElementById('fasesGrid');
+            let gameNum = 1;
             conf.listaFases.forEach(fase => {
                 const section = document.createElement('section');
                 section.className = 'phase-section';
                 section.style.setProperty('--fase-color', fase.corEtiqueta);
                 section.innerHTML = `<div class="phase-label">${fase.tituloFase}</div>`;
-
                 fase.jogos.forEach(jogo => {
-                    const card = document.createElement('a');
-                    card.className = 'game-card'; card.href = jogo.link;
+                    const card = document.createElement('a'); card.className = 'game-card'; card.href = jogo.link;
                     card.style.setProperty('--item-color', jogo.cor);
-                    card.innerHTML = `
-                        <div class="card-img-box"><img src="${conf.caminhoIconsJogos}${jogo.icon}"></div>
-                        <h2>${jogo.nome}</h2>
-                        <div class="card-footer-bar"></div>
-                    `;
+                    card.innerHTML = `<div class="card-img-box"><img src="${conf.caminhoIconsJogos}${jogo.icon}"></div><h2>${gameNum}. ${jogo.nome}</h2><div class="card-footer-bar"></div>`;
                     section.appendChild(card);
+                    gameNum++;
                 });
-                container.appendChild(section);
+                grid.appendChild(section);
             });
-        }
-        window.onload = initUI;
+
+            // Destaques
+            const dGrid = document.getElementById('destaquesGrid');
+            conf.listaDestaques.forEach(j => {
+                const item = document.createElement('a'); item.className = 'destaque-item'; item.href = j.link;
+                item.innerHTML = `<img src="${conf.caminhoIconsJogos}${j.icon}"><p>${j.nome}</p><div class="stars">${'★'.repeat(j.estrelas)}${'☆'.repeat(5-j.estrelas)}</div>`;
+                dGrid.appendChild(item);
+            });
+        };
     </script>
 </body>
 </html>
