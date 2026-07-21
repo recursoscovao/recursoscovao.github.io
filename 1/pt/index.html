@@ -4,67 +4,51 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Jogos Educativos</title>
-    
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
-    
     <style>
-        :root { 
-            --bg-page: #ffffff; --primary-blue: #5ba4e5; --primary-dark: #3d7db8; 
-            --white: #ffffff; --text-grey: #5d7082; --header-h: 85px; 
-        }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
-        
-        body { background-color: var(--bg-page); height: 100dvh; width: 100vw; display: flex; flex-direction: column; overflow-x: hidden; transition: background 0.3s; }
+        :root { --bg-page: #ffffff; --primary-blue: #1A499C; --text-grey: #8792a1; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
+        body { background-color: var(--bg-page); height: 100dvh; display: flex; flex-direction: column; overflow-x: hidden; }
 
         /* ----- HEADER ----- */
         header { 
-            height: var(--header-h); background: white; display: flex; align-items: center; 
-            justify-content: space-between; padding: 0 20px; z-index: 2500; flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); position: relative; border-radius: 0 0 35px 35px;
+            height: 80px; background: white; display: grid; grid-template-columns: 50px 1fr 50px; 
+            align-items: center; padding: 0 15px; z-index: 1000; flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); border-radius: 0 0 35px 35px;
         }
-        .logo-center { position: absolute; left: 50%; transform: translateX(-50%); display: flex; align-items: center; gap: 12px; white-space: nowrap; }
-        .logo-center img { height: 55px; width: auto; } 
-        .logo-text h1 { font-size: 1.1rem; color: var(--primary-blue); font-weight: 900; text-transform: uppercase; line-height: 0.9; }
-        .logo-text p { font-size: 0.65rem; color: var(--text-grey); font-weight: 700; text-transform: uppercase; margin-top: 2px; }
-
-        .hamburger-btn { font-size: 26px; color: var(--primary-blue); cursor: pointer; padding: 10px; z-index: 3001; }
-        .btn-voltar-img { height: 40px; transition: 0.2s; cursor: pointer; }
-
-        /* ----- MENU ----- */
-        .menu-dropdown { position: absolute; top: 80px; left: 15px; display: none; flex-direction: column; gap: 5px; z-index: 3000; }
-        .menu-item { display: flex; align-items: center; gap: 10px; padding: 12px 18px; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-decoration: none; color: var(--text-grey); font-weight: 700; min-width: 210px; transition: 0.2s; }
-        .menu-item:hover { background-color: var(--primary-blue); color: white; }
-        .menu-item img { height: 22px; width: 22px; object-fit: contain; }
+        .hamburger-btn { justify-self: start; background: none; border: none; color: var(--primary-blue); font-size: 24px; cursor: pointer; }
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 10px; }
+        #head-logo { height: 50px; object-fit: contain; }
+        .title-group { display: flex; flex-direction: column; text-align: left; line-height: 0.9; }
+        #tit-l1, #tit-l2 { color: var(--primary-blue); font-weight: 900; font-size: 1.1rem; }
+        #sub-tit { color: var(--text-grey); font-weight: 700; font-size: 0.65rem; margin-top: 2px; text-transform: uppercase; }
+        .btn-voltar { justify-self: end; }
+        #header-back { height: 35px; width: 35px; cursor: pointer; }
 
         /* ----- CONTEÚDO ----- */
-        main { flex: 1; overflow-y: auto; padding: 40px 20px; display: flex; flex-direction: column; align-items: center; }
-        .intro-container { text-align: center; margin-bottom: 40px; }
-        .intro-text { color: #1a4a7a; font-size: 1.3rem; font-weight: 800; position: relative; display: inline-block; }
-        .intro-text::after { content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 10px; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); background-size: 100% 100%; }
+        main { flex: 1; padding: 40px 20px; max-width: 1200px; margin: 0 auto; width: 100%; overflow-y: auto; }
 
-        /* ----- ESTRUTURA DE FASES ----- */
+        /* CONTENTOR DA FASE (DESIGN IMAGEM 2) */
         .phase-section {
-            background: rgba(255,255,255,0.45);
+            background: rgba(255,255,255,0.4);
             border: 2px solid white;
-            border-radius: 35px;
-            padding: 45px 20px 25px 20px;
+            border-radius: 40px;
+            padding: 50px 25px 30px 25px;
             margin-bottom: 60px;
             position: relative;
-            width: 100%;
-            max-width: 1100px;
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(330px, 1fr));
-            gap: 20px;
+            grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+            gap: 25px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.02);
         }
 
         .phase-label {
             position: absolute;
-            top: -20px; left: 20px;
+            top: -20px; left: 25px;
             background: var(--fase-color);
             color: white;
-            padding: 10px 28px;
+            padding: 10px 30px;
             border-radius: 50px;
             font-weight: 900;
             font-size: 0.85rem;
@@ -72,128 +56,106 @@
             box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
-        /* ----- CARTÃO DO JOGO ----- */
+        /* CARTÃO DO JOGO (DESIGN IMAGEM 1) */
         .game-card {
             background: white;
-            height: 115px;
-            border-radius: 25px;
+            aspect-ratio: 1 / 1.1; /* Formato quadrado como na imagem 1 */
+            border-radius: 35px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-decoration: none;
+            transition: transform 0.2s ease;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            overflow: hidden;
+            position: relative;
+        }
+        .game-card:hover { transform: translateY(-10px); }
+
+        .card-img-box {
+            flex: 1;
+            width: 100%;
             display: flex;
             align-items: center;
-            padding: 15px;
-            text-decoration: none;
-            transition: 0.2s ease;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.05);
-            border-bottom: 8px solid var(--game-color); /* BARRA COLORIDA DA IMAGEM */
+            justify-content: center;
+            padding: 20px;
         }
-        .game-card:hover { transform: translateY(-5px); }
-
-        .game-icon-box {
-            width: 75px; height: 75px;
-            background: #f8fbff;
-            border-radius: 18px;
-            display: flex; align-items: center; justify-content: center;
-            flex-shrink: 0;
-        }
-        .game-icon-box img { width: 75%; height: 75%; object-fit: contain; }
-
-        .game-info { flex: 1; padding: 0 18px; overflow: hidden; }
-        .game-info h2 { font-size: 1.1rem; color: #333; font-weight: 900; margin-bottom: 3px; }
-        .game-info p { font-size: 0.78rem; color: #777; font-weight: 600; line-height: 1.2; }
-
-        .play-btn {
-            width: 40px; height: 40px;
-            background-color: var(--game-color);
-            border: 2px solid white;
-            border-radius: 50%;
-            display: flex; align-items: center; justify-content: center;
-            color: white; flex-shrink: 0;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        .card-img-box img { 
+            max-width: 90%; 
+            max-height: 90%; 
+            object-fit: contain;
+            /* Se quiseres remover o fundo cinza, não usamos caixa aqui, apenas a img solta */
         }
 
-        footer { 
-            background: white; width: 100%; padding: 15px 0; 
-            display: flex; justify-content: center; align-items: center;
-            margin-top: auto; box-shadow: 0 -4px 10px rgba(0,0,0,0.02);
-            color: var(--text-grey); font-weight: 600; font-size: 0.8rem;
+        .game-card h2 { 
+            width: 100%;
+            padding: 0 15px 20px 15px;
+            color: #1A499C; /* Azul padrão dos títulos da imagem 1 */
+            font-size: 0.85rem; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            text-align: center;
         }
 
-        @media (max-width: 650px) {
-            .phase-section { grid-template-columns: 1fr; padding-top: 45px; }
-            .game-card { height: 100px; }
-            .game-icon-box { width: 65px; height: 65px; }
-            .logo-text { display: none; }
+        /* BARRA COLORIDA NO FUNDO (DESIGN IMAGEM 1) */
+        .card-footer-bar {
+            width: 100%;
+            height: 12px; 
+            background-color: var(--item-color);
+        }
+
+        /* ----- FOOTER ----- */
+        footer { background: white; width: 100%; padding: 15px 0; text-align: center; color: var(--text-grey); font-size: 0.8rem; box-shadow: 0 -4px 10px rgba(0,0,0,0.02); }
+
+        @media (max-width: 600px) {
+            .phase-section { grid-template-columns: repeat(2, 1fr); gap: 15px; padding: 45px 15px 20px 15px; }
+            .game-card { border-radius: 25px; }
+            .game-card h2 { font-size: 0.65rem; padding-bottom: 12px; }
+            .card-footer-bar { height: 8px; }
         }
     </style>
 </head>
 <body>
 
     <header>
-        <i class="fas fa-bars hamburger-btn" onclick="toggleMenu(event)"></i>
-        <div id="dropdownMenu" class="menu-dropdown"></div>
-        
-        <div class="logo-center">
-            <img id="head-logo" src="" alt="Logo">
-            <div class="logo-text">
+        <button class="hamburger-btn"><i class="fas fa-bars"></i></button>
+        <div class="header-center">
+            <img id="head-logo" src="" alt="">
+            <div class="title-group">
                 <h1 id="tit-l1"></h1>
                 <h1 id="tit-l2"></h1>
-                <p id="sub-tit"></p>
+                <div id="sub-tit"></div>
             </div>
         </div>
-
-        <div class="header-right">
-            <a href="#" onclick="window.history.back()">
-                <img id="header-back-img" class="btn-voltar-img" src="" alt="Voltar">
-            </a>
-        </div>
+        <a href="#" class="btn-voltar" onclick="window.history.back()">
+            <img id="header-back" src="" alt="Voltar">
+        </a>
     </header>
 
-    <main>
-        <div class="intro-container">
-            <div class="intro-text" id="intro-sub"></div>
-        </div>
-        <div id="fasesGrid"></div>
-    </main>
+    <main id="fasesContainer"></main>
 
     <footer id="txt-rodape"></footer>
 
     <script src="biblioteca.js"></script>
     <script src="dados.js"></script>
-    
     <script>
-        function init() {
+        function initUI() {
             const conf = JOGO_CONFIG;
             const tema = BIBLIOTECA_TEMAS[conf.areaAtiva];
             const info = BIBLIOTECA_CONTEUDO[conf.anoAtivo][conf.areaAtiva];
             const root = document.documentElement;
 
-            // Aplicar Cores e Textos da Biblioteca
             root.style.setProperty('--bg-page', tema.corPagina);
             root.style.setProperty('--primary-blue', tema.corPrimaria);
-            root.style.setProperty('--text-grey', tema.corTexto);
-
+            
             document.getElementById('tit-l1').innerText = info.t1;
             document.getElementById('tit-l2').innerText = info.t2;
             document.getElementById('sub-tit').innerText = info.sub;
-            document.getElementById('intro-sub').innerText = info.intro;
             document.getElementById('txt-rodape').innerHTML = info.rodape;
-            
             document.getElementById('head-logo').src = conf.caminhoIconsMenu + conf.iconesMenu[conf.anoAtivo];
-            document.getElementById('header-back-img').src = conf.caminhoIconsMenu + tema.voltarMobile;
+            document.getElementById('header-back').src = conf.caminhoIconsMenu + tema.voltarMobile;
 
-            // Gerar Menu
-            const menuBox = document.getElementById('dropdownMenu');
-            const labels = { home: 'Início', pre: 'Pré-Escolar', ano1: '1º Ano', ano2: '2º Ano', ano3: '3º Ano', ano4: '4º Ano' };
-            ['home', 'pre', 'ano1', 'ano2', 'ano3', 'ano4'].forEach(k => {
-                if(conf.links[k]) {
-                    const a = document.createElement('a'); a.className = 'menu-item'; a.href = conf.links[k];
-                    a.innerHTML = `<img src="${conf.caminhoIconsMenu}${conf.iconesMenu[k]}"><span>${labels[k]}</span>`;
-                    menuBox.appendChild(a);
-                }
-            });
-
-            // Gerar Fases e Jogos
-            const container = document.getElementById('fasesGrid');
-            let gameIndex = 1;
+            const container = document.getElementById('fasesContainer');
 
             conf.listaFases.forEach(fase => {
                 const section = document.createElement('section');
@@ -205,33 +167,21 @@
                     const card = document.createElement('a');
                     card.className = 'game-card';
                     card.href = jogo.link;
-                    card.style.setProperty('--game-color', jogo.cor);
+                    card.style.setProperty('--item-color', jogo.cor);
 
                     card.innerHTML = `
-                        <div class="game-icon-box">
+                        <div class="card-img-box">
                             <img src="${conf.caminhoIconsJogos}${jogo.icon}">
                         </div>
-                        <div class="game-info">
-                            <h2>${gameIndex}. ${jogo.nome}</h2>
-                            <p>${jogo.desc}</p>
-                        </div>
-                        <div class="play-btn"><i class="fas fa-play"></i></div>
+                        <h2>${jogo.nome}</h2>
+                        <div class="card-footer-bar"></div>
                     `;
                     section.appendChild(card);
-                    gameIndex++;
                 });
                 container.appendChild(section);
             });
         }
-
-        function toggleMenu(e) {
-            e.stopPropagation();
-            const m = document.getElementById('dropdownMenu');
-            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
-        }
-        window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
-
-        window.onload = init;
+        window.onload = initUI;
     </script>
 </body>
 </html>
