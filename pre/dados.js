@@ -40,8 +40,8 @@ const BIBLIOTECA_CONTEUDO = {
 // ==========================================
 
 const JOGO_CONFIG = {
-    areaAtiva: "portugues", // Escolha: "portugues", "matematica", "estudo" ou "pre"
-    anoAtivo: "ano1",      // Escolha: "pre", "ano1", "ano2", "ano3", "ano4"
+    areaAtiva: "pre", // Escolha: "portugues", "matematica", "estudo" ou "pre"
+    anoAtivo: "pre",      // Escolha: "pre", "ano1", "ano2", "ano3", "ano4"
     
     caminhoIconsMenu: "../../icons/", 
     caminhoIconsJogos: "iconjogos/",
