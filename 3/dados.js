@@ -3,7 +3,7 @@ const JOGO_CONFIG = {
     textos: {
         tituloLinha1: "SUPER",
         tituloLinha2: "EXPLORADORES",
-        subtitulo: "ATIVIDADES | 3º ANO",
+        subtitulo: "ATIVIDADES | 1º ANO",
         intro: "O que vamos aprender hoje?",
         rodape: "&copy; Super Exploradores - Recursos Educativos",
         // Textos do Menu
@@ -23,12 +23,12 @@ const JOGO_CONFIG = {
         controller: "jogo.png"
     },
     links: {
-        home: "../", 
-        pre: "../pre",
-        ano1: "./1",
-        ano2: "../2",
-        ano3: "../3",
-        ano4: "../4"
+        home: "/", 
+        pre: "/pre",
+        ano1: "/1",
+        ano2: "/2",
+        ano3: "/3",
+        ano4: "/4"
     },
     temaCores: {
         azul: { borda: "#5ba4e5", fundo: "#e1f0ff", texto: "#0066ff" },
