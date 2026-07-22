@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pré-Escolar</title>
+    <title>Recursos Educativos</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
@@ -11,7 +11,7 @@
         :root {
             --text-grey: #8792a1;
             --menu-item-h: 55px;
-            --cor-dinamica: #E691A7; /* Valor padrão, será alterado via JS */
+            --cor-dinamica: #E691A7; 
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
@@ -89,7 +89,15 @@
         .num-circle { width: 40px; height: 40px; border-radius: 50%; border: 3px solid var(--fase-color); color: var(--fase-color); display: flex; align-items: center; justify-content: center; font-weight: 900; }
         .btn-jogar { flex: 1; background: var(--fase-color); color: white; padding: 10px; border-radius: 25px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 900; font-size: 0.8rem; }
 
-        footer { padding: 30px; text-align: center; }
+        /* RODAPÉ COM FUNDO BRANCO */
+        footer { 
+            padding: 30px; 
+            text-align: center; 
+            background: white; 
+            border-radius: 35px 35px 0 0; 
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.03);
+            margin-top: 20px;
+        }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
     </style>
 </head>
@@ -129,7 +137,6 @@
             const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
-            // CONFIGURAÇÕES VISUAIS DINÂMICAS
             document.body.style.backgroundColor = bibTema.corPagina;
             document.getElementById('txt-titulo1').style.color = bibTema.corPrimaria;
             document.getElementById('txt-titulo2').style.color = bibTema.corEscura;
@@ -138,12 +145,10 @@
             btnHam.style.color = bibTema.corHamburger;
             document.documentElement.style.setProperty('--cor-dinamica', bibTema.corHamburger);
 
-            // TEXTOS E HEADER
             document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
             document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = bibConteudo.sub;
             
-            // INTRODUÇÃO: Sublinha apenas "Brinca" (ou a primeira palavra no Estudo do Meio)
             const textoIntro = bibConteudo.intro;
             if (textoIntro.toLowerCase().includes("brinca")) {
                 document.getElementById('txt-intro').innerHTML = textoIntro.replace(/Brinca/i, "<span>Brinca</span>");
@@ -157,7 +162,6 @@
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
-            // MENU DROPDOWN
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
@@ -176,7 +180,6 @@
             btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${bibTema.voltarMobile}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnVoltarMenu);
 
-            // GERAÇÃO DOS JOGOS
             const mainContent = document.getElementById('mainContent');
             let numGlobal = 1;
             config.listaFases.forEach(fase => {
