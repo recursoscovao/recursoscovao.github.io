@@ -64,6 +64,9 @@ const JOGO_CONFIG = {
             jogos: [
                 { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
                 { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
+                { nome: "Toupeira das Letras", desc: "Bata nas toupeiras corretas.", icon: "rato.png", link: "toupeira/", cor: "#E64A19" },
+                { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
+                { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
                 { nome: "Toupeira das Letras", desc: "Bata nas toupeiras corretas.", icon: "rato.png", link: "toupeira/", cor: "#E64A19" }
             ]
         },
@@ -71,9 +74,12 @@ const JOGO_CONFIG = {
             tituloFase: "FASE 2: DESCOBERTAS E SEQUÊNCIAS",
             corEtiqueta: "#FF9800",
             jogos: [
-                { nome: "Abre a Caixa Quiz", desc: "Abra presentes surpresa e resolva o quiz.", icon: "caixa.png", link: "caixa/", cor: "#F57C00" },
-                { nome: "Combinação Mágica", desc: "Relacione as iniciais com cada desenho.", icon: "puzzle.png", link: "combina/", cor: "#1976D2" },
-                { nome: "Comboio de Letras", desc: "Complete as sequências no trem.", icon: "trem.png", link: "trem/", cor: "#0097A7" }
+                { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
+                { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
+                { nome: "Toupeira das Letras", desc: "Bata nas toupeiras corretas.", icon: "rato.png", link: "toupeira/", cor: "#E64A19" },
+                { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
+                { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
+                { nome: "Toupeira das Letras", desc: "Bata nas toupeiras corretas.", icon: "rato.png", link: "toupeira/", cor: "#E64A19" }
             ]
         }
     ]
