@@ -13,7 +13,7 @@
             --text-grey: #8792a1;
             --sky-blue: #EAF4FE;
             --menu-item-h: 55px;
-            --cor-hamburger: #E691A7; /* Nova cor solicitada */
+            --cor-hamburger: #E691A7; 
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
@@ -21,7 +21,6 @@
         body { 
             min-height: 100vh; background-color: var(--sky-blue); 
             display: flex; flex-direction: column; overflow-x: hidden; 
-            transition: background-color 0.3s ease; /* Suaviza a troca de cor */
         }
 
         /* HEADER */
@@ -38,44 +37,39 @@
         #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 1.4rem; }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
         
-        /* HAMBURGER ALTERADO */
+        /* ICON HAMBURGER */
         .hamburger-btn { 
-            background: none; 
-            border: none; 
-            color: var(--cor-hamburger); 
-            font-size: 28px; 
-            cursor: pointer; 
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            background: none; border: none; color: var(--cor-hamburger); 
+            font-size: 28px; cursor: pointer; transition: transform 0.2s;
         }
-        .hamburger-btn:hover {
-            transform: scale(1.1);
-            filter: brightness(0.9);
-        }
+        .hamburger-btn:hover { transform: scale(1.1); }
 
         #icon-voltar-top { height: 42px; width: 42px; object-fit: contain; cursor: pointer; justify-self: end;}
 
         /* MENU DROPDOWN */
         .menu-dropdown { 
             position: absolute; top: 85px; left: 15px; display: none; 
-            flex-direction: column; gap: 5px; z-index: 2000; 
+            flex-direction: column; gap: 8px; z-index: 2000; 
         }
         .menu-item { 
             display: flex; align-items: center; gap: 12px; 
             height: var(--menu-item-h); padding: 0 20px;
             text-decoration: none; color: var(--text-grey); 
             font-weight: 800; background: white; border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; min-width: 230px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.2s ease; 
+            min-width: 230px; cursor: pointer; border: none;
         }
-        .menu-item:hover { background-color: var(--primary-blue); color: white; }
+        /* CORREÇÃO DO HOVER NO MENU */
+        .menu-item:hover { 
+            background-color: var(--cor-hamburger) !important; 
+            color: white !important; 
+            transform: translateX(5px);
+        }
         .menu-item img { width: 28px; height: 28px; object-fit: contain; }
 
         /* INTRODUÇÃO */
-        .sub-header { text-align: center; margin: 25px 0; flex-shrink: 0; padding: 0 20px; }
+        .sub-header { text-align: center; margin: 25px 0; flex-shrink: 0; }
         .intro-text { color: #1a4a7a; font-size: 1.4rem; font-weight: 800; display: inline-block; }
-        
         .intro-text span { position: relative; display: inline-block; }
         .intro-text span::after { 
             content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 10px; 
@@ -85,7 +79,6 @@
 
         main { flex: 1; padding: 20px; width: 100%; max-width: 1400px; margin: 0 auto; }
         
-        /* FASE CONTAINER */
         .fase-wrapper { margin-bottom: 50px; }
         .fase-header { 
             display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
@@ -125,7 +118,6 @@
             border: 3px solid var(--fase-color); color: var(--fase-color); 
             display: flex; align-items: center; justify-content: center; 
             font-weight: 900; font-size: 1rem; flex-shrink: 0;
-            background: transparent;
         }
         .btn-jogar {
             flex: 1; background: var(--fase-color); color: white;
@@ -179,31 +171,26 @@
             const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
-            // APLICAR COR DE FUNDO DA PÁGINA
             document.body.style.backgroundColor = bibTema.corPagina;
-
             document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
             document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = bibConteudo.sub;
             
-            // INTRODUÇÃO: Lógica para aplicar o span dinamicamente
-            const introStr = bibConteudo.intro;
-            // Se o texto contiver a frase padrão, destaca-a, senão destaca a última parte para manter o estilo visual
-            if(introStr.includes("diverte-te a ler!")) {
-                document.getElementById('txt-intro').innerHTML = introStr.replace("diverte-te a ler!", "<span>diverte-te a ler!</span>");
+            const textoOriginal = bibConteudo.intro;
+            if(textoOriginal.includes("diverte-te a ler!")) {
+                document.getElementById('txt-intro').innerHTML = textoOriginal.replace("diverte-te a ler!", "<span>diverte-te a ler!</span>");
             } else {
-                // Para o Pré-Escolar ou outros que não tenham a frase acima
-                document.getElementById('txt-intro').innerHTML = `<span>${introStr}</span>`;
+                document.getElementById('txt-intro').innerHTML = `<span>${textoOriginal}</span>`;
             }
             
             document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
-            // MENU DROPDOWN
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
+            // Itens de Ano
             Object.keys(config.links).forEach(key => {
                 if (config.iconesMenu[key]) {
                     const a = document.createElement('a');
@@ -213,19 +200,23 @@
                 }
             });
 
-            // GERAÇÃO DAS FASES
+            // BOTÃO VOLTAR (No final do menu)
+            const btnVoltarMenu = document.createElement('div');
+            btnVoltarMenu.className = 'menu-item';
+            btnVoltarMenu.onclick = (e) => { e.stopPropagation(); voltarPagina(); };
+            btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${bibTema.voltarMobile}"> <span>VOLTAR</span>`;
+            menuBox.appendChild(btnVoltarMenu);
+
             const mainContent = document.getElementById('mainContent');
             let numGlobal = 1;
 
             config.listaFases.forEach(fase => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'fase-wrapper';
-
                 const faseHeader = document.createElement('div');
                 faseHeader.className = 'fase-header';
                 faseHeader.innerHTML = `<span style="background:${fase.corEtiqueta}"></span><h3>${fase.tituloFase}</h3>`;
                 wrapper.appendChild(faseHeader);
-
                 const grid = document.createElement('div');
                 grid.className = 'games-grid';
 
@@ -235,13 +226,9 @@
                     card.href = jogo.link;
                     card.style.setProperty('--fase-color', fase.corEtiqueta);
                     card.style.setProperty('--fase-bg', fase.corEtiqueta + '15');
-
                     card.innerHTML = `
                         <div class="card-image-area"><img src="${config.caminhoIconsJogos}${jogo.icon}"></div>
-                        <div class="card-info">
-                            <h2>${jogo.nome}</h2>
-                            <p>${jogo.desc}</p>
-                        </div>
+                        <div class="card-info"><h2>${jogo.nome}</h2><p>${jogo.desc}</p></div>
                         <div class="card-footer">
                             <div class="num-circle">${numGlobal}</div>
                             <div class="btn-jogar"><i class="fas fa-play"></i> JOGAR</div>
@@ -250,7 +237,6 @@
                     grid.appendChild(card);
                     numGlobal++;
                 });
-
                 wrapper.appendChild(grid);
                 mainContent.appendChild(wrapper);
             });
