@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Recursos Educativos</title>
+    <title>Pré-Escolar</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
@@ -59,7 +59,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: all 0.2s ease; 
             min-width: 230px; cursor: pointer; border: none;
         }
-        /* CORREÇÃO DO HOVER NO MENU */
         .menu-item:hover { 
             background-color: var(--cor-hamburger) !important; 
             color: white !important; 
@@ -68,11 +67,13 @@
         .menu-item img { width: 28px; height: 28px; object-fit: contain; }
 
         /* INTRODUÇÃO */
-        .sub-header { text-align: center; margin: 25px 0; flex-shrink: 0; }
+        .sub-header { text-align: center; margin: 25px 0; flex-shrink: 0; padding: 0 15px; }
         .intro-text { color: #1a4a7a; font-size: 1.4rem; font-weight: 800; display: inline-block; }
-        .intro-text span { position: relative; display: inline-block; }
+        
+        /* Sublinhado apenas no span */
+        .intro-text span { position: relative; display: inline-block; color: inherit; }
         .intro-text span::after { 
-            content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 10px; 
+            content: ""; position: absolute; left: 0; bottom: -5px; width: 100%; height: 10px; 
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); 
             background-size: 100% 100%; 
         }
@@ -154,9 +155,9 @@
 
     <script src="dados.js"></script>
     <script>
+        // Função para descer um nível na pasta
         function voltarPagina() { 
-            const config = JOGO_CONFIG;
-            window.location.href = config.links[config.anoAtivo]; 
+            window.location.href = '../'; 
         }
 
         function toggleMenu(e) { 
@@ -176,12 +177,9 @@
             document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = bibConteudo.sub;
             
-            const textoOriginal = bibConteudo.intro;
-            if(textoOriginal.includes("diverte-te a ler!")) {
-                document.getElementById('txt-intro').innerHTML = textoOriginal.replace("diverte-te a ler!", "<span>diverte-te a ler!</span>");
-            } else {
-                document.getElementById('txt-intro').innerHTML = `<span>${textoOriginal}</span>`;
-            }
+            // INTRODUÇÃO: Sublinha apenas a palavra "Brinca"
+            const textoIntro = bibConteudo.intro;
+            document.getElementById('txt-intro').innerHTML = textoIntro.replace(/Brinca/i, "<span>Brinca</span>");
             
             document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
@@ -190,7 +188,6 @@
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
-            // Itens de Ano
             Object.keys(config.links).forEach(key => {
                 if (config.iconesMenu[key]) {
                     const a = document.createElement('a');
@@ -200,7 +197,7 @@
                 }
             });
 
-            // BOTÃO VOLTAR (No final do menu)
+            // Botão voltar no Menu Hambúrguer (Desce um nível)
             const btnVoltarMenu = document.createElement('div');
             btnVoltarMenu.className = 'menu-item';
             btnVoltarMenu.onclick = (e) => { e.stopPropagation(); voltarPagina(); };
