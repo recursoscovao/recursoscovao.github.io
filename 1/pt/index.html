@@ -8,7 +8,6 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        /* VARIÁVEIS DO MENU (EXATAMENTE COMO PEDIDO) */
         :root {
             --primary-blue: #5EA2E6; 
             --back-blue: #1A499C; 
@@ -26,7 +25,7 @@
             display: flex; flex-direction: column; overflow-x: hidden; 
         }
 
-        /* HEADER (EXATAMENTE COMO O INDEX FORNECIDO) */
+        /* HEADER */
         header { 
             background: white; border-radius: 0 0 35px 35px;
             display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; 
@@ -42,7 +41,7 @@
         .hamburger-btn { background: none; border: none; color: var(--primary-blue); font-size: 28px; cursor: pointer; }
         #icon-voltar-top { height: 40px; width: 40px; object-fit: contain; cursor: pointer; justify-self: end;}
 
-        /* MENU DROPDOWN (EXATAMENTE COMO O INDEX FORNECIDO) */
+        /* MENU DROPDOWN */
         .menu-dropdown { 
             position: absolute; top: 85px; left: 15px; display: none; 
             flex-direction: column; gap: 5px; z-index: 2000; 
@@ -66,7 +65,6 @@
             background-size: 100% 100%; 
         }
 
-        /* CONTAINER DAS FASES (ESTILO NOVO) */
         main { flex: 1; padding: 20px; width: 100%; max-width: 1400px; margin: 0 auto; }
         
         .fase-wrapper { margin-bottom: 40px; }
@@ -78,79 +76,52 @@
         .dot-fase { width: 12px; height: 12px; border-radius: 50%; }
         .fase-titulo-area h3 { font-size: 0.75rem; color: #8792a1; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
 
-        /* GRID DE JOGOS (PC 6, LANDSCAPE 4, VERTICAL 2) */
-        .games-grid {
-            display: grid;
-            gap: 20px;
-            grid-template-columns: repeat(6, 1fr);
-        }
+        .games-grid { display: grid; gap: 20px; grid-template-columns: repeat(6, 1fr); }
 
-        /* CARTÃO DE JOGO (ESTILO MODERNO DA IMAGEM) */
+        /* CARTÃO DE JOGO */
         .game-card {
-            background: white;
-            border-radius: 30px;
-            padding: 15px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            text-decoration: none;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.04);
-            transition: transform 0.2s;
-            height: 100%;
-            border: 2px solid #f0f4f8;
+            background: white; border-radius: 30px; padding: 15px;
+            display: flex; flex-direction: column; align-items: center;
+            text-decoration: none; box-shadow: 0 8px 20px rgba(0,0,0,0.04);
+            transition: transform 0.2s; height: 100%; border: 2px solid #f0f4f8;
         }
         .game-card:hover { transform: translateY(-5px); }
 
         .card-image-area {
-            width: 100%;
-            aspect-ratio: 1/1;
-            background: var(--card-bg);
-            border-radius: 25px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            margin-bottom: 15px;
+            width: 100%; aspect-ratio: 1.1/1; background: var(--card-bg);
+            border-radius: 25px; display: flex; align-items: center;
+            justify-content: center; margin-bottom: 15px;
         }
         .card-image-area img { width: 65%; height: 65%; object-fit: contain; }
 
-        .card-info { width: 100%; display: flex; align-items: flex-start; gap: 10px; margin-bottom: 10px; }
-        .num-circle { 
-            width: 32px; height: 32px; border-radius: 50%; background: var(--theme-color); 
-            color: white; display: flex; align-items: center; justify-content: center; 
-            font-weight: 900; font-size: 0.9rem; flex-shrink: 0;
-        }
-        .title-text-area { flex: 1; }
-        .title-text-area h2 { font-size: 0.95rem; font-weight: 900; color: #1A499C; text-transform: uppercase; margin-bottom: 2px; }
-        .title-text-area p { font-size: 0.7rem; color: #8792a1; font-weight: 600; line-height: 1.2; }
+        .card-info { width: 100%; text-align: center; margin-bottom: 15px; }
+        .card-info h2 { font-size: 0.95rem; font-weight: 900; color: #1A499C; text-transform: uppercase; margin-bottom: 5px; }
+        .card-info p { font-size: 0.75rem; color: #8792a1; font-weight: 600; line-height: 1.3; }
 
+        /* RODAPÉ DO CARTÃO (NÚMERO + BOTÃO) */
+        .card-footer { 
+            width: 100%; display: flex; align-items: center; gap: 10px; margin-top: auto; 
+        }
+        .num-circle { 
+            width: 38px; height: 38px; border-radius: 50%; background: white; 
+            border: 3px solid var(--theme-color); color: var(--theme-color); 
+            display: flex; align-items: center; justify-content: center; 
+            font-weight: 900; font-size: 1rem; flex-shrink: 0;
+        }
         .btn-jogar {
-            width: 100%;
-            background: var(--theme-color);
-            color: white;
-            padding: 10px;
-            border-radius: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            font-weight: 900;
-            font-size: 0.85rem;
-            margin-top: auto;
-            text-transform: uppercase;
+            flex: 1; background: var(--theme-color); color: white;
+            padding: 10px; border-radius: 20px; display: flex;
+            align-items: center; justify-content: center; gap: 8px;
+            font-weight: 900; font-size: 0.8rem; text-transform: uppercase;
         }
 
         /* RESPONSIVIDADE */
-        @media (max-width: 1200px) {
-            .games-grid { grid-template-columns: repeat(4, 1fr); }
-        }
+        @media (max-width: 1200px) { .games-grid { grid-template-columns: repeat(4, 1fr); } }
         @media (max-width: 700px) {
-            .games-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-            .game-card { border-radius: 20px; padding: 12px; }
-            .num-circle { width: 26px; height: 26px; font-size: 0.8rem; }
-            .title-text-area h2 { font-size: 0.8rem; }
-            .title-text-area p { font-size: 0.6rem; }
-            .btn-jogar { font-size: 0.7rem; padding: 8px; }
+            .games-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+            .game-card { padding: 10px; }
+            .num-circle { width: 32px; height: 32px; font-size: 0.85rem; }
+            .btn-jogar { font-size: 0.65rem; padding: 8px; }
         }
 
         footer { padding: 20px; text-align: center; }
@@ -163,7 +134,7 @@
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
         <div class="header-center">
-            <img id="header-icon" src="" alt="Header Icon">
+            <img id="header-icon" src="" alt="">
             <div class="title-group">
                 <div id="txt-titulo1"></div>
                 <div id="txt-titulo2"></div>
@@ -181,7 +152,7 @@
 
     <script src="dados.js"></script>
     <script>
-        // CORREÇÃO: Volta apenas 1 nível (Para a página do Ano)
+        // CORREÇÃO: Volta apenas 1 nível para a página do Ano
         function voltarPagina() { 
             const config = JOGO_CONFIG;
             window.location.href = config.links[config.anoAtivo]; 
@@ -199,7 +170,6 @@
             const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
-            // Preecher Header
             document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
             document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = bibConteudo.sub;
@@ -207,15 +177,14 @@
             document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
             
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
-            // Ícone de voltar dinâmico pelo tema
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
-            // Menu (Exatamente como solicitado)
+            // MENU COM PÁGINA INICIAL INCLUÍDA
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
             Object.keys(config.links).forEach(key => {
-                if (config.iconesMenu[key] && key !== 'home') {
+                if (config.iconesMenu[key]) {
                     const a = document.createElement('a');
                     a.className = 'menu-item'; a.href = config.links[key];
                     a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
@@ -229,7 +198,7 @@
             btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnVoltarMenu);
 
-            // Gerar Fases e Cartões Modernos
+            // GERAÇÃO DOS CARTÕES (NÚMERO AO LADO DO BOTÃO)
             const mainContent = document.getElementById('mainContent');
             let numGlobal = 1;
 
@@ -250,21 +219,20 @@
                     card.className = 'game-card';
                     card.href = jogo.link;
                     
-                    // Cores do cartão: fundo suave e cor principal
-                    const corFundoSuave = jogo.cor + '15'; // 15% de opacidade para o fundo
+                    const corFundoSuave = jogo.cor + '15'; 
                     card.style.setProperty('--card-bg', corFundoSuave);
                     card.style.setProperty('--theme-color', jogo.cor);
 
                     card.innerHTML = `
                         <div class="card-image-area"><img src="${config.caminhoIconsJogos}${jogo.icon}"></div>
                         <div class="card-info">
-                            <div class="num-circle">${numGlobal}</div>
-                            <div class="title-text-area">
-                                <h2>${jogo.nome}</h2>
-                                <p>${jogo.desc}</p>
-                            </div>
+                            <h2>${jogo.nome}</h2>
+                            <p>${jogo.desc}</p>
                         </div>
-                        <div class="btn-jogar"><i class="fas fa-play"></i> JOGAR</div>
+                        <div class="card-footer">
+                            <div class="num-circle">${numGlobal}</div>
+                            <div class="btn-jogar"><i class="fas fa-play"></i> JOGAR</div>
+                        </div>
                     `;
                     grid.appendChild(card);
                     numGlobal++;
