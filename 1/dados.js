@@ -1,16 +1,17 @@
 const JOGO_CONFIG = {
-    anoAtivo: "ano1", // Altera aqui para "ano2", "ano3", etc.
+    anoAtivo: "ano1", 
     textos: {
         tituloLinha1: "PEQUENOS",
         tituloLinha2: "EXPLORADORES",
         subtitulo: "ATIVIDADES | 1º ANO",
         intro: "O que vamos aprender hoje?",
         rodape: "&copy; Pequenos Exploradores - Recursos Educativos",
+        // Textos do Menu
         menuInicio: "INÍCIO",
         menuVoltar: "VOLTAR"
     },
-    caminhoIconsMenu: "icons/", 
-    caminhoIconsJogos: "icons/", 
+    caminhoIconsMenu: "../icons/", 
+    caminhoIconsJogos: "../icons/", 
     iconesMenu: {
         home: "home.png",
         pre: "iconpre.png",
@@ -22,12 +23,12 @@ const JOGO_CONFIG = {
         controller: "jogo.png"
     },
     links: {
-        home: "index.html", 
-        pre: "pre/index.html",
-        ano1: "1/index.html",
-        ano2: "2/index.html",
-        ano3: "3/index.html",
-        ano4: "4/index.html"
+        home: "../", 
+        pre: "../pre",
+        ano1: "./1",
+        ano2: "../2",
+        ano3: "../3",
+        ano4: "../4"
     },
     temaCores: {
         azul: { borda: "#5ba4e5", fundo: "#e1f0ff", texto: "#0066ff" },
