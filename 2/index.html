@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Jovens Exploradores</title>
+    <title>Pequenos Exploradores</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
@@ -70,9 +70,7 @@
 
         main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 10px 0; }
 
-        /* ============================================================
-           PC DESIGN
-           ============================================================ */
+        /* PC DESIGN */
         @media (min-width: 1025px) {
             .game-wrapper { display: flex; gap: 25px; justify-content: center; width: 95%; }
             .game-card { 
@@ -91,9 +89,7 @@
             .destaques-grid { display: flex; justify-content: space-around; width: 100%; }
         }
 
-        /* ============================================================
-           MOBILE VERTICAL
-           ============================================================ */
+        /* MOBILE VERTICAL */
         @media (max-width: 1024px) and (orientation: portrait) {
             header { height: 80px; }
             .game-wrapper { width: 92%; flex-direction: column; }
@@ -112,28 +108,15 @@
             .destaques-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px 5px; }
         }
 
-        /* ============================================================
-           MOBILE LANDSCAPE (3 LADO A LADO COM CONTORNOS)
-           ============================================================ */
+        /* MOBILE LANDSCAPE */
         @media (max-height: 500px) and (orientation: landscape) {
             header { height: 65px; border-radius: 0 0 25px 25px; }
             #header-icon { height: 45px; }
             #txt-titulo1 { font-size: 1.1rem; }
             #txt-titulo2 { font-size: 0.9rem; }
-            
-            /* Ajuste do Subtítulo para aparecer no Landscape */
-            #txt-subtitulo-header { 
-                display: block !important; 
-                font-size: 0.5rem !important; 
-                margin-top: 2px !important;
-            }
-
+            #txt-subtitulo-header { display: block !important; font-size: 0.5rem !important; margin-top: 2px !important; }
             .sub-header { margin: 10px 0; }
-
-            .game-wrapper { 
-                display: grid !important; grid-template-columns: repeat(3, 1fr) !important; 
-                gap: 12px; width: 92%; max-width: 650px; 
-            }
+            .game-wrapper { display: grid !important; grid-template-columns: repeat(3, 1fr) !important; gap: 12px; width: 92%; max-width: 650px; }
             .game-card { 
                 height: 180px; width: 100%; border-radius: 25px; 
                 border: 2px solid var(--theme-color);
@@ -146,15 +129,7 @@
             .card-bottom { height: 45%; display: flex; flex-direction: column !important; align-items: center; justify-content: center; gap: 4px; }
             .card-bottom h2 { font-size: 0.75rem; text-align: center; }
             .btn-circle { width: 26px; height: 26px; font-size: 10px; border-radius: 50%; background: var(--theme-color); color: white; display: flex; align-items: center; justify-content: center; }
-
-            .destaques-wrapper { 
-                background: white; 
-                border-radius: 25px; 
-                padding: 15px; 
-                width: 92%; 
-                margin-top: 15px; 
-                box-shadow: 0 4px 15px rgba(0,0,0,0.04); 
-            }
+            .destaques-wrapper { background: white; border-radius: 25px; padding: 15px; width: 92%; margin-top: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.04); }
             .destaques-grid { display: grid; grid-template-columns: repeat(6, 1fr); gap: 10px; }
         }
 
@@ -220,10 +195,19 @@
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + config.iconesMenu.voltar;
 
             const menuBox = document.getElementById('dropdownMenu');
-            const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
+            // Mapeamento de labels dinâmico
+            const labels = { 
+                home: config.textos.menuInicio, 
+                pre: "Pré-Escolar", 
+                ano1: "1º Ano", 
+                ano2: "2º Ano", 
+                ano3: "3º Ano", 
+                ano4: "4º Ano" 
+            };
             
+            // Gerar itens do menu (incluindo Home/Início)
             Object.keys(config.links).forEach(key => {
-                if (config.iconesMenu[key] && key !== 'home') {
+                if (config.iconesMenu[key]) {
                     const a = document.createElement('a');
                     a.className = 'menu-item'; a.href = config.links[key];
                     a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
@@ -231,10 +215,11 @@
                 }
             });
 
+            // Botão Voltar no Menu com texto do dados.js
             const btnVoltarMenu = document.createElement('a');
             btnVoltarMenu.className = 'menu-item'; btnVoltarMenu.href = "#";
             btnVoltarMenu.onclick = (e) => { e.preventDefault(); voltarPagina(); };
-            btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
+            btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>${config.textos.menuVoltar}</span>`;
             menuBox.appendChild(btnVoltarMenu);
 
             const grid = document.getElementById('gamesGrid');
