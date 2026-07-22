@@ -45,9 +45,12 @@ const JOGO_CONFIG = {
         ano2: "icon2.png", ano3: "icon3.png", ano4: "icon4.png", voltar: "voltar.png"
     },
     links: {
-        home: "../../index.html", pre: "../../pre/index.html", 
-        ano1: "../../1/index.html", ano2: "../../2/index.html",
-        ano3: "../../3/index.html", ano4: "../../4/index.html"
+        home: "/", 
+        pre: "/pre",
+        ano1: "/1",
+        ano2: "/2",
+        ano3: "/3",
+        ano4: "/4"
     },
     listaFases: [
         {
