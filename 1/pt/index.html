@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pequenos Exploradores</title>
+    <title>Pequenos Leitores</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
@@ -55,8 +55,11 @@
 
         /* INTRODUÇÃO */
         .sub-header { text-align: center; margin: 25px 0; flex-shrink: 0; }
-        .intro-text { color: #1a4a7a; font-size: 1.4rem; font-weight: 800; position: relative; display: inline-block; }
-        .intro-text::after { 
+        .intro-text { color: #1a4a7a; font-size: 1.4rem; font-weight: 800; display: inline-block; }
+        
+        /* Estilo aplicado apenas ao span dentro da intro */
+        .intro-text span { position: relative; display: inline-block; }
+        .intro-text span::after { 
             content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 10px; 
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); 
             background-size: 100% 100%; 
@@ -144,7 +147,6 @@
 
     <script src="dados.js"></script>
     <script>
-        // Função para voltar apenas 1 nível (ex: do Português para o 1º Ano)
         function voltarPagina() { 
             const config = JOGO_CONFIG;
             window.location.href = config.links[config.anoAtivo]; 
@@ -162,21 +164,21 @@
             const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
-            // Setup Header
             document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
             document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = bibConteudo.sub;
-            document.getElementById('txt-intro').innerText = bibConteudo.intro;
-            document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
             
+            // ALTERAÇÃO: Envolve a frase específica num span para o sublinhado
+            const textoOriginal = bibConteudo.intro;
+            document.getElementById('txt-intro').innerHTML = textoOriginal.replace("diverte-te a ler!", "<span>diverte-te a ler!</span>");
+            
+            document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
-            // MENU DROPDOWN
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
-            // Botões de navegação
             Object.keys(config.links).forEach(key => {
                 if (config.iconesMenu[key]) {
                     const a = document.createElement('a');
@@ -186,14 +188,12 @@
                 }
             });
 
-            // Botão VOLTAR no menu (com o mesmo ícone do Header)
             const btnVoltarMenu = document.createElement('a');
             btnVoltarMenu.className = 'menu-item'; btnVoltarMenu.href = "#";
             btnVoltarMenu.onclick = (e) => { e.preventDefault(); voltarPagina(); };
             btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${bibTema.voltarMobile}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnVoltarMenu);
 
-            // GERAÇÃO DOS JOGOS
             const mainContent = document.getElementById('mainContent');
             let numGlobal = 1;
 
@@ -213,10 +213,8 @@
                     const card = document.createElement('a');
                     card.className = 'game-card';
                     card.href = jogo.link;
-                    
-                    // Cores dinâmicas baseadas na fase
                     card.style.setProperty('--fase-color', fase.corEtiqueta);
-                    card.style.setProperty('--fase-bg', fase.corEtiqueta + '15'); // 15% opacidade
+                    card.style.setProperty('--fase-bg', fase.corEtiqueta + '15');
 
                     card.innerHTML = `
                         <div class="card-image-area"><img src="${config.caminhoIconsJogos}${jogo.icon}"></div>
