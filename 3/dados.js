@@ -1,11 +1,11 @@
 const JOGO_CONFIG = {
-    anoAtivo: "ano1", 
+    anoAtivo: "ano3", 
     textos: {
-        tituloLinha1: "PEQUENOS",
+        tituloLinha1: "SUPER",
         tituloLinha2: "EXPLORADORES",
-        subtitulo: "ATIVIDADES | 1º ANO",
+        subtitulo: "ATIVIDADES | 3º ANO",
         intro: "O que vamos aprender hoje?",
-        rodape: "&copy; Pequenos Exploradores - Recursos Educativos",
+        rodape: "&copy; Super Exploradores - Recursos Educativos",
         // Textos do Menu
         menuInicio: "INÍCIO",
         menuVoltar: "VOLTAR"
