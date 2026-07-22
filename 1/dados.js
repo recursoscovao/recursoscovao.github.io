@@ -20,12 +20,12 @@ const JOGO_CONFIG = {
         controller: "jogo.png"
     },
     links: {
-        home: "../index.html", 
-        pre: "../pre/index.html",
-        ano1: "./index.html",
-        ano2: "../2/index.html",
-        ano3: "../3/index.html",
-        ano4: "../4/index.html"
+        home: "../", 
+        pre: "../pre",
+        ano1: "./1",
+        ano2: "../2",
+        ano3: "../3",
+        ano4: "../4"
     },
     temaCores: {
         azul: { borda: "#5ba4e5", fundo: "#e1f0ff", texto: "#0066ff" },
