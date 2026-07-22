@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Recursos Educativos</title>
+    <title>Pré-Escolar</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
@@ -29,7 +29,7 @@
         #header-icon { height: 70px; object-fit: contain; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         #txt-titulo1 { font-weight: 900; font-size: 1.65rem; }
-        #txt-titulo2 { font-weight: 800; font-size: 1.4rem; }
+        #txt-titulo2 { font-weight: 800; font-size: 1.4rem; } /* Cor será aplicada via JS */
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
         
         .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; transition: 0.2s; }
@@ -89,14 +89,17 @@
         .num-circle { width: 40px; height: 40px; border-radius: 50%; border: 3px solid var(--fase-color); color: var(--fase-color); display: flex; align-items: center; justify-content: center; font-weight: 900; }
         .btn-jogar { flex: 1; background: var(--fase-color); color: white; padding: 10px; border-radius: 25px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 900; font-size: 0.8rem; }
 
-        /* RODAPÉ COM FUNDO BRANCO */
+        /* RODAPÉ COM ALTURA DE 40PX */
         footer { 
-            padding: 10px; 
-            text-align: center; 
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             background: white; 
             border-radius: 35px 35px 0 0; 
             box-shadow: 0 -4px 15px rgba(0,0,0,0.03);
             margin-top: 20px;
+            padding: 0;
         }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
     </style>
@@ -137,14 +140,19 @@
             const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
+            // CONFIGURAÇÕES DE CORES
             document.body.style.backgroundColor = bibTema.corPagina;
+            
+            // Titulo 1 assume a cor do tema (Rosa no pré)
             document.getElementById('txt-titulo1').style.color = bibTema.corPrimaria;
-            document.getElementById('txt-titulo2').style.color = bibTema.corEscura;
+            // Titulo 2 (Curiosos) assume o cinzento fixo solicitado
+            document.getElementById('txt-titulo2').style.color = "#8792A1";
             
             const btnHam = document.querySelector('.hamburger-btn');
             btnHam.style.color = bibTema.corHamburger;
             document.documentElement.style.setProperty('--cor-dinamica', bibTema.corHamburger);
 
+            // TEXTOS
             document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
             document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = bibConteudo.sub;
