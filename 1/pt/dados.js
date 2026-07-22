@@ -59,7 +59,7 @@ const JOGO_CONFIG = {
     
     listaFases: [
         {
-            tituloFase: "FASE 1: SONS, LETRAS E FORMAS BÁSICAS",
+            tituloFase: "SONS, LETRAS E FORMAS BÁSICAS",
             corEtiqueta: "#E91E63", 
             jogos: [
                 { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
@@ -71,7 +71,7 @@ const JOGO_CONFIG = {
             ]
         },
         {
-            tituloFase: "FASE 2: DESCOBERTAS E SEQUÊNCIAS",
+            tituloFase: "DESCOBERTAS E SEQUÊNCIAS",
             corEtiqueta: "#FF9800",
             jogos: [
                 { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
