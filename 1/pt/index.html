@@ -3,17 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pequenos Leitores</title>
+    <title>Pequenos Exploradores</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
             --bg-page: #e9f0f8;
-            --primary: #5EA2E6; 
-            --text-grey: #5d7082;
-            --accent-yellow: #FFC107;
-            --menu-item-h: 55px;
+            --primary: #5ba4e5; 
+            --text-grey: #7a8ba3;
+            --white: #ffffff;
+            --active-blue: #e3effb;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
@@ -26,125 +26,94 @@
         /* HEADER */
         header { 
             background: white; border-radius: 0 0 35px 35px;
-            display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; 
+            display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; 
             padding: 0 20px; height: 95px; z-index: 1000;
             box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         #header-icon { height: 70px; object-fit: contain; }
         .title-group { display: flex; flex-direction: column; line-height: 0.9; text-transform: uppercase; }
-        #txt-titulo1 { color: var(--primary); font-weight: 900; font-size: 1.65rem; }
-        #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 1.4rem; }
+        #txt-titulo1 { color: var(--primary); font-weight: 900; font-size: 1.6rem; }
+        #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 1.3rem; }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 700; font-size: 0.7rem; margin-top: 4px; opacity: 0.8; }
-        .hamburger-btn { background: none; border: none; color: var(--primary); font-size: 28px; cursor: pointer; }
-        #icon-voltar-top { height: 40px; cursor: pointer; justify-self: end; }
+        .hamburger-btn { background: none; border: none; color: var(--primary); font-size: 32px; cursor: pointer; }
+        #icon-voltar-top { height: 42px; cursor: pointer; justify-self: end; transition: 0.2s; }
+        #icon-voltar-top:active { transform: scale(0.9); }
 
-        /* MENU DROPDOWN (ESTILO COMPLETO) */
+        /* MENU DROPDOWN (ESTILO IGUAL À IMAGEM) */
         .menu-dropdown { 
-            position: absolute; top: 85px; left: 15px; display: none; 
-            flex-direction: column; gap: 5px; z-index: 2000; 
+            position: absolute; top: 105px; left: 20px; display: none; 
+            flex-direction: column; gap: 12px; z-index: 2000; 
         }
         .menu-item { 
-            display: flex; align-items: center; gap: 12px; 
-            height: var(--menu-item-h); padding: 0 20px;
+            display: flex; align-items: center; gap: 18px; 
+            min-width: 280px; height: 70px; padding: 0 25px;
             text-decoration: none; color: var(--text-grey); 
-            font-weight: 800; background: white; border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; min-width: 230px;
+            font-weight: 800; font-size: 1.3rem;
+            background: white; border-radius: 22px;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.06); 
+            transition: all 0.2s;
         }
-        .menu-item:hover { background-color: var(--primary); color: white; }
-        .menu-item img { width: 24px; height: 24px; object-fit: contain; }
+        /* Item Ativo (como o 2º Ano na imagem) */
+        .menu-item.active { 
+            background-color: var(--active-blue); 
+            color: var(--primary); 
+        }
+        .menu-item img { width: 38px; height: 38px; object-fit: contain; }
+        
+        /* Botão Voltar no Menu */
+        .menu-item.btn-voltar { color: #7a8ba3; text-transform: uppercase; }
+        .voltar-circle-icon { 
+            width: 40px; height: 40px; background: #5ba4e5; 
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 20px;
+        }
 
         /* INTRODUÇÃO */
-        .sub-header { text-align: center; margin: 25px 0 35px 0; padding: 0 15px; }
+        .sub-header { text-align: center; margin: 30px 0 40px 0; padding: 0 15px; }
         .intro-text { 
             color: #1a4a7a; font-size: 1.4rem; font-weight: 800; 
             position: relative; display: inline-block; 
         }
         .intro-text::after { 
-            content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 10px; 
+            content: ""; position: absolute; left: 0; bottom: -10px; width: 100%; height: 12px; 
             background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); 
             background-size: 100% 100%; 
         }
 
-        /* ÁREA PRINCIPAL */
-        main { flex: 1; padding: 0 20px 40px 20px; max-width: 1400px; margin: 0 auto; width: 100%; }
-        
+        /* ÁREA DAS FASES (IGUAL À PRIMEIRA IMAGEM) */
+        main { flex: 1; padding: 0 20px 50px 20px; max-width: 1400px; margin: 0 auto; width: 100%; }
         .fase-container {
             background: rgba(255, 255, 255, 0.5);
-            border-radius: 40px;
-            padding: 45px 25px 25px 25px;
-            margin-bottom: 50px;
-            position: relative;
-            border: 2px solid white;
+            border-radius: 40px; padding: 45px 25px 25px 25px;
+            margin-bottom: 50px; position: relative; border: 2px solid white;
         }
-
         .fase-etiqueta {
-            position: absolute;
-            top: -20px;
-            left: 30px;
-            color: white;
-            padding: 10px 25px;
-            border-radius: 20px;
-            font-weight: 900;
-            font-size: 0.85rem;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-            text-transform: uppercase;
+            position: absolute; top: -22px; left: 30px; color: white;
+            padding: 10px 25px; border-radius: 20px; font-weight: 900;
+            font-size: 0.85rem; text-transform: uppercase; box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+        .games-grid { display: grid; gap: 20px; grid-template-columns: repeat(6, 1fr); }
 
-        /* GRID RESPONSIVA */
-        .games-grid {
-            display: grid;
-            gap: 20px;
-            grid-template-columns: repeat(6, 1fr); /* PC: 6 por linha */
-        }
-
-        /* CARTÃO DE JOGO (IGUAL À IMAGEM) */
+        /* CARTÃO DE JOGO */
         .game-card {
-            background: white;
-            border-radius: 25px;
-            text-decoration: none;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            padding: 20px 10px 10px 10px;
-            transition: all 0.2s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
-            border-bottom: 8px solid #ccc;
-            height: 100%;
+            background: white; border-radius: 25px; text-decoration: none;
+            display: flex; flex-direction: column; align-items: center;
+            padding: 20px 10px 10px 10px; transition: 0.2s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05); border-bottom: 8px solid #ccc; height: 100%;
         }
-        .game-card img {
-            width: 75%;
-            height: 110px;
-            object-fit: contain;
-            margin-bottom: 15px;
-        }
-        .game-card h2 {
-            color: #1A499C;
-            font-size: 0.8rem;
-            font-weight: 900;
-            text-align: center;
-            text-transform: uppercase;
-            margin-top: auto;
-            padding-bottom: 5px;
-        }
+        .game-card img { width: 80%; height: 115px; object-fit: contain; margin-bottom: 15px; }
+        .game-card h2 { color: #1A499C; font-size: 0.8rem; font-weight: 900; text-align: center; text-transform: uppercase; }
 
         /* RESPONSIVIDADE */
-        /* Landscape: 4 por linha */
-        @media (max-width: 1200px) {
-            .games-grid { grid-template-columns: repeat(4, 1fr); }
-        }
-        /* Mobile Vertical: 2 por linha */
+        @media (max-width: 1200px) { .games-grid { grid-template-columns: repeat(4, 1fr); } }
         @media (max-width: 700px) {
-            header { height: 80px; }
-            #txt-titulo1 { font-size: 1.3rem; }
-            #txt-titulo2 { font-size: 1.1rem; }
-            .games-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
-            .fase-container { padding: 40px 15px 15px 15px; border-radius: 30px; }
-            .game-card img { height: 85px; }
-            .fase-etiqueta { font-size: 0.7rem; left: 15px; }
+            .games-grid { grid-template-columns: repeat(2, 1fr); }
+            .menu-item { min-width: 250px; font-size: 1.1rem; height: 60px; }
+            .fase-container { padding: 40px 15px 15px 15px; }
         }
 
-        footer { padding: 25px; text-align: center; }
+        footer { padding: 30px; text-align: center; }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
     </style>
 </head>
@@ -152,15 +121,16 @@
 
     <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
-        <div id="dropdownMenu" class="menu-dropdown"></div>
+        <nav id="dropdownMenu" class="menu-dropdown"></nav>
         <div class="header-center">
-            <img id="header-icon" src="" alt="Ícone">
+            <img id="header-icon" src="" alt="">
             <div class="title-group">
                 <div id="txt-titulo1"></div>
                 <div id="txt-titulo2"></div>
                 <div id="txt-subtitulo-header"></div>
             </div>
         </div>
+        <!-- Botão Voltar Topo (Um nível abaixo) -->
         <img id="icon-voltar-top" src="" alt="Voltar" onclick="voltarPagina()">
     </header>
 
@@ -174,10 +144,8 @@
 
     <script src="dados.js"></script>
     <script>
-        // Função para voltar um nível (ex: de Português 1 para a página do 1º Ano)
-        function voltarPagina() { 
-            window.location.href = JOGO_CONFIG.links.home; 
-        }
+        // Função que desce 1 nível usando a rota home configurada
+        function voltarPagina() { window.location.href = JOGO_CONFIG.links.home; }
 
         function toggleMenu(e) { 
             if(e) e.stopPropagation(); 
@@ -191,7 +159,7 @@
             const temaAtivo = BIBLIOTECA_TEMAS[config.areaAtiva];
             const conteudoAtivo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
 
-            // Cores e Textos
+            // Cores e Textos Header
             document.documentElement.style.setProperty('--bg-page', temaAtivo.corPagina);
             document.documentElement.style.setProperty('--primary', temaAtivo.corPrimaria);
             document.documentElement.style.setProperty('--text-grey', temaAtivo.corTexto);
@@ -200,64 +168,55 @@
             document.getElementById('txt-subtitulo-header').innerText = conteudoAtivo.sub;
             document.getElementById('txt-intro').innerText = conteudoAtivo.intro;
             document.getElementById('txt-rodape').innerHTML = conteudoAtivo.rodape;
-            
-            // Ícones do Header
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + temaAtivo.voltarMobile;
 
-            // MENU HAMBURGUER COMPLETO
+            // MENU HAMBURGUER (ESTILO DA IMAGEM)
             const menuBox = document.getElementById('dropdownMenu');
-            const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
+            const labels = { pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
-            // Links das páginas
-            Object.keys(config.links).forEach(key => {
-                if (config.iconesMenu[key] && key !== 'home') {
-                    const a = document.createElement('a');
-                    a.className = 'menu-item'; 
-                    a.href = config.links[key];
-                    a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
-                    menuBox.appendChild(a);
-                }
+            // Gerar itens de anos
+            Object.keys(labels).forEach(key => {
+                const a = document.createElement('a');
+                a.className = 'menu-item';
+                if (key === config.anoAtivo) a.classList.add('active'); // Destacar ano atual (azul)
+                a.href = config.links[key];
+                a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key]}</span>`;
+                menuBox.appendChild(a);
             });
 
-            // Botão VOLTAR dentro do menu (Volta um nível)
+            // Adicionar Botão VOLTAR (estilo circular azul)
             const btnVoltarMenu = document.createElement('a');
-            btnVoltarMenu.className = 'menu-item'; 
+            btnVoltarMenu.className = 'menu-item btn-voltar'; 
             btnVoltarMenu.href = "#";
             btnVoltarMenu.onclick = (e) => { e.preventDefault(); voltarPagina(); };
-            btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span style="color:#D32F2F">VOLTAR</span>`;
+            btnVoltarMenu.innerHTML = `<div class="voltar-circle-icon"><i class="fas fa-arrow-left"></i></div> <span>VOLTAR</span>`;
             menuBox.appendChild(btnVoltarMenu);
 
-            // GERAÇÃO DAS FASES (Igual à imagem)
+            // GERAÇÃO DOS JOGOS
             const mainContent = document.getElementById('mainContent');
-            let numGlobal = 1;
+            let contador = 1;
 
             config.listaFases.forEach(fase => {
                 const section = document.createElement('section');
                 section.className = 'fase-container';
-                
-                const etiqueta = document.createElement('div');
-                etiqueta.className = 'fase-etiqueta';
-                etiqueta.innerText = fase.tituloFase;
-                etiqueta.style.backgroundColor = fase.corEtiqueta;
-                section.appendChild(etiqueta);
+                const label = document.createElement('div');
+                label.className = 'fase-etiqueta';
+                label.innerText = fase.tituloFase;
+                label.style.backgroundColor = fase.corEtiqueta;
+                section.appendChild(label);
 
                 const grid = document.createElement('div');
                 grid.className = 'games-grid';
-
                 fase.jogos.forEach(jogo => {
                     const card = document.createElement('a');
                     card.className = 'game-card';
                     card.href = jogo.link;
                     card.style.borderBottomColor = jogo.cor;
-                    card.innerHTML = `
-                        <img src="${config.caminhoIconsJogos}${jogo.icon}" alt="${jogo.nome}">
-                        <h2>${numGlobal}. ${jogo.nome}</h2>
-                    `;
+                    card.innerHTML = `<img src="${config.caminhoIconsJogos}${jogo.icon}"> <h2>${contador}. ${jogo.nome}</h2>`;
                     grid.appendChild(card);
-                    numGlobal++;
+                    contador++;
                 });
-
                 section.appendChild(grid);
                 mainContent.appendChild(section);
             });
