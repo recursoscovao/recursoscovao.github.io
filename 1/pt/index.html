@@ -13,8 +13,6 @@
             --back-blue: #1A499C; 
             --text-grey: #8792a1;
             --sky-blue: #EAF4FE;
-            --accent-yellow: #FFC107;
-            --line-blue: #A5D1FF;
             --menu-item-h: 55px;
         }
 
@@ -67,65 +65,71 @@
 
         main { flex: 1; padding: 20px; width: 100%; max-width: 1400px; margin: 0 auto; }
         
-        .fase-wrapper { margin-bottom: 40px; }
-        .fase-titulo-area { 
-            display: flex; align-items: center; gap: 10px; margin-bottom: 15px;
-            background: white; width: fit-content; padding: 5px 20px; 
-            border-radius: 20px; box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+        /* CONTAINER DAS FASES */
+        .fase-wrapper { margin-bottom: 50px; }
+        .fase-header { 
+            display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
+            background: white; width: fit-content; padding: 8px 25px; 
+            border-radius: 30px; box-shadow: 0 4px 10px rgba(0,0,0,0.04);
         }
-        .dot-fase { width: 12px; height: 12px; border-radius: 50%; }
-        .fase-titulo-area h3 { font-size: 0.75rem; color: #8792a1; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; }
+        .fase-header span { width: 12px; height: 12px; border-radius: 50%; }
+        .fase-header h3 { font-size: 0.8rem; color: #7a8ba3; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; }
 
-        .games-grid { display: grid; gap: 20px; grid-template-columns: repeat(6, 1fr); }
+        /* GRID RESPONSIVA */
+        .games-grid { display: grid; gap: 25px; grid-template-columns: repeat(6, 1fr); }
 
         /* CARTÃO DE JOGO */
         .game-card {
-            background: white; border-radius: 30px; padding: 15px;
+            background: white; border-radius: 35px; padding: 18px;
             display: flex; flex-direction: column; align-items: center;
-            text-decoration: none; box-shadow: 0 8px 20px rgba(0,0,0,0.04);
-            transition: transform 0.2s; height: 100%; border: 2px solid #f0f4f8;
+            text-decoration: none; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            transition: all 0.3s ease; height: 100%; border: 2px solid #f8fafc;
         }
-        .game-card:hover { transform: translateY(-5px); }
+        .game-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px rgba(0,0,0,0.08); }
 
         .card-image-area {
-            width: 100%; aspect-ratio: 1.1/1; background: var(--card-bg);
-            border-radius: 25px; display: flex; align-items: center;
-            justify-content: center; margin-bottom: 15px;
+            width: 100%; aspect-ratio: 1/1; 
+            background: linear-gradient(135deg, rgba(255,255,255,1) 0%, var(--fase-bg) 100%);
+            border-radius: 28px; display: flex; align-items: center;
+            justify-content: center; margin-bottom: 18px; position: relative;
         }
-        .card-image-area img { width: 65%; height: 65%; object-fit: contain; }
+        .card-image-area img { width: 70%; height: 70%; object-fit: contain; z-index: 2; }
 
         .card-info { width: 100%; text-align: center; margin-bottom: 15px; }
-        .card-info h2 { font-size: 0.95rem; font-weight: 900; color: #1A499C; text-transform: uppercase; margin-bottom: 5px; }
-        .card-info p { font-size: 0.75rem; color: #8792a1; font-weight: 600; line-height: 1.3; }
+        .card-info h2 { font-size: 1rem; font-weight: 900; color: #1A499C; text-transform: uppercase; margin-bottom: 6px; }
+        .card-info p { font-size: 0.75rem; color: #8792a1; font-weight: 700; line-height: 1.3; height: 32px; overflow: hidden; }
 
-        /* RODAPÉ DO CARTÃO (NÚMERO + BOTÃO) */
+        /* RODAPÉ DO CARTÃO (NÚMERO + BOTÃO DA COR DA FASE) */
         .card-footer { 
             width: 100%; display: flex; align-items: center; gap: 10px; margin-top: auto; 
         }
         .num-circle { 
-            width: 38px; height: 38px; border-radius: 50%; background: white; 
-            border: 3px solid var(--theme-color); color: var(--theme-color); 
+            width: 42px; height: 42px; border-radius: 50%; 
+            background: var(--fase-color); color: white; 
             display: flex; align-items: center; justify-content: center; 
-            font-weight: 900; font-size: 1rem; flex-shrink: 0;
+            font-weight: 900; font-size: 1.1rem; flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
         .btn-jogar {
-            flex: 1; background: var(--theme-color); color: white;
-            padding: 10px; border-radius: 20px; display: flex;
+            flex: 1; background: var(--fase-color); color: white;
+            padding: 12px; border-radius: 25px; display: flex;
             align-items: center; justify-content: center; gap: 8px;
-            font-weight: 900; font-size: 0.8rem; text-transform: uppercase;
+            font-weight: 900; font-size: 0.85rem; text-transform: uppercase;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
 
         /* RESPONSIVIDADE */
-        @media (max-width: 1200px) { .games-grid { grid-template-columns: repeat(4, 1fr); } }
-        @media (max-width: 700px) {
-            .games-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
-            .game-card { padding: 10px; }
-            .num-circle { width: 32px; height: 32px; font-size: 0.85rem; }
-            .btn-jogar { font-size: 0.65rem; padding: 8px; }
+        @media (max-width: 1300px) { .games-grid { grid-template-columns: repeat(4, 1fr); } }
+        @media (max-width: 800px) {
+            .games-grid { grid-template-columns: repeat(2, 1fr); gap: 15px; }
+            .game-card { border-radius: 25px; padding: 12px; }
+            .num-circle { width: 35px; height: 35px; font-size: 0.9rem; }
+            .btn-jogar { font-size: 0.75rem; padding: 10px; }
+            .intro-text { font-size: 1.1rem; }
         }
 
-        footer { padding: 20px; text-align: center; }
-        .footer-text { color: var(--text-grey); font-size: 0.8rem; font-weight: 700; }
+        footer { padding: 30px; text-align: center; }
+        .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
     </style>
 </head>
 <body>
@@ -152,7 +156,7 @@
 
     <script src="dados.js"></script>
     <script>
-        // CORREÇÃO: Volta apenas 1 nível para a página do Ano
+        // Lógica de navegação: volta 1 nível
         function voltarPagina() { 
             const config = JOGO_CONFIG;
             window.location.href = config.links[config.anoAtivo]; 
@@ -179,7 +183,7 @@
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
-            // MENU COM PÁGINA INICIAL INCLUÍDA
+            // MENU COM INÍCIO E VOLTAR
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
@@ -198,7 +202,7 @@
             btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnVoltarMenu);
 
-            // GERAÇÃO DOS CARTÕES (NÚMERO AO LADO DO BOTÃO)
+            // GERAÇÃO DAS FASES E JOGOS
             const mainContent = document.getElementById('mainContent');
             let numGlobal = 1;
 
@@ -206,10 +210,11 @@
                 const wrapper = document.createElement('div');
                 wrapper.className = 'fase-wrapper';
 
-                const tituloArea = document.createElement('div');
-                tituloArea.className = 'fase-titulo-area';
-                tituloArea.innerHTML = `<div class="dot-fase" style="background:${fase.corEtiqueta}"></div><h3>${fase.tituloFase}</h3>`;
-                wrapper.appendChild(tituloArea);
+                // Cabeçalho da Fase
+                const faseHeader = document.createElement('div');
+                faseHeader.className = 'fase-header';
+                faseHeader.innerHTML = `<span style="background:${fase.corEtiqueta}"></span><h3>${fase.tituloFase}</h3>`;
+                wrapper.appendChild(faseHeader);
 
                 const grid = document.createElement('div');
                 grid.className = 'games-grid';
@@ -219,9 +224,9 @@
                     card.className = 'game-card';
                     card.href = jogo.link;
                     
-                    const corFundoSuave = jogo.cor + '15'; 
-                    card.style.setProperty('--card-bg', corFundoSuave);
-                    card.style.setProperty('--theme-color', jogo.cor);
+                    // Definir cores da fase no cartão
+                    card.style.setProperty('--fase-color', fase.corEtiqueta);
+                    card.style.setProperty('--fase-bg', fase.corEtiqueta + '15'); // 15% opacidade para o brilho
 
                     card.innerHTML = `
                         <div class="card-image-area"><img src="${config.caminhoIconsJogos}${jogo.icon}"></div>
