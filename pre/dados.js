@@ -3,10 +3,10 @@
 // ==========================================
 
 const BIBLIOTECA_TEMAS = {
-    "portugues": { corPagina: "#e9f0f8", corPrimaria: "#5ba4e5", corEscura: "#3d7db8", corTexto: "#5d7082", voltarMobile: "voltar_az.png" },
-    "matematica": { corPagina: "#e8f9f4", corPrimaria: "#45cfa8", corEscura: "#2BA886", corTexto: "#45cfa8", voltarMobile: "voltar_vr.png" },
-    "estudo": { corPagina: "#EAE2E5", corPrimaria: "#994D4D", corEscura: "#6C3737", corTexto: "#994D4D", voltarMobile: "voltar_cs.png" },
-    "pre": { corPagina: "#FFF5F7", corPrimaria: "#E691A7", corEscura: "#D54267", corTexto: "#E691A7", voltarMobile: "voltar_rs.png" }
+    "portugues": { corPagina: "#e9f0f8", corPrimaria: "#5ba4e5", corEscura: "#3d7db8", corTexto: "#5d7082", voltarMobile: "voltar_az.png", corHamburger: "#5ba4e5" },
+    "matematica": { corPagina: "#e8f9f4", corPrimaria: "#45cfa8", corEscura: "#2BA886", corTexto: "#45cfa8", voltarMobile: "voltar_vr.png", corHamburger: "#45cfa8" },
+    "estudo": { corPagina: "#EAE2E5", corPrimaria: "#994D4D", corEscura: "#6C3737", corTexto: "#994D4D", voltarMobile: "voltar_cs.png", corHamburger: "#994D4D" },
+    "pre": { corPagina: "#FFF5F7", corPrimaria: "#E691A7", corEscura: "#D54267", corTexto: "#E691A7", voltarMobile: "voltar_rs.png", corHamburger: "#E691A7" }
 };
 
 const BIBLIOTECA_CONTEUDO = {
@@ -35,44 +35,24 @@ const BIBLIOTECA_CONTEUDO = {
     }
 };
 
-// ==========================================
-// CONFIGURAÇÃO ESPECÍFICA DO JOGO
-// ==========================================
-
 const JOGO_CONFIG = {
-    areaAtiva: "pre", // Escolha: "portugues", "matematica", "estudo" ou "pre"
-    anoAtivo: "pre",      // Escolha: "pre", "ano1", "ano2", "ano3", "ano4"
-    
+    areaAtiva: "pre", 
+    anoAtivo: "pre",      
     caminhoIconsMenu: "../icons/", 
     caminhoIconsJogos: "iconjogos/",
-    
     iconesMenu: {
         home: "home.png", pre: "iconpre.png", ano1: "icon1.png", 
         ano2: "icon2.png", ano3: "icon3.png", ano4: "icon4.png", voltar: "voltar.png"
     },
-    
     links: {
         home: "../../index.html", pre: "../../pre/index.html", 
         ano1: "../../1/index.html", ano2: "../../2/index.html",
         ano3: "../../3/index.html", ano4: "../../4/index.html"
     },
-    
     listaFases: [
         {
             tituloFase: "SONS, LETRAS E FORMAS BÁSICAS",
             corEtiqueta: "#E91E63", 
-            jogos: [
-                { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
-                { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
-                { nome: "Toupeira das Letras", desc: "Bata nas toupeiras corretas.", icon: "rato.png", link: "toupeira/", cor: "#E64A19" },
-                { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
-                { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
-                { nome: "Toupeira das Letras", desc: "Bata nas toupeiras corretas.", icon: "rato.png", link: "toupeira/", cor: "#E64A19" }
-            ]
-        },
-        {
-            tituloFase: "DESCOBERTAS E SEQUÊNCIAS",
-            corEtiqueta: "#FF9800",
             jogos: [
                 { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
                 { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
