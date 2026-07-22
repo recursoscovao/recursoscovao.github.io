@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pré - Escolar</title>
+    <title>Recursos Educativos</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
@@ -13,6 +13,7 @@
             --text-grey: #8792a1;
             --sky-blue: #EAF4FE;
             --menu-item-h: 55px;
+            --cor-hamburger: #E691A7; /* Nova cor solicitada */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
@@ -20,6 +21,7 @@
         body { 
             min-height: 100vh; background-color: var(--sky-blue); 
             display: flex; flex-direction: column; overflow-x: hidden; 
+            transition: background-color 0.3s ease; /* Suaviza a troca de cor */
         }
 
         /* HEADER */
@@ -35,7 +37,24 @@
         #txt-titulo1 { color: var(--primary-blue); font-weight: 900; font-size: 1.65rem; }
         #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 1.4rem; }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
-        .hamburger-btn { background: none; border: none; color: var(--primary-blue); font-size: 28px; cursor: pointer; }
+        
+        /* HAMBURGER ALTERADO */
+        .hamburger-btn { 
+            background: none; 
+            border: none; 
+            color: var(--cor-hamburger); 
+            font-size: 28px; 
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .hamburger-btn:hover {
+            transform: scale(1.1);
+            filter: brightness(0.9);
+        }
+
         #icon-voltar-top { height: 42px; width: 42px; object-fit: contain; cursor: pointer; justify-self: end;}
 
         /* MENU DROPDOWN */
@@ -54,10 +73,9 @@
         .menu-item img { width: 28px; height: 28px; object-fit: contain; }
 
         /* INTRODUÇÃO */
-        .sub-header { text-align: center; margin: 25px 0; flex-shrink: 0; }
+        .sub-header { text-align: center; margin: 25px 0; flex-shrink: 0; padding: 0 20px; }
         .intro-text { color: #1a4a7a; font-size: 1.4rem; font-weight: 800; display: inline-block; }
         
-        /* Estilo aplicado apenas ao span dentro da intro */
         .intro-text span { position: relative; display: inline-block; }
         .intro-text span::after { 
             content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 10px; 
@@ -77,13 +95,10 @@
         .fase-header span { width: 12px; height: 12px; border-radius: 50%; }
         .fase-header h3 { font-size: 0.8rem; color: #7a8ba3; font-weight: 800; text-transform: uppercase; }
 
-        /* GRID (6 PC, 4 LANDSCAPE, 2 VERTICAL) */
         .games-grid { display: grid; gap: 20px; grid-template-columns: repeat(6, 1fr); }
-
         @media (max-width: 1200px) { .games-grid { grid-template-columns: repeat(4, 1fr); } }
         @media (max-width: 700px) { .games-grid { grid-template-columns: repeat(2, 1fr); } }
 
-        /* CARTÃO DE JOGO */
         .game-card {
             background: white; border-radius: 35px; padding: 18px;
             display: flex; flex-direction: column; align-items: center;
@@ -104,7 +119,6 @@
         .card-info h2 { font-size: 0.9rem; font-weight: 900; color: #1A499C; text-transform: uppercase; margin-bottom: 4px; }
         .card-info p { font-size: 0.7rem; color: #8792a1; font-weight: 700; line-height: 1.2; height: 32px; overflow: hidden; }
 
-        /* RODAPÉ DO CARTÃO */
         .card-footer { width: 100%; display: flex; align-items: center; gap: 10px; margin-top: auto; }
        .num-circle { 
             width: 40px; height: 40px; border-radius: 50%; 
@@ -165,18 +179,28 @@
             const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
+            // APLICAR COR DE FUNDO DA PÁGINA
+            document.body.style.backgroundColor = bibTema.corPagina;
+
             document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
             document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = bibConteudo.sub;
             
-            // ALTERAÇÃO: Envolve a frase específica num span para o sublinhado
-            const textoOriginal = bibConteudo.intro;
-            document.getElementById('txt-intro').innerHTML = textoOriginal.replace("diverte-te a ler!", "<span>diverte-te a ler!</span>");
+            // INTRODUÇÃO: Lógica para aplicar o span dinamicamente
+            const introStr = bibConteudo.intro;
+            // Se o texto contiver a frase padrão, destaca-a, senão destaca a última parte para manter o estilo visual
+            if(introStr.includes("diverte-te a ler!")) {
+                document.getElementById('txt-intro').innerHTML = introStr.replace("diverte-te a ler!", "<span>diverte-te a ler!</span>");
+            } else {
+                // Para o Pré-Escolar ou outros que não tenham a frase acima
+                document.getElementById('txt-intro').innerHTML = `<span>${introStr}</span>`;
+            }
             
             document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
+            // MENU DROPDOWN
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
@@ -189,12 +213,7 @@
                 }
             });
 
-            const btnVoltarMenu = document.createElement('a');
-            btnVoltarMenu.className = 'menu-item'; btnVoltarMenu.href = "#";
-            btnVoltarMenu.onclick = (e) => { e.preventDefault(); voltarPagina(); };
-            btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${bibTema.voltarMobile}"> <span>VOLTAR</span>`;
-            menuBox.appendChild(btnVoltarMenu);
-
+            // GERAÇÃO DAS FASES
             const mainContent = document.getElementById('mainContent');
             let numGlobal = 1;
 
