@@ -43,7 +43,7 @@ const JOGO_CONFIG = {
     areaAtiva: "pre", // Escolha: "portugues", "matematica", "estudo" ou "pre"
     anoAtivo: "pre",      // Escolha: "pre", "ano1", "ano2", "ano3", "ano4"
     
-    caminhoIconsMenu: "../../icons/", 
+    caminhoIconsMenu: "../icons/", 
     caminhoIconsJogos: "iconjogos/",
     
     iconesMenu: {
