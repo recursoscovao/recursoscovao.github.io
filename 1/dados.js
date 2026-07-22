@@ -5,7 +5,10 @@ const JOGO_CONFIG = {
         tituloLinha2: "EXPLORADORES",
         subtitulo: "ATIVIDADES | 1º ANO",
         intro: "O que vamos aprender hoje?",
-        rodape: "&copy; Pequenos Exploradores - Recursos Educativos"
+        rodape: "&copy; Pequenos Exploradores - Recursos Educativos",
+        // Textos do Menu
+        menuInicio: "INÍCIO",
+        menuVoltar: "VOLTAR"
     },
     caminhoIconsMenu: "../icons/", 
     caminhoIconsJogos: "../icons/", 
@@ -37,7 +40,6 @@ const JOGO_CONFIG = {
         { nome: "Matemática", icon: "mat.png", link: "mat/", tema: "verde" },
         { nome: "Estudo do Meio", icon: "em.png", link: "em/", tema: "castanho" },
     ],
-    // ADICIONE ESTA LISTA DE DESTAQUES
     listaDestaques: [
         { nome: "Quebra-Cabeças", icon: "puzzle.png", link: "jogos/puzzle.html", estrelas: 4 },
         { nome: "Memória", icon: "memory.png", link: "jogos/memoria.html", estrelas: 5 },
