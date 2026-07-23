@@ -3,218 +3,228 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Recursos Educativos</title>
+    <title>Pequenos Curiosos - Jogo</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
     <style>
         :root {
+            --cor-primaria: #E691A7; /* Tema Pre-Escolar default */
+            --cor-pagina: #FFF5F7;
             --text-grey: #8792a1;
-            --menu-item-h: 55px;
-            --cor-dinamica: #E691A7; 
+            --card-bg: #ffffff;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
-        
-        body { min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; padding-bottom: 20px; }
+        body { background-color: var(--cor-pagina); min-height: 100vh; display: flex; flex-direction: column; }
 
-        /* HEADER */
+        /* HEADER IGUAL À IMAGEM */
         header { 
-            background: white; border-radius: 0 0 35px 35px;
-            display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; 
-            padding: 0 15px; height: 95px; z-index: 1000; flex-shrink: 0;
+            background: white; border-radius: 0 0 30px 30px;
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 10px 20px; height: 80px; z-index: 1000;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            margin-bottom: 30px;
         }
-        .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
-        #header-icon { height: 70px; object-fit: contain; }
-        .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
-        #txt-titulo1 { font-weight: 900; font-size: 1.65rem; }
-        #txt-titulo2 { font-weight: 800; font-size: 1.4rem; color: #8792a1; }
-        #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
+        .header-logo { display: flex; align-items: center; gap: 10px; text-transform: uppercase; text-align: center; }
+        .header-logo img { height: 50px; }
+        .header-logo h1 { font-size: 1.1rem; color: var(--cor-primaria); font-weight: 900; line-height: 1; }
+        .header-logo span { display: block; font-size: 0.6rem; color: var(--text-grey); font-weight: 700; }
         
-        .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; transition: 0.2s; color: var(--cor-dinamica); }
-        #icon-voltar-top { height: 42px; width: 42px; object-fit: contain; cursor: pointer; justify-self: end;}
+        .btn-icon { background: none; border: none; font-size: 24px; color: var(--cor-primaria); cursor: pointer; }
+        .btn-voltar { color: white; background: var(--cor-primaria); width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; }
 
-        /* MENU DROPDOWN COMPLETO */
-        .menu-dropdown { 
-            position: absolute; top: 85px; left: 15px; 
-            display: none; flex-direction: column; gap: 8px; 
-            z-index: 2000; 
-        }
-        .menu-item { 
-            display: flex; align-items: center; gap: 12px; 
-            height: var(--menu-item-h); padding: 0 20px;
-            text-decoration: none; color: var(--text-grey); 
-            font-weight: 800; background: white; border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; 
-            min-width: 230px; cursor: pointer;
-        }
-        .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
-        .menu-item img { width: 28px; height: 28px; object-fit: contain; }
+        /* CONTENTOR PRINCIPAL */
+        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        .game-container { background: var(--card-bg); width: 100%; max-width: 1000px; border-radius: 40px; padding: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.05); position: relative; }
 
-        main { flex: 1; padding: 0 20px; width: 100%; max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+        /* --- 1. ECRÃ INICIAL --- */
+        #ecra-inicial { text-align: center; }
+        .init-circle { width: 180px; height: 180px; border: 8px solid var(--cor-pagina); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; }
+        .init-circle img { width: 70%; }
+        .init-title { font-size: 1.8rem; font-weight: 900; color: var(--cor-primaria); margin-bottom: 5px; }
+        .difficulty { background: #e8f9f4; color: #45cfa8; padding: 4px 15px; border-radius: 20px; font-weight: 800; font-size: 0.8rem; display: inline-block; margin-bottom: 15px; }
+        .init-desc { color: var(--text-grey); font-weight: 700; margin-bottom: 25px; font-size: 0.9rem; }
         
-        /* CARTÃO ADAPTÁVEL PC / MOBILE */
-        .fase-wrapper { width: 100%; display: flex; justify-content: center; }
-        .games-grid { width: 100%; display: flex; justify-content: center; }
+        .init-badges { display: flex; justify-content: center; gap: 20px; margin-bottom: 30px; }
+        .badge { display: flex; align-items: center; gap: 8px; font-size: 0.8rem; font-weight: 800; color: var(--text-grey); }
+        .badge i { font-size: 1.2rem; color: #FFC107; }
 
-        .game-card {
-            background: white; border-radius: 35px; padding: 25px;
-            display: flex; flex-direction: column; align-items: center;
-            box-shadow: 0 10px 30px var(--fase-shadow); 
-            border: 2px solid #fff;
-            width: 95%; 
-            max-width: 950px; 
-        }
+        /* --- 2. ECRÃ DE JOGO --- */
+        #ecra-jogo { display: none; }
+        .status-bar { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 20px; }
+        .level-label { background: var(--cor-primaria); color: white; padding: 5px 12px; border-radius: 10px; font-weight: 900; font-size: 0.8rem; }
+        .progress-dots { flex: 1; display: flex; gap: 5px; }
+        .dot { height: 10px; flex: 1; background: #eee; border-radius: 5px; }
+        .dot.active { background: var(--cor-primaria); }
+        .score-box { color: #FFC107; font-weight: 900; display: flex; align-items: center; gap: 5px; }
 
-        /* ÁREA DO JOGO (IMAGEM 100%) */
-        .card-image-area { 
-            width: 100%; 
-            aspect-ratio: 16/9; 
-            background: var(--fase-bg); 
-            border-radius: 25px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            margin-bottom: 20px;
-            overflow: hidden; /* Garante que a imagem respeite o border-radius */
-        }
-        .card-image-area img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: cover; /* Preenche 100% do espaço sem sobras */
-            opacity: 1; 
-        }
+        .question-text { text-align: center; color: var(--cor-primaria); font-weight: 900; font-size: 1.3rem; margin-bottom: 20px; }
+        .target-image { width: 120px; height: 120px; border: 4px dashed var(--cor-primaria); border-radius: 25px; margin: 0 auto 30px; display: flex; align-items: center; justify-content: center; }
+        .target-image img { width: 60%; }
 
-        .card-info h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; text-align: center; margin-bottom: 25px; }
+        .game-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        .grid-item { background: #fdfdfd; border: 2px solid #f0f0f0; border-radius: 20px; padding: 15px; cursor: pointer; transition: 0.2s; display: flex; align-items: center; justify-content: center; aspect-ratio: 1/1; }
+        .grid-item img { width: 70%; }
+        .grid-item.correct { border-color: #45cfa8; background: #e8f9f4; box-shadow: 0 0 0 4px #45cfa833; }
+
+        /* --- 3. ECRÃ DE FEEDBACK --- */
+        #ecra-feedback { display: none; text-align: center; }
+        .trophy-area { margin-bottom: 20px; position: relative; }
+        .trophy-area i { font-size: 80px; color: #FFC107; }
+        .feedback-msg { font-size: 1.8rem; font-weight: 900; color: var(--cor-primaria); margin-bottom: 5px; }
+        .feedback-sub { color: var(--text-grey); font-weight: 700; margin-bottom: 30px; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin-bottom: 30px; }
+        .stat-card { background: #fdfdfd; padding: 15px 5px; border-radius: 20px; border: 1px solid #f0f0f0; }
+        .stat-val { display: block; font-size: 1.4rem; font-weight: 900; margin-bottom: 5px; }
+        .stat-label { font-size: 0.65rem; font-weight: 800; color: var(--text-grey); text-transform: uppercase; }
+        .stat-card.bonus { background: #FFF9E6; border-color: #FFE082; }
+
+        /* BOTÕES */
+        .btn-jogar { background: var(--cor-primaria); color: white; border: none; padding: 18px 60px; border-radius: 30px; font-weight: 900; font-size: 1.2rem; cursor: pointer; display: inline-flex; align-items: center; gap: 10px; box-shadow: 0 8px 0 #D54267; margin-bottom: 10px; text-decoration: none; transition: 0.1s;}
+        .btn-jogar:active { transform: translateY(4px); box-shadow: 0 4px 0 #D54267; }
         
-        .card-footer { width: 100%; display: flex; align-items: center; gap: 15px; }
-        .num-circle { width: 55px; height: 55px; border-radius: 50%; border: 3px solid var(--fase-color); color: var(--fase-color); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.3rem; }
-        
-        .btn-jogar { 
-            flex: 1; background: var(--fase-color); color: white; padding: 16px; 
-            border-radius: 25px; display: flex; align-items: center; justify-content: center; 
-            gap: 10px; font-weight: 900; font-size: 1.15rem; text-decoration: none;
-            transition: 0.3s;
-        }
-        .btn-jogar:hover { filter: brightness(1.1); transform: scale(1.02); }
+        .feedback-buttons { display: flex; gap: 10px; justify-content: center; }
+        .btn-alt { flex: 1; padding: 12px; border-radius: 20px; border: 2px solid #f0f0f0; background: white; color: var(--text-grey); font-weight: 800; font-size: 0.8rem; cursor: pointer; text-decoration: none; display: flex; align-items: center; justify-content: center; gap: 5px; }
 
-        footer { 
-            height: 40px; display: flex; align-items: center; justify-content: center;
-            background: white; border-radius: 35px 35px 0 0; 
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.03); margin-top: 30px;
+        /* RESPONSIVIDADE (TABLET & MOBILE) */
+        @media (max-width: 768px) {
+            .game-container { padding: 20px; }
+            .game-grid { grid-template-columns: repeat(3, 1fr); }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
         }
-        .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
+
+        @media (max-width: 480px) {
+            .game-grid { grid-template-columns: repeat(2, 1fr); }
+            .feedback-buttons { flex-direction: column; }
+            .init-badges { flex-direction: column; align-items: center; gap: 10px; }
+            .init-title { font-size: 1.4rem; }
+            .header-logo h1 { font-size: 0.9rem; }
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
-        <div id="dropdownMenu" class="menu-dropdown"></div>
-
-        <div class="header-center">
-            <img id="header-icon" src="" alt="">
-            <div class="title-group">
-                <div id="txt-titulo1"></div>
-                <div id="txt-titulo2"></div>
-                <div id="txt-subtitulo-header"></div>
+        <button class="btn-icon"><i class="fas fa-bars"></i></button>
+        <div class="header-logo">
+            <img src="https://cdn-icons-png.flaticon.com/512/3069/3069172.png" alt="Logo">
+            <div>
+                <h1>Pequenos Curiosos</h1>
+                <span>Atividades | Pré-Escolar</span>
             </div>
         </div>
-        <img id="icon-voltar-top" src="" alt="Voltar" onclick="voltarPagina()">
+        <button class="btn-voltar" onclick="setScreen('inicial')"><i class="fas fa-arrow-left"></i></button>
     </header>
 
-    <main id="mainContent"></main>
-    
-    <footer><span class="footer-text" id="txt-rodape"></span></footer>
-
-    <script src="dados.js"></script>
-    <script>
-        function voltarPagina() { window.location.href = '../'; }
-
-        function toggleMenu(e) { 
-            if(e) e.stopPropagation(); 
-            const menu = document.getElementById('dropdownMenu');
-            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex'; 
-        }
-
-        window.onclick = () => {
-            document.getElementById('dropdownMenu').style.display = 'none';
-        }
-
-        window.onload = () => {
-            const config = JOGO_CONFIG;
-            const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
-            const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
-
-            document.body.style.backgroundColor = bibTema.corPagina;
-            document.getElementById('txt-titulo1').style.color = bibTema.corPrimaria;
-            document.documentElement.style.setProperty('--cor-dinamica', bibTema.corHamburger);
-
-            document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
-            document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
-            document.getElementById('txt-subtitulo-header').innerText = bibConteudo.sub;
-            document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
+    <main>
+        <div class="game-container">
             
-            document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
-            document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
-
-            const menuBox = document.getElementById('dropdownMenu');
-            const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
-            
-            Object.keys(config.links).forEach(key => {
-                if (config.iconesMenu[key]) {
-                    const a = document.createElement('a');
-                    a.className = 'menu-item'; a.href = config.links[key];
-                    a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
-                    menuBox.appendChild(a);
-                }
-            });
-
-            const btnVoltarMenu = document.createElement('div');
-            btnVoltarMenu.className = 'menu-item';
-            btnVoltarMenu.onclick = (e) => { e.stopPropagation(); voltarPagina(); };
-            btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${bibTema.voltarMobile}"> <span style="color:${bibTema.corPrimaria}">VOLTAR</span>`;
-            menuBox.appendChild(btnVoltarMenu);
-
-            const mainContent = document.getElementById('mainContent');
-            let numGlobal = 1;
-
-            config.listaFases.forEach(fase => {
-                const wrapper = document.createElement('div');
-                wrapper.className = 'fase-wrapper';
-                const grid = document.createElement('div');
-                grid.className = 'games-grid';
+            <!-- 1. ECRÃ INICIAL -->
+            <div id="ecra-inicial">
+                <div class="init-circle">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2913/2913501.png" alt="Abelha">
+                </div>
+                <h2 class="init-title">ENCONTRA A ABELHA</h2>
+                <span class="difficulty">⭐ FÁCIL</span>
+                <p class="init-desc">Encontra o desenho igual ao de cima.</p>
                 
-                fase.jogos.forEach(jogo => {
-                    const card = document.createElement('div');
-                    card.className = 'game-card';
-                    
-                    card.style.setProperty('--fase-color', fase.corEtiqueta);
-                    card.style.setProperty('--fase-bg', fase.corEtiqueta + '15');
-                    card.style.setProperty('--fase-shadow', fase.corEtiqueta + '33'); 
+                <div class="init-badges">
+                    <div class="badge"><i class="far fa-clock"></i> Cerca de 2 minutos</div>
+                    <div class="badge"><i class="fas fa-star"></i> Ganhas moedas</div>
+                </div>
 
-                    card.innerHTML = `
-                        <div class="card-image-area">
-                            <img src="${config.caminhoIconsJogos}${jogo.icon}">
-                        </div>
-                        <div class="card-info">
-                            <h2>${jogo.nome}</h2>
-                        </div>
-                        <div class="card-footer">
-                            <div class="num-circle">${numGlobal}</div>
-                            <a href="${jogo.link}" class="btn-jogar">
-                                <i class="fas fa-play"></i> JOGAR
-                            </a>
-                        </div>`;
-                    grid.appendChild(card);
-                    numGlobal++;
-                });
-                wrapper.appendChild(grid);
-                mainContent.appendChild(wrapper);
-            });
-        };
+                <button class="btn-jogar" onclick="setScreen('jogo')">
+                    <i class="fas fa-play"></i> JOGAR
+                </button>
+            </div>
+
+            <!-- 2. ECRÃ DE JOGO -->
+            <div id="ecra-jogo">
+                <div class="status-bar">
+                    <div class="level-label">4 / 10</div>
+                    <div class="progress-dots">
+                        <div class="dot active"></div><div class="dot active"></div>
+                        <div class="dot active"></div><div class="dot active"></div>
+                        <div class="dot"></div><div class="dot"></div>
+                        <div class="dot"></div><div class="dot"></div>
+                    </div>
+                    <div class="score-box">⭐ 5</div>
+                </div>
+
+                <h3 class="question-text">Qual é igual?</h3>
+                
+                <div class="target-image">
+                    <img src="https://cdn-icons-png.flaticon.com/512/2913/2913501.png" alt="Target">
+                </div>
+
+                <div class="game-grid">
+                    <div class="grid-item"><img src="https://cdn-icons-png.flaticon.com/512/1864/1864514.png"></div>
+                    <div class="grid-item"><img src="https://cdn-icons-png.flaticon.com/512/2311/2311145.png"></div>
+                    <div class="grid-item"><img src="https://cdn-icons-png.flaticon.com/512/1998/1998669.png"></div>
+                    <div class="grid-item"><img src="https://cdn-icons-png.flaticon.com/512/1998/1998686.png"></div>
+                    <div class="grid-item correct" onclick="setScreen('feedback')"><img src="https://cdn-icons-png.flaticon.com/512/2913/2913501.png"></div>
+                    <div class="grid-item"><img src="https://cdn-icons-png.flaticon.com/512/1998/1998765.png"></div>
+                    <div class="grid-item"><img src="https://cdn-icons-png.flaticon.com/512/1998/1998610.png"></div>
+                    <div class="grid-item"><img src="https://cdn-icons-png.flaticon.com/512/1998/1998713.png"></div>
+                </div>
+            </div>
+
+            <!-- 3. ECRÃ DE FEEDBACK -->
+            <div id="ecra-feedback">
+                <div class="trophy-area">
+                    <i class="fas fa-trophy"></i>
+                </div>
+                <h2 class="feedback-msg">ÉS UM CRAQUE!</h2>
+                <p class="feedback-sub">Terminaste o desafio!</p>
+
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <span class="stat-val" style="color:#45cfa8">10</span>
+                        <span class="stat-label">Certos</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-val" style="color:#FF5252">0</span>
+                        <span class="stat-label">Erros</span>
+                    </div>
+                    <div class="stat-card">
+                        <span class="stat-val" style="color:#FFB74D">0</span>
+                        <span class="stat-label">Ajudas</span>
+                    </div>
+                    <div class="stat-card bonus">
+                        <span class="stat-val" style="color:#FFC107">+25</span>
+                        <span class="stat-label">Moedas</span>
+                    </div>
+                </div>
+
+                <button class="btn-jogar" style="width:100%; margin-bottom:20px;" onclick="setScreen('jogo')">
+                    <i class="fas fa-sync-alt"></i> JOGAR NOVAMENTE
+                </button>
+
+                <div class="feedback-buttons">
+                    <a href="#" class="btn-alt"><i class="fas fa-gamepad"></i> OUTRO JOGO</a>
+                    <a href="#" class="btn-alt"><i class="fas fa-map"></i> MAPA DE JOGOS</a>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        function setScreen(screenName) {
+            // Esconde todos
+            document.getElementById('ecra-inicial').style.display = 'none';
+            document.getElementById('ecra-jogo').style.display = 'none';
+            document.getElementById('ecra-feedback').style.display = 'none';
+
+            // Mostra o selecionado
+            document.getElementById('ecra-' + screenName).style.display = 'block';
+            
+            // Se for feedback, podemos disparar confetes (simulado aqui)
+            if(screenName === 'feedback') {
+                console.log("Parabéns!");
+            }
+        }
     </script>
 </body>
 </html>
