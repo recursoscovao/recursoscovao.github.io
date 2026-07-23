@@ -65,10 +65,10 @@
             box-shadow: 0 10px 30px var(--fase-shadow); 
             border: 2px solid #fff;
             width: 95%; 
-            max-width: 950px; /* Alarga no PC */
+            max-width: 950px; 
         }
 
-        /* ÁREA DO JOGO (ONDE FICARÁ O JOGO) */
+        /* ÁREA DO JOGO (IMAGEM 100%) */
         .card-image-area { 
             width: 100%; 
             aspect-ratio: 16/9; 
@@ -78,9 +78,14 @@
             align-items: center; 
             justify-content: center; 
             margin-bottom: 20px;
-            overflow: hidden;
+            overflow: hidden; /* Garante que a imagem respeite o border-radius */
         }
-        .card-image-area img { width: 25%; height: 25%; object-fit: contain; opacity: 0.5; }
+        .card-image-area img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; /* Preenche 100% do espaço sem sobras */
+            opacity: 1; 
+        }
 
         .card-info h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; text-align: center; margin-bottom: 25px; }
         
@@ -106,12 +111,7 @@
 <body>
 
     <header>
-        <!-- BOTÃO HAMBURGUER -->
-        <button class="hamburger-btn" onclick="toggleMenu(event)">
-            <i class="fas fa-bars"></i>
-        </button>
-        
-        <!-- CONTAINER DO MENU -->
+        <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
 
         <div class="header-center">
@@ -133,14 +133,12 @@
     <script>
         function voltarPagina() { window.location.href = '../'; }
 
-        // Lógica de abrir/fechar menu
         function toggleMenu(e) { 
             if(e) e.stopPropagation(); 
             const menu = document.getElementById('dropdownMenu');
             menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex'; 
         }
 
-        // Fechar menu ao clicar fora
         window.onclick = () => {
             document.getElementById('dropdownMenu').style.display = 'none';
         }
@@ -150,7 +148,6 @@
             const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
-            // Aplicação de Cores
             document.body.style.backgroundColor = bibTema.corPagina;
             document.getElementById('txt-titulo1').style.color = bibTema.corPrimaria;
             document.documentElement.style.setProperty('--cor-dinamica', bibTema.corHamburger);
@@ -163,29 +160,24 @@
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
-            // MONTAGEM DO MENU HAMBURGUER
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
-            // Itens de Navegação
             Object.keys(config.links).forEach(key => {
                 if (config.iconesMenu[key]) {
                     const a = document.createElement('a');
-                    a.className = 'menu-item'; 
-                    a.href = config.links[key];
+                    a.className = 'menu-item'; a.href = config.links[key];
                     a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
                     menuBox.appendChild(a);
                 }
             });
 
-            // Botão VOLTAR dentro do Menu
             const btnVoltarMenu = document.createElement('div');
             btnVoltarMenu.className = 'menu-item';
             btnVoltarMenu.onclick = (e) => { e.stopPropagation(); voltarPagina(); };
             btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${bibTema.voltarMobile}"> <span style="color:${bibTema.corPrimaria}">VOLTAR</span>`;
             menuBox.appendChild(btnVoltarMenu);
 
-            // MONTAGEM DO CARTÃO ÚNICO
             const mainContent = document.getElementById('mainContent');
             let numGlobal = 1;
 
