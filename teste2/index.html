@@ -50,7 +50,6 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; 
             min-width: 230px; cursor: pointer;
         }
-        /* Hover com a cor dinâmica da seta */
         .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
         .menu-item img { width: 28px; height: 28px; object-fit: contain; }
 
@@ -71,9 +70,10 @@
             background: white; border-radius: 35px; overflow: hidden;
             min-height: 300px;
             border: 2px solid #fff;
-            /* ADICIONADA: Sombra ligeira na cor da seta voltar */
-            box-shadow: 0 10px 30px -5px var(--cor-dinamica); 
-            transition: box-shadow 0.3s ease;
+            
+            /* SOMBRA MENOS ACENTUADA: 
+               Reduzi o desfoque e usei color-mix para dar 30% de opacidade à cor */
+            box-shadow: 0 6px 20px -8px color-mix(in srgb, var(--cor-dinamica), transparent 70%); 
         }
         .main-meio img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -124,7 +124,7 @@
         </section>
 
         <section class="main-meio" id="area-jogo-conteudo">
-            <!-- Imagem injetada via JS -->
+            <!-- Imagem via JS -->
         </section>
 
         <section class="main-fundo">
@@ -152,7 +152,7 @@
             const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
-            // Define a cor primária (seta voltar) como a cor dinâmica do CSS
+            // Aplica a cor do tema à variável dinâmica
             document.documentElement.style.setProperty('--cor-dinamica', bibTema.corPrimaria);
             
             document.body.style.backgroundColor = bibTema.corPagina;
@@ -185,14 +185,13 @@
             btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${bibTema.voltarMobile}"> <span style="color:${bibTema.corPrimaria}">VOLTAR</span>`;
             menuBox.appendChild(btnVoltarMenu);
 
-            // Conteúdo do Jogo
+            // Conteúdo Inicial
             const fase = config.listaFases[0];
             const jogo = fase.jogos[0];
             if(jogo) {
                 document.getElementById('jogo-titulo').innerText = jogo.nome;
                 document.getElementById('area-jogo-conteudo').innerHTML = `<img src="${config.caminhoIconsJogos}${jogo.icon}">`;
                 document.getElementById('btn-link-jogo').href = jogo.link;
-                document.getElementById('jogo-numero').innerText = "1";
             }
         };
     </script>
