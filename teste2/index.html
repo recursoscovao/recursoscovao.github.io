@@ -61,39 +61,49 @@
 
         main { flex: 1; padding: 20px; width: 100%; max-width: 1400px; margin: 0 auto; }
         
-        /* GRID E CARTÕES */
+        /* GRID ADAPTÁVEL */
         .fase-wrapper { margin-bottom: 50px; }
         .fase-header { 
             display: flex; align-items: center; gap: 12px; margin-bottom: 20px;
             background: white; width: fit-content; padding: 8px 25px; border-radius: 30px;
+            margin-left: auto; margin-right: auto; /* Centraliza o cabeçalho da fase */
         }
         .fase-header span { width: 12px; height: 12px; border-radius: 50%; }
         .fase-header h3 { font-size: 0.8rem; color: #7a8ba3; font-weight: 800; text-transform: uppercase; }
         
-        .games-grid { display: grid; gap: 20px; grid-template-columns: repeat(6, 1fr); }
-        @media (max-width: 1200px) { .games-grid { grid-template-columns: repeat(4, 1fr); } }
-        @media (max-width: 700px) { .games-grid { grid-template-columns: repeat(2, 1fr); } }
+        .games-grid { 
+            display: flex; 
+            flex-wrap: wrap; 
+            gap: 25px; 
+            justify-content: center; /* Centraliza o cartão no espaço que sobra */
+        }
 
-        /* CARTÃO COM SOMBRA DINÂMICA */
+        /* CARTÃO DINÂMICO */
         .game-card {
-            background: white; border-radius: 35px; padding: 18px;
+            background: white; border-radius: 35px; padding: 25px;
             display: flex; flex-direction: column; align-items: center;
             text-decoration: none; 
             box-shadow: 0 10px 30px var(--fase-shadow); 
-            transition: 0.3s; height: 100%; border: 2px solid #fff;
+            transition: 0.3s; 
+            border: 2px solid #fff;
+            /* Definição de tamanho adaptável */
+            flex: 1;
+            min-width: 300px; 
+            max-width: 450px; 
+            height: auto;
         }
         .game-card:hover { transform: translateY(-8px); box-shadow: 0 15px 35px var(--fase-shadow); }
 
         .card-image-area { width: 100%; aspect-ratio: 1/1; background: var(--fase-bg); border-radius: 28px; display: flex; align-items: center; justify-content: center; margin-bottom: 15px; }
         .card-image-area img { width: 70%; height: 70%; object-fit: contain; }
-        .card-info h2 { font-size: 0.9rem; font-weight: 900; color: #1A499C; text-transform: uppercase; text-align: center; margin-bottom: 4px; }
-        .card-info p { font-size: 0.7rem; color: var(--text-grey); font-weight: 700; text-align: center; height: 32px; overflow: hidden; }
+        .card-info h2 { font-size: 1.1rem; font-weight: 900; color: #1A499C; text-transform: uppercase; text-align: center; margin-bottom: 8px; }
+        .card-info p { font-size: 0.85rem; color: var(--text-grey); font-weight: 700; text-align: center; margin-bottom: 20px; min-height: 40px; }
         
         .card-footer { width: 100%; display: flex; align-items: center; gap: 10px; margin-top: auto; }
-        .num-circle { width: 40px; height: 40px; border-radius: 50%; border: 3px solid var(--fase-color); color: var(--fase-color); display: flex; align-items: center; justify-content: center; font-weight: 900; }
-        .btn-jogar { flex: 1; background: var(--fase-color); color: white; padding: 10px; border-radius: 25px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 900; font-size: 0.8rem; }
+        .num-circle { width: 45px; height: 45px; border-radius: 50%; border: 3px solid var(--fase-color); color: var(--fase-color); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; }
+        .btn-jogar { flex: 1; background: var(--fase-color); color: white; padding: 12px; border-radius: 25px; display: flex; align-items: center; justify-content: center; gap: 8px; font-weight: 900; font-size: 0.9rem; }
 
-        /* FOOTER 40PX */
+        /* FOOTER */
         footer { 
             height: 40px;
             display: flex;
@@ -103,9 +113,12 @@
             border-radius: 35px 35px 0 0; 
             box-shadow: 0 -4px 15px rgba(0,0,0,0.03);
             margin-top: 20px;
-            padding: 0;
         }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
+
+        @media (max-width: 480px) {
+            .game-card { max-width: 100%; min-width: 100%; }
+        }
     </style>
 </head>
 <body>
@@ -125,7 +138,9 @@
     </header>
 
     <div class="sub-header"><div class="intro-text" id="txt-intro"></div></div>
+    
     <main id="mainContent"></main>
+    
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
     <script src="dados.js"></script>
@@ -144,10 +159,9 @@
             const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
-            // APLICAR TEMAS
             document.body.style.backgroundColor = bibTema.corPagina;
             document.getElementById('txt-titulo1').style.color = bibTema.corPrimaria;
-            document.getElementById('txt-titulo2').style.color = "#8792A1"; // Cinzento fixo solicitado
+            document.getElementById('txt-titulo2').style.color = "#8792A1"; 
             
             const btnHam = document.querySelector('.hamburger-btn');
             btnHam.style.color = bibTema.corHamburger;
@@ -170,7 +184,6 @@
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
-            // MENU
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
@@ -189,23 +202,24 @@
             btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${bibTema.voltarMobile}"> <span>VOLTAR</span>`;
             menuBox.appendChild(btnVoltarMenu);
 
-            // JOGOS COM SOMBRA DINÂMICA
             const mainContent = document.getElementById('mainContent');
             let numGlobal = 1;
             config.listaFases.forEach(fase => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'fase-wrapper';
+                
                 const faseHeader = document.createElement('div');
                 faseHeader.className = 'fase-header';
                 faseHeader.innerHTML = `<span style="background:${fase.corEtiqueta}"></span><h3>${fase.tituloFase}</h3>`;
                 wrapper.appendChild(faseHeader);
+
                 const grid = document.createElement('div');
                 grid.className = 'games-grid';
+                
                 fase.jogos.forEach(jogo => {
                     const card = document.createElement('a');
                     card.className = 'game-card'; card.href = jogo.link;
                     
-                    // APLICAR CORES NO CARTÃO (INCLUINDO A SOMBRA '33' é a transparência)
                     card.style.setProperty('--fase-color', fase.corEtiqueta);
                     card.style.setProperty('--fase-bg', fase.corEtiqueta + '15');
                     card.style.setProperty('--fase-shadow', fase.corEtiqueta + '33'); 
