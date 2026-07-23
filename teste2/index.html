@@ -16,7 +16,12 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
-        body { min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        body { 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            overflow-x: hidden; 
+        }
 
         /* --- HEADER --- */
         header { 
@@ -53,51 +58,80 @@
         .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
         .menu-item img { width: 28px; height: 28px; object-fit: contain; }
 
-        /* --- MAIN DIVIDIDO EM 3 --- */
+        /* --- MAIN (AGORA É O CARTÃO ÚNICO) --- */
         main { 
-            flex: 1; display: flex; flex-direction: column; 
-            padding: 0 20px; width: 100%; max-width: 950px; margin: 0 auto; gap: 20px;
-        }
-
-        /* 1ª Divisão: Topo (Status) */
-        .main-topo { width: 100%; text-align: center; }
-        .status-card { background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
-        .status-card h2 { font-size: 1.3rem; font-weight: 900; color: #1A499C; text-transform: uppercase; }
-
-        /* 2ª Divisão: Meio (Área de Jogo) */
-        .main-meio { 
-            flex: 1; display: flex; align-items: center; justify-content: center;
-            background: white; border-radius: 35px; overflow: hidden;
-            min-height: 300px;
-            border: 2px solid #fff;
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
             
-            /* SOMBRA INTERMÉDIA EM TODO O LIMITE:
-               0 0 no início significa sem deslocamento (espalha para todos os lados igualmente)
-               O uso do color-mix com 50% garante que a sombra seja visível mas não pesada */
-            box-shadow: 0 0 20px 2px color-mix(in srgb, var(--cor-dinamica), transparent 50%); 
+            /* O Main agora é o container visual */
+            background: white;
+            margin: 0 20px 20px 20px; /* Margem para a sombra respirar */
+            padding: 25px;
+            border-radius: 35px;
+            border: 2px solid #fff;
+            max-width: 950px;
+            align-self: center; /* Centraliza no PC */
+            width: calc(100% - 40px);
+            
+            /* Sombra Intermédia em todo o limite */
+            box-shadow: 0 0 20px 2px color-mix(in srgb, var(--cor-dinamica), transparent 50%);
         }
-        .main-meio img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* 3ª Divisão: Fundo (Controles) */
-        .main-fundo { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        /* 1ª Divisão Interna: Topo (Status) */
+        .card-topo { 
+            width: 100%; 
+            text-align: center; 
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee; /* Opcional: separador discreto */
+            margin-bottom: 15px;
+        }
+        .card-topo h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; }
+
+        /* 2ª Divisão Interna: Meio (Área de Imagem) */
+        .card-meio { 
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            overflow: hidden;
+            border-radius: 20px;
+            background: #fdfdfd; /* Um fundo leve para a imagem */
+        }
+        .card-meio img { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: contain; /* Garante que o ícone do jogo se veja bem sem cortar */
+            max-height: 400px;
+        }
+
+        /* 3ª Divisão Interna: Fundo (Controles) */
+        .card-fundo { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            padding-top: 20px;
+        }
         .num-circle { 
-            width: 55px; height: 55px; border-radius: 50%; 
+            width: 60px; height: 60px; border-radius: 50%; 
             border: 3px solid var(--cor-dinamica); color: var(--cor-dinamica); 
             display: flex; align-items: center; justify-content: center; 
-            font-weight: 900; font-size: 1.3rem; background: white;
+            font-weight: 900; font-size: 1.4rem; background: white;
         }
         .btn-jogar { 
-            flex: 1; background: var(--cor-dinamica); color: white; padding: 16px; 
+            flex: 1; background: var(--cor-dinamica); color: white; padding: 18px; 
             border-radius: 25px; display: flex; align-items: center; justify-content: center; 
-            gap: 10px; font-weight: 900; font-size: 1.15rem; text-decoration: none; transition: 0.3s;
+            gap: 10px; font-weight: 900; font-size: 1.2rem; text-decoration: none; 
+            transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
         }
-        .btn-jogar:hover { filter: brightness(1.1); transform: scale(1.02); }
+        .btn-jogar:hover { filter: brightness(1.1); transform: translateY(-2px); }
 
         /* --- FOOTER --- */
         footer { 
             height: 40px; display: flex; align-items: center; justify-content: center;
             background: white; border-radius: 35px 35px 0 0; 
             box-shadow: 0 -4px 15px rgba(0,0,0,0.03);
+            flex-shrink: 0;
         }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
     </style>
@@ -120,18 +154,23 @@
     </header>
 
     <main>
-        <section class="main-topo">
-            <div class="status-card"><h2 id="jogo-titulo">Carregando...</h2></div>
-        </section>
+        <!-- 1ª Divisão Interna -->
+        <div class="card-topo">
+            <h2 id="jogo-titulo">Carregando...</h2>
+        </div>
 
-        <section class="main-meio" id="area-jogo-conteudo">
+        <!-- 2ª Divisão Interna -->
+        <div class="card-meio" id="area-jogo-conteudo">
             <!-- Imagem via JS -->
-        </section>
+        </div>
 
-        <section class="main-fundo">
+        <!-- 3ª Divisão Interna -->
+        <div class="card-fundo">
             <div class="num-circle" id="jogo-numero">1</div>
-            <a href="#" class="btn-jogar" id="btn-link-jogo"><i class="fas fa-play"></i> JOGAR</a>
-        </section>
+            <a href="#" class="btn-jogar" id="btn-link-jogo">
+                <i class="fas fa-play"></i> JOGAR
+            </a>
+        </div>
     </main>
     
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
@@ -153,6 +192,7 @@
             const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
+            // Define cor do tema
             document.documentElement.style.setProperty('--cor-dinamica', bibTema.corPrimaria);
             
             document.body.style.backgroundColor = bibTema.corPagina;
@@ -185,12 +225,14 @@
             btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${bibTema.voltarMobile}"> <span style="color:${bibTema.corPrimaria}">VOLTAR</span>`;
             menuBox.appendChild(btnVoltarMenu);
 
+            // Carrega o primeiro jogo
             const fase = config.listaFases[0];
             const jogo = fase.jogos[0];
             if(jogo) {
                 document.getElementById('jogo-titulo').innerText = jogo.nome;
                 document.getElementById('area-jogo-conteudo').innerHTML = `<img src="${config.caminhoIconsJogos}${jogo.icon}">`;
                 document.getElementById('btn-link-jogo').href = jogo.link;
+                document.getElementById('jogo-numero').innerText = "1";
             }
         };
     </script>
