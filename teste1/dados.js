@@ -1,7 +1,7 @@
 // === CONFIGURAÇÃO MESTRE ===
 const CONFIG_MESTRE = {
-    ano: "pre",        
-    area: "pre",  
+    ano: "ano1",        
+    area: "portugues",  
     nomeJogo: "Chuva de Letras",
     categoriaAtiva: "maiusculas" // Define qual categoria carregar ao iniciar
 };
