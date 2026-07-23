@@ -16,19 +16,15 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
-        body { 
-            min-height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            background-color: #f0f2f5;
-        }
+        body { min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
 
-        /* --- 1. HEADER --- */
+        /* --- HEADER --- */
         header { 
             background: white; border-radius: 0 0 35px 35px;
             display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; 
             padding: 0 15px; height: 95px; z-index: 1000; flex-shrink: 0;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            margin-bottom: 20px;
         }
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         #header-icon { height: 70px; object-fit: contain; }
@@ -37,10 +33,10 @@
         #txt-titulo2 { font-weight: 800; font-size: 1.4rem; color: #8792a1; }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
         
-        .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--cor-dinamica); }
+        .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; transition: 0.2s; color: var(--cor-dinamica); }
         #icon-voltar-top { height: 42px; width: 42px; object-fit: contain; cursor: pointer; justify-self: end;}
 
-        /* MENU DROPDOWN */
+        /* --- MENU DROPDOWN (IGUAL AO ORIGINAL) --- */
         .menu-dropdown { 
             position: absolute; top: 85px; left: 15px; 
             display: none; flex-direction: column; gap: 8px; 
@@ -54,79 +50,71 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; 
             min-width: 230px; cursor: pointer;
         }
+        .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
+        .menu-item img { width: 28px; height: 28px; object-fit: contain; }
 
-        /* --- 2. MAIN (ESTRUTURA SOLICITADA) --- */
+        /* --- MAIN E DIVISÕES --- */
         main { 
             flex: 1; 
             display: flex; 
             flex-direction: column; 
+            padding: 0 20px; 
             width: 100%; 
             max-width: 950px; 
-            margin: 20px auto; 
-            padding: 0 15px;
+            margin: 0 auto; 
             gap: 20px;
         }
 
-        /* Divisão 1: Topo (Status) */
-        .main-topo-status {
-            background: white;
-            padding: 15px;
-            border-radius: 20px;
+        /* 1ª Divisão: Topo (Status) */
+        .main-topo { 
+            width: 100%; 
             text-align: center;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.02);
         }
-        .status-badge {
-            font-weight: 900;
-            text-transform: uppercase;
-            font-size: 1.2rem;
-            color: #1A499C;
+        .status-card {
+            background: white; padding: 15px; border-radius: 20px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
         }
+        .status-card h2 { font-size: 1.3rem; font-weight: 900; color: #1A499C; text-transform: uppercase; }
 
-        /* Divisão 2: Meio (Área de Jogo) */
-        .main-meio-jogo {
-            flex: 1; /* Faz esta área crescer e ocupar o centro */
+        /* 2ª Divisão: Meio (Área de Jogo) */
+        .main-meio { 
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
             background: white;
             border-radius: 35px;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            border: 4px solid white;
+            border: 2px solid #fff;
             min-height: 300px;
         }
-        .main-meio-jogo img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
+        .main-meio img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* Divisão 3: Fundo (Botão e Número) */
-        .main-fundo-controles {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding-bottom: 10px;
+        /* 3ª Divisão: Fundo (Botão e Número) */
+        .main-fundo { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            margin-bottom: 20px;
         }
-
         .num-circle { 
-            width: 60px; height: 60px; border-radius: 50%; 
+            width: 55px; height: 55px; border-radius: 50%; 
             border: 3px solid var(--cor-dinamica); color: var(--cor-dinamica); 
             display: flex; align-items: center; justify-content: center; 
-            font-weight: 900; font-size: 1.4rem; background: white;
+            font-weight: 900; font-size: 1.3rem; background: white;
         }
-        
         .btn-jogar { 
-            flex: 1; background: var(--cor-dinamica); color: white; padding: 18px; 
+            flex: 1; background: var(--cor-dinamica); color: white; padding: 16px; 
             border-radius: 25px; display: flex; align-items: center; justify-content: center; 
-            gap: 10px; font-weight: 900; font-size: 1.3rem; text-decoration: none;
-            transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            gap: 10px; font-weight: 900; font-size: 1.15rem; text-decoration: none;
+            transition: 0.3s;
         }
-        .btn-jogar:hover { transform: translateY(-3px); filter: brightness(1.1); }
+        .btn-jogar:hover { filter: brightness(1.1); transform: scale(1.02); }
 
-        /* --- 3. FOOTER --- */
+        /* --- FOOTER --- */
         footer { 
-            height: 50px; display: flex; align-items: center; justify-content: center;
+            height: 40px; display: flex; align-items: center; justify-content: center;
             background: white; border-radius: 35px 35px 0 0; 
             box-shadow: 0 -4px 15px rgba(0,0,0,0.03); flex-shrink: 0;
         }
@@ -150,29 +138,29 @@
         <img id="icon-voltar-top" src="" alt="Voltar" onclick="voltarPagina()">
     </header>
 
-    <main id="mainContainer">
+    <main>
         <!-- 1ª Divisão: Topo (Status) -->
-        <section class="main-topo-status">
-            <div class="status-badge" id="jogo-nome">CARREGANDO...</div>
+        <section class="main-topo">
+            <div class="status-card">
+                <h2 id="jogo-titulo">Carregando...</h2>
+            </div>
         </section>
 
         <!-- 2ª Divisão: Meio (Área de Jogo) -->
-        <section class="main-meio-jogo" id="jogo-area">
-            <!-- A imagem do jogo será inserida aqui via JS -->
+        <section class="main-meio" id="area-jogo-conteudo">
+            <!-- Imagem injetada via JS -->
         </section>
 
-        <!-- 3ª Divisão: Fundo (Controles) -->
-        <section class="main-fundo-controles">
+        <!-- 3ª Divisão: Fundo (Botão e Número) -->
+        <section class="main-fundo">
             <div class="num-circle" id="jogo-numero">1</div>
-            <a href="#" class="btn-jogar" id="jogo-link">
+            <a href="#" class="btn-jogar" id="btn-link-jogo">
                 <i class="fas fa-play"></i> JOGAR
             </a>
         </section>
     </main>
     
-    <footer>
-        <span class="footer-text" id="txt-rodape"></span>
-    </footer>
+    <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
     <script src="dados.js"></script>
     <script>
@@ -184,43 +172,37 @@
             menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex'; 
         }
 
-        window.onclick = () => { document.getElementById('dropdownMenu').style.display = 'none'; }
+        window.onclick = () => {
+            document.getElementById('dropdownMenu').style.display = 'none';
+        }
 
         window.onload = () => {
             const config = JOGO_CONFIG;
             const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
-            // Aplicação de Cores Temáticas
+            // Cores e Temas
             document.body.style.backgroundColor = bibTema.corPagina;
-            document.documentElement.style.setProperty('--cor-dinamica', bibTema.corPrimaria);
-            
-            // Header Info
-            document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
             document.getElementById('txt-titulo1').style.color = bibTema.corPrimaria;
+            document.documentElement.style.setProperty('--cor-dinamica', bibTema.corHamburger);
+
+            // Textos Header
+            document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
             document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = bibConteudo.sub;
+            document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
+            
+            // Icones Header
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
-            // Footer Info
-            document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
-
-            // Carregar dados do primeiro jogo disponível (Exemplo baseado na sua lista)
-            const primeiraFase = config.listaFases[0];
-            const primeiroJogo = primeiraFase.jogos[0];
-
-            if(primeiroJogo) {
-                document.getElementById('jogo-nome').innerText = primeiroJogo.nome;
-                document.getElementById('jogo-area').innerHTML = `<img src="${config.caminhoIconsJogos}${primeiroJogo.icon}" alt="Jogo">`;
-                document.getElementById('jogo-link').href = primeiroJogo.link;
-                document.getElementById('jogo-numero').innerText = "1";
-            }
-
-            // Menu Lateral (Dropdown)
+            // --- MENU HAMBÚRGUER (Restaurado e Completo) ---
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
+            // Limpa o menu antes de popular (segurança)
+            menuBox.innerHTML = '';
+
             Object.keys(config.links).forEach(key => {
                 if (config.iconesMenu[key]) {
                     const a = document.createElement('a');
@@ -229,6 +211,28 @@
                     menuBox.appendChild(a);
                 }
             });
+
+            // Botão Voltar dentro do Menu
+            const btnVoltarMenu = document.createElement('div');
+            btnVoltarMenu.className = 'menu-item';
+            btnVoltarMenu.onclick = (e) => { e.stopPropagation(); voltarPagina(); };
+            btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${bibTema.voltarMobile}"> <span style="color:${bibTema.corPrimaria}">VOLTAR</span>`;
+            menuBox.appendChild(btnVoltarMenu);
+
+            // --- CARREGAMENTO DO CONTEÚDO NO MAIN ---
+            // Pegando o primeiro jogo da lista para exemplificar o preenchimento
+            const faseAtual = config.listaFases[0];
+            const jogoAtual = faseAtual.jogos[0];
+
+            if(jogoAtual) {
+                document.getElementById('jogo-titulo').innerText = jogoAtual.nome;
+                document.getElementById('area-jogo-conteudo').innerHTML = `<img src="${config.caminhoIconsJogos}${jogoAtual.icon}">`;
+                document.getElementById('btn-link-jogo').href = jogoAtual.link;
+                document.getElementById('jogo-numero').innerText = "1";
+                
+                // Ajusta a cor do círculo e botão baseado na fase
+                document.documentElement.style.setProperty('--cor-dinamica', faseAtual.corEtiqueta);
+            }
         };
     </script>
 </body>
