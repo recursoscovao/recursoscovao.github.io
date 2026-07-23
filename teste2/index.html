@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pré-Escolar</title>
+    <title>Recursos Educativos</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
@@ -16,7 +16,7 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
-        body { min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; }
+        body { min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; padding-bottom: 20px; }
 
         /* HEADER */
         header { 
@@ -24,6 +24,7 @@
             display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; 
             padding: 0 15px; height: 95px; z-index: 1000; flex-shrink: 0;
             box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            margin-bottom: 30px;
         }
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         #header-icon { height: 70px; object-fit: contain; }
@@ -33,7 +34,6 @@
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
         
         .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; transition: 0.2s; }
-        .hamburger-btn:hover { transform: scale(1.1); }
         #icon-voltar-top { height: 42px; width: 42px; object-fit: contain; cursor: pointer; justify-self: end;}
 
         /* MENU DROPDOWN */
@@ -49,38 +49,25 @@
         .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
         .menu-item img { width: 28px; height: 28px; object-fit: contain; }
 
-        /* INTRODUÇÃO */
-        .sub-header { text-align: center; margin: 25px 0; flex-shrink: 0; padding: 0 15px; }
-        .intro-text { color: #1a4a7a; font-size: 1.4rem; font-weight: 800; display: inline-block; }
-        .intro-text span { position: relative; display: inline-block; }
-        .intro-text span::after { 
-            content: ""; position: absolute; left: 0; bottom: -8px; width: 100%; height: 10px; 
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 20' preserveAspectRatio='none'%3E%3Cpath d='M5,15 Q50,0 95,15' stroke='%23FFC107' stroke-width='6' fill='none' stroke-linecap='round'/%3E%3C/svg%3E"); 
-            background-size: 100% 100%; 
-        }
-
-        main { flex: 1; padding: 20px; width: 100%; max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
+        main { flex: 1; padding: 0 20px; width: 100%; max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
         
-        /* GRID ADAPTÁVEL E INTELIGENTE */
+        /* GRID E CARTÃO ADAPTÁVEL */
         .fase-wrapper { width: 100%; display: flex; justify-content: center; }
         .games-grid { width: 100%; display: flex; justify-content: center; }
 
         .game-card {
             background: white; border-radius: 35px; padding: 25px;
             display: flex; flex-direction: column; align-items: center;
-            text-decoration: none; 
             box-shadow: 0 10px 30px var(--fase-shadow); 
-            transition: 0.3s; border: 2px solid #fff;
-            /* Ocupa quase tudo no mobile e expande no PC */
+            border: 2px solid #fff;
             width: 90%; 
-            max-width: 900px; 
+            max-width: 950px; /* Alarga de forma inteligente no PC */
         }
-        .game-card:hover { transform: translateY(-5px); }
 
-        /* ESPAÇO ONDE FICARÁ O JOGO (AMPILADO) */
+        /* ÁREA DO JOGO */
         .card-image-area { 
             width: 100%; 
-            aspect-ratio: 16/9; /* Formato widescreen para o jogo */
+            aspect-ratio: 16/9; /* Espaço para o jogo */
             background: var(--fase-bg); 
             border-radius: 25px; 
             display: flex; 
@@ -89,18 +76,26 @@
             margin-bottom: 20px;
             overflow: hidden;
         }
-        .card-image-area img { width: 40%; height: 40%; object-fit: contain; opacity: 0.8; }
+        .card-image-area img { width: 30%; height: 30%; object-fit: contain; opacity: 0.6; }
 
-        .card-info h2 { font-size: 1.3rem; font-weight: 900; color: #1A499C; text-transform: uppercase; text-align: center; margin-bottom: 20px; }
+        .card-info h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; text-align: center; margin-bottom: 25px; }
         
         .card-footer { width: 100%; display: flex; align-items: center; gap: 15px; }
-        .num-circle { width: 50px; height: 50px; border-radius: 50%; border: 3px solid var(--fase-color); color: var(--fase-color); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.2rem; }
-        .btn-jogar { flex: 1; background: var(--fase-color); color: white; padding: 15px; border-radius: 25px; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; font-size: 1.1rem; }
+        .num-circle { width: 55px; height: 55px; border-radius: 50%; border: 3px solid var(--fase-color); color: var(--fase-color); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.3rem; }
+        
+        /* BOTÃO COM LINK */
+        .btn-jogar { 
+            flex: 1; background: var(--fase-color); color: white; padding: 16px; 
+            border-radius: 25px; display: flex; align-items: center; justify-content: center; 
+            gap: 10px; font-weight: 900; font-size: 1.15rem; text-decoration: none;
+            transition: 0.3s;
+        }
+        .btn-jogar:hover { filter: brightness(1.1); transform: scale(1.02); }
 
         footer { 
             height: 40px; display: flex; align-items: center; justify-content: center;
             background: white; border-radius: 35px 35px 0 0; 
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.03); margin-top: 20px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.03); margin-top: 30px;
         }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
     </style>
@@ -121,8 +116,6 @@
         <img id="icon-voltar-top" src="" alt="Voltar" onclick="voltarPagina()">
     </header>
 
-    <div class="sub-header"><div class="intro-text" id="txt-intro"></div></div>
-    
     <main id="mainContent"></main>
     
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
@@ -154,20 +147,12 @@
             document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
             document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = bibConteudo.sub;
-            
-            const textoIntro = bibConteudo.intro;
-            if (textoIntro.toLowerCase().includes("brinca")) {
-                document.getElementById('txt-intro').innerHTML = textoIntro.replace(/Brinca/i, "<span>Brinca</span>");
-            } else {
-                const palavras = textoIntro.split(' ');
-                const primeira = palavras.shift();
-                document.getElementById('txt-intro').innerHTML = `<span>${primeira}</span> ${palavras.join(' ')}`;
-            }
-            
             document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
+            
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
+            // Menu Dropdown
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
@@ -180,14 +165,9 @@
                 }
             });
 
-            const btnVoltarMenu = document.createElement('div');
-            btnVoltarMenu.className = 'menu-item';
-            btnVoltarMenu.onclick = (e) => { e.stopPropagation(); voltarPagina(); };
-            btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${bibTema.voltarMobile}"> <span>VOLTAR</span>`;
-            menuBox.appendChild(btnVoltarMenu);
-
             const mainContent = document.getElementById('mainContent');
             let numGlobal = 1;
+
             config.listaFases.forEach(fase => {
                 const wrapper = document.createElement('div');
                 wrapper.className = 'fase-wrapper';
@@ -195,8 +175,8 @@
                 grid.className = 'games-grid';
                 
                 fase.jogos.forEach(jogo => {
-                    const card = document.createElement('a');
-                    card.className = 'game-card'; card.href = jogo.link;
+                    const card = document.createElement('div');
+                    card.className = 'game-card';
                     
                     card.style.setProperty('--fase-color', fase.corEtiqueta);
                     card.style.setProperty('--fase-bg', fase.corEtiqueta + '15');
@@ -207,7 +187,7 @@
                         <div class="card-info"><h2>${jogo.nome}</h2></div>
                         <div class="card-footer">
                             <div class="num-circle">${numGlobal}</div>
-                            <div class="btn-jogar"><i class="fas fa-play"></i> JOGAR</div>
+                            <a href="${jogo.link}" class="btn-jogar"><i class="fas fa-play"></i> JOGAR</a>
                         </div>`;
                     grid.appendChild(card);
                     numGlobal++;
