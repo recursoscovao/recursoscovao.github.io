@@ -11,7 +11,7 @@
         :root {
             --text-grey: #8792a1;
             --menu-item-h: 55px;
-            --cor-dinamica: #E691A7; 
+            --cor-dinamica: #E691A7; /* Esta cor será substituída pela cor da seta voltar via JS */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
@@ -33,10 +33,10 @@
         #txt-titulo2 { font-weight: 800; font-size: 1.4rem; color: #8792a1; }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
         
-        .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; transition: 0.2s; color: var(--cor-dinamica); }
+        .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--cor-dinamica); }
         #icon-voltar-top { height: 42px; width: 42px; object-fit: contain; cursor: pointer; justify-self: end;}
 
-        /* --- MENU DROPDOWN (IGUAL AO ORIGINAL) --- */
+        /* --- MENU DROPDOWN --- */
         .menu-dropdown { 
             position: absolute; top: 85px; left: 15px; 
             display: none; flex-direction: column; gap: 8px; 
@@ -50,54 +50,31 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; 
             min-width: 230px; cursor: pointer;
         }
+        /* COR DO HOVER IGUAL À SETA VOLTAR */
         .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
         .menu-item img { width: 28px; height: 28px; object-fit: contain; }
 
-        /* --- MAIN E DIVISÕES --- */
+        /* --- MAIN DIVIDIDO EM 3 --- */
         main { 
-            flex: 1; 
-            display: flex; 
-            flex-direction: column; 
-            padding: 0 20px; 
-            width: 100%; 
-            max-width: 950px; 
-            margin: 0 auto; 
-            gap: 20px;
+            flex: 1; display: flex; flex-direction: column; 
+            padding: 0 20px; width: 100%; max-width: 950px; margin: 0 auto; gap: 20px;
         }
 
         /* 1ª Divisão: Topo (Status) */
-        .main-topo { 
-            width: 100%; 
-            text-align: center;
-        }
-        .status-card {
-            background: white; padding: 15px; border-radius: 20px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-        }
+        .main-topo { width: 100%; text-align: center; }
+        .status-card { background: white; padding: 15px; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.05); }
         .status-card h2 { font-size: 1.3rem; font-weight: 900; color: #1A499C; text-transform: uppercase; }
 
         /* 2ª Divisão: Meio (Área de Jogo) */
         .main-meio { 
-            flex: 1; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            background: white;
-            border-radius: 35px;
-            overflow: hidden;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            border: 2px solid #fff;
-            min-height: 300px;
+            flex: 1; display: flex; align-items: center; justify-content: center;
+            background: white; border-radius: 35px; overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05); border: 2px solid #fff; min-height: 300px;
         }
         .main-meio img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* 3ª Divisão: Fundo (Botão e Número) */
-        .main-fundo { 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            margin-bottom: 20px;
-        }
+        /* 3ª Divisão: Fundo (Controles) */
+        .main-fundo { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
         .num-circle { 
             width: 55px; height: 55px; border-radius: 50%; 
             border: 3px solid var(--cor-dinamica); color: var(--cor-dinamica); 
@@ -107,8 +84,7 @@
         .btn-jogar { 
             flex: 1; background: var(--cor-dinamica); color: white; padding: 16px; 
             border-radius: 25px; display: flex; align-items: center; justify-content: center; 
-            gap: 10px; font-weight: 900; font-size: 1.15rem; text-decoration: none;
-            transition: 0.3s;
+            gap: 10px; font-weight: 900; font-size: 1.15rem; text-decoration: none; transition: 0.3s;
         }
         .btn-jogar:hover { filter: brightness(1.1); transform: scale(1.02); }
 
@@ -116,7 +92,7 @@
         footer { 
             height: 40px; display: flex; align-items: center; justify-content: center;
             background: white; border-radius: 35px 35px 0 0; 
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.03); flex-shrink: 0;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.03);
         }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
     </style>
@@ -139,24 +115,15 @@
     </header>
 
     <main>
-        <!-- 1ª Divisão: Topo (Status) -->
         <section class="main-topo">
-            <div class="status-card">
-                <h2 id="jogo-titulo">Carregando...</h2>
-            </div>
+            <div class="status-card"><h2 id="jogo-titulo">Carregando...</h2></div>
         </section>
 
-        <!-- 2ª Divisão: Meio (Área de Jogo) -->
-        <section class="main-meio" id="area-jogo-conteudo">
-            <!-- Imagem injetada via JS -->
-        </section>
+        <section class="main-meio" id="area-jogo-conteudo"></section>
 
-        <!-- 3ª Divisão: Fundo (Botão e Número) -->
         <section class="main-fundo">
             <div class="num-circle" id="jogo-numero">1</div>
-            <a href="#" class="btn-jogar" id="btn-link-jogo">
-                <i class="fas fa-play"></i> JOGAR
-            </a>
+            <a href="#" class="btn-jogar" id="btn-link-jogo"><i class="fas fa-play"></i> JOGAR</a>
         </section>
     </main>
     
@@ -172,37 +139,31 @@
             menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex'; 
         }
 
-        window.onclick = () => {
-            document.getElementById('dropdownMenu').style.display = 'none';
-        }
+        window.onclick = () => { document.getElementById('dropdownMenu').style.display = 'none'; }
 
         window.onload = () => {
             const config = JOGO_CONFIG;
             const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
-            // Cores e Temas
+            // A "Cor da seta voltar" é o bibTema.corPrimaria
+            document.documentElement.style.setProperty('--cor-dinamica', bibTema.corPrimaria);
+            
             document.body.style.backgroundColor = bibTema.corPagina;
             document.getElementById('txt-titulo1').style.color = bibTema.corPrimaria;
-            document.documentElement.style.setProperty('--cor-dinamica', bibTema.corHamburger);
-
-            // Textos Header
             document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
             document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = bibConteudo.sub;
             document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
             
-            // Icones Header
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
-            // --- MENU HAMBÚRGUER (Restaurado e Completo) ---
+            // Menu Hambúrguer Completo
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
-            // Limpa o menu antes de popular (segurança)
             menuBox.innerHTML = '';
-
             Object.keys(config.links).forEach(key => {
                 if (config.iconesMenu[key]) {
                     const a = document.createElement('a');
@@ -212,26 +173,21 @@
                 }
             });
 
-            // Botão Voltar dentro do Menu
             const btnVoltarMenu = document.createElement('div');
             btnVoltarMenu.className = 'menu-item';
             btnVoltarMenu.onclick = (e) => { e.stopPropagation(); voltarPagina(); };
             btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${bibTema.voltarMobile}"> <span style="color:${bibTema.corPrimaria}">VOLTAR</span>`;
             menuBox.appendChild(btnVoltarMenu);
 
-            // --- CARREGAMENTO DO CONTEÚDO NO MAIN ---
-            // Pegando o primeiro jogo da lista para exemplificar o preenchimento
-            const faseAtual = config.listaFases[0];
-            const jogoAtual = faseAtual.jogos[0];
-
-            if(jogoAtual) {
-                document.getElementById('jogo-titulo').innerText = jogoAtual.nome;
-                document.getElementById('area-jogo-conteudo').innerHTML = `<img src="${config.caminhoIconsJogos}${jogoAtual.icon}">`;
-                document.getElementById('btn-link-jogo').href = jogoAtual.link;
-                document.getElementById('jogo-numero').innerText = "1";
-                
-                // Ajusta a cor do círculo e botão baseado na fase
-                document.documentElement.style.setProperty('--cor-dinamica', faseAtual.corEtiqueta);
+            // Conteúdo do Jogo (Exemplo: primeiro jogo da lista)
+            const fase = config.listaFases[0];
+            const jogo = fase.jogos[0];
+            if(jogo) {
+                document.getElementById('jogo-titulo').innerText = jogo.nome;
+                document.getElementById('area-jogo-conteudo').innerHTML = `<img src="${config.caminhoIconsJogos}${jogo.icon}">`;
+                document.getElementById('btn-link-jogo').href = jogo.link;
+                // Se quiser que o botão de jogar e o círculo sigam a cor da fase e não a do menu:
+                // document.documentElement.style.setProperty('--cor-dinamica', fase.corEtiqueta);
             }
         };
     </script>
