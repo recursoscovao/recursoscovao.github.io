@@ -7,80 +7,92 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --cor-primaria: #E691A7; --cor-escura: #D54267; --bg-page: #fff5f7; --bg-card: #ffffff; }
+        :root { --cor-primaria: #E691A7; --cor-escura: #D54267; --cor-hamburger: #E691A7; --bg-page: #fff5f7; --bg-card: #ffffff; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-page); min-height: 100vh; display: flex; flex-direction: column; transition: 0.3s; }
+        body { min-height: 100vh; display: flex; flex-direction: column; background-color: var(--bg-page); transition: 0.3s; }
 
         /* HEADER */
         header { 
             background: white; border-radius: 0 0 35px 35px;
-            display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; 
-            padding: 0 15px; height: 90px; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; 
+            padding: 0 15px; height: 90px; z-index: 3000; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            position: relative;
         }
         .header-center { display: flex; align-items: center; justify-content: center; gap: 10px; }
-        #header-icon { height: 60px; }
+        #header-icon { height: 55px; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
-        #txt-titulo1 { font-weight: 900; font-size: 1.4rem; color: var(--cor-primaria); }
-        #txt-titulo2 { font-weight: 800; font-size: 1.2rem; color: #8792a1; }
-        #txt-subtitulo-header { color: #8792a1; font-weight: 600; font-size: 0.65rem; margin-top: 4px; }
-        .hamburger-btn { background: none; border: none; font-size: 24px; color: #8792a1; cursor: pointer; }
-        #icon-voltar-top { height: 38px; cursor: pointer; justify-self: end; }
+        #txt-titulo1 { font-weight: 900; font-size: 1.35rem; color: var(--cor-primaria); }
+        #txt-titulo2 { font-weight: 800; font-size: 1.1rem; color: #8792a1; }
+        #txt-subtitulo-header { color: #8792a1; font-weight: 600; font-size: 0.6rem; margin-top: 4px; }
+        
+        .hamburger-btn { background: none; border: none; font-size: 28px; color: var(--cor-hamburger); cursor: pointer; }
+        #icon-voltar-top { height: 40px; cursor: pointer; justify-self: end; }
+
+        /* MENU DROPDOWN */
+        #menuDropdown {
+            position: absolute; top: 95px; left: 15px; background: white;
+            border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.15);
+            display: none; flex-direction: column; padding: 10px; z-index: 4000; min-width: 240px;
+        }
+        .menu-item {
+            display: flex; align-items: center; gap: 15px; padding: 12px 20px;
+            text-decoration: none; color: #5d7082; font-weight: 800; border-radius: 12px; transition: 0.2s;
+        }
+        .menu-item:hover { background: var(--bg-page); color: var(--cor-primaria); }
+        .menu-item img { width: 28px; height: 28px; object-fit: contain; }
 
         /* CONTENT */
-        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; width: 100%; max-width: 1400px; margin: 0 auto; }
 
-        /* CARD PRINCIPAL (DESIGN COM BORDAS COLORIDAS) */
+        /* CARD JOGO */
         .card-jogo {
             background: var(--bg-card); border: 4px solid var(--cor-primaria); border-radius: 45px;
-            padding: 35px; width: 100%; max-width: 550px; text-align: center;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.06); position: relative;
+            padding: 40px; width: 100%; max-width: 600px; text-align: center;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.05); position: relative;
         }
 
-        /* ECRÃ 1 */
-        .badge-facil { background: #e8f5e9; color: #4caf50; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 0.75rem; display: inline-flex; align-items: center; gap: 5px; margin-bottom: 15px; }
-        .img-circulo { width: 150px; height: 150px; background: white; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; border: 6px solid var(--cor-primaria); box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .img-circulo img { width: 70%; object-fit: contain; }
-        .game-title { font-size: 1.7rem; font-weight: 900; color: var(--cor-escura); text-transform: uppercase; margin-bottom: 8px; }
-        .game-desc { color: #5d7082; font-weight: 700; font-size: 0.95rem; margin-bottom: 25px; line-height: 1.4; }
-        .info-row { display: flex; justify-content: center; gap: 25px; margin-bottom: 30px; }
-        .info-box { display: flex; align-items: center; gap: 8px; text-align: left; font-size: 0.75rem; font-weight: 800; color: #5d7082; }
-        .info-box i { font-size: 1.3rem; color: #fbc02d; }
-        .btn-principal { background: var(--cor-escura); color: white; border: none; padding: 18px 60px; border-radius: 35px; font-weight: 900; font-size: 1.15rem; cursor: pointer; box-shadow: 0 8px 0 rgba(0,0,0,0.15); transition: 0.2s; display: inline-flex; align-items: center; gap: 10px; }
-        .btn-principal:active { transform: translateY(4px); box-shadow: 0 4px 0 rgba(0,0,0,0.15); }
+        /* RESPONSIVIDADE */
+        @media (max-width: 480px) { /* Telemóvel Vertical */
+            header { height: 85px; border-radius: 0; }
+            main { padding: 0; align-items: flex-start; }
+            .card-jogo { border: none; border-radius: 0; min-height: calc(100vh - 85px); max-width: none; padding: 30px 20px; }
+            footer { border-radius: 0 !important; }
+        }
 
-        /* ECRÃ 2 */
+        @media (min-width: 768px) and (max-width: 1024px) { /* Tablet */
+            .card-jogo { max-width: 700px; padding: 50px; }
+        }
+
+        /* COMPONENTES DO JOGO */
+        .img-circulo { width: 150px; height: 150px; background: white; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; border: 6px solid var(--cor-primaria); }
+        .img-circulo img { width: 70%; }
+        .game-title { font-size: 1.8rem; font-weight: 900; color: var(--cor-escura); text-transform: uppercase; margin-bottom: 10px; }
+        .game-desc { color: #5d7082; font-weight: 700; font-size: 0.95rem; margin-bottom: 30px; }
+        
         .top-status { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-        .progress-bar-bg { flex: 1; height: 14px; background: #eee; border-radius: 10px; margin: 0 15px; overflow: hidden; }
+        .progress-bar { flex: 1; height: 14px; background: #eee; border-radius: 10px; margin: 0 20px; overflow: hidden; }
         .progress-fill { height: 100%; background: var(--cor-primaria); width: 0%; transition: 0.4s; }
-        .pergunta { font-size: 1.5rem; font-weight: 900; color: #1a4a7a; margin-bottom: 15px; }
+
         .target-box { background: white; border-radius: 25px; padding: 15px; border: 3px dashed var(--cor-primaria); display: inline-block; margin-bottom: 30px; }
-        .target-box span { font-size: 4rem; font-weight: 900; color: var(--cor-escura); line-height: 1; }
-        .options-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
-        .opt-card { background: white; border-radius: 20px; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; font-size: 2.3rem; font-weight: 900; color: #5d7082; cursor: pointer; border: 2px solid transparent; box-shadow: 0 6px 0 #f0f0f0; transition: 0.2s; }
-        .opt-card.correct { background: #e8f5e9; border-color: #4caf50; color: #4caf50; box-shadow: 0 6px 0 #388e3c; }
-        .opt-card.wrong { background: #ffebee; border-color: #f44336; color: #f44336; box-shadow: 0 6px 0 #d32f2f; }
+        .target-box span { font-size: 4.5rem; font-weight: 900; color: var(--cor-escura); line-height: 1; }
 
-        /* ECRÃ 3 */
-        .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin: 25px 0; }
-        .stat-card { background: #f8f9fa; padding: 15px 5px; border-radius: 20px; }
-        .stat-val { display: block; font-size: 1.5rem; font-weight: 900; }
-        .stat-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; color: #8792a1; }
-        .btn-stack { display: flex; flex-direction: column; gap: 10px; width: 100%; }
-        .btn-outline { background: white; border: 2px solid #f0f0f0; padding: 12px; border-radius: 25px; font-weight: 800; color: #8792a1; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .options-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
+        @media (max-width: 600px) { .options-grid { grid-template-columns: repeat(2, 1fr); } }
 
-        /* FOOTER */
-        footer { height: 45px; background: white; border-radius: 35px 35px 0 0; display: flex; align-items: center; justify-content: center; margin-top: auto; box-shadow: 0 -4px 15px rgba(0,0,0,0.02); }
-        .footer-text { color: #8792a1; font-size: 0.8rem; font-weight: 700; }
-
-        @media (max-width: 600px) {
-            .options-grid { grid-template-columns: repeat(2, 1fr); }
-            .card-jogo { padding: 25px; border-radius: 35px; }
+        .opt-btn { 
+            background: white; border-radius: 20px; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; 
+            font-size: 2.2rem; font-weight: 900; color: #5d7082; cursor: pointer; border: 2px solid transparent; box-shadow: 0 6px 0 #f0f0f0; 
         }
+        .opt-btn.correct { background: #e8f5e9; border-color: #4caf50; color: #4caf50; box-shadow: 0 6px 0 #388e3c; }
+        .opt-btn.wrong { background: #ffebee; border-color: #f44336; color: #f44336; box-shadow: 0 6px 0 #d32f2f; }
+
+        footer { height: 45px; background: white; border-radius: 35px 35px 0 0; display: flex; align-items: center; justify-content: center; z-index: 10; margin-top: auto; }
     </style>
 </head>
 <body>
     <header>
-        <button class="hamburger-btn"><i class="fas fa-bars"></i></button>
+        <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
+        <div id="menuDropdown"></div>
         <div class="header-center">
             <img id="header-icon" src="">
             <div class="title-group">
@@ -94,9 +106,17 @@
 
     <main id="game-stage"></main>
 
-    <footer><span id="txt-rodape" class="footer-text"></span></footer>
+    <footer><span id="txt-rodape" style="color:#8792a1; font-weight:700; font-size:0.75rem;"></span></footer>
 
     <script src="dados.js"></script>
     <script src="jogo.js"></script>
+    <script>
+        function toggleMenu(e) {
+            e.stopPropagation();
+            const menu = document.getElementById('menuDropdown');
+            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+        }
+        window.onclick = () => document.getElementById('menuDropdown').style.display = 'none';
+    </script>
 </body>
 </html>
