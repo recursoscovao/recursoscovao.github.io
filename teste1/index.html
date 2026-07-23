@@ -3,118 +3,114 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pequenos Curiosos - Jogo</title>
+    <title>Pequenos Curiosos</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --cor-primaria: #E691A7; --cor-escura: #D54267; --cor-hamburger: #E691A7; --bg-page: #fff5f7; --bg-card: #ffffff; }
-        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { min-height: 100vh; display: flex; flex-direction: column; background-color: var(--bg-page); transition: 0.3s; }
+        :root { --cor-primaria: #E691A7; --cor-escura: #D54267; --bg-page: #fff5f7; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
+        body { background-color: var(--bg-page); min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; position: relative; }
+
+        /* DECORAÇÃO FLORES */
+        .decor-flower { position: fixed; bottom: 0; width: 220px; z-index: -1; pointer-events: none; opacity: 0.8; }
+        .flower-left { left: 0; }
+        .flower-right { right: 0; transform: scaleX(-1); }
 
         /* HEADER */
         header { 
-            background: white; border-radius: 0 0 35px 35px;
-            display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; 
-            padding: 0 15px; height: 90px; z-index: 3000; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
-            position: relative;
+            background: white; height: 90px; padding: 0 25px; display: flex; align-items: center; justify-content: space-between;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.03); border-radius: 0 0 35px 35px; z-index: 100;
         }
-        .header-center { display: flex; align-items: center; justify-content: center; gap: 10px; }
-        #header-icon { height: 55px; }
-        .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
-        #txt-titulo1 { font-weight: 900; font-size: 1.35rem; color: var(--cor-primaria); }
-        #txt-titulo2 { font-weight: 800; font-size: 1.1rem; color: #8792a1; }
-        #txt-subtitulo-header { color: #8792a1; font-weight: 600; font-size: 0.6rem; margin-top: 4px; }
-        
-        .hamburger-btn { background: none; border: none; font-size: 28px; color: var(--cor-hamburger); cursor: pointer; }
-        #icon-voltar-top { height: 40px; cursor: pointer; justify-self: end; }
+        .header-center { display: flex; align-items: center; gap: 15px; }
+        .header-center img { height: 60px; }
+        .title-group { line-height: 1.1; }
+        .t1 { font-weight: 900; color: var(--cor-primaria); font-size: 1.4rem; }
+        .t2 { font-weight: 800; color: #8792a1; font-size: 1.2rem; }
+        .sub-h { font-size: 0.75rem; color: #8792a1; font-weight: 700; }
+
+        .btn-ham { background: none; border: none; font-size: 26px; color: var(--cor-primaria); cursor: pointer; }
+        .btn-voltar-top { 
+            background: var(--cor-primaria); color: white; padding: 10px 20px; border-radius: 25px; 
+            text-decoration: none; font-weight: 900; font-size: 0.85rem; display: flex; align-items: center; gap: 8px;
+        }
 
         /* MENU DROPDOWN */
-        #menuDropdown {
-            position: absolute; top: 95px; left: 15px; background: white;
-            border-radius: 20px; box-shadow: 0 15px 40px rgba(0,0,0,0.15);
-            display: none; flex-direction: column; padding: 10px; z-index: 4000; min-width: 240px;
+        .menu-drop { 
+            position: absolute; top: 95px; left: 25px; background: white; border-radius: 20px; 
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1); display: none; flex-direction: column; padding: 10px; z-index: 1000;
         }
-        .menu-item {
-            display: flex; align-items: center; gap: 15px; padding: 12px 20px;
-            text-decoration: none; color: #5d7082; font-weight: 800; border-radius: 12px; transition: 0.2s;
+        .menu-item { padding: 12px 20px; text-decoration: none; color: #555; font-weight: 800; display: flex; align-items: center; gap: 12px; border-radius: 12px; }
+        .menu-item:hover { background: var(--bg-page); color: var(--cor-escura); }
+        .menu-item img { width: 25px; }
+
+        /* ÁREA DE JOGO */
+        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
+        #game-stage { width: 100%; max-width: 900px; height: 100%; display: flex; align-items: center; justify-content: center; }
+
+        .game-card { background: white; border-radius: 40px; padding: 40px; width: 100%; box-shadow: 0 15px 50px rgba(0,0,0,0.05); text-align: center; }
+
+        /* STATUS JOGO */
+        .status-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 25px; }
+        .st-pill { background: #f8f9fa; padding: 6px 15px; border-radius: 20px; font-weight: 800; font-size: 0.9rem; color: #555; display: flex; align-items: center; gap: 8px; }
+        .st-green { background: #e8f5e9; color: #2e7d32; }
+        .st-red { background: #ffebee; color: #c62828; }
+
+        /* ELEMENTOS VISUAIS */
+        .target-box { width: 140px; height: 140px; border: 2px solid #eee; border-radius: 25px; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; position: relative; }
+        .target-box img { width: 80%; }
+        .target-box span { font-size: 4.5rem; font-weight: 900; color: var(--cor-escura); }
+
+        .options-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 30px; }
+        .opt-btn { background: white; border: 2px solid #f0f0f0; border-radius: 20px; aspect-ratio: 1.1; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+        .opt-btn:hover { transform: translateY(-5px); border-color: var(--cor-primaria); }
+        .opt-btn img { width: 70%; }
+        .opt-btn span { font-size: 2.5rem; font-weight: 900; }
+
+        /* BOTÕES GERAIS */
+        .btn-p { background: var(--cor-escura); color: white; border: none; padding: 18px 60px; border-radius: 35px; font-weight: 900; font-size: 1.2rem; cursor: pointer; box-shadow: 0 8px 0 rgba(0,0,0,0.1); width: fit-content; margin: 10px auto; display: block; }
+        .btn-s { background: white; color: var(--cor-primaria); border: 2px solid var(--cor-primaria); padding: 12px 40px; border-radius: 30px; font-weight: 800; cursor: pointer; width: 100%; max-width: 300px; margin: 8px auto; display: block; }
+
+        /* RESPONSIVO MOBILE */
+        @media (max-width: 768px) {
+            .options-grid { grid-template-columns: repeat(2, 1fr); }
+            header { height: 75px; padding: 0 15px; }
+            .t1, .t2 { font-size: 1.1rem; }
+            .btn-voltar-top span { display: none; }
+            .btn-voltar-top { width: 45px; height: 45px; padding: 0; justify-content: center; border-radius: 50%; }
+            .game-card { padding: 25px; border-radius: 30px; }
         }
-        .menu-item:hover { background: var(--bg-page); color: var(--cor-primaria); }
-        .menu-item img { width: 28px; height: 28px; object-fit: contain; }
-
-        /* CONTENT */
-        main { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; width: 100%; max-width: 1400px; margin: 0 auto; }
-
-        /* CARD JOGO */
-        .card-jogo {
-            background: var(--bg-card); border: 4px solid var(--cor-primaria); border-radius: 45px;
-            padding: 40px; width: 100%; max-width: 600px; text-align: center;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.05); position: relative;
-        }
-
-        /* RESPONSIVIDADE */
-        @media (max-width: 480px) { /* Telemóvel Vertical */
-            header { height: 85px; border-radius: 0; }
-            main { padding: 0; align-items: flex-start; }
-            .card-jogo { border: none; border-radius: 0; min-height: calc(100vh - 85px); max-width: none; padding: 30px 20px; }
-            footer { border-radius: 0 !important; }
-        }
-
-        @media (min-width: 768px) and (max-width: 1024px) { /* Tablet */
-            .card-jogo { max-width: 700px; padding: 50px; }
-        }
-
-        /* COMPONENTES DO JOGO */
-        .img-circulo { width: 150px; height: 150px; background: white; border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; border: 6px solid var(--cor-primaria); }
-        .img-circulo img { width: 70%; }
-        .game-title { font-size: 1.8rem; font-weight: 900; color: var(--cor-escura); text-transform: uppercase; margin-bottom: 10px; }
-        .game-desc { color: #5d7082; font-weight: 700; font-size: 0.95rem; margin-bottom: 30px; }
-        
-        .top-status { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
-        .progress-bar { flex: 1; height: 14px; background: #eee; border-radius: 10px; margin: 0 20px; overflow: hidden; }
-        .progress-fill { height: 100%; background: var(--cor-primaria); width: 0%; transition: 0.4s; }
-
-        .target-box { background: white; border-radius: 25px; padding: 15px; border: 3px dashed var(--cor-primaria); display: inline-block; margin-bottom: 30px; }
-        .target-box span { font-size: 4.5rem; font-weight: 900; color: var(--cor-escura); line-height: 1; }
-
-        .options-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-        @media (max-width: 600px) { .options-grid { grid-template-columns: repeat(2, 1fr); } }
-
-        .opt-btn { 
-            background: white; border-radius: 20px; aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; 
-            font-size: 2.2rem; font-weight: 900; color: #5d7082; cursor: pointer; border: 2px solid transparent; box-shadow: 0 6px 0 #f0f0f0; 
-        }
-        .opt-btn.correct { background: #e8f5e9; border-color: #4caf50; color: #4caf50; box-shadow: 0 6px 0 #388e3c; }
-        .opt-btn.wrong { background: #ffebee; border-color: #f44336; color: #f44336; box-shadow: 0 6px 0 #d32f2f; }
-
-        footer { height: 45px; background: white; border-radius: 35px 35px 0 0; display: flex; align-items: center; justify-content: center; z-index: 10; margin-top: auto; }
     </style>
 </head>
 <body>
+
+    <img src="https://pequenoscuriosos.pt/assets/img/decor-flores.png" class="decor-flower flower-left" alt="">
+    <img src="https://pequenoscuriosos.pt/assets/img/decor-flores.png" class="decor-flower flower-right" alt="">
+
     <header>
-        <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
-        <div id="menuDropdown"></div>
+        <button class="btn-ham" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
+        <div id="menuDropdown" class="menu-drop"></div>
         <div class="header-center">
-            <img id="header-icon" src="">
+            <img id="header-icon" src="" alt="">
             <div class="title-group">
-                <div id="txt-titulo1"></div>
-                <div id="txt-titulo2"></div>
-                <div id="txt-subtitulo-header"></div>
+                <div class="t1" id="txt-t1"></div>
+                <div class="t2" id="txt-t2"></div>
+                <div class="sub-h" id="txt-sub"></div>
             </div>
         </div>
-        <img id="icon-voltar-top" src="" onclick="window.history.back()">
+        <a href="../" class="btn-voltar-top"><i class="fas fa-arrow-left"></i> <span>VOLTAR</span></a>
     </header>
 
-    <main id="game-stage"></main>
-
-    <footer><span id="txt-rodape" style="color:#8792a1; font-weight:700; font-size:0.75rem;"></span></footer>
+    <main>
+        <div id="game-stage"></div>
+    </main>
 
     <script src="dados.js"></script>
     <script src="jogo.js"></script>
     <script>
         function toggleMenu(e) {
             e.stopPropagation();
-            const menu = document.getElementById('menuDropdown');
-            menu.style.display = menu.style.display === 'flex' ? 'none' : 'flex';
+            const m = document.getElementById('menuDropdown');
+            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex';
         }
         window.onclick = () => document.getElementById('menuDropdown').style.display = 'none';
     </script>
