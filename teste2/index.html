@@ -33,11 +33,15 @@
         #txt-titulo2 { font-weight: 800; font-size: 1.4rem; color: #8792a1; }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
         
-        .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; transition: 0.2s; }
+        .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; transition: 0.2s; color: var(--cor-dinamica); }
         #icon-voltar-top { height: 42px; width: 42px; object-fit: contain; cursor: pointer; justify-self: end;}
 
-        /* MENU DROPDOWN */
-        .menu-dropdown { position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 8px; z-index: 2000; }
+        /* MENU DROPDOWN COMPLETO */
+        .menu-dropdown { 
+            position: absolute; top: 85px; left: 15px; 
+            display: none; flex-direction: column; gap: 8px; 
+            z-index: 2000; 
+        }
         .menu-item { 
             display: flex; align-items: center; gap: 12px; 
             height: var(--menu-item-h); padding: 0 20px;
@@ -51,7 +55,7 @@
 
         main { flex: 1; padding: 0 20px; width: 100%; max-width: 1400px; margin: 0 auto; display: flex; flex-direction: column; align-items: center; }
         
-        /* GRID E CARTÃO ADAPTÁVEL */
+        /* CARTÃO ADAPTÁVEL PC / MOBILE */
         .fase-wrapper { width: 100%; display: flex; justify-content: center; }
         .games-grid { width: 100%; display: flex; justify-content: center; }
 
@@ -60,14 +64,14 @@
             display: flex; flex-direction: column; align-items: center;
             box-shadow: 0 10px 30px var(--fase-shadow); 
             border: 2px solid #fff;
-            width: 90%; 
-            max-width: 950px; /* Alarga de forma inteligente no PC */
+            width: 95%; 
+            max-width: 950px; /* Alarga no PC */
         }
 
-        /* ÁREA DO JOGO */
+        /* ÁREA DO JOGO (ONDE FICARÁ O JOGO) */
         .card-image-area { 
             width: 100%; 
-            aspect-ratio: 16/9; /* Espaço para o jogo */
+            aspect-ratio: 16/9; 
             background: var(--fase-bg); 
             border-radius: 25px; 
             display: flex; 
@@ -76,14 +80,13 @@
             margin-bottom: 20px;
             overflow: hidden;
         }
-        .card-image-area img { width: 30%; height: 30%; object-fit: contain; opacity: 0.6; }
+        .card-image-area img { width: 25%; height: 25%; object-fit: contain; opacity: 0.5; }
 
         .card-info h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; text-align: center; margin-bottom: 25px; }
         
         .card-footer { width: 100%; display: flex; align-items: center; gap: 15px; }
         .num-circle { width: 55px; height: 55px; border-radius: 50%; border: 3px solid var(--fase-color); color: var(--fase-color); display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.3rem; }
         
-        /* BOTÃO COM LINK */
         .btn-jogar { 
             flex: 1; background: var(--fase-color); color: white; padding: 16px; 
             border-radius: 25px; display: flex; align-items: center; justify-content: center; 
@@ -103,8 +106,14 @@
 <body>
 
     <header>
-        <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
+        <!-- BOTÃO HAMBURGUER -->
+        <button class="hamburger-btn" onclick="toggleMenu(event)">
+            <i class="fas fa-bars"></i>
+        </button>
+        
+        <!-- CONTAINER DO MENU -->
         <div id="dropdownMenu" class="menu-dropdown"></div>
+
         <div class="header-center">
             <img id="header-icon" src="" alt="">
             <div class="title-group">
@@ -124,24 +133,26 @@
     <script>
         function voltarPagina() { window.location.href = '../'; }
 
+        // Lógica de abrir/fechar menu
         function toggleMenu(e) { 
             if(e) e.stopPropagation(); 
             const menu = document.getElementById('dropdownMenu');
             menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex'; 
         }
-        window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
+
+        // Fechar menu ao clicar fora
+        window.onclick = () => {
+            document.getElementById('dropdownMenu').style.display = 'none';
+        }
 
         window.onload = () => {
             const config = JOGO_CONFIG;
             const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
+            // Aplicação de Cores
             document.body.style.backgroundColor = bibTema.corPagina;
             document.getElementById('txt-titulo1').style.color = bibTema.corPrimaria;
-            document.getElementById('txt-titulo2').style.color = "#8792A1"; 
-            
-            const btnHam = document.querySelector('.hamburger-btn');
-            btnHam.style.color = bibTema.corHamburger;
             document.documentElement.style.setProperty('--cor-dinamica', bibTema.corHamburger);
 
             document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
@@ -152,19 +163,29 @@
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
-            // Menu Dropdown
+            // MONTAGEM DO MENU HAMBURGUER
             const menuBox = document.getElementById('dropdownMenu');
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
             
+            // Itens de Navegação
             Object.keys(config.links).forEach(key => {
                 if (config.iconesMenu[key]) {
                     const a = document.createElement('a');
-                    a.className = 'menu-item'; a.href = config.links[key];
+                    a.className = 'menu-item'; 
+                    a.href = config.links[key];
                     a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
                     menuBox.appendChild(a);
                 }
             });
 
+            // Botão VOLTAR dentro do Menu
+            const btnVoltarMenu = document.createElement('div');
+            btnVoltarMenu.className = 'menu-item';
+            btnVoltarMenu.onclick = (e) => { e.stopPropagation(); voltarPagina(); };
+            btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${bibTema.voltarMobile}"> <span style="color:${bibTema.corPrimaria}">VOLTAR</span>`;
+            menuBox.appendChild(btnVoltarMenu);
+
+            // MONTAGEM DO CARTÃO ÚNICO
             const mainContent = document.getElementById('mainContent');
             let numGlobal = 1;
 
@@ -183,11 +204,17 @@
                     card.style.setProperty('--fase-shadow', fase.corEtiqueta + '33'); 
 
                     card.innerHTML = `
-                        <div class="card-image-area"><img src="${config.caminhoIconsJogos}${jogo.icon}"></div>
-                        <div class="card-info"><h2>${jogo.nome}</h2></div>
+                        <div class="card-image-area">
+                            <img src="${config.caminhoIconsJogos}${jogo.icon}">
+                        </div>
+                        <div class="card-info">
+                            <h2>${jogo.nome}</h2>
+                        </div>
                         <div class="card-footer">
                             <div class="num-circle">${numGlobal}</div>
-                            <a href="${jogo.link}" class="btn-jogar"><i class="fas fa-play"></i> JOGAR</a>
+                            <a href="${jogo.link}" class="btn-jogar">
+                                <i class="fas fa-play"></i> JOGAR
+                            </a>
                         </div>`;
                     grid.appendChild(card);
                     numGlobal++;
