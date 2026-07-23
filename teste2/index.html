@@ -71,9 +71,10 @@
             min-height: 300px;
             border: 2px solid #fff;
             
-            /* SOMBRA MENOS ACENTUADA: 
-               Reduzi o desfoque e usei color-mix para dar 30% de opacidade à cor */
-            box-shadow: 0 6px 20px -8px color-mix(in srgb, var(--cor-dinamica), transparent 70%); 
+            /* SOMBRA INTERMÉDIA EM TODO O LIMITE:
+               0 0 no início significa sem deslocamento (espalha para todos os lados igualmente)
+               O uso do color-mix com 50% garante que a sombra seja visível mas não pesada */
+            box-shadow: 0 0 20px 2px color-mix(in srgb, var(--cor-dinamica), transparent 50%); 
         }
         .main-meio img { width: 100%; height: 100%; object-fit: cover; }
 
@@ -152,7 +153,6 @@
             const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
-            // Aplica a cor do tema à variável dinâmica
             document.documentElement.style.setProperty('--cor-dinamica', bibTema.corPrimaria);
             
             document.body.style.backgroundColor = bibTema.corPagina;
@@ -185,7 +185,6 @@
             btnVoltarMenu.innerHTML = `<img src="${config.caminhoIconsMenu}${bibTema.voltarMobile}"> <span style="color:${bibTema.corPrimaria}">VOLTAR</span>`;
             menuBox.appendChild(btnVoltarMenu);
 
-            // Conteúdo Inicial
             const fase = config.listaFases[0];
             const jogo = fase.jogos[0];
             if(jogo) {
