@@ -42,6 +42,7 @@
             text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 230px; cursor: pointer;
         }
+        .menu-item img { height: 30px; width: 30px; object-fit: contain; }
         .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
 
         /* --- MAIN (O CARTÃO BRANCO) --- */
@@ -53,20 +54,17 @@
             overflow: hidden;
         }
 
-        /* VISTAS: Garantem que ocupam 100% da altura do main */
         .view-container { display: none; flex-direction: column; height: 100%; flex: 1; }
         .view-active { display: flex; }
 
-        /* ZONAS DO CARTÃO */
+        /* ESTRUTURA DOS CARDS */
         .card-topo { flex-shrink: 0; text-align: center; padding-bottom: 15px; border-bottom: 1px dashed #eee; margin-bottom: 15px; }
         .card-topo h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; }
 
-        /* card-meio: O Segredo. flex: 1 faz com que ele cresça e empurre o fundo para baixo */
         .card-meio { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 20px; background: #fdfdfd; }
         .card-meio img { max-width: 100%; max-height: 100%; object-fit: contain; }
         #iframe-jogo { width: 100%; height: 100%; border: none; border-radius: 20px; }
 
-        /* card-fundo: Sempre no final do contentor */
         .card-fundo { flex-shrink: 0; display: flex; align-items: center; gap: 15px; padding-top: 20px; }
 
         /* BOTÕES */
@@ -150,9 +148,7 @@
             <div class="card-topo"><h2>RESULTADOS</h2></div>
             <div class="card-meio">
                 <div class="resultados-corpo">
-                    <div class="stars">
-                        <i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i>
-                    </div>
+                    <div class="stars"><i class="fas fa-star"></i><i class="fas fa-star"></i><i class="fas fa-star"></i></div>
                     <div class="feedback-txt">PARABÉNS!</div>
                     <p>Completaste o desafio com sucesso.</p>
                 </div>
@@ -175,16 +171,16 @@
 
     <script src="dados.js"></script>
     <script>
+        // Função para trocar de ecrã (App Style)
         function mudarEcra(id) {
             document.querySelectorAll('.view-container').forEach(v => v.classList.remove('view-active'));
             document.getElementById('view-' + id).classList.add('view-active');
 
             const iframe = document.getElementById('iframe-jogo');
-            const config = JOGO_CONFIG;
-            const jogo = config.listaFases[0].jogos[0];
+            const jogo = JOGO_CONFIG.listaFases[0].jogos[0];
 
             if(id === 'jogo') {
-                iframe.src = jogo.link;
+                iframe.src = JOGO_CONFIG.listaFases[0].jogos[0].link;
                 document.querySelector('footer').style.display = 'none';
             } else {
                 iframe.src = "";
@@ -203,37 +199,49 @@
 
         window.onload = () => {
             const config = JOGO_CONFIG;
-            const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
+            
+            // Correção caso haja erro de digitação no anoAtivo do ficheiro dados.js
+            const anoKey = config.anoAtivo === "amo1" ? "ano1" : config.anoAtivo;
+            
+            const bibConteudo = BIBLIOTECA_CONTEUDO[anoKey][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
+            // 1. Cores e Temas
             document.documentElement.style.setProperty('--cor-dinamica', bibTema.corPrimaria);
             document.body.style.backgroundColor = bibTema.corPagina;
             document.getElementById('txt-titulo1').style.color = bibTema.corPrimaria;
+            
+            // 2. Textos do Header e Rodapé
             document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
             document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = bibConteudo.sub;
             document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
             
-            document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
+            // 3. Ícones do Header
+            document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[anoKey];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
+            // 4. Popular Menu Dropdown dinamicamente
             const menuBox = document.getElementById('dropdownMenu');
             menuBox.innerHTML = '';
             Object.keys(config.links).forEach(key => {
                 if (config.iconesMenu[key]) {
                     const a = document.createElement('a');
                     a.className = 'menu-item'; a.href = config.links[key];
-                    a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${key}</span>`;
+                    a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${key.toUpperCase()}</span>`;
                     menuBox.appendChild(a);
                 }
             });
 
-            const jogo = config.listaFases[0].jogos[0];
-            if(jogo) {
-                document.getElementById('jogo-titulo').innerText = jogo.nome;
-                document.getElementById('jogo-titulo-exec').innerText = jogo.nome;
-                document.getElementById('area-jogo-conteudo').innerHTML = `<img src="${config.caminhoIconsJogos}${jogo.icon}">`;
-                if(jogo.info) document.getElementById('info-texto').innerHTML = jogo.info;
+            // 5. Dados do Jogo Ativo (ListaFases -> Jogos)
+            const jogoAtivo = config.listaFases[0].jogos[0];
+            if(jogoAtivo) {
+                document.getElementById('jogo-titulo').innerText = jogoAtivo.nome;
+                document.getElementById('jogo-titulo-exec').innerText = jogoAtivo.nome;
+                document.getElementById('area-jogo-conteudo').innerHTML = `<img src="${config.caminhoIconsJogos}${jogoAtivo.icon}">`;
+                
+                // Se o jogo tiver info ou desc, coloca no overlay
+                document.getElementById('info-texto').innerHTML = `<p>${jogoAtivo.desc || "Sem descrição disponível."}</p>`;
             }
         };
     </script>
