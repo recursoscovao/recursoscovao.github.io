@@ -11,6 +11,9 @@ const BIBLIOTECA_TEMAS = {
 };
 
 const BIBLIOTECA_CONTEUDO = {
+    "jd": {
+        "jd": { t1: "Jogos em", t2: "Destaque", sub: "Recursos Especiais", intro: "Descobre os nossos jogos mais populares!", rodape: "&copy; Pequenos Curiosos - Recursos Educativos" }
+    },
     "pre": {
         "pre": { t1: "Pequenos", t2: "Curiosos", sub: "Atividades | Pré-Escolar", intro: "Brinca com os números, as cores e as formas!", rodape: "&copy; Pequenos Curiosos - Recursos Educativos" },
         "jd": { t1: "Jogos em", t2: "Destaque", sub: "Desafios | Pré-Escolar", intro: "Diverte-te com estes jogos especiais!", rodape: "&copy; Pequenos Curiosos - Recursos Educativos" }
@@ -42,18 +45,24 @@ const BIBLIOTECA_CONTEUDO = {
 };
 
 const JOGO_CONFIG = {
-    areaAtiva: "jd", // Alterado para jd para testares
-    anoAtivo: "jd",   // Alterado para jd para carregar o icondestaque.png
+    areaAtiva: "jd", 
+    anoAtivo: "jd",  // Ao colocar "jd" aqui, o script principal buscará iconesMenu["jd"]      
     caminhoIconsMenu: "../icons/", 
     caminhoIconsJogos: "iconjogos/",
     iconesMenu: {
-        home: "home.png", pre: "iconpre.png", ano1: "icon1.png", 
-        ano2: "icon2.png", ano3: "icon3.png", ano4: "icon4.png", 
-        jd: "icondestaque.png", voltar: "voltar.png"
+        home: "home.png", 
+        pre: "iconpre.png", 
+        jd: "icondestaque.png", // Icone solicitado
+        ano1: "icon1.png", 
+        ano2: "icon2.png", 
+        ano3: "icon3.png", 
+        ano4: "icon4.png", 
+        voltar: "voltar.png"
     },
     links: {
         home: "/", 
         pre: "/pre",
+        jd: "/destaques",
         ano1: "/1",
         ano2: "/2",
         ano3: "/3",
@@ -61,7 +70,7 @@ const JOGO_CONFIG = {
     },
     listaFases: [
         {
-            tituloFase: "JOGOS EM DESTAQUE",
+            tituloFase: "DESTAQUES DO MÊS",
             corEtiqueta: "#6c757d", 
             jogos: [
                 { 
