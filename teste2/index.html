@@ -44,27 +44,31 @@
         }
         .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
 
-        /* --- MAIN (CARTÃO ÚNICO) --- */
+        /* --- MAIN (CONTENTOR DE TELAS) --- */
         main { 
             flex: 1; display: flex; flex-direction: column; background: white; 
             margin: 0 20px 20px 20px; padding: 25px; border-radius: 35px; border: 2px solid #fff; 
             max-width: 950px; align-self: center; width: calc(100% - 40px);
             box-shadow: 0 0 20px 2px color-mix(in srgb, var(--cor-dinamica), transparent 50%);
+            position: relative; overflow: hidden;
         }
 
+        /* Vistas (Containers de conteúdo) */
+        .view-container { display: none; flex-direction: column; height: 100%; width: 100%; }
+        .view-active { display: flex; }
+
+        /* --- ESTILO DOS CARDS (Comum a Apresentação e Resultados) --- */
         .card-topo { width: 100%; text-align: center; padding-bottom: 15px; border-bottom: 1px dashed #eee; margin-bottom: 15px; }
         .card-topo h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; }
-
         .card-meio { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 20px; background: #fdfdfd; }
         .card-meio img { width: 100%; height: 100%; object-fit: contain; max-height: 400px; }
-
         .card-fundo { display: flex; align-items: center; gap: 15px; padding-top: 20px; }
 
-        /* Botão i em itálico */
+        /* Botões */
         .btn-info { 
             width: 60px; height: 60px; border-radius: 50%; border: 3px solid var(--cor-dinamica); 
             color: var(--cor-dinamica); display: flex; align-items: center; justify-content: center; 
-            font-size: 1.8rem; background: white; cursor: pointer; transition: 0.3s;
+            font-size: 1.8rem; background: white; cursor: pointer; transition: 0.3s; flex-shrink: 0;
         }
         .btn-info i { font-family: 'Georgia', serif; font-style: italic; font-weight: bold; }
         .btn-info:hover { background: var(--cor-dinamica); color: white; }
@@ -72,21 +76,33 @@
         .btn-jogar { 
             flex: 1; background: var(--cor-dinamica); color: white; padding: 18px; border-radius: 25px; 
             display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; 
-            font-size: 1.2rem; text-decoration: none; transition: 0.3s;
+            font-size: 1.2rem; text-decoration: none; border: none; cursor: pointer; transition: 0.3s;
         }
 
-        /* --- NOVO ECRÃ DE INFORMAÇÕES (OVERLAY) --- */
+        /* --- ECRÃ DE JOGO (IFRAME) --- */
+        #iframe-jogo { width: 100%; height: 100%; border: none; border-radius: 20px; background: #eee; }
+        .btn-voltar-jogo { 
+            position: absolute; top: 10px; right: 10px; background: rgba(0,0,0,0.2); 
+            color: white; border: none; padding: 8px 15px; border-radius: 15px; cursor: pointer; font-weight: 700;
+        }
+
+        /* --- ECRÃ DE RESULTADOS --- */
+        .resultados-corpo { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+        .stars-container { font-size: 3.5rem; color: #ddd; margin-bottom: 20px; }
+        .stars-container .fas.active { color: #FFD700; }
+        .feedback-titulo { font-size: 2rem; font-weight: 900; color: var(--cor-dinamica); margin-bottom: 10px; }
+        .feedback-texto { font-size: 1.2rem; color: var(--text-grey); font-weight: 700; }
+
+        /* --- OVERLAY INFORMAÇÕES --- */
         #info-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: white; z-index: 3000; display: none; /* Começa escondido */
+            background: white; z-index: 3000; display: none; 
             flex-direction: column; padding: 30px; animation: slideIn 0.4s ease-out;
         }
         @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
-
         .info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .info-header h2 { font-weight: 900; color: var(--cor-dinamica); font-size: 1.8rem; }
         .btn-close-info { font-size: 2rem; color: var(--text-grey); cursor: pointer; }
-
         .info-content { flex: 1; overflow-y: auto; color: #444; font-size: 1.1rem; line-height: 1.6; }
 
         /* --- FOOTER --- */
@@ -114,32 +130,89 @@
         <img id="icon-voltar-top" src="" alt="Voltar" onclick="voltarPagina()">
     </header>
 
-    <main>
-        <div class="card-topo"><h2 id="jogo-titulo">CARREGANDO...</h2></div>
-        <div class="card-meio" id="area-jogo-conteudo"></div>
-        <div class="card-fundo">
-            <!-- Botão que abre o "novo ecrã" -->
-            <div class="btn-info" onclick="toggleInfoScreen(true)"><i>i</i></div>
-            <a href="#" class="btn-jogar" id="btn-link-jogo"><i class="fas fa-play"></i> JOGAR</a>
+    <main id="main-container">
+        
+        <!-- 1. ECRÃ DE APRESENTAÇÃO -->
+        <div id="view-apresentacao" class="view-container view-active">
+            <div class="card-topo"><h2 id="jogo-titulo">CARREGANDO...</h2></div>
+            <div class="card-meio" id="area-jogo-conteudo"></div>
+            <div class="card-fundo">
+                <div class="btn-info" onclick="toggleInfoScreen(true)"><i>i</i></div>
+                <button class="btn-jogar" onclick="iniciarJogo()"><i class="fas fa-play"></i> JOGAR</button>
+            </div>
         </div>
+
+        <!-- 2. ECRÃ DO JOGO -->
+        <div id="view-jogo" class="view-container">
+            <button class="btn-voltar-jogo" onclick="finalizarJogo()">SAIR DO JOGO</button>
+            <iframe id="iframe-jogo" src=""></iframe>
+        </div>
+
+        <!-- 3. ECRÃ DE RESULTADOS -->
+        <div id="view-resultados" class="view-container">
+            <div class="card-topo"><h2>DESAFIO CONCLUÍDO!</h2></div>
+            <div class="resultados-corpo">
+                <div class="stars-container">
+                    <i class="fas fa-star active"></i>
+                    <i class="fas fa-star active"></i>
+                    <i class="fas fa-star active"></i>
+                </div>
+                <div class="feedback-titulo">MUITO BEM!</div>
+                <div class="feedback-texto">Concluíste todas as tarefas com sucesso.</div>
+            </div>
+            <div class="card-fundo">
+                <button class="btn-jogar" onclick="voltarParaInicio()"><i class="fas fa-redo"></i> JOGAR NOVAMENTE</button>
+            </div>
+        </div>
+
     </main>
     
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
-    <!-- NOVO ECRÃ DE INFORMAÇÕES -->
+    <!-- OVERLAY DE INFORMAÇÕES -->
     <div id="info-screen">
         <div class="info-header">
             <h2>Informações</h2>
             <i class="fas fa-times btn-close-info" onclick="toggleInfoScreen(false)"></i>
         </div>
         <div class="info-content" id="info-texto">
-            <!-- Texto injetado pelo JS -->
             <p>Aqui ficam as orientações pedagógicas, objetivos e créditos do jogo selecionado.</p>
         </div>
     </div>
 
     <script src="dados.js"></script>
     <script>
+        // --- NAVEGAÇÃO ENTRE VISTAS ---
+        function mostrarView(viewId) {
+            // Esconde todas
+            document.querySelectorAll('.view-container').forEach(v => v.classList.remove('view-active'));
+            // Mostra a selecionada
+            document.getElementById('view-' + viewId).classList.add('view-active');
+
+            // Se for jogo, esconder footer para mais espaço. Senão, mostrar.
+            document.querySelector('footer').style.display = (viewId === 'jogo') ? 'none' : 'flex';
+        }
+
+        function iniciarJogo() {
+            const config = JOGO_CONFIG;
+            const jogo = config.listaFases[0].jogos[0];
+            if(jogo && jogo.link) {
+                document.getElementById('iframe-jogo').src = jogo.link;
+                mostrarView('jogo');
+            }
+        }
+
+        function finalizarJogo() {
+            // Limpa o iframe para parar sons/processamento
+            document.getElementById('iframe-jogo').src = "";
+            mostrarView('resultados');
+        }
+
+        function voltarParaInicio() {
+            mostrarView('apresentacao');
+        }
+
+        // --- FUNÇÕES JÁ EXISTENTES ---
         function voltarPagina() { window.location.href = '../'; }
 
         function toggleMenu(e) { 
@@ -148,7 +221,6 @@
             menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex'; 
         }
 
-        // Função para Abrir/Fechar o Ecrã de Informações
         function toggleInfoScreen(show) {
             const screen = document.getElementById('info-screen');
             screen.style.display = show ? 'flex' : 'none';
@@ -157,22 +229,28 @@
         window.onclick = () => { document.getElementById('dropdownMenu').style.display = 'none'; }
 
         window.onload = () => {
+            if (typeof JOGO_CONFIG === 'undefined') return;
+
             const config = JOGO_CONFIG;
             const bibConteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
+            // Cores Dinâmicas
             document.documentElement.style.setProperty('--cor-dinamica', bibTema.corPrimaria);
             document.body.style.backgroundColor = bibTema.corPagina;
             document.getElementById('txt-titulo1').style.color = bibTema.corPrimaria;
+            
+            // Textos Header
             document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
             document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = bibConteudo.sub;
             document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
             
+            // Ícones Header
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
-            // Popular Menu
+            // Popular Menu Dropdown
             const menuBox = document.getElementById('dropdownMenu');
             menuBox.innerHTML = '';
             Object.keys(config.links).forEach(key => {
@@ -184,15 +262,13 @@
                 }
             });
 
-            // Carregar Jogo Atual
+            // Carregar Dados do Jogo no Card de Apresentação
             const fase = config.listaFases[0];
             const jogo = fase.jogos[0];
             if(jogo) {
                 document.getElementById('jogo-titulo').innerText = jogo.nome;
                 document.getElementById('area-jogo-conteudo').innerHTML = `<img src="${config.caminhoIconsJogos}${jogo.icon}">`;
-                document.getElementById('btn-link-jogo').href = jogo.link;
                 
-                // Se o teu dados.js tiver um campo 'info', ele aparece aqui
                 if(jogo.info) {
                     document.getElementById('info-texto').innerHTML = jogo.info;
                 }
