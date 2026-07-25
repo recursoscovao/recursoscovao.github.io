@@ -36,8 +36,8 @@ const BIBLIOTECA_CONTEUDO = {
 };
 
 const JOGO_CONFIG = {
-    areaAtiva: "pre", 
-    anoAtivo: "pre",      
+    areaAtiva: "portugues", 
+    anoAtivo: "amo1",      
     caminhoIconsMenu: "../icons/", 
     caminhoIconsJogos: "iconjogos/",
     iconesMenu: {
