@@ -15,7 +15,7 @@
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
-        body { min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; background: #f0f2f5; }
+        body { min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; background: #f0f2f5; }
 
         /* --- HEADER --- */
         header { 
@@ -29,6 +29,7 @@
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         #txt-titulo1 { font-weight: 900; font-size: 1.65rem; }
         #txt-titulo2 { font-weight: 800; font-size: 1.4rem; color: #8792a1; }
+        #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
         .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--cor-dinamica); }
         #icon-voltar-top { height: 42px; width: 42px; object-fit: contain; cursor: pointer; justify-self: end;}
 
@@ -43,17 +44,20 @@
         }
         .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
 
-        /* --- MAIN (LANÇADOR: O QUE JÁ TINHAMOS) --- */
+        /* --- MAIN (CARTÃO ÚNICO) --- */
         main { 
             flex: 1; display: flex; flex-direction: column; background: white; 
             margin: 0 20px 20px 20px; padding: 25px; border-radius: 35px; border: 2px solid #fff; 
             max-width: 950px; align-self: center; width: calc(100% - 40px);
             box-shadow: 0 0 20px 2px color-mix(in srgb, var(--cor-dinamica), transparent 50%);
         }
+
         .card-topo { width: 100%; text-align: center; padding-bottom: 15px; border-bottom: 1px dashed #eee; margin-bottom: 15px; }
         .card-topo h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; }
+
         .card-meio { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 20px; background: #fdfdfd; }
         .card-meio img { width: 100%; height: 100%; object-fit: contain; max-height: 400px; }
+
         .card-fundo { display: flex; align-items: center; gap: 15px; padding-top: 20px; }
 
         /* Botão i em itálico */
@@ -63,36 +67,27 @@
             font-size: 1.8rem; background: white; cursor: pointer; transition: 0.3s;
         }
         .btn-info i { font-family: 'Georgia', serif; font-style: italic; font-weight: bold; }
+        .btn-info:hover { background: var(--cor-dinamica); color: white; }
 
         .btn-jogar { 
             flex: 1; background: var(--cor-dinamica); color: white; padding: 18px; border-radius: 25px; 
             display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; 
-            font-size: 1.2rem; text-decoration: none; transition: 0.3s; cursor: pointer; border: none;
+            font-size: 1.2rem; text-decoration: none; transition: 0.3s;
         }
 
-        /* --- NOVO ECRÃ DO JOGO (FULL SCREEN OVERLAY) --- */
-        #game-screen {
+        /* --- NOVO ECRÃ DE INFORMAÇÕES (OVERLAY) --- */
+        #info-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: #f0f2f5; z-index: 4000; display: none; flex-direction: column;
+            background: white; z-index: 3000; display: none; /* Começa escondido */
+            flex-direction: column; padding: 30px; animation: slideIn 0.4s ease-out;
         }
+        @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
 
-        /* Barra de Status no Topo do Jogo */
-        .game-header-status {
-            height: 70px; background: white; display: flex; align-items: center; 
-            justify-content: space-between; padding: 0 25px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10;
-        }
-        .status-text { font-weight: 800; color: #1A499C; text-transform: uppercase; }
-        .btn-sair-jogo { color: var(--cor-dinamica); font-size: 1.5rem; cursor: pointer; }
+        .info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
+        .info-header h2 { font-weight: 900; color: var(--cor-dinamica); font-size: 1.8rem; }
+        .btn-close-info { font-size: 2rem; color: var(--text-grey); cursor: pointer; }
 
-        /* Área do Jogo 100% (Meio e Fundo Unidos) */
-        .game-content-area {
-            flex: 1; width: 100%; position: relative;
-            /* Limite discreto */
-            border: 10px solid #f0f2f5; 
-            background: #eee;
-        }
-        #game-iframe { width: 100%; height: 100%; border: none; display: block; }
+        .info-content { flex: 1; overflow-y: auto; color: #444; font-size: 1.1rem; line-height: 1.6; }
 
         /* --- FOOTER --- */
         footer { 
@@ -104,7 +99,7 @@
 </head>
 <body>
 
-    <header id="main-header">
+    <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
 
@@ -113,63 +108,50 @@
             <div class="title-group">
                 <div id="txt-titulo1"></div>
                 <div id="txt-titulo2"></div>
+                <div id="txt-subtitulo-header"></div>
             </div>
         </div>
         <img id="icon-voltar-top" src="" alt="Voltar" onclick="voltarPagina()">
     </header>
 
-    <!-- O LANÇADOR (MAIN ORIGINAL) -->
-    <main id="launcher-card">
+    <main>
         <div class="card-topo"><h2 id="jogo-titulo">CARREGANDO...</h2></div>
         <div class="card-meio" id="area-jogo-conteudo"></div>
         <div class="card-fundo">
-            <div class="btn-info"><i>i</i></div>
-            <button class="btn-jogar" onclick="abrirEcraJogo()">
-                <i class="fas fa-play"></i> JOGAR
-            </button>
+            <!-- Botão que abre o "novo ecrã" -->
+            <div class="btn-info" onclick="toggleInfoScreen(true)"><i>i</i></div>
+            <a href="#" class="btn-jogar" id="btn-link-jogo"><i class="fas fa-play"></i> JOGAR</a>
         </div>
     </main>
     
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
-    <!-- NOVO ECRÃ DO JOGO (ESCONDIDO) -->
-    <div id="game-screen">
-        <!-- card-topo do jogo: Barra de Status -->
-        <div class="game-header-status">
-            <div class="status-text" id="game-status-label">A JOGAR...</div>
-            <div class="btn-sair-jogo" onclick="fecharEcraJogo()"><i class="fas fa-times-circle"></i></div>
+    <!-- NOVO ECRÃ DE INFORMAÇÕES -->
+    <div id="info-screen">
+        <div class="info-header">
+            <h2>Informações</h2>
+            <i class="fas fa-times btn-close-info" onclick="toggleInfoScreen(false)"></i>
         </div>
-        
-        <!-- card-jogo: Meio e Fundo unidos 100% -->
-        <div class="game-content-area">
-            <iframe id="game-iframe" src=""></iframe>
+        <div class="info-content" id="info-texto">
+            <!-- Texto injetado pelo JS -->
+            <p>Aqui ficam as orientações pedagógicas, objetivos e créditos do jogo selecionado.</p>
         </div>
     </div>
 
     <script src="dados.js"></script>
     <script>
-        let jogoAtivoURL = "";
-
-        function abrirEcraJogo() {
-            const screen = document.getElementById('game-screen');
-            const iframe = document.getElementById('game-iframe');
-            iframe.src = jogoAtivoURL;
-            screen.style.display = 'flex';
-        }
-
-        function fecharEcraJogo() {
-            const screen = document.getElementById('game-screen');
-            const iframe = document.getElementById('game-iframe');
-            iframe.src = "";
-            screen.style.display = 'none';
-        }
-
         function voltarPagina() { window.location.href = '../'; }
 
         function toggleMenu(e) { 
             if(e) e.stopPropagation(); 
             const menu = document.getElementById('dropdownMenu');
             menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex'; 
+        }
+
+        // Função para Abrir/Fechar o Ecrã de Informações
+        function toggleInfoScreen(show) {
+            const screen = document.getElementById('info-screen');
+            screen.style.display = show ? 'flex' : 'none';
         }
 
         window.onclick = () => { document.getElementById('dropdownMenu').style.display = 'none'; }
@@ -182,9 +164,9 @@
             document.documentElement.style.setProperty('--cor-dinamica', bibTema.corPrimaria);
             document.body.style.backgroundColor = bibTema.corPagina;
             document.getElementById('txt-titulo1').style.color = bibTema.corPrimaria;
-            
             document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
             document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
+            document.getElementById('txt-subtitulo-header').innerText = bibConteudo.sub;
             document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
             
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
@@ -202,13 +184,18 @@
                 }
             });
 
-            // Dados do Jogo
-            const jogo = config.listaFases[0].jogos[0];
+            // Carregar Jogo Atual
+            const fase = config.listaFases[0];
+            const jogo = fase.jogos[0];
             if(jogo) {
                 document.getElementById('jogo-titulo').innerText = jogo.nome;
                 document.getElementById('area-jogo-conteudo').innerHTML = `<img src="${config.caminhoIconsJogos}${jogo.icon}">`;
-                document.getElementById('game-status-label').innerText = jogo.nome;
-                jogoAtivoURL = jogo.link;
+                document.getElementById('btn-link-jogo').href = jogo.link;
+                
+                // Se o teu dados.js tiver um campo 'info', ele aparece aqui
+                if(jogo.info) {
+                    document.getElementById('info-texto').innerHTML = jogo.info;
+                }
             }
         };
     </script>
