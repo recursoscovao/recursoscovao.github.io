@@ -10,18 +10,19 @@
     <style>
         :root {
             --text-grey: #8792a1;
+            --menu-item-h: 55px;
             --cor-dinamica: #E691A7; 
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
-        body { min-height: 100vh; display: flex; flex-direction: column; overflow: hidden; background: #f0f2f5; }
+        body { min-height: 100vh; display: flex; flex-direction: column; overflow-x: hidden; background: #f0f2f5; }
 
         /* --- HEADER --- */
         header { 
             background: white; border-radius: 0 0 35px 35px;
             display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; 
             padding: 0 15px; height: 95px; z-index: 1000; flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 20px;
         }
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         #header-icon { height: 70px; object-fit: contain; }
@@ -31,46 +32,31 @@
         .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--cor-dinamica); }
         #icon-voltar-top { height: 42px; width: 42px; object-fit: contain; cursor: pointer; justify-self: end;}
 
-        /* --- MAIN (O CARTÃO DO JOGO) --- */
+        /* --- MENU DROPDOWN --- */
+        .menu-dropdown { 
+            position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 8px; z-index: 2000; 
+        }
+        .menu-item { 
+            display: flex; align-items: center; gap: 12px; height: var(--menu-item-h); padding: 0 20px;
+            text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 230px; cursor: pointer;
+        }
+        .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
+
+        /* --- MAIN (LANÇADOR: O QUE JÁ TINHAMOS) --- */
         main { 
             flex: 1; display: flex; flex-direction: column; background: white; 
-            margin: 0 15px 15px 15px; border-radius: 35px; border: 2px solid #fff; 
-            max-width: 1100px; align-self: center; width: calc(100% - 30px);
+            margin: 0 20px 20px 20px; padding: 25px; border-radius: 35px; border: 2px solid #fff; 
+            max-width: 950px; align-self: center; width: calc(100% - 40px);
             box-shadow: 0 0 20px 2px color-mix(in srgb, var(--cor-dinamica), transparent 50%);
-            overflow: hidden; /* Garante que o jogo não saia do border-radius */
         }
+        .card-topo { width: 100%; text-align: center; padding-bottom: 15px; border-bottom: 1px dashed #eee; margin-bottom: 15px; }
+        .card-topo h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; }
+        .card-meio { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 20px; background: #fdfdfd; }
+        .card-meio img { width: 100%; height: 100%; object-fit: contain; max-height: 400px; }
+        .card-fundo { display: flex; align-items: center; gap: 15px; padding-top: 20px; }
 
-        /* 1ª Divisão: Barra de Status (Topo) */
-        .card-status { 
-            width: 100%; height: 60px; padding: 0 25px;
-            display: flex; align-items: center; justify-content: space-between;
-            background: #fff; border-bottom: 2px solid #f0f2f5;
-        }
-        .status-item { font-weight: 800; color: #1A499C; font-size: 1.1rem; text-transform: uppercase; }
-        .status-item span { color: var(--cor-dinamica); margin-left: 5px; }
-
-        /* 2ª Divisão: Área de Jogo (Meio + Fundo Unidos) */
-        .card-jogo { 
-            flex: 1; position: relative; width: 100%;
-            background: #f9f9f9; 
-            /* Limite discreto interno */
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.03); 
-            display: flex; align-items: center; justify-content: center;
-        }
-
-        /* Iframe ou Elemento do Jogo 100% */
-        #game-frame {
-            width: 100%; height: 100%; border: none;
-            display: block;
-        }
-
-        /* --- ECRÃ INICIAL (VISTA DE LANÇAMENTO) --- */
-        /* Usamos uma classe para alternar entre o launcher e o jogo real */
-        .view-launcher { display: flex; flex-direction: column; height: 100%; width: 100%; padding: 25px; }
-        .launcher-thumb { flex: 1; display: flex; align-items: center; justify-content: center; }
-        .launcher-thumb img { max-height: 80%; object-fit: contain; }
-        .launcher-btns { display: flex; gap: 15px; padding-top: 20px; }
-
+        /* Botão i em itálico */
         .btn-info { 
             width: 60px; height: 60px; border-radius: 50%; border: 3px solid var(--cor-dinamica); 
             color: var(--cor-dinamica); display: flex; align-items: center; justify-content: center; 
@@ -81,20 +67,44 @@
         .btn-jogar { 
             flex: 1; background: var(--cor-dinamica); color: white; padding: 18px; border-radius: 25px; 
             display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; 
-            font-size: 1.3rem; text-decoration: none; cursor: pointer; border: none;
+            font-size: 1.2rem; text-decoration: none; transition: 0.3s; cursor: pointer; border: none;
         }
+
+        /* --- NOVO ECRÃ DO JOGO (FULL SCREEN OVERLAY) --- */
+        #game-screen {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: #f0f2f5; z-index: 4000; display: none; flex-direction: column;
+        }
+
+        /* Barra de Status no Topo do Jogo */
+        .game-header-status {
+            height: 70px; background: white; display: flex; align-items: center; 
+            justify-content: space-between; padding: 0 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05); z-index: 10;
+        }
+        .status-text { font-weight: 800; color: #1A499C; text-transform: uppercase; }
+        .btn-sair-jogo { color: var(--cor-dinamica); font-size: 1.5rem; cursor: pointer; }
+
+        /* Área do Jogo 100% (Meio e Fundo Unidos) */
+        .game-content-area {
+            flex: 1; width: 100%; position: relative;
+            /* Limite discreto */
+            border: 10px solid #f0f2f5; 
+            background: #eee;
+        }
+        #game-iframe { width: 100%; height: 100%; border: none; display: block; }
 
         /* --- FOOTER --- */
         footer { 
-            height: 35px; display: flex; align-items: center; justify-content: center;
+            height: 40px; display: flex; align-items: center; justify-content: center;
             background: white; border-radius: 35px 35px 0 0; flex-shrink: 0;
         }
-        .footer-text { color: var(--text-grey); font-size: 0.8rem; font-weight: 700; }
+        .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
     </style>
 </head>
 <body>
 
-    <header>
+    <header id="main-header">
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
 
@@ -108,65 +118,61 @@
         <img id="icon-voltar-top" src="" alt="Voltar" onclick="voltarPagina()">
     </header>
 
-    <main id="main-container">
-        <!-- VISTA DE LANÇAMENTO (O que aparece antes de clicar jogar) -->
-        <div id="launcher-view" class="view-launcher">
-            <div class="card-topo" style="border:none; padding:0; text-align:center; display:block;">
-                <h2 id="jogo-titulo-launcher" style="font-weight:900; color:#1A499C; text-transform:uppercase;">Carregando...</h2>
-            </div>
-            <div class="launcher-thumb" id="jogo-thumb"></div>
-            <div class="launcher-btns">
-                <div class="btn-info" onclick="alert('Abrir ecrã de info...')"><i>i</i></div>
-                <button class="btn-jogar" onclick="iniciarJogo()">
-                    <i class="fas fa-play"></i> JOGAR
-                </button>
-            </div>
-        </div>
-
-        <!-- VISTA DO JOGO (O que aparece ao clicar jogar) -->
-        <div id="game-view" style="display: none; flex-direction: column; height: 100%; width: 100%;">
-            <!-- 1ª DIVISÃO: STATUS -->
-            <div class="card-status">
-                <div class="status-item">Nível: <span id="stat-nivel">1</span></div>
-                <div class="status-item" id="stat-nome-jogo">JOGO</div>
-                <div class="status-item">Pontos: <span id="stat-pontos">0</span></div>
-            </div>
-
-            <!-- 2ª DIVISÃO: ÁREA DE JOGO (UNIDA) -->
-            <div class="card-jogo" id="card-jogo-area">
-                <!-- O jogo ocupará 100% deste espaço -->
-                <iframe id="game-frame" src=""></iframe>
-            </div>
+    <!-- O LANÇADOR (MAIN ORIGINAL) -->
+    <main id="launcher-card">
+        <div class="card-topo"><h2 id="jogo-titulo">CARREGANDO...</h2></div>
+        <div class="card-meio" id="area-jogo-conteudo"></div>
+        <div class="card-fundo">
+            <div class="btn-info"><i>i</i></div>
+            <button class="btn-jogar" onclick="abrirEcraJogo()">
+                <i class="fas fa-play"></i> JOGAR
+            </button>
         </div>
     </main>
     
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
+    <!-- NOVO ECRÃ DO JOGO (ESCONDIDO) -->
+    <div id="game-screen">
+        <!-- card-topo do jogo: Barra de Status -->
+        <div class="game-header-status">
+            <div class="status-text" id="game-status-label">A JOGAR...</div>
+            <div class="btn-sair-jogo" onclick="fecharEcraJogo()"><i class="fas fa-times-circle"></i></div>
+        </div>
+        
+        <!-- card-jogo: Meio e Fundo unidos 100% -->
+        <div class="game-content-area">
+            <iframe id="game-iframe" src=""></iframe>
+        </div>
+    </div>
+
     <script src="dados.js"></script>
     <script>
-        function iniciarJogo() {
-            // Esconde o launcher e mostra o jogo
-            document.getElementById('launcher-view').style.display = 'none';
-            document.getElementById('game-view').style.display = 'flex';
-            
-            // Carrega o URL do jogo no iframe
-            const config = JOGO_CONFIG;
-            const jogo = config.listaFases[0].jogos[0];
-            document.getElementById('game-frame').src = jogo.link;
-            document.getElementById('stat-nome-jogo').innerText = jogo.nome;
+        let jogoAtivoURL = "";
+
+        function abrirEcraJogo() {
+            const screen = document.getElementById('game-screen');
+            const iframe = document.getElementById('game-iframe');
+            iframe.src = jogoAtivoURL;
+            screen.style.display = 'flex';
         }
 
-        function voltarPagina() {
-            // Se estiver no jogo, volta para o launcher. Se não, volta para a página anterior.
-            const gameView = document.getElementById('game-view');
-            if(gameView.style.display === 'flex') {
-                gameView.style.display = 'none';
-                document.getElementById('launcher-view').style.display = 'flex';
-                document.getElementById('game-frame').src = '';
-            } else {
-                window.location.href = '../';
-            }
+        function fecharEcraJogo() {
+            const screen = document.getElementById('game-screen');
+            const iframe = document.getElementById('game-iframe');
+            iframe.src = "";
+            screen.style.display = 'none';
         }
+
+        function voltarPagina() { window.location.href = '../'; }
+
+        function toggleMenu(e) { 
+            if(e) e.stopPropagation(); 
+            const menu = document.getElementById('dropdownMenu');
+            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex'; 
+        }
+
+        window.onclick = () => { document.getElementById('dropdownMenu').style.display = 'none'; }
 
         window.onload = () => {
             const config = JOGO_CONFIG;
@@ -175,27 +181,36 @@
 
             document.documentElement.style.setProperty('--cor-dinamica', bibTema.corPrimaria);
             document.body.style.backgroundColor = bibTema.corPagina;
+            document.getElementById('txt-titulo1').style.color = bibTema.corPrimaria;
             
             document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
-            document.getElementById('txt-titulo1').style.color = bibTema.corPrimaria;
             document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
             document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
             
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
-            // Carrega dados iniciais no Launcher
+            // Popular Menu
+            const menuBox = document.getElementById('dropdownMenu');
+            menuBox.innerHTML = '';
+            Object.keys(config.links).forEach(key => {
+                if (config.iconesMenu[key]) {
+                    const a = document.createElement('a');
+                    a.className = 'menu-item'; a.href = config.links[key];
+                    a.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu[key]}"> <span>${key}</span>`;
+                    menuBox.appendChild(a);
+                }
+            });
+
+            // Dados do Jogo
             const jogo = config.listaFases[0].jogos[0];
             if(jogo) {
-                document.getElementById('jogo-titulo-launcher').innerText = jogo.nome;
-                document.getElementById('jogo-thumb').innerHTML = `<img src="${config.caminhoIconsJogos}${jogo.icon}">`;
+                document.getElementById('jogo-titulo').innerText = jogo.nome;
+                document.getElementById('area-jogo-conteudo').innerHTML = `<img src="${config.caminhoIconsJogos}${jogo.icon}">`;
+                document.getElementById('game-status-label').innerText = jogo.nome;
+                jogoAtivoURL = jogo.link;
             }
         };
-
-        function toggleMenu(e) { 
-            if(e) e.stopPropagation(); 
-            // Lógica do menu...
-        }
     </script>
 </body>
 </html>
