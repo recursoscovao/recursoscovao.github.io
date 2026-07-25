@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Recursos Educativos</title>
+    <!-- O título será preenchido pelo JS -->
+    <title>Carregando...</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
@@ -57,7 +58,6 @@
         .view-container { display: none; flex-direction: column; height: 100%; flex: 1; }
         .view-active { display: flex; }
 
-        /* ESTRUTURA DOS CARDS */
         .card-topo { flex-shrink: 0; text-align: center; padding-bottom: 15px; border-bottom: 1px dashed #eee; margin-bottom: 15px; }
         .card-topo h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; }
 
@@ -67,7 +67,6 @@
 
         .card-fundo { flex-shrink: 0; display: flex; align-items: center; gap: 15px; padding-top: 20px; }
 
-        /* BOTÕES */
         .btn-info { 
             width: 60px; height: 60px; border-radius: 50%; border: 3px solid var(--cor-dinamica); 
             color: var(--cor-dinamica); display: flex; align-items: center; justify-content: center; 
@@ -82,12 +81,10 @@
             font-size: 1.2rem; text-decoration: none; border: none; cursor: pointer; transition: 0.3s;
         }
 
-        /* RESULTADOS */
         .resultados-corpo { text-align: center; }
         .stars { font-size: 3rem; color: #FFD700; margin-bottom: 15px; }
         .feedback-txt { font-weight: 900; font-size: 1.5rem; color: var(--cor-dinamica); }
 
-        /* OVERLAY INFO */
         #info-screen {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: white; z-index: 3000; display: none; 
@@ -99,7 +96,6 @@
         .btn-close-info { font-size: 2rem; color: var(--text-grey); cursor: pointer; }
         .info-content { flex: 1; overflow-y: auto; color: #444; font-size: 1.1rem; line-height: 1.6; }
 
-        /* FOOTER */
         footer { height: 40px; display: flex; align-items: center; justify-content: center; background: white; border-radius: 35px 35px 0 0; flex-shrink: 0; }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
     </style>
@@ -122,7 +118,6 @@
     </header>
 
     <main>
-        <!-- VISTA 1: APRESENTAÇÃO -->
         <div id="view-apresentacao" class="view-container view-active">
             <div class="card-topo"><h2 id="jogo-titulo">CARREGANDO...</h2></div>
             <div class="card-meio" id="area-jogo-conteudo"></div>
@@ -132,7 +127,6 @@
             </div>
         </div>
 
-        <!-- VISTA 2: JOGO -->
         <div id="view-jogo" class="view-container">
             <div class="card-topo"><h2 id="jogo-titulo-exec">A JOGAR...</h2></div>
             <div class="card-meio">
@@ -143,7 +137,6 @@
             </div>
         </div>
 
-        <!-- VISTA 3: RESULTADOS -->
         <div id="view-resultados" class="view-container">
             <div class="card-topo"><h2>RESULTADOS</h2></div>
             <div class="card-meio">
@@ -171,14 +164,10 @@
 
     <script src="dados.js"></script>
     <script>
-        // Função para trocar de ecrã (App Style)
         function mudarEcra(id) {
             document.querySelectorAll('.view-container').forEach(v => v.classList.remove('view-active'));
             document.getElementById('view-' + id).classList.add('view-active');
-
             const iframe = document.getElementById('iframe-jogo');
-            const jogo = JOGO_CONFIG.listaFases[0].jogos[0];
-
             if(id === 'jogo') {
                 iframe.src = JOGO_CONFIG.listaFases[0].jogos[0].link;
                 document.querySelector('footer').style.display = 'none';
@@ -199,31 +188,25 @@
 
         window.onload = () => {
             const config = JOGO_CONFIG;
-            
-            // Correção caso haja erro de digitação no anoAtivo do ficheiro dados.js
             const anoKey = config.anoAtivo === "amo1" ? "ano1" : config.anoAtivo;
-            
             const bibConteudo = BIBLIOTECA_CONTEUDO[anoKey][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
-            // 1. Cores e Temas
             document.documentElement.style.setProperty('--cor-dinamica', bibTema.corPrimaria);
             document.body.style.backgroundColor = bibTema.corPagina;
             document.getElementById('txt-titulo1').style.color = bibTema.corPrimaria;
-            
-            // 2. Textos do Header e Rodapé
             document.getElementById('txt-titulo1').innerText = bibConteudo.t1;
             document.getElementById('txt-titulo2').innerText = bibConteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = bibConteudo.sub;
             document.getElementById('txt-rodape').innerHTML = bibConteudo.rodape;
-            
-            // 3. Ícones do Header
             document.getElementById('header-icon').src = config.caminhoIconsMenu + config.iconesMenu[anoKey];
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + bibTema.voltarMobile;
 
-            // 4. Popular Menu Dropdown dinamicamente
+            // Popular Menu Dropdown (Incluindo o item Voltar que está no iconesMenu)
             const menuBox = document.getElementById('dropdownMenu');
             menuBox.innerHTML = '';
+            
+            // Primeiro, adicionamos os links normais
             Object.keys(config.links).forEach(key => {
                 if (config.iconesMenu[key]) {
                     const a = document.createElement('a');
@@ -233,14 +216,23 @@
                 }
             });
 
-            // 5. Dados do Jogo Ativo (ListaFases -> Jogos)
+            // Adicionar especificamente o botão VOLTAR se ele não estiver nos links mas estiver nos ícones
+            if (config.iconesMenu.voltar && !config.links.voltar) {
+                const aVoltar = document.createElement('a');
+                aVoltar.className = 'menu-item'; 
+                aVoltar.href = "../"; // Ou config.links.voltar se decidires adicionar ao dados.js
+                aVoltar.innerHTML = `<img src="${config.caminhoIconsMenu}${config.iconesMenu.voltar}"> <span>VOLTAR</span>`;
+                menuBox.appendChild(aVoltar);
+            }
+
             const jogoAtivo = config.listaFases[0].jogos[0];
             if(jogoAtivo) {
+                // ALTERAÇÃO PEDIDA: Título do Browser igual ao nome do jogo
+                document.title = jogoAtivo.nome;
+
                 document.getElementById('jogo-titulo').innerText = jogoAtivo.nome;
                 document.getElementById('jogo-titulo-exec').innerText = jogoAtivo.nome;
                 document.getElementById('area-jogo-conteudo').innerHTML = `<img src="${config.caminhoIconsJogos}${jogoAtivo.icon}">`;
-                
-                // Se o jogo tiver info ou desc, coloca no overlay
                 document.getElementById('info-texto').innerHTML = `<p>${jogoAtivo.desc || "Sem descrição disponível."}</p>`;
             }
         };
