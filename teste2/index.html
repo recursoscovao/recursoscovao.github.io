@@ -10,7 +10,7 @@
     <style>
         :root {
             --text-grey: #8792a1;
-            --menu-item-h: 65px; /* Aumentado para o novo design */
+            --menu-item-h: 60px; 
             --cor-dinamica: #E691A7; 
         }
 
@@ -30,23 +30,25 @@
         #txt-titulo1 { font-weight: 900; font-size: 1.65rem; }
         #txt-titulo2 { font-weight: 800; font-size: 1.4rem; color: #8792a1; }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
+        
         .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--cor-dinamica); }
         #icon-voltar-top { height: 42px; width: 42px; object-fit: contain; cursor: pointer; justify-self: end;}
 
-        /* --- MENU DROPDOWN (ESTILO DA IMAGEM) --- */
+        /* --- MENU DROPDOWN (ESTILO CARDS DO PRIMEIRO INDEX) --- */
         .menu-dropdown { 
             position: absolute; top: 85px; left: 15px; display: none; 
-            flex-direction: column; gap: 12px; z-index: 2000; width: 260px;
+            flex-direction: column; gap: 8px; z-index: 2000; width: 250px;
         }
         .menu-item { 
-            display: flex; align-items: center; gap: 15px; height: var(--menu-item-h); padding: 0 20px;
+            display: flex; align-items: center; gap: 15px; height: var(--menu-item-h); padding: 0 18px;
             text-decoration: none; color: #7b899b; font-weight: 800; background: white; 
-            border-radius: 20px; /* Bem arredondado como na imagem */
-            box-shadow: 0 5px 15px rgba(0,0,0,0.08); cursor: pointer;
-            text-transform: uppercase; font-size: 1.1rem; transition: 0.2s;
+            border-radius: 18px; 
+            box-shadow: 0 6px 12px rgba(0,0,0,0.08); cursor: pointer;
+            text-transform: uppercase; font-size: 1rem; transition: 0.2s;
         }
-        .menu-item img { height: 38px; width: 38px; object-fit: contain; }
-        .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
+        .menu-item img { height: 32px; width: 32px; object-fit: contain; }
+        /* O hover usa a cor dinâmica do tema */
+        .menu-item:hover { background-color: var(--cor-dinamica); color: white; }
 
         /* --- MAIN --- */
         main { 
@@ -59,16 +61,12 @@
 
         .view-container { display: none; flex-direction: column; height: 100%; flex: 1; }
         .view-active { display: flex; }
-
         .card-topo { flex-shrink: 0; text-align: center; padding-bottom: 15px; border-bottom: 1px dashed #eee; margin-bottom: 15px; }
         .card-topo h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; }
-
         .card-meio { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 20px; background: #fdfdfd; }
         .card-meio img { max-width: 100%; max-height: 100%; object-fit: contain; }
         #iframe-jogo { width: 100%; height: 100%; border: none; border-radius: 20px; }
-
         .card-fundo { flex-shrink: 0; display: flex; align-items: center; gap: 15px; padding-top: 20px; }
-
         .btn-info { 
             width: 60px; height: 60px; border-radius: 50%; border: 3px solid var(--cor-dinamica); 
             color: var(--cor-dinamica); display: flex; align-items: center; justify-content: center; 
@@ -76,7 +74,6 @@
         }
         .btn-info i { font-family: 'Georgia', serif; font-style: italic; font-weight: bold; }
         .btn-info:hover { background: var(--cor-dinamica); color: white; }
-
         .btn-jogar { 
             flex: 1; background: var(--cor-dinamica); color: white; padding: 18px; border-radius: 25px; 
             display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; 
@@ -180,12 +177,16 @@
         }
 
         function voltarPagina() { window.location.href = '../'; }
+        
         function toggleMenu(e) { 
             if(e) e.stopPropagation(); 
             const menu = document.getElementById('dropdownMenu');
             menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex'; 
         }
+
         function toggleInfoScreen(show) { document.getElementById('info-screen').style.display = show ? 'flex' : 'none'; }
+        
+        // Fecha o menu ao clicar fora
         window.onclick = () => { document.getElementById('dropdownMenu').style.display = 'none'; }
 
         window.onload = () => {
@@ -194,6 +195,7 @@
             const bibConteudo = BIBLIOTECA_CONTEUDO[anoKey][config.areaAtiva];
             const bibTema = BIBLIOTECA_TEMAS[config.areaAtiva];
 
+            // Aplicação de cores dinâmicas
             document.documentElement.style.setProperty('--cor-dinamica', bibTema.corPrimaria);
             document.body.style.backgroundColor = bibTema.corPagina;
             document.getElementById('txt-titulo1').style.color = bibTema.corPrimaria;
@@ -206,12 +208,20 @@
             document.getElementById('header-icon').src = iconCaminho + config.iconesMenu[anoKey];
             document.getElementById('icon-voltar-top').src = iconCaminho + bibTema.voltarMobile;
 
-            // Popular Menu Dropdown (Design de cards como na imagem)
+            // Popular Menu Dropdown (Estilo Cards Dinâmicos)
             const menuBox = document.getElementById('dropdownMenu');
             menuBox.innerHTML = '';
             
-            const labels = { home: "INÍCIO", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
+            const labels = { 
+                home: config.textos.menuInicio || "INÍCIO", 
+                pre: "Pré-Escolar", 
+                ano1: "1º Ano", 
+                ano2: "2º Ano", 
+                ano3: "3º Ano", 
+                ano4: "4º Ano" 
+            };
 
+            // Itens de Navegação (Home e Anos)
             Object.keys(config.links).forEach(key => {
                 if (config.iconesMenu[key]) {
                     const a = document.createElement('a');
@@ -221,13 +231,14 @@
                 }
             });
 
-            // Botão VOLTAR (Usa a mesma seta dinâmica do Header)
+            // Botão VOLTAR (Estilo card também)
             const aVoltar = document.createElement('a');
             aVoltar.className = 'menu-item'; 
             aVoltar.href = "../";
-            aVoltar.innerHTML = `<img src="${iconCaminho}${bibTema.voltarMobile}"> <span>VOLTAR</span>`;
+            aVoltar.innerHTML = `<img src="${iconCaminho}${bibTema.voltarMobile}"> <span>${config.textos.menuVoltar || 'VOLTAR'}</span>`;
             menuBox.appendChild(aVoltar);
 
+            // Dados do Jogo Ativo
             const jogoAtivo = config.listaFases[0].jogos[0];
             if(jogoAtivo) {
                 document.title = jogoAtivo.nome;
