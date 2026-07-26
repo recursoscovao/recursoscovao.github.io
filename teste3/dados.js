@@ -15,7 +15,7 @@ const BIBLIOTECA_CONTEUDO = {
 const JOGO_CONFIG = {
     areaAtiva: "jd", 
     anoAtivo: "jd",        
-    caminhoIconsMenu: "icons/", 
+    caminhoIconsMenu: "../icons/", 
     caminhoIconsJogos: "iconjogos/",
     iconesMenu: {
         home: "home.png", 
