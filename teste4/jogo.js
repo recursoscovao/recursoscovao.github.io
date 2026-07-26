@@ -110,28 +110,28 @@ setTimeout(() => ECRA_APRESENTACAO.init(), 150);
 // =============================================================================
 const ECRA_JOGO = {
     init() {
-        ronda = 1; acertos = 0; erros = 0; ajudasContador = 0; // Reset das ajudas aqui
+        ronda = 1; acertos = 0; erros = 0; ajudasContador = 0;
         this.aplicarCorrecoesLayout();
         this.renderizarEstrutura();
         this.proximaRonda();
     },
 
-    // Ajusta o comportamento de scroll e altura conforme o dispositivo
     aplicarCorrecoesLayout() {
         const style = document.createElement('style');
         style.innerHTML = `
-            /* Telemóveis: Permite scroll para não cortar conteúdo */
-            @media (max-width: 767px) {
+            /* Ajuste Global para Telemóvel Vertical */
+            @media (max-width: 767px) and (orientation: portrait) {
                 body, main { overflow-y: auto !important; height: auto !important; }
-                #view-jogo { min-height: 550px; }
+                main { padding: 15px !important; } /* Reduz padding lateral para ganhar espaço */
+                #view-jogo { min-height: 90vh; display: flex; flex-direction: column; }
             }
-            /* PC/Tablet: Bloqueia scroll para encaixar no ecrã */
+
+            /* PC e Tablet Landscape: Sem Scroll */
             @media (min-width: 768px) {
                 body, main { overflow: hidden !important; height: 100vh !important; }
                 #view-jogo { height: 100% !important; }
             }
             
-            /* Barra de Progresso - Escondida em Mobile, Visível em PC/Tablet */
             .progress-container { display: none; gap: 4px; flex: 1; justify-content: center; padding: 0 15px; }
             @media (min-width: 768px) { .progress-container { display: flex; } }
             
@@ -145,68 +145,82 @@ const ECRA_JOGO = {
         const container = document.getElementById('game-injection-point');
         container.innerHTML = `
         <style>
-            .game-wrapper { display: flex; flex-direction: column; height: 100%; width: 100%; }
+            .game-wrapper { 
+                display: flex; flex-direction: column; 
+                height: 100%; width: 100%; 
+                justify-content: flex-start; /* Força tudo para o topo */
+            }
             
-            /* Card-topo limitado a 60px conforme pedido */
             .status-bar { 
                 display: flex; align-items: center; justify-content: space-between; 
-                height: 60px; min-height: 60px; padding: 0 15px; 
-                background: #fff; border-bottom: 2px solid #f0f2f5; 
+                height: 60px; min-height: 60px; padding: 0 10px; 
+                background: #fff; border-bottom: 2px solid #f0f2f5;
+                margin-top: -10px; /* Sobe um pouco a barra para o topo */
             }
             
             .stat-bubble { 
-                height: 38px; padding: 0 12px; border-radius: 12px; 
+                height: 38px; padding: 0 10px; border-radius: 12px; 
                 display: flex; align-items: center; justify-content: center; 
-                font-weight: 900; font-size: 1rem; color: white; gap: 5px;
+                font-weight: 900; font-size: 0.9rem; color: white; gap: 4px;
             }
-            .b-ronda { background: #f0f2f5; color: #5d7082; min-width: 70px; }
-            .b-certo { background: #8ed131; min-width: 50px; }
-            .b-erro { background: #ff5e5e; min-width: 50px; }
+            .b-ronda { background: #f0f2f5; color: #5d7082; min-width: 65px; }
+            .b-certo { background: #8ed131; min-width: 45px; }
+            .b-erro { background: #ff5e5e; min-width: 45px; }
 
             .btn-i-mini { 
-                width: 35px; height: 35px; border-radius: 50%; 
+                width: 34px; height: 34px; border-radius: 50%; 
                 border: 2px solid var(--cor-dinamica); color: var(--cor-dinamica); 
                 display: flex; align-items: center; justify-content: center; 
-                font-weight: bold; cursor: pointer; font-style: italic; font-family: serif; 
+                font-weight: bold; cursor: pointer; font-style: italic; 
             }
 
-            /* Área Central - Otimizada para PC sem scroll */
             .play-area { 
                 flex: 1; display: flex; flex-direction: column; 
-                align-items: center; justify-content: center; 
-                padding: 10px; gap: 2vh; overflow: hidden;
+                align-items: center; gap: 15px; padding: 15px 5px;
             }
             
             .target-box { 
-                width: clamp(130px, 28vh, 180px); height: clamp(130px, 28vh, 180px); 
+                width: clamp(120px, 22vh, 170px); height: clamp(120px, 22vh, 170px); 
                 border: 4px dashed #adb5bd; border-radius: 25px; 
                 display: flex; align-items: center; justify-content: center; background: #fff; 
             }
-            .target-box img { max-width: 85%; max-height: 85%; object-fit: contain; }
+            .target-box img { max-width: 90%; max-height: 90%; object-fit: contain; }
 
+            /* GRELHA ADAPTÁVEL: 3-3-2 no telemóvel vertical */
             .grid { 
-                display: grid; grid-template-columns: repeat(4, 1fr); 
+                display: flex; flex-wrap: wrap; justify-content: center; 
                 gap: 10px; width: 100%; max-width: 600px; 
             }
+
             .card { 
-                aspect-ratio: 1; border: 2px solid #eee; border-radius: 18px; 
+                background: white; border: 2px solid #eee; border-radius: 18px; 
                 display: flex; align-items: center; justify-content: center; 
-                cursor: pointer; background: white; transition: 0.15s; 
+                cursor: pointer; transition: 0.15s; 
+                /* Tamanho padrão PC (4 por linha) */
+                width: calc(25% - 10px); aspect-ratio: 1;
             }
-            .card img { max-width: 80%; max-height: 80%; object-fit: contain; }
+
+            @media (max-width: 767px) and (orientation: portrait) {
+                .card { 
+                    /* Tamanho Telemóvel (3 por linha) */
+                    width: calc(31% - 5px); 
+                }
+            }
+
+            .card img { max-width: 88%; max-height: 88%; object-fit: contain; }
             .card:active { transform: scale(0.92); }
 
-            /* Ajuste para ecrãs baixos (Landscape) */
             @media (max-height: 550px) {
-                .play-area { flex-direction: row; gap: 30px; }
-                .grid { grid-template-columns: repeat(4, 1fr); max-width: 380px; }
+                .play-area { flex-direction: row; gap: 20px; }
+                .grid { max-width: 400px; }
+                .card { width: calc(25% - 8px); }
             }
         </style>
         
         <div class="game-wrapper">
             <div class="status-bar">
-                <div style="display:flex; gap:10px; align-items:center;">
-                    <img src="${JOGO_CONFIG.caminhoIconsMenu}lampada.png" style="width:38px; cursor:pointer" onclick="ECRA_JOGO.ajuda()" title="Ajuda">
+                <div style="display:flex; gap:8px; align-items:center;">
+                    <img src="${JOGO_CONFIG.caminhoIconsMenu}lampada.png" style="width:36px; cursor:pointer" onclick="ECRA_JOGO.ajuda()">
                     <div class="stat-bubble b-ronda" id="ronda-bubble">1 / 10</div>
                 </div>
 
@@ -214,7 +228,7 @@ const ECRA_JOGO = {
                     ${Array(10).fill().map(() => `<div class="prog-step"></div>`).join('')}
                 </div>
 
-                <div style="display:flex; gap:8px; align-items:center;">
+                <div style="display:flex; gap:6px; align-items:center;">
                     <div class="stat-bubble b-certo">✓ <span id="v-acertos">0</span></div>
                     <div class="stat-bubble b-erro">X <span id="v-erros">0</span></div>
                     <div class="btn-i-mini" onclick="toggleInfoScreen(true)">i</div>
@@ -231,23 +245,18 @@ const ECRA_JOGO = {
     proximaRonda() {
         if (ronda > 10) { 
             pontuacaoFinal = acertos; 
-            ECRA_RESULTADOS.init(); // Ativa a renderização dos resultados antes de mudar
+            ECRA_RESULTADOS.init();
             setTimeout(() => mudarEcra('resultados'), 300);
             return; 
         }
         
-        // Atualiza texto da bolha e a barra de progresso (se visível)
         document.getElementById('ronda-bubble').innerText = `${ronda} / 10`;
         const steps = document.querySelectorAll('.prog-step');
-        steps.forEach((step, idx) => {
-            step.classList.toggle('prog-active', idx < ronda);
-        });
+        steps.forEach((step, idx) => { step.classList.toggle('prog-active', idx < ronda); });
 
-        // Seleção do alvo aleatório
         itemAlvo = DADOS_JOGO.itens[Math.floor(Math.random() * DADOS_JOGO.itens.length)];
         document.getElementById('alvo').innerHTML = `<img src="${DADOS_JOGO.caminhoImagens}${itemAlvo.img}">`;
 
-        // Baralhar opções (1 correta + 7 erradas)
         let opcoes = [itemAlvo];
         let outros = DADOS_JOGO.itens.filter(i => i.id !== itemAlvo.id).sort(() => 0.5 - Math.random());
         opcoes = [...opcoes, ...outros.slice(0, 7)].sort(() => 0.5 - Math.random());
@@ -264,9 +273,7 @@ const ECRA_JOGO = {
     },
 
     validarResposta(item, elemento) {
-        // Bloqueia cliques durante o feedback
         document.querySelectorAll('.card').forEach(c => c.style.pointerEvents = 'none');
-
         if (item.id === itemAlvo.id) {
             acertos++;
             elemento.style.borderColor = "#8ed131";
@@ -276,23 +283,18 @@ const ECRA_JOGO = {
             elemento.style.borderColor = "#ff5e5e";
             elemento.style.background = "#fff5f5";
         }
-        
         document.getElementById('v-acertos').innerText = acertos;
         document.getElementById('v-erros').innerText = erros;
-
-        setTimeout(() => {
-            ronda++;
-            this.proximaRonda();
-        }, 700);
+        setTimeout(() => { ronda++; this.proximaRonda(); }, 700);
     },
 
     ajuda() {
-        ajudasContador++; // Incremento das ajudas aqui
+        ajudasContador++;
         const cards = document.querySelectorAll('.card');
         cards.forEach(c => {
             if (c.innerHTML.includes(itemAlvo.img)) {
                 c.style.background = "#fff9c4";
-                c.style.transform = "scale(1.1)";
+                c.style.transform = "scale(1.08)";
                 c.style.borderColor = "var(--cor-dinamica)";
                 setTimeout(() => {
                     c.style.background = "white";
@@ -303,6 +305,8 @@ const ECRA_JOGO = {
         });
     }
 };
+
+
 // =============================================================================
 // MÓDULO: RESULTADOS (view-resultados)
 // =============================================================================
