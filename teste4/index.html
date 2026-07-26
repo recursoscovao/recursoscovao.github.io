@@ -30,57 +30,50 @@
         .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--cor-dinamica); }
         #icon-voltar-top { height: 42px; width: 42px; object-fit: contain; cursor: pointer; justify-self: end; }
 
-        /* MENU */
-        .menu-dropdown { position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 8px; z-index: 2000; width: 230px; }
-        .menu-item { display: flex; align-items: center; gap: 12px; height: var(--menu-item-h); padding: 0 15px; text-decoration: none; color: #7b899b; font-weight: 800; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; text-transform: uppercase; font-size: 0.85rem; }
-
         /* MAIN STRUCTURE */
         main { flex: 1; display: flex; flex-direction: column; background: white; margin: 0 20px 20px 20px; padding: 25px; border-radius: 35px; border: 2px solid #fff; max-width: 950px; align-self: center; width: calc(100% - 40px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; }
         .view-container { display: none; flex-direction: column; height: 100%; flex: 1; }
         .view-active { display: flex; }
         
-        .card-topo { flex-shrink: 0; padding-bottom: 15px; border-bottom: 2px solid #f0f2f5; margin-bottom: 15px; }
+        .card-topo { flex-shrink: 0; padding-bottom: 12px; border-bottom: 2px solid #f8f9fa; margin-bottom: 15px; }
         .card-meio { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 20px; background: #fdfdfd; position: relative; }
         .card-fundo { flex-shrink: 0; display: flex; align-items: center; gap: 15px; padding-top: 20px; }
 
-        /* PAINEL DE JOGO (ESTILO DA IMAGEM) */
+        /* PAINEL DE JOGO REDUZIDO */
         .game-status-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 0 5px; }
-        
-        .status-left { display: flex; align-items: center; gap: 10px; }
-        .status-right { display: flex; align-items: center; gap: 10px; }
+        .status-left, .status-right { display: flex; align-items: center; gap: 8px; }
 
-        /* Elementos tipo Cápsula */
         .stat-pill { 
-            height: 45px; 
-            padding: 0 20px; 
-            border-radius: 15px; 
+            height: 38px; /* Tamanho reduzido */
+            padding: 0 15px; 
+            border-radius: 12px; 
             display: flex; 
             align-items: center; 
             justify-content: center; 
             color: white; 
-            font-weight: 900; 
-            font-size: 1.2rem;
-            min-width: 80px;
+            font-weight: 800; 
+            font-size: 1rem;
+            min-width: 70px;
         }
 
         .pill-ronda { background-color: var(--cor-dinamica); }
-        .pill-certo { background-color: var(--cor-certo); gap: 8px; }
-        .pill-errado { background-color: var(--cor-errado); gap: 8px; }
+        .pill-certo { background-color: var(--cor-certo); gap: 6px; }
+        .pill-errado { background-color: var(--cor-errado); gap: 6px; }
 
-        /* Ícone Lâmpada */
-        #img-lampada { height: 45px; width: auto; cursor: pointer; transition: 0.2s; }
+        #img-lampada { height: 38px; width: auto; cursor: pointer; transition: 0.2s; }
         #img-lampada:hover { transform: scale(1.1); }
 
-        /* Botão i Pequeno */
         .btn-info-mini { 
-            width: 35px; height: 35px; border-radius: 50%; border: 2px solid var(--cor-dinamica); 
+            width: 30px; height: 30px; border-radius: 50%; border: 2px solid var(--cor-dinamica); 
             color: var(--cor-dinamica); display: flex; align-items: center; justify-content: center; 
-            font-size: 1.1rem; font-weight: bold; cursor: pointer; font-family: 'Georgia', serif; font-style: italic;
-            background: white; transition: 0.2s;
+            font-size: 0.9rem; font-weight: bold; cursor: pointer; font-family: 'Georgia', serif; font-style: italic;
+            background: white; transition: 0.2s; margin-left: 4px;
         }
         .btn-info-mini:hover { background: var(--cor-dinamica); color: white; }
 
         /* GERAL */
+        .menu-dropdown { position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 8px; z-index: 2000; width: 230px; }
+        .menu-item { display: flex; align-items: center; gap: 12px; height: var(--menu-item-h); padding: 0 15px; text-decoration: none; color: #7b899b; font-weight: 800; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; text-transform: uppercase; font-size: 0.85rem; }
         .btn-jogar { flex: 1; background: var(--cor-dinamica); color: white; padding: 18px; border-radius: 25px; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; font-size: 1.2rem; border: none; cursor: pointer; }
         #info-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 3000; display: none; flex-direction: column; padding: 30px; animation: slideIn 0.4s ease-out; }
         @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
@@ -117,7 +110,7 @@
             </div>
         </div>
 
-        <!-- ECRÃ 2: O JOGO (ESTILO IMAGEM SOLICITADA) -->
+        <!-- ECRÃ 2: O JOGO -->
         <div id="view-jogo" class="view-container">
             <div class="card-topo">
                 <div class="game-status-bar">
@@ -129,22 +122,21 @@
                         </div>
                     </div>
 
-                    <!-- Direita: Acertos, Info e Erros -->
+                    <!-- Direita: Acertos, Erros e Info (Nova Ordem) -->
                     <div class="status-right">
                         <div class="stat-pill pill-certo">
                             <i class="fas fa-check"></i> <span id="cont-certos">0</span>
                         </div>
                         
-                        <div class="btn-info-mini" onclick="toggleInfoScreen(true)">i</div>
-                        
                         <div class="stat-pill pill-errado">
                             <i class="fas fa-times"></i> <span id="cont-errados">0</span>
                         </div>
+
+                        <div class="btn-info-mini" onclick="toggleInfoScreen(true)">i</div>
                     </div>
                 </div>
             </div>
 
-            <!-- Área de Jogo -->
             <div class="card-meio">
                 <div id="game-injection-point" style="width:100%; height:100%;"></div>
             </div>
@@ -220,8 +212,6 @@
             document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
             document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
             document.getElementById('icon-voltar-top').src = pathIcons + tema.voltarMobile;
-            
-            // Ícone da Lâmpada
             document.getElementById('img-lampada').src = pathIcons + "lampada.png";
 
             const dadosAno = config.menuItens.find(item => item.id === config.anoAtivo);
