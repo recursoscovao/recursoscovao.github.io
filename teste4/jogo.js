@@ -16,7 +16,6 @@ const ECRA_APRESENTACAO = {
         this.limparLayoutBase();
     },
 
-    // Garante que o ecrã de jogo terá espaço total escondendo o título/botão padrão
     limparLayoutBase() {
         const style = document.createElement('style');
         style.innerHTML = `
@@ -65,7 +64,7 @@ const ECRA_APRESENTACAO = {
                 <p>Observa atentamente o animal apresentado no topo do ecrã e encontra a imagem igual entre as várias opções. Clica ou toca no animal correto para avançares para a ronda seguinte.</p>
                 
                 <h3 style="color: var(--cor-dinamica); font-weight: 900; margin-top: 15px; margin-bottom: 5px; text-transform: uppercase;">Como jogar</h3>
-                <ul style="padding-left: 20px;">
+                <ul style="padding-left: 20px; margin-bottom: 10px;">
                     <li>Observa o animal que aparece no topo do ecrã.</li>
                     <li>Analisa todas as imagens apresentadas.</li>
                     <li>Encontra a imagem exatamente igual ao modelo.</li>
@@ -76,7 +75,7 @@ const ECRA_APRESENTACAO = {
                 </ul>
 
                 <h3 style="color: var(--cor-dinamica); font-weight: 900; margin-top: 15px; margin-bottom: 5px; text-transform: uppercase;">Regras</h3>
-                <ul style="padding-left: 20px;">
+                <ul style="padding-left: 20px; margin-bottom: 10px;">
                     <li>Existe apenas uma resposta correta em cada ronda.</li>
                     <li>Observa com atenção antes de responder.</li>
                     <li>Não há limite de tempo.</li>
@@ -87,12 +86,18 @@ const ECRA_APRESENTACAO = {
                 <p>Observa cuidadosamente: a forma do animal; as cores; os detalhes (orelhas, patas, asas, cauda, etc.). Alguns animais podem ser parecidos, escolhe o que é idêntico.</p>
 
                 <h3 style="color: var(--cor-dinamica); font-weight: 900; margin-top: 15px; margin-bottom: 5px; text-transform: uppercase;">O que vais desenvolver?</h3>
-                <p>Atenção e concentração; Memória visual; Capacidade de observação; Rapidez de identificação; Discriminação visual.</p>
+                <ul style="padding-left: 20px;">
+                    <li>Atenção e concentração;</li>
+                    <li>Memória visual;</li>
+                    <li>Capacidade de observação;</li>
+                    <li>Rapidez de identificação;</li>
+                    <li>Discriminação visual.</li>
+                </ul>
             </div>`;
     }
 };
 
-// Inicialização (colocar no final do ficheiro jogo.js)
+// Inicialização
 setTimeout(() => ECRA_APRESENTACAO.init(), 150);
 
 // =============================================================================
