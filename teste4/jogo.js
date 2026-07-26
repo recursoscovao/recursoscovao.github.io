@@ -119,22 +119,27 @@ const ECRA_JOGO = {
     aplicarCorrecoesLayout() {
         const style = document.createElement('style');
         style.innerHTML = `
-            /* Ajuste Global para Telemóvel Vertical */
-            @media (max-width: 767px) and (orientation: portrait) {
-                body, main { overflow-y: auto !important; height: auto !important; }
-                main { padding: 15px !important; } /* Reduz padding lateral para ganhar espaço */
-                #view-jogo { min-height: 90vh; display: flex; flex-direction: column; }
+            /* Telemóvel LANDSCAPE: Scroll em todo o body conforme pedido */
+            @media (max-width: 950px) and (orientation: landscape) {
+                body, html { overflow-y: auto !important; height: auto !important; }
+                main { overflow: visible !important; height: auto !important; max-height: none !important; margin: 10px auto !important; }
+                #view-jogo { height: auto !important; min-height: 500px; }
             }
 
-            /* PC e Tablet Landscape: Sem Scroll */
-            @media (min-width: 768px) {
-                body, main { overflow: hidden !important; height: 100vh !important; }
+            /* Telemóvel PORTRAIT: Status bar no topo, resto preenchido */
+            @media (max-width: 767px) and (orientation: portrait) {
+                body, html { overflow: hidden !important; height: 100% !important; }
+                main { height: calc(100% - 120px) !important; padding: 10px !important; margin: 10px !important; }
                 #view-jogo { height: 100% !important; }
             }
-            
+
+            /* PC / TABLET: Mantém sem scroll */
+            @media (min-width: 768px) {
+                body, main { overflow: hidden !important; height: 100vh !important; }
+            }
+
             .progress-container { display: none; gap: 4px; flex: 1; justify-content: center; padding: 0 15px; }
             @media (min-width: 768px) { .progress-container { display: flex; } }
-            
             .prog-step { height: 10px; flex: 1; border-radius: 10px; background: #e0e0e0; transition: 0.3s; }
             .prog-active { background: var(--cor-dinamica) !important; }
         `;
@@ -148,45 +153,48 @@ const ECRA_JOGO = {
             .game-wrapper { 
                 display: flex; flex-direction: column; 
                 height: 100%; width: 100%; 
-                justify-content: flex-start; /* Força tudo para o topo */
+                position: relative;
             }
             
+            /* Status Bar: Sempre no topo, altura fixa 60px */
             .status-bar { 
                 display: flex; align-items: center; justify-content: space-between; 
                 height: 60px; min-height: 60px; padding: 0 10px; 
                 background: #fff; border-bottom: 2px solid #f0f2f5;
-                margin-top: -10px; /* Sobe um pouco a barra para o topo */
+                z-index: 10;
             }
             
             .stat-bubble { 
-                height: 38px; padding: 0 10px; border-radius: 12px; 
+                height: 38px; padding: 0 12px; border-radius: 12px; 
                 display: flex; align-items: center; justify-content: center; 
-                font-weight: 900; font-size: 0.9rem; color: white; gap: 4px;
+                font-weight: 900; font-size: 0.95rem; color: white; gap: 5px;
             }
-            .b-ronda { background: #f0f2f5; color: #5d7082; min-width: 65px; }
-            .b-certo { background: #8ed131; min-width: 45px; }
-            .b-erro { background: #ff5e5e; min-width: 45px; }
+            .b-ronda { background: #f0f2f5; color: #5d7082; min-width: 70px; }
+            .b-certo { background: #8ed131; min-width: 50px; }
+            .b-erro { background: #ff5e5e; min-width: 50px; }
 
             .btn-i-mini { 
-                width: 34px; height: 34px; border-radius: 50%; 
+                width: 35px; height: 35px; border-radius: 50%; 
                 border: 2px solid var(--cor-dinamica); color: var(--cor-dinamica); 
                 display: flex; align-items: center; justify-content: center; 
-                font-weight: bold; cursor: pointer; font-style: italic; 
+                font-weight: bold; cursor: pointer; font-style: italic; font-family: serif; 
             }
 
+            /* Play Area: Assume o resto do espaço */
             .play-area { 
                 flex: 1; display: flex; flex-direction: column; 
-                align-items: center; gap: 15px; padding: 15px 5px;
+                align-items: center; justify-content: center; 
+                padding: 10px; gap: 15px; overflow: hidden;
             }
             
             .target-box { 
-                width: clamp(120px, 22vh, 170px); height: clamp(120px, 22vh, 170px); 
+                width: clamp(130px, 25vh, 180px); height: clamp(130px, 25vh, 180px); 
                 border: 4px dashed #adb5bd; border-radius: 25px; 
                 display: flex; align-items: center; justify-content: center; background: #fff; 
             }
             .target-box img { max-width: 90%; max-height: 90%; object-fit: contain; }
 
-            /* GRELHA ADAPTÁVEL: 3-3-2 no telemóvel vertical */
+            /* GRELHA ADAPTÁVEL: 3-3-2 no portrait */
             .grid { 
                 display: flex; flex-wrap: wrap; justify-content: center; 
                 gap: 10px; width: 100%; max-width: 600px; 
@@ -196,31 +204,28 @@ const ECRA_JOGO = {
                 background: white; border: 2px solid #eee; border-radius: 18px; 
                 display: flex; align-items: center; justify-content: center; 
                 cursor: pointer; transition: 0.15s; 
-                /* Tamanho padrão PC (4 por linha) */
                 width: calc(25% - 10px); aspect-ratio: 1;
             }
 
             @media (max-width: 767px) and (orientation: portrait) {
-                .card { 
-                    /* Tamanho Telemóvel (3 por linha) */
-                    width: calc(31% - 5px); 
-                }
+                .card { width: calc(31% - 8px); } /* Força 3-3-2 */
             }
 
-            .card img { max-width: 88%; max-height: 88%; object-fit: contain; }
+            .card img { max-width: 85%; max-height: 85%; object-fit: contain; }
             .card:active { transform: scale(0.92); }
 
+            /* Ajuste Landscape */
             @media (max-height: 550px) {
-                .play-area { flex-direction: row; gap: 20px; }
+                .play-area { flex-direction: row; gap: 30px; overflow: visible; }
                 .grid { max-width: 400px; }
-                .card { width: calc(25% - 8px); }
+                .card { width: calc(25% - 10px); }
             }
         </style>
         
         <div class="game-wrapper">
             <div class="status-bar">
-                <div style="display:flex; gap:8px; align-items:center;">
-                    <img src="${JOGO_CONFIG.caminhoIconsMenu}lampada.png" style="width:36px; cursor:pointer" onclick="ECRA_JOGO.ajuda()">
+                <div style="display:flex; gap:10px; align-items:center;">
+                    <img src="${JOGO_CONFIG.caminhoIconsMenu}lampada.png" style="width:38px; cursor:pointer" onclick="ECRA_JOGO.ajuda()">
                     <div class="stat-bubble b-ronda" id="ronda-bubble">1 / 10</div>
                 </div>
 
@@ -228,7 +233,7 @@ const ECRA_JOGO = {
                     ${Array(10).fill().map(() => `<div class="prog-step"></div>`).join('')}
                 </div>
 
-                <div style="display:flex; gap:6px; align-items:center;">
+                <div style="display:flex; gap:8px; align-items:center;">
                     <div class="stat-bubble b-certo">✓ <span id="v-acertos">0</span></div>
                     <div class="stat-bubble b-erro">X <span id="v-erros">0</span></div>
                     <div class="btn-i-mini" onclick="toggleInfoScreen(true)">i</div>
@@ -252,7 +257,9 @@ const ECRA_JOGO = {
         
         document.getElementById('ronda-bubble').innerText = `${ronda} / 10`;
         const steps = document.querySelectorAll('.prog-step');
-        steps.forEach((step, idx) => { step.classList.toggle('prog-active', idx < ronda); });
+        steps.forEach((step, idx) => {
+            step.classList.toggle('prog-active', idx < ronda);
+        });
 
         itemAlvo = DADOS_JOGO.itens[Math.floor(Math.random() * DADOS_JOGO.itens.length)];
         document.getElementById('alvo').innerHTML = `<img src="${DADOS_JOGO.caminhoImagens}${itemAlvo.img}">`;
@@ -274,6 +281,7 @@ const ECRA_JOGO = {
 
     validarResposta(item, elemento) {
         document.querySelectorAll('.card').forEach(c => c.style.pointerEvents = 'none');
+
         if (item.id === itemAlvo.id) {
             acertos++;
             elemento.style.borderColor = "#8ed131";
@@ -283,9 +291,14 @@ const ECRA_JOGO = {
             elemento.style.borderColor = "#ff5e5e";
             elemento.style.background = "#fff5f5";
         }
+        
         document.getElementById('v-acertos').innerText = acertos;
         document.getElementById('v-erros').innerText = erros;
-        setTimeout(() => { ronda++; this.proximaRonda(); }, 700);
+
+        setTimeout(() => {
+            ronda++;
+            this.proximaRonda();
+        }, 700);
     },
 
     ajuda() {
@@ -294,7 +307,7 @@ const ECRA_JOGO = {
         cards.forEach(c => {
             if (c.innerHTML.includes(itemAlvo.img)) {
                 c.style.background = "#fff9c4";
-                c.style.transform = "scale(1.08)";
+                c.style.transform = "scale(1.1)";
                 c.style.borderColor = "var(--cor-dinamica)";
                 setTimeout(() => {
                     c.style.background = "white";
