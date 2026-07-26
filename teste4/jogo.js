@@ -19,6 +19,10 @@ const ECRA_APRESENTACAO = {
     limparLayoutBase() {
         const style = document.createElement('style');
         style.innerHTML = `
+            /* Define a cor do título do jogo igual ao título 1 do header */
+            #jogo-titulo { color: var(--cor-dinamica) !important; }
+
+            /* Ajustes de layout para o ecrã de jogo */
             #view-jogo .card-topo, #view-jogo .card-fundo { display: none !important; }
             #view-jogo .card-meio { border-radius: 25px; height: 100% !important; border: none; background: #fff; }
         `;
