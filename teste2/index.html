@@ -212,7 +212,8 @@
             const labels = { home: "INÍCIO", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
 
             Object.keys(config.links).forEach(key => {
-                if (config.iconesMenu[key]) {
+                // Modificado para ignorar a chave 'jd' no menu
+                if (key !== 'jd' && config.iconesMenu[key]) {
                     const a = document.createElement('a');
                     a.className = 'menu-item'; a.href = config.links[key];
                     a.innerHTML = `<img src="${iconCaminho}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
