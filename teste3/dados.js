@@ -47,7 +47,7 @@ const BIBLIOTECA_CONTEUDO = {
 const JOGO_CONFIG = {
     areaAtiva: "jd", 
     anoAtivo: "jd",        
-    caminhoIconsMenu: "../icons/", 
+    caminhoIconsMenu: "icons/", 
     caminhoIconsJogos: "iconjogos/",
     iconesMenu: {
         home: "home.png", 
@@ -68,7 +68,6 @@ const JOGO_CONFIG = {
         ano3: "/3",
         ano4: "/4"
     },
-    // Resultados atualizados para escala de 0 a 10
     relatorios: [
         { min: 9, max: 10, titulo: "És um craque!", img: "taca_1.png" },
         { min: 7, max: 8, titulo: "Muito bem!", img: "taca_2.png" },
@@ -81,13 +80,6 @@ const JOGO_CONFIG = {
             corEtiqueta: "#6c757d", 
             jogos: [
                 { 
-                    nome: "Estoura-Balão", 
-                    desc: "Estoure desenhos correspondentes.", 
-                    icon: "balao.png", 
-                    link: "balao/", 
-                    cor: "#495057" 
-                },
-                { 
                     nome: "Encontrar o Par", 
                     desc: "Encontra os pares dos animais domésticos.", 
                     icon: "par_animais.png", 
@@ -99,13 +91,8 @@ const JOGO_CONFIG = {
     ]
 };
 
-// ==========================================
-// DADOS ESPECÍFICOS DO JOGO DE MEMÓRIA
-// ==========================================
-
 const DADOS_JOGO_MEMORIA = {
     caminhoImagens: "img/animaisdomesticos/",
-    // Lista de ficheiros de imagem (devem existir na pasta)
     itens: [
         { id: 1, img: "cao.png", nome: "Cão" },
         { id: 2, img: "gato.png", nome: "Gato" },
