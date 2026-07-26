@@ -25,18 +25,34 @@ const BIBLIOTECA_TEMAS = {
 };
 
 // ==========================================
-// 2. BIBLIOTECA DE CONTEÚDO
+// 2. BIBLIOTECA DE CONTEÚDO (Textos Automáticos)
 // ==========================================
 const BIBLIOTECA_CONTEUDO = {
-    "jd": { "jd": { t1: "Jogos em", t2: "Destaque", sub: "Recursos Especiais", rodape: "&copy; Pequenos Curiosos" } },
-    "pre": { "pre": { t1: "Pequenos", t2: "Curiosos", sub: "Atividades | Pré-Escolar", rodape: "&copy; Pequenos Curiosos" } },
+    "jd": { 
+        "jd": { t1: "Jogos em", t2: "Destaque", sub: "Recursos Especiais", rodape: "&copy; Pequenos Curiosos" } 
+    },
+    "pre": { 
+        "pre": { t1: "Pequenos", t2: "Curiosos", sub: "Atividades | Pré-Escolar", rodape: "&copy; Pequenos Curiosos" } 
+    },
     "ano1": { 
         "portugues": { t1: "Pequenos", t2: "Leitores", sub: "1º Ano | Português", rodape: "&copy; Pequenos Leitores" },
-        "matematica": { t1: "Pequenos", t2: "Matemáticos", sub: "1º Ano | Matemática", rodape: "&copy; Pequenos Matemáticos" }
+        "matematica": { t1: "Pequenos", t2: "Matemáticos", sub: "1º Ano | Matemática", rodape: "&copy; Pequenos Matemáticos" },
+        "estudo": { t1: "Pequenos", t2: "Exploradores", sub: "1º Ano | Estudo do Meio", rodape: "&copy; Pequenos Exploradores" }
     },
     "ano2": { 
         "portugues": { t1: "Jovens", t2: "Leitores", sub: "2º Ano | Português", rodape: "&copy; Jovens Leitores" },
-        "matematica": { t1: "Jovens", t2: "Matemáticos", sub: "2º Ano | Matemática", rodape: "&copy; Jovens Matemáticos" }
+        "matematica": { t1: "Jovens", t2: "Matemáticos", sub: "2º Ano | Matemática", rodape: "&copy; Jovens Matemáticos" },
+        "estudo": { t1: "Jovens", t2: "Exploradores", sub: "2º Ano | Estudo do Meio", rodape: "&copy; Jovens Exploradores" }
+    },
+    "ano3": { 
+        "portugues": { t1: "Exploradores", t2: "Leitores", sub: "3º Ano | Português", rodape: "&copy; Exploradores" },
+        "matematica": { t1: "Exploradores", t2: "Cálculos", sub: "3º Ano | Matemática", rodape: "&copy; Exploradores" },
+        "estudo": { t1: "Exploradores", t2: "do Mundo", sub: "3º Ano | Estudo do Meio", rodape: "&copy; Exploradores" }
+    },
+    "ano4": { 
+        "portugues": { t1: "Mestres", t2: "da Língua", sub: "4º Ano | Português", rodape: "&copy; Mestres Curiosos" },
+        "matematica": { t1: "Mestres", t2: "do Cálculo", sub: "4º Ano | Matemática", rodape: "&copy; Mestres Curiosos" },
+        "estudo": { t1: "Mestres", t2: "do Mundo", sub: "4º Ano | Estudo do Meio", rodape: "&copy; Mestres Curiosos" }
     }
 };
 
@@ -62,9 +78,10 @@ const JOGO_CONFIG = {
     ],
 
     relatorios: [
-        { min: 9, max: 12, titulo: "És um craque!", img: "taca_1.png" },
-        { min: 6, max: 8, titulo: "Muito bem!", img: "taca_2.png" },
-        { min: 0, max: 5, titulo: "Continua a tentar!", img: "taca_4.png" }
+        { min: 9, max: 10, titulo: "És um craque!", img: "taca_1.png" },
+        { min: 7, max: 8, titulo: "Muito bem!", img: "taca_2.png" },
+        { min: 5, max: 6, titulo: "Estás quase lá!", img: "taca_3.png" },
+        { min: 0, max: 4, titulo: "Continua a tentar!", img: "taca_4.png" }
     ]
 };
 
