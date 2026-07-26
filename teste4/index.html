@@ -3,187 +3,212 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title id="aba-titulo">A carregar...</title>
-    
+    <title id="aba-navegador">Jogo Educativo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* CSS RESET E ESTRUTURA BASE */
-        :root {
-            --cor-primaria: #5ba4e5;
-            --cor-pagina: #e9f0f8;
-            --cor-texto: #5d7082;
-            --cor-escura: #3d7db8;
-        }
-
-        * { margin: 0; padding: 0; box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
-
-        body {
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background-color: var(--cor-pagina);
-            color: var(--cor-texto);
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow: hidden; /* Evita scroll no body */
-        }
-
-        /* MENU HAMBURGUER */
-        #menu-container {
-            position: fixed;
-            top: 15px;
-            right: 15px;
-            z-index: 1000;
-        }
-
-        #btn-hamburger {
-            width: 45px;
-            height: 45px;
-            border-radius: 8px;
-            cursor: pointer;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            transition: 0.3s;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-        }
-
-        .bar { width: 25px; height: 3px; background-color: white; border-radius: 2px; }
-
-        #lista-menu {
-            position: absolute;
-            top: 55px;
-            right: 0;
-            background: white;
-            list-style: none;
-            padding: 10px;
-            border-radius: 8px;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-            display: none; /* Escondido por defeito */
-            min-width: 180px;
-        }
-
-        #lista-menu.ativo { display: block; }
-
-        #lista-menu li { border-bottom: 1px solid #eee; }
-        #lista-menu li:last-child { border: none; }
-
-        #lista-menu a {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px;
-            text-decoration: none;
-            color: var(--cor-texto);
-            font-weight: 600;
-            font-size: 14px;
-        }
-
-        /* CABEÇALHO */
-        header {
-            text-align: center;
-            padding: 20px 10px;
-            flex-shrink: 0; /* Não encolhe */
-        }
-
-        header h1 { font-size: clamp(1.5rem, 5vw, 2.5rem); color: var(--cor-primaria); text-transform: uppercase; }
-        header h1 strong { color: var(--cor-escura); }
-        header p { font-size: 0.9rem; letter-spacing: 1px; opacity: 0.8; }
-
-        /* ÁREA DO JOGO (CONTEÚDO PRINCIPAL) */
-        main {
-            flex-grow: 1; /* Ocupa o espaço restante */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            padding: 10px;
-            overflow-y: auto; /* Só aparece scroll aqui se o jogo for grande */
-            width: 100%;
-        }
-
-        #nome-jogo-titulo {
-            margin-bottom: 15px;
-            color: var(--cor-escura);
-            font-size: clamp(1.1rem, 4vw, 1.6rem);
-            text-align: center;
-        }
-
-        #game-area {
-            width: 100%;
-            max-width: 1000px;
-            background: rgba(255, 255, 255, 0.5);
-            border-radius: 20px;
-            min-height: 300px; /* Altura mínima para o jogo */
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border: 3px dashed var(--cor-primaria);
-        }
-
-        /* RODAPÉ */
-        footer {
-            text-align: center;
-            padding: 10px;
-            font-size: 0.8rem;
-            flex-shrink: 0;
-        }
-
-        /* RESPONSIVIDADE PARA MOBILE */
-        @media (max-width: 600px) {
-            header { padding: 15px 5px; }
-            #btn-hamburger { width: 40px; height: 40px; }
-        }
+        :root { --text-grey: #8792a1; --menu-item-h: 50px; --cor-dinamica: #E691A7; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
+        
+        body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; background: #f0f2f5; }
+        
+        header { background: white; border-radius: 0 0 35px 35px; display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; padding: 0 15px; height: 95px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 20px; }
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
+        #header-icon { height: 70px; width: 70px; object-fit: contain; }
+        
+        .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
+        #txt-titulo1 { font-weight: 900; font-size: 1.65rem; }
+        #txt-titulo2 { font-weight: 800; font-size: 1.4rem; color: #8792a1; }
+        #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
+        
+        .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--cor-dinamica); }
+        #icon-voltar-top { height: 42px; width: 42px; object-fit: contain; cursor: pointer; justify-self: end; }
+        
+        .menu-dropdown { position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 8px; z-index: 2000; width: 230px; }
+        .menu-item { display: flex; align-items: center; gap: 12px; height: var(--menu-item-h); padding: 0 15px; text-decoration: none; color: #7b899b; font-weight: 800; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; text-transform: uppercase; font-size: 0.85rem; transition: 0.2s; }
+        .menu-item img { height: 30px; width: 30px; object-fit: contain; }
+        .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
+        
+        main { flex: 1; display: flex; flex-direction: column; background: white; margin: 0 20px 10px 20px; padding: 25px; border-radius: 35px; border: 2px solid #fff; max-width: 950px; align-self: center; width: calc(100% - 40px); box-shadow: 0 0 20px 2px color-mix(in srgb, var(--cor-dinamica), transparent 85%); overflow: hidden; position: relative; }
+        
+        .view-container { display: none; flex-direction: column; height: 100%; flex: 1; overflow: hidden; }
+        .view-active { display: flex; }
+        
+        .card-topo { flex-shrink: 0; text-align: center; padding-bottom: 15px; border-bottom: 1px dashed #eee; margin-bottom: 15px; }
+        .card-topo h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; }
+        
+        .card-meio { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 20px; background: #fdfdfd; position: relative; }
+        /* Scroll apenas se o conteúdo do jogo for maior que a área disponível */
+        #game-injection-point { width: 100%; height: 100%; overflow-y: auto; padding: 10px; }
+        
+        .card-fundo { flex-shrink: 0; display: flex; align-items: center; gap: 15px; padding-top: 20px; }
+        .btn-info { width: 60px; height: 60px; border-radius: 50%; border: 3px solid var(--cor-dinamica); color: var(--cor-dinamica); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; background: white; cursor: pointer; transition: 0.3s; flex-shrink: 0; }
+        .btn-jogar { flex: 1; background: var(--cor-dinamica); color: white; padding: 18px; border-radius: 25px; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; font-size: 1.2rem; border: none; cursor: pointer; text-transform: uppercase; }
+        
+        #info-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 3000; display: none; flex-direction: column; padding: 30px; animation: slideIn 0.4s ease-out; }
+        @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
+        
+        footer { height: 40px; display: flex; align-items: center; justify-content: center; background: white; border-radius: 35px 35px 0 0; flex-shrink: 0; }
+        .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
     </style>
 </head>
 <body>
-
-    <!-- Menu -->
-    <nav id="menu-container">
-        <div id="btn-hamburger" onclick="toggleMenu()">
-            <div class="bar"></div>
-            <div class="bar"></div>
-            <div class="bar"></div>
-        </div>
-        <ul id="lista-menu">
-            <!-- Gerado via dados.js -->
-        </ul>
-    </nav>
-
-    <!-- Topo -->
     <header>
-        <h1 id="site-t1">---</h1>
-        <p id="site-sub">---</p>
+        <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
+        <div id="dropdownMenu" class="menu-dropdown"></div>
+        
+        <div class="header-center">
+            <img id="header-icon" src="" alt="Ícone Ano">
+            <div class="title-group">
+                <div id="txt-titulo1"></div>
+                <div id="txt-titulo2"></div>
+                <div id="txt-subtitulo-header"></div>
+            </div>
+        </div>
+        
+        <img id="icon-voltar-top" src="" alt="Voltar" onclick="voltarPagina()">
     </header>
 
-    <!-- Jogo -->
     <main>
-        <h2 id="nome-jogo-titulo">---</h2>
-        <div id="game-area">
-            <!-- O conteúdo do jogo (cartas, perguntas, etc) entra aqui -->
-            <p id="carregando">A carregar jogo...</p>
+        <!-- Ecrã 1: Apresentação -->
+        <div id="view-apresentacao" class="view-container view-active">
+            <div class="card-topo"><h2 id="jogo-titulo">---</h2></div>
+            <div class="card-meio" id="area-jogo-intro">
+                <!-- Imagem/Animação do Jogo -->
+            </div>
+            <div class="card-fundo">
+                <div class="btn-info" onclick="toggleInfoScreen(true)"><i>i</i></div>
+                <button class="btn-jogar" onclick="mudarEcra('jogo')"><i class="fas fa-play"></i> JOGAR</button>
+            </div>
+        </div>
+
+        <!-- Ecrã 2: Jogo propriamente dito -->
+        <div id="view-jogo" class="view-container">
+            <div class="card-topo"><h2 id="jogo-titulo-exec">---</h2></div>
+            <div class="card-meio">
+                <div id="game-injection-point"></div>
+            </div>
+            <div class="card-fundo">
+                <button class="btn-jogar" onclick="mudarEcra('resultados')">TERMINAR</button>
+            </div>
+        </div>
+
+        <!-- Ecrã 3: Resultados -->
+        <div id="view-resultados" class="view-container">
+            <div class="card-topo"><h2>RESULTADOS</h2></div>
+            <div class="card-meio">
+                <div style="text-align:center">
+                    <img id="res-img" src="" style="width:150px; margin-bottom:15px;">
+                    <div id="res-titulo" style="font-weight:900; font-size:1.8rem; color:var(--cor-dinamica)"></div>
+                    <p style="font-weight:700; color:#8792a1;">Desafio Concluído!</p>
+                </div>
+            </div>
+            <div class="card-fundo">
+                <button class="btn-jogar" onclick="mudarEcra('apresentacao')">VOLTAR AO INÍCIO</button>
+            </div>
         </div>
     </main>
 
-    <!-- Rodapé -->
-    <footer id="site-rodape"></footer>
+    <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
-    <!-- Scripts -->
+    <!-- Overlay de Informações -->
+    <div id="info-screen">
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
+            <h2 id="info-titulo" style="font-weight:900; color:var(--cor-dinamica);">Instruções</h2>
+            <i class="fas fa-times" style="font-size:2rem; cursor:pointer; color:#8792a1;" onclick="toggleInfoScreen(false)"></i>
+        </div>
+        <div id="info-texto" style="flex:1; overflow-y:auto; font-size:1.1rem; line-height:1.6;"></div>
+    </div>
+
     <script src="dados.js"></script>
     <script src="jogos.js"></script>
 
     <script>
-        // Lógica simples para abrir/fechar menu
-        function toggleMenu() {
-            document.getElementById('lista-menu').classList.toggle('ativo');
-        }
-        
-        // Fechar menu ao clicar fora
-        window.onclick = function(event) {
-            if (!event.target.closest('#menu-container')) {
-                document.getElementById('lista-menu').classList.remove('ativo');
+        // Função para mudar de ecrã (Apresentação, Jogo, Resultados)
+        function mudarEcra(id) {
+            document.querySelectorAll('.view-container').forEach(v => v.classList.remove('view-active'));
+            document.getElementById('view-' + id).classList.add('view-active');
+            
+            if(id === 'jogo') {
+                document.querySelector('footer').style.visibility = 'hidden';
+                if(typeof iniciarLogicaJogo === "function") iniciarLogicaJogo(); 
+            } else {
+                document.querySelector('footer').style.visibility = 'visible';
+            }
+
+            if(id === 'resultados') {
+                // Exemplo de cálculo: pontuacaoFinal deve ser definida no teu jogos.js
+                const pontos = window.pontuacaoFinal || 0;
+                const rel = JOGO_CONFIG.relatorios.find(r => pontos >= r.min && pontos <= r.max);
+                if(rel) {
+                    document.getElementById('res-titulo').innerText = rel.titulo;
+                    document.getElementById('res-img').src = JOGO_CONFIG.caminhoIconsMenu + rel.img;
+                }
             }
         }
+
+        function voltarPagina() { window.location.href = JOGO_CONFIG.links.home; }
+        
+        function toggleMenu(e) { 
+            if(e) e.stopPropagation(); 
+            const m = document.getElementById('dropdownMenu'); 
+            m.style.display = (m.style.display==='flex') ? 'none' : 'flex'; 
+        }
+
+        function toggleInfoScreen(show) { document.getElementById('info-screen').style.display = show ? 'flex' : 'none'; }
+
+        window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
+
+        window.onload = () => {
+            const config = JOGO_CONFIG;
+            const tema = BIBLIOTECA_TEMAS[config.areaAtiva];
+            const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
+            const pathIcons = config.caminhoIconsMenu;
+
+            // 1. Aplicar Identidade Visual
+            document.getElementById('aba-navegador').innerText = config.nomeJogo || "Jogo";
+            document.documentElement.style.setProperty('--cor-dinamica', tema.corPrimaria);
+            document.getElementById('txt-titulo1').style.color = tema.corPrimaria;
+            
+            // 2. Preencher Textos do Cabeçalho e Rodapé
+            document.getElementById('txt-titulo1').innerText = conteudo.t1;
+            document.getElementById('txt-titulo2').innerText = conteudo.t2;
+            document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
+            document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
+            
+            // 3. Ícones de Topo
+            document.getElementById('header-icon').src = pathIcons + config.iconesMenu[config.anoAtivo];
+            document.getElementById('icon-voltar-top').src = pathIcons + tema.voltarMobile;
+
+            // 4. Construir Menu Hambúrguer (Conforme pedido)
+            const menuBox = document.getElementById('dropdownMenu');
+            const ordemMenu = ['home', 'pre', 'ano1', 'ano2', 'ano3', 'ano4'];
+            const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
+
+            ordemMenu.forEach(chave => {
+                if(config.links[chave]) {
+                    const a = document.createElement('a');
+                    a.className = 'menu-item';
+                    a.href = config.links[chave];
+                    a.innerHTML = `<img src="${pathIcons}${config.iconesMenu[chave]}"><span>${labels[chave]}</span>`;
+                    menuBox.appendChild(a);
+                }
+            });
+
+            // Adicionar Item Voltar ao final do Menu
+            const btnVoltarMenu = document.createElement('a');
+            btnVoltarMenu.className = 'menu-item';
+            btnVoltarMenu.href = "javascript:history.back()";
+            btnVoltarMenu.innerHTML = `<img src="${pathIcons}${tema.voltarMobile}"><span>VOLTAR</span>`;
+            menuBox.appendChild(btnVoltarMenu);
+
+            // 5. Carregar Dados do Jogo na Apresentação
+            const jogoDados = config.listaFases[0].jogos[0];
+            document.getElementById('jogo-titulo').innerText = jogoDados.nome;
+            document.getElementById('jogo-titulo-exec').innerText = jogoDados.nome;
+            document.getElementById('area-jogo-intro').innerHTML = `<img src="${config.caminhoIconsJogos}${jogoDados.icon}" style="max-height:80%; max-width:80%; object-fit:contain;">`;
+            document.getElementById('info-texto').innerHTML = `<p>${jogoDados.desc}</p>`;
+        };
     </script>
 </body>
 </html>
