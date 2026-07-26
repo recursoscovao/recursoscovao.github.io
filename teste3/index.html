@@ -60,9 +60,11 @@
         .card-topo { flex-shrink: 0; text-align: center; padding-bottom: 15px; border-bottom: 1px dashed #eee; margin-bottom: 15px; }
         .card-topo h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; }
 
-        .card-meio { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 20px; background: #fdfdfd; }
+        .card-meio { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 20px; background: #fdfdfd; position: relative;}
         .card-meio img { max-width: 100%; max-height: 100%; object-fit: contain; }
-        #iframe-jogo { width: 100%; height: 100%; border: none; border-radius: 20px; }
+        
+        /* Container onde o jogo será injetado */
+        #game-injection-point { width: 100%; height: 100%; overflow-y: auto; }
 
         .card-fundo { flex-shrink: 0; display: flex; align-items: center; gap: 15px; padding-top: 20px; }
 
@@ -130,7 +132,7 @@
         <div id="view-jogo" class="view-container">
             <div class="card-topo"><h2 id="jogo-titulo-exec">A JOGAR...</h2></div>
             <div class="card-meio">
-                <iframe id="iframe-jogo" src=""></iframe>
+                <div id="game-injection-point"></div>
             </div>
             <div class="card-fundo">
                 <button class="btn-jogar" onclick="mudarEcra('resultados')">ENCERRAR JOGO</button>
@@ -167,24 +169,21 @@
     <script src="jogo.js"></script>
 
     <script>
+        let pontuacaoFinal = 0;
+
         function mudarEcra(id) {
             document.querySelectorAll('.view-container').forEach(v => v.classList.remove('view-active'));
             document.getElementById('view-' + id).classList.add('view-active');
             
-            const iframe = document.getElementById('iframe-jogo');
-            
             if(id === 'jogo') {
-                iframe.src = JOGO_CONFIG.listaFases[0].jogos[0].link;
                 document.querySelector('footer').style.display = 'none';
+                // Inicia a lógica que está no jogo.js
+                initJogo(); 
             } 
             else if(id === 'resultados') {
-                iframe.src = "";
                 document.querySelector('footer').style.display = 'flex';
                 
-                // LÓGICA DE RESULTADOS DINÂMICOS
-                // A pontuaçãoGanha pode vir do ficheiro jogo.js se necessário
-                const pontuacaoGanha = 9; 
-                const relatorio = JOGO_CONFIG.relatorios.find(r => pontuacaoGanha >= r.min && pontuacaoGanha <= r.max);
+                const relatorio = JOGO_CONFIG.relatorios.find(r => pontuacaoFinal >= r.min && pontuacaoFinal <= r.max);
                 
                 if(relatorio) {
                     document.getElementById('res-titulo').innerText = relatorio.titulo;
@@ -192,7 +191,6 @@
                 }
             } 
             else {
-                iframe.src = "";
                 document.querySelector('footer').style.display = 'flex';
             }
         }
@@ -237,12 +235,6 @@
                     menuBox.appendChild(a);
                 }
             });
-
-            const aVoltar = document.createElement('a');
-            aVoltar.className = 'menu-item'; 
-            aVoltar.href = "../";
-            aVoltar.innerHTML = `<img src="${iconCaminho}${bibTema.voltarMobile}"> <span>VOLTAR</span>`;
-            menuBox.appendChild(aVoltar);
 
             const jogoAtivo = config.listaFases[0].jogos[0];
             if(jogoAtivo) {
