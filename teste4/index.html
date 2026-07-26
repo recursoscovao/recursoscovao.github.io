@@ -102,6 +102,9 @@
             if(id === 'jogo') { document.querySelector('footer').style.display = 'none'; initJogo(); } 
             else if(id === 'resultados') {
                 document.querySelector('footer').style.display = 'flex';
+                    // --- LINHA INSERIDA AQUI ---
+                if(typeof ECRA_RESULTADOS !== 'undefined') ECRA_RESULTADOS.init();
+                // ---------------------------
                 const rel = JOGO_CONFIG.relatorios.find(r => pontuacaoFinal >= r.min && pontuacaoFinal <= r.max);
                 if(rel) { document.getElementById('res-titulo').innerText = rel.titulo; document.getElementById('res-img').src = JOGO_CONFIG.caminhoIconsMenu + rel.img; }
             } else { document.querySelector('footer').style.display = 'flex'; }
