@@ -6,10 +6,8 @@ let itemAlvo = null;
 
 /**
  * CONFIGURAÇÃO DA APRESENTAÇÃO (SOBREPÕE O INDEX.HTML)
- * Esta função injeta a animação e o texto detalhado ignorando o que está no JOGO_CONFIG
  */
 function configurarApresentacao() {
-    // 1. Injetar a Animação no "card-meio" (Substitui o ícone estático)
     const areaConteudo = document.getElementById('area-jogo-conteudo');
     if (areaConteudo) {
         areaConteudo.innerHTML = `
@@ -19,7 +17,6 @@ function configurarApresentacao() {
             .demo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
             .demo-card { width: 60px; height: 60px; border: 2px solid #eee; border-radius: 12px; background: white; display: flex; align-items: center; justify-content: center; }
             .demo-hand { position: absolute; font-size: 35px; color: var(--cor-dinamica); animation: moveHandDemo 3s infinite; pointer-events: none; z-index: 10; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2)); }
-            
             @keyframes pulseDemo { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
             @keyframes moveHandDemo {
                 0% { transform: translate(60px, 160px); opacity: 0; }
@@ -30,11 +27,13 @@ function configurarApresentacao() {
             }
             .flash-win { animation: flashWinDemo 3s infinite; }
             @keyframes flashWinDemo { 0%, 50% { background: white; } 60% { background: #8ed131; border-color: #8ed131; } 100% { background: white; } }
+            
+            /* CSS para esconder elementos no view-jogo quando ativo */
+            #view-jogo .card-topo, #view-jogo .card-fundo { display: none !important; }
+            #view-jogo .card-meio { border-radius: 25px; height: 100%; }
         </style>
         <div class="demo-container">
-            <!-- Simulação do Alvo -->
             <div class="demo-target"><img src="${DADOS_JOGO.caminhoImagens}${DADOS_JOGO.itens[0].img}" style="width:75%"></div>
-            <!-- Simulação das Opções -->
             <div class="demo-grid">
                 <div class="demo-card"><img src="${DADOS_JOGO.caminhoImagens}${DADOS_JOGO.itens[1].img}" style="width:70%"></div>
                 <div class="demo-card flash-win"><img src="${DADOS_JOGO.caminhoImagens}${DADOS_JOGO.itens[0].img}" style="width:70%"></div>
@@ -44,46 +43,29 @@ function configurarApresentacao() {
         </div>`;
     }
 
-    // 2. Injetar o Texto Completo (Substitui a descrição curta do ficheiro dados)
     const infoTexto = document.getElementById('info-texto');
     if (infoTexto) {
         infoTexto.innerHTML = `
             <div style="text-align: left; padding: 10px; font-size: 1rem;">
                 <h3 style="color: var(--cor-dinamica); margin-bottom: 10px; font-weight: 900;">OBJETIVO DO JOGO</h3>
-                <p>Observa atentamente o animal apresentado no topo do ecrã e encontra a imagem igual entre as várias opções. Clica ou toca no animal correto para avançares para a ronda seguinte.</p>
-                
+                <p>Observa atentamente o animal apresentado no topo do ecrã e encontra a imagem igual entre as várias opções.</p>
                 <h3 style="color: var(--cor-dinamica); margin-top: 20px; margin-bottom: 10px; font-weight: 900;">COMO JOGAR</h3>
-                <ul style="padding-left: 20px; line-height: 1.5; margin-bottom: 15px;">
-                    <li>Observa o animal que aparece no topo do ecrã.</li>
-                    <li>Analisa todas as imagens apresentadas.</li>
-                    <li>Encontra a imagem <b>exatamente igual</b> ao modelo.</li>
-                    <li>Clica ou toca no animal correto.</li>
-                    <li>Se acertares, passas para a próxima ronda.</li>
-                    <li>Se errares, tenta novamente até encontrares o par correto.</li>
-                    <li>Completa as 10 rondas para veres a tua pontuação.</li>
-                </ul>
-
-                <h3 style="color: var(--cor-dinamica); margin-top: 20px; margin-bottom: 10px; font-weight: 900;">REGRAS</h3>
                 <ul style="padding-left: 20px; line-height: 1.5;">
-                    <li>Existe apenas uma resposta correta em cada ronda.</li>
-                    <li>Observa com atenção antes de responder.</li>
-                    <li>Não há limite de tempo.</li>
+                    <li>Observa o animal no topo.</li>
+                    <li>Clica na imagem <b>exatamente igual</b> na grelha.</li>
+                    <li>Cada escolha (certa ou errada) conta como uma ronda.</li>
+                    <li>O jogo termina após 10 rondas.</li>
                 </ul>
-
                 <h3 style="color: var(--cor-dinamica); margin-top: 20px; margin-bottom: 10px; font-weight: 900;">DICAS</h3>
-                <p>Observa cuidadosamente: <b>a forma, as cores e os detalhes</b> (orelhas, patas, asas, cauda, etc.). Alguns animais podem ser parecidos, escolhe apenas o que é idêntico.</p>
-
-                <h3 style="color: var(--cor-dinamica); margin-top: 20px; margin-bottom: 10px; font-weight: 900;">O QUE VAIS DESENVOLVER?</h3>
-                <p>Atenção e concentração, memória visual, capacidade de observação e discriminação visual.</p>
+                <p>Observa as cores e detalhes! Alguns animais são muito parecidos.</p>
             </div>`;
     }
 }
 
-// Pequeno atraso para garantir que o window.onload do index.html já terminou
 setTimeout(configurarApresentacao, 150);
 
 /**
- * LÓGICA DO JOGO (Executada ao clicar em JOGAR)
+ * LÓGICA DO JOGO
  */
 
 function initJogo() {
@@ -96,28 +78,28 @@ function renderInterface() {
     const container = document.getElementById('game-injection-point');
     container.innerHTML = `
     <style>
-        .status-bar { display: flex; align-items: center; justify-content: space-between; padding: 10px 20px; border-bottom: 2px solid #eee; background: #fff; }
-        .stat-group { display: flex; align-items: center; gap: 10px; }
-        .round-tag { background: var(--cor-dinamica); color: white; padding: 5px 15px; border-radius: 12px; font-weight: 900; }
-        .score { color: white; padding: 5px 12px; border-radius: 10px; font-weight: 900; min-width: 45px; text-align: center; }
+        .status-bar { display: flex; align-items: center; justify-content: space-between; padding: 12px 15px; border-bottom: 2px solid #f0f2f5; background: #fff; width: 100%; }
+        .stat-group { display: flex; align-items: center; gap: 8px; }
+        .round-tag { background: #f0f2f5; color: #5d7082; padding: 5px 12px; border-radius: 10px; font-weight: 900; font-size: 0.9rem; }
+        .score { color: white; padding: 5px 12px; border-radius: 10px; font-weight: 900; min-width: 40px; text-align: center; }
         .s-certo { background: #8ed131; } .s-erro { background: #ff5e5e; }
-        .play-area { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; gap: 20px; flex: 1; }
-        .target-box { width: 130px; height: 130px; border: 4px dashed #adb5bd; border-radius: 25px; display: flex; align-items: center; justify-content: center; background: #fff; box-shadow: inset 0 0 10px rgba(0,0,0,0.05); }
-        .target-box img { max-width: 85%; max-height: 85%; object-fit: contain; }
-        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; width: 100%; max-width: 550px; }
-        .card { aspect-ratio: 1; border: 2px solid #eee; border-radius: 18px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: white; transition: 0.2s; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-        .card:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.05); }
-        .card:active { transform: scale(0.95); }
+        .btn-mini-info { width: 32px; height: 32px; border-radius: 50%; border: 2px solid var(--cor-dinamica); color: var(--cor-dinamica); display: flex; align-items: center; justify-content: center; font-weight: bold; cursor: pointer; font-style: italic; font-family: 'Georgia', serif; }
+        .play-area { display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 15px; gap: 15px; flex: 1; }
+        .target-box { width: 120px; height: 120px; border: 4px dashed #adb5bd; border-radius: 20px; display: flex; align-items: center; justify-content: center; background: #fff; }
+        .target-box img { max-width: 80%; max-height: 80%; object-fit: contain; }
+        .grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; width: 100%; max-width: 500px; }
+        .card { aspect-ratio: 1; border: 2px solid #eee; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; background: white; transition: 0.2s; }
         .card img { max-width: 75%; max-height: 75%; object-fit: contain; }
     </style>
     <div class="status-bar">
         <div class="stat-group">
-            <img src="${JOGO_CONFIG.caminhoIconsMenu}lampada.png" style="width:38px;cursor:pointer" onclick="ajuda()">
+            <img src="${JOGO_CONFIG.caminhoIconsMenu}lampada.png" style="width:35px;cursor:pointer" onclick="ajuda()">
             <div class="round-tag" id="ronda-txt">1 / 10</div>
         </div>
         <div class="stat-group">
             <div class="score s-certo">✓ <span id="v-acertos">0</span></div>
             <div class="score s-erro">X <span id="v-erros">0</span></div>
+            <div class="btn-mini-info" onclick="toggleInfoScreen(true)">i</div>
         </div>
     </div>
     <div class="play-area">
@@ -129,17 +111,15 @@ function renderInterface() {
 function gerarRonda() {
     if (ronda > 10) { 
         pontuacaoFinal = acertos; 
-        mudarEcra('resultados'); 
+        setTimeout(() => mudarEcra('resultados'), 400); 
         return; 
     }
     
     document.getElementById('ronda-txt').innerText = `${ronda} / 10`;
     
-    // Escolher item alvo usando DADOS_JOGO
     itemAlvo = DADOS_JOGO.itens[Math.floor(Math.random() * DADOS_JOGO.itens.length)];
     document.getElementById('alvo').innerHTML = `<img src="${DADOS_JOGO.caminhoImagens}${itemAlvo.img}">`;
 
-    // Gerar grelha (1 certa + 7 erradas)
     let opcoes = [itemAlvo];
     let outros = DADOS_JOGO.itens.filter(i => i.id !== itemAlvo.id).sort(() => 0.5 - Math.random());
     opcoes = [...opcoes, ...outros.slice(0, 7)].sort(() => 0.5 - Math.random());
@@ -152,27 +132,28 @@ function gerarRonda() {
         div.className = 'card';
         div.innerHTML = `<img src="${DADOS_JOGO.caminhoImagens}${item.img}">`;
         div.onclick = () => {
+            // Bloqueia cliques imediatos para processar a ronda
+            const cards = document.querySelectorAll('.card');
+            cards.forEach(c => c.style.pointerEvents = 'none');
+
             if (item.id === itemAlvo.id) {
                 acertos++;
                 div.style.borderColor = "#8ed131";
                 div.style.background = "#f1f8e9";
-                
-                // Bloqueia cliques imediatos para não somar pontos extra
-                const cards = document.querySelectorAll('.card');
-                cards.forEach(c => c.style.pointerEvents = 'none');
-                
-                setTimeout(() => {
-                    ronda++;
-                    gerarRonda();
-                }, 600);
             } else {
                 erros++;
                 div.style.borderColor = "#ff5e5e";
-                div.style.opacity = "0.4";
-                div.style.pointerEvents = 'none'; // Bloqueia clicar no mesmo erro
+                div.style.background = "#fff5f5";
             }
+            
             document.getElementById('v-acertos').innerText = acertos;
             document.getElementById('v-erros').innerText = erros;
+
+            // Em ambos os casos (acerto ou erro), avança a ronda
+            setTimeout(() => {
+                ronda++;
+                gerarRonda();
+            }, 700);
         };
         grid.appendChild(div);
     });
@@ -183,7 +164,7 @@ function ajuda() {
     cards.forEach(c => {
         if (c.innerHTML.includes(itemAlvo.img)) {
             c.style.background = "#fff9c4";
-            c.style.transform = "scale(1.1)";
+            c.style.transform = "scale(1.05)";
             setTimeout(() => {
                 c.style.background = "white";
                 c.style.transform = "scale(1)";
