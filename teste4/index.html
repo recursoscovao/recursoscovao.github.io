@@ -4,154 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Jogo Educativo</title>
-    <!-- CSS Externo -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        :root { 
-            --text-grey: #8792a1; 
-            --menu-item-h: 50px; 
-            --cor-dinamica: #E691A7; /* Cor padrão que será alterada via JS */
-        }
-
+        :root { --text-grey: #8792a1; --menu-item-h: 50px; --cor-dinamica: #E691A7; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
-        
-        body { 
-            height: 100vh; 
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; 
-            background: #f0f2f5; 
-            transition: background 0.3s ease;
-        }
-
-        /* HEADER */
-        header { 
-            background: white; 
-            border-radius: 0 0 35px 35px; 
-            display: grid; 
-            grid-template-columns: 50px 1fr 50px; 
-            align-items: center; 
-            padding: 0 15px; 
-            height: 95px; 
-            z-index: 1000; 
-            flex-shrink: 0; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
-            margin-bottom: 20px; 
-        }
-
+        body { height: 100vh; display: flex; flex-direction: column; overflow: hidden; background: #f0f2f5; transition: background 0.3s ease; }
+        header { background: white; border-radius: 0 0 35px 35px; display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; padding: 0 15px; height: 95px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 20px; }
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         #header-icon { height: 60px; width: 60px; object-fit: contain; }
-        
         .title-group { display: flex; flex-direction: column; line-height: 0.9; text-transform: uppercase; }
         #txt-titulo1 { font-weight: 900; font-size: 1.5rem; }
         #txt-titulo2 { font-weight: 800; font-size: 1.3rem; color: #8792a1; }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 700; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
-
         .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--cor-dinamica); }
         #icon-voltar-top { height: 42px; width: 42px; object-fit: contain; cursor: pointer; justify-self: end; }
-
-        /* MENU DROP-DOWN */
-        .menu-dropdown { 
-            position: absolute; 
-            top: 85px; 
-            left: 15px; 
-            display: none; 
-            flex-direction: column; 
-            gap: 8px; 
-            z-index: 2000; 
-            width: 230px; 
-        }
-        .menu-item { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; 
-            height: var(--menu-item-h); 
-            padding: 0 15px; 
-            text-decoration: none; 
-            color: #7b899b; 
-            font-weight: 800; 
-            background: white; 
-            border-radius: 15px; 
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08); 
-            cursor: pointer; 
-            text-transform: uppercase; 
-            font-size: 0.85rem; 
-            transition: 0.2s; 
-        }
+        .menu-dropdown { position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 8px; z-index: 2000; width: 230px; }
+        .menu-item { display: flex; align-items: center; gap: 12px; height: var(--menu-item-h); padding: 0 15px; text-decoration: none; color: #7b899b; font-weight: 800; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; text-transform: uppercase; font-size: 0.85rem; transition: 0.2s; }
         .menu-item img { height: 28px; width: 28px; object-fit: contain; }
         .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
-
-        /* MAIN CONTENT */
-        main { 
-            flex: 1; 
-            display: flex; 
-            flex-direction: column; 
-            background: white; 
-            margin: 0 20px 20px 20px; 
-            padding: 25px; 
-            border-radius: 35px; 
-            border: 2px solid #fff; 
-            max-width: 950px; 
-            align-self: center; 
-            width: calc(100% - 40px); 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05); 
-            overflow: hidden; 
-            position: relative;
-        }
-
+        main { flex: 1; display: flex; flex-direction: column; background: white; margin: 0 20px 20px 20px; padding: 25px; border-radius: 35px; border: 2px solid #fff; max-width: 950px; align-self: center; width: calc(100% - 40px); box-shadow: 0 10px 30px rgba(0,0,0,0.05); overflow: hidden; position: relative; }
         .view-container { display: none; flex-direction: column; height: 100%; flex: 1; }
         .view-active { display: flex; }
-
         .card-topo { flex-shrink: 0; text-align: center; padding-bottom: 15px; border-bottom: 1px dashed #eee; margin-bottom: 15px; }
         .card-topo h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; }
-
-        .card-meio { 
-            flex: 1; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            overflow: hidden; 
-            border-radius: 20px; 
-            background: #fdfdfd; 
-            position: relative; 
-        }
+        .card-meio { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 20px; background: #fdfdfd; position: relative; }
         .card-meio img { max-width: 80%; max-height: 80%; object-fit: contain; }
-
         .card-fundo { flex-shrink: 0; display: flex; align-items: center; gap: 15px; padding-top: 20px; }
-        
-        .btn-info { 
-            width: 60px; height: 60px; border-radius: 50%; 
-            border: 3px solid var(--cor-dinamica); color: var(--cor-dinamica); 
-            display: flex; align-items: center; justify-content: center; 
-            font-size: 1.8rem; background: white; cursor: pointer; transition: 0.3s; 
-        }
+        .btn-info { width: 60px; height: 60px; border-radius: 50%; border: 3px solid var(--cor-dinamica); color: var(--cor-dinamica); display: flex; align-items: center; justify-content: center; font-size: 1.8rem; background: white; cursor: pointer; transition: 0.3s; }
         .btn-info i { font-family: 'Georgia', serif; font-style: italic; font-weight: bold; }
-
-        .btn-jogar { 
-            flex: 1; background: var(--cor-dinamica); color: white; 
-            padding: 18px; border-radius: 25px; display: flex; 
-            align-items: center; justify-content: center; gap: 10px; 
-            font-weight: 900; font-size: 1.2rem; border: none; cursor: pointer; 
-        }
-
-        /* INFO OVERLAY */
-        #info-screen { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
-            background: white; z-index: 3000; display: none; 
-            flex-direction: column; padding: 30px; animation: slideIn 0.4s ease-out; 
-        }
+        .btn-jogar { flex: 1; background: var(--cor-dinamica); color: white; padding: 18px; border-radius: 25px; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; font-size: 1.2rem; border: none; cursor: pointer; }
+        #info-screen { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: white; z-index: 3000; display: none; flex-direction: column; padding: 30px; animation: slideIn 0.4s ease-out; }
         @keyframes slideIn { from { transform: translateY(100%); } to { transform: translateY(0); } }
         .info-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; }
         .info-header h2 { font-weight: 900; color: var(--cor-dinamica); font-size: 1.8rem; }
         .info-content { flex: 1; overflow-y: auto; color: #444; font-size: 1.1rem; line-height: 1.6; }
-
-        /* FOOTER */
         footer { height: 45px; display: flex; align-items: center; justify-content: center; background: white; border-radius: 35px 35px 0 0; flex-shrink: 0; }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
-
-        /* RESULTADOS */
         .img-resultado { width: 150px; height: 150px; object-fit: contain; margin-bottom: 15px; }
         .feedback-txt { font-weight: 900; font-size: 1.8rem; color: var(--cor-dinamica); margin-bottom: 10px; }
     </style>
@@ -161,178 +51,119 @@
     <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
-        
         <div class="header-center">
-            <img id="header-icon" src="" alt="Ícone Ano">
+            <img id="header-icon" src="" alt="">
             <div class="title-group">
                 <div id="txt-titulo1"></div>
                 <div id="txt-titulo2"></div>
                 <div id="txt-subtitulo-header"></div>
             </div>
         </div>
-        
         <img id="icon-voltar-top" src="" alt="Voltar" onclick="voltarPagina()">
     </header>
 
     <main>
-        <!-- ECRÃ 1: APRESENTAÇÃO -->
         <div id="view-apresentacao" class="view-container view-active">
-            <div class="card-topo"><h2 id="jogo-titulo">NOME DO JOGO</h2></div>
-            <div class="card-meio" id="area-jogo-conteudo">
-                <!-- Imagem de capa injetada via JS -->
-            </div>
+            <div class="card-topo"><h2 id="jogo-titulo">CARREGANDO...</h2></div>
+            <div class="card-meio" id="area-jogo-conteudo"></div>
             <div class="card-fundo">
                 <div class="btn-info" onclick="toggleInfoScreen(true)"><i>i</i></div>
                 <button class="btn-jogar" onclick="mudarEcra('jogo')"><i class="fas fa-play"></i> JOGAR</button>
             </div>
         </div>
 
-        <!-- ECRÃ 2: O JOGO EM SI -->
         <div id="view-jogo" class="view-container">
             <div class="card-topo"><h2 id="jogo-titulo-exec">A JOGAR...</h2></div>
-            <div class="card-meio">
-                <div id="game-injection-point" style="width:100%; height:100%;">
-                    <!-- O teu ficheiro jogo.js vai trabalhar aqui -->
-                </div>
-            </div>
-            <div class="card-fundo">
-                <button class="btn-jogar" onclick="mudarEcra('resultados')">TERMINAR</button>
-            </div>
+            <div class="card-meio"><div id="game-injection-point" style="width:100%; height:100%;"></div></div>
+            <div class="card-fundo"><button class="btn-jogar" onclick="mudarEcra('resultados')">TERMINAR</button></div>
         </div>
 
-        <!-- ECRÃ 3: RESULTADOS -->
         <div id="view-resultados" class="view-container">
             <div class="card-topo"><h2>RESULTADOS</h2></div>
             <div class="card-meio">
-                <div style="text-align:center; padding: 20px;">
+                <div style="text-align:center">
                     <img id="res-img" src="" class="img-resultado">
                     <div id="res-titulo" class="feedback-txt"></div>
-                    <p id="res-sub">Concluíste o desafio com sucesso!</p>
+                    <p>Desafio concluído!</p>
                 </div>
             </div>
-            <div class="card-fundo">
-                <button class="btn-jogar" onclick="mudarEcra('apresentacao')">RECOMEÇAR</button>
-            </div>
+            <div class="card-fundo"><button class="btn-jogar" onclick="mudarEcra('apresentacao')">RECOMEÇAR</button></div>
         </div>
     </main>
 
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
-    <!-- OVERLAY DE INFORMAÇÕES -->
     <div id="info-screen">
         <div class="info-header">
             <h2>Instruções</h2>
             <i class="fas fa-times" style="font-size:2rem;cursor:pointer" onclick="toggleInfoScreen(false)"></i>
         </div>
         <div class="info-content" id="info-texto">
-            <!-- Texto injetado via dados.js -->
+            <!-- Este conteúdo será preenchido pelo ficheiro jogo.js -->
         </div>
     </div>
 
-    <!-- Scripts -->
     <script src="dados.js"></script>
-    <script src="jogo.js"></script> <!-- Certifica-te que este ficheiro existe -->
+    <script src="jogo.js"></script>
 
     <script>
-        let pontuacaoFinal = 0; // Esta variável deve ser atualizada pelo teu jogo.js
+        let pontuacaoFinal = 0;
 
-        // Função para trocar de ecrã
         function mudarEcra(id) {
             document.querySelectorAll('.view-container').forEach(v => v.classList.remove('view-active'));
             document.getElementById('view-' + id).classList.add('view-active');
-            
             if(id === 'jogo') { 
                 document.querySelector('footer').style.display = 'none'; 
-                if(typeof initJogo === "function") initJogo(); // Chama função de início se existir
+                if(typeof initJogo === "function") initJogo(); 
             } 
             else if(id === 'resultados') {
                 document.querySelector('footer').style.display = 'flex';
-                // Cálculo de troféus com base nos dados.js
                 const rel = JOGO_CONFIG.relatorios.find(r => pontuacaoFinal >= r.min && pontuacaoFinal <= r.max);
                 if(rel) { 
                     document.getElementById('res-titulo').innerText = rel.titulo; 
                     document.getElementById('res-img').src = JOGO_CONFIG.caminhoIconsMenu + rel.img; 
                 }
-            } else { 
-                document.querySelector('footer').style.display = 'flex'; 
-            }
+            } else { document.querySelector('footer').style.display = 'flex'; }
         }
 
-        // Funções de Interface
         function voltarPagina() { window.history.back(); }
-        
-        function toggleMenu(e) { 
-            if(e) e.stopPropagation(); 
-            const m = document.getElementById('dropdownMenu'); 
-            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; 
-        }
+        function toggleMenu(e) { if(e) e.stopPropagation(); const m = document.getElementById('dropdownMenu'); m.style.display = (m.style.display==='flex')?'none':'flex'; }
+        function toggleInfoScreen(s) { document.getElementById('info-screen').style.display = s?'flex':'none'; }
+        window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
 
-        function toggleInfoScreen(s) { document.getElementById('info-screen').style.display = s ? 'flex' : 'none'; }
-        
-        // Fechar menu ao clicar fora
-        window.onclick = () => { document.getElementById('dropdownMenu').style.display = 'none'; };
-
-        // ==========================================
-        // CARREGAMENTO INICIAL (BINDING COM DADOS.JS)
-        // ==========================================
         window.onload = () => {
             const config = JOGO_CONFIG;
-            
-            // 1. Obter dados das bibliotecas baseados na configuração ativa
-            const temaAtivo = BIBLIOTECA_TEMAS[config.areaAtiva];
-            const conteudoAtivo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
+            const tema = BIBLIOTECA_TEMAS[config.areaAtiva];
+            const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const pathIcons = config.caminhoIconsMenu;
 
-            // 2. Aplicar Cores (CSS Variables)
-            document.documentElement.style.setProperty('--cor-dinamica', temaAtivo.corPrimaria);
-            document.body.style.backgroundColor = temaAtivo.corPagina;
+            document.documentElement.style.setProperty('--cor-dinamica', tema.corPrimaria);
+            document.body.style.backgroundColor = tema.corPagina;
+            document.getElementById('txt-titulo1').innerText = conteudo.t1;
+            document.getElementById('txt-titulo1').style.color = tema.corPrimaria;
+            document.getElementById('txt-titulo2').innerText = conteudo.t2;
+            document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
+            document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
+            document.getElementById('icon-voltar-top').src = pathIcons + tema.voltarMobile;
 
-            // 3. Aplicar Textos no Header
-            document.getElementById('txt-titulo1').innerText = conteudoAtivo.t1;
-            document.getElementById('txt-titulo1').style.color = temaAtivo.corPrimaria;
-            document.getElementById('txt-titulo2').innerText = conteudoAtivo.t2;
-            document.getElementById('txt-subtitulo-header').innerText = conteudoAtivo.sub;
-            document.getElementById('txt-rodape').innerHTML = conteudoAtivo.rodape;
-
-            // 4. Configurar Ícones do Header
-            // Tenta encontrar o ícone correspondente ao ano ativo na lista de itens de menu
             const dadosAno = config.menuItens.find(item => item.id === config.anoAtivo);
-            if(dadosAno) {
-                document.getElementById('header-icon').src = pathIcons + dadosAno.icon;
-            }
-            document.getElementById('icon-voltar-top').src = pathIcons + temaAtivo.voltarMobile;
+            if(dadosAno) document.getElementById('header-icon').src = pathIcons + dadosAno.icon;
 
-            // 5. Gerar Itens do Menu Hambúrguer
             const menuBox = document.getElementById('dropdownMenu');
-            menuBox.innerHTML = ""; // Limpa antes de gerar
-            
             config.menuItens.forEach(item => {
                 const a = document.createElement('a');
-                a.className = 'menu-item';
-                a.href = item.link;
-                
-                // Se o ícone for "AUTO", usa o ícone de voltar definido no tema
-                const iconFinal = (item.icon === "AUTO") ? temaAtivo.voltarMobile : item.icon;
-                
-                a.innerHTML = `
-                    <img src="${pathIcons}${iconFinal}" alt="${item.label}">
-                    <span>${item.label}</span>
-                `;
+                a.className = 'menu-item'; a.href = item.link;
+                const icon = (item.icon === "AUTO") ? tema.voltarMobile : item.icon;
+                a.innerHTML = `<img src="${pathIcons}${icon}"><span>${item.label}</span>`;
                 menuBox.appendChild(a);
             });
 
-            // 6. Configurar Ecrã de Apresentação do Jogo
             document.getElementById('jogo-titulo').innerText = config.nomeDoJogo;
             document.getElementById('jogo-titulo-exec').innerText = config.nomeDoJogo;
             
-            // Se houver uma descrição nos dados (adicionada para completar)
-            const descJogo = config.descricao || "Prepara-te para este desafio educativo!";
-            document.getElementById('info-texto').innerHTML = `<p>${descJogo}</p>`;
-
-            // Imagem de capa (usamos a primeira imagem do DADOS_JOGO como pré-visualização)
+            // IMAGEM DE CAPA (Puxa a primeira imagem dos dados do jogo)
             if(DADOS_JOGO.itens && DADOS_JOGO.itens.length > 0) {
-                const imgCapa = DADOS_JOGO.caminhoImagens + DADOS_JOGO.itens[0].img;
-                document.getElementById('area-jogo-conteudo').innerHTML = `<img src="${imgCapa}" alt="Capa">`;
+                document.getElementById('area-jogo-conteudo').innerHTML = `<img src="${DADOS_JOGO.caminhoImagens}${DADOS_JOGO.itens[0].img}">`;
             }
         };
     </script>
