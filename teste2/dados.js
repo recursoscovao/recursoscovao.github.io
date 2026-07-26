@@ -46,13 +46,13 @@ const BIBLIOTECA_CONTEUDO = {
 
 const JOGO_CONFIG = {
     areaAtiva: "jd", 
-    anoAtivo: "jd",  // Ao colocar "jd" aqui, o script principal buscará iconesMenu["jd"]      
+    anoAtivo: "jd",        
     caminhoIconsMenu: "../icons/", 
     caminhoIconsJogos: "iconjogos/",
     iconesMenu: {
         home: "home.png", 
         pre: "iconpre.png", 
-        jd: "icondestaque.png", // Icone solicitado
+        jd: "icondestaque.png", 
         ano1: "icon1.png", 
         ano2: "icon2.png", 
         ano3: "icon3.png", 
@@ -68,6 +68,12 @@ const JOGO_CONFIG = {
         ano3: "/3",
         ano4: "/4"
     },
+    relatorios: [
+        { min: 90, max: 100, titulo: "És um craque!", img: "taca_1.png" },
+        { min: 70, max: 89, titulo: "Muito bem!", img: "taca_2.png" },
+        { min: 50, max: 69, titulo: "Estás quase lá!", img: "taca_2.png" },
+        { min: 0, max: 49, titulo: "Continua a tentar!", img: "taca_4.png" }
+    ],
     listaFases: [
         {
             tituloFase: "DESTAQUES DO MÊS",
