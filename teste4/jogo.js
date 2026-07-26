@@ -110,7 +110,7 @@ setTimeout(() => ECRA_APRESENTACAO.init(), 150);
 // =============================================================================
 const ECRA_JOGO = {
     init() {
-        ronda = 1; acertos = 0; erros = 0;
+        ronda = 1; acertos = 0; erros = 0; ajudasContador = 0; // Reset das ajudas aqui
         this.aplicarCorrecoesLayout();
         this.renderizarEstrutura();
         this.proximaRonda();
@@ -231,6 +231,7 @@ const ECRA_JOGO = {
     proximaRonda() {
         if (ronda > 10) { 
             pontuacaoFinal = acertos; 
+            ECRA_RESULTADOS.init(); // Ativa a renderização dos resultados antes de mudar
             setTimeout(() => mudarEcra('resultados'), 300);
             return; 
         }
@@ -286,6 +287,7 @@ const ECRA_JOGO = {
     },
 
     ajuda() {
+        ajudasContador++; // Incremento das ajudas aqui
         const cards = document.querySelectorAll('.card');
         cards.forEach(c => {
             if (c.innerHTML.includes(itemAlvo.img)) {
@@ -355,10 +357,7 @@ const ECRA_RESULTADOS = {
     },
 
     renderizarConteudo() {
-        // 1. Atualizar o Card Meio com as estatísticas
         const cardMeio = document.querySelector('#view-resultados .card-meio');
-        
-        // Determinar qual relatório usar (lógica do index.html original)
         const rel = JOGO_CONFIG.relatorios.find(r => acertos >= r.min && acertos <= r.max) || JOGO_CONFIG.relatorios[0];
 
         cardMeio.innerHTML = `
@@ -387,7 +386,6 @@ const ECRA_RESULTADOS = {
             </div>
         `;
 
-        // 2. Atualizar o Card Fundo com os novos botões
         const cardFundo = document.querySelector('#view-resultados .card-fundo');
         cardFundo.innerHTML = `
             <div class="res-btn-group">
@@ -406,12 +404,10 @@ const ECRA_RESULTADOS = {
 // INICIALIZAÇÃO AUTOMÁTICA
 // =============================================================================
 
-// Função obrigatória que o index.html chama ao clicar no botão "JOGAR"
 function initJogo() {
     ECRA_JOGO.init();
 }
 
-// Configuração inicial da Apresentação (espera pelo index.html)
 setTimeout(() => {
     ECRA_APRESENTACAO.init();
 }, 150);
