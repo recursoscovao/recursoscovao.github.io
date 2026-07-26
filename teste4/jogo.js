@@ -5,6 +5,7 @@ let ronda = 1;
 let acertos = 0;
 let erros = 0;
 let itemAlvo = null;
+let ajudasContador = 0;
 
 // =============================================================================
 // MÓDULO: APRESENTAÇÃO (view-apresentacao)
@@ -301,12 +302,103 @@ const ECRA_JOGO = {
     }
 };
 // =============================================================================
-// 4. MÓDULO: RESULTADOS (view-resultados)
+// MÓDULO: RESULTADOS (view-resultados)
 // =============================================================================
 const ECRA_RESULTADOS = {
-    // Aqui podes adicionar funções para injetar confetes, sons ou tabelas de erros/acertos
     init() {
-        console.log("Jogo terminado. Pontuação: " + pontuacaoFinal);
+        this.configurarEstilo();
+        this.renderizarConteudo();
+    },
+
+    configurarEstilo() {
+        const style = document.createElement('style');
+        style.innerHTML = `
+            #view-resultados h2 { color: var(--cor-dinamica) !important; }
+            
+            .stats-container { 
+                display: flex; justify-content: center; gap: 15px; 
+                margin-top: 20px; width: 100%; padding: 0 10px;
+            }
+            
+            .stat-card {
+                flex: 1; min-width: 80px; max-width: 120px;
+                background: white; border-radius: 15px; padding: 12px 5px;
+                display: flex; flex-direction: column; align-items: center;
+                box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+                border: 2px solid #f0f2f5;
+            }
+            
+            .sc-verde { border-color: #e8f5e9; }
+            .sc-vermelho { border-color: #ffebee; }
+            .sc-laranja { border-color: #fff3e0; }
+
+            .stat-num { font-size: 1.8rem; font-weight: 900; line-height: 1; margin-bottom: 2px; }
+            .sn-verde { color: #8ed131; }
+            .sn-vermelho { color: #ff5e5e; }
+            .sn-laranja { color: #ff9800; }
+
+            .stat-label { font-size: 0.65rem; font-weight: 800; color: #8792a1; text-transform: uppercase; margin-bottom: 8px; }
+            
+            .stat-icon {
+                width: 28px; height: 28px; border-radius: 50%;
+                display: flex; align-items: center; justify-content: center;
+                color: white; font-size: 0.9rem;
+            }
+            .si-verde { background: #8ed131; }
+            .si-vermelho { background: #ff5e5e; }
+            .si-laranja { background: #ff9800; }
+
+            .res-btn-group { display: flex; gap: 10px; width: 100%; }
+            .btn-outro { background: #8792a1 !important; }
+        `;
+        document.head.appendChild(style);
+    },
+
+    renderizarConteudo() {
+        // 1. Atualizar o Card Meio com as estatísticas
+        const cardMeio = document.querySelector('#view-resultados .card-meio');
+        
+        // Determinar qual relatório usar (lógica do index.html original)
+        const rel = JOGO_CONFIG.relatorios.find(r => acertos >= r.min && acertos <= r.max) || JOGO_CONFIG.relatorios[0];
+
+        cardMeio.innerHTML = `
+            <div style="text-align:center; width: 100%;">
+                <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" class="img-resultado">
+                <div class="feedback-txt">${rel.titulo}</div>
+                <p style="color: #8792a1; font-weight: 700; margin-bottom: 10px;">Completaste o desafio!</p>
+                
+                <div class="stats-container">
+                    <div class="stat-card sc-verde">
+                        <span class="stat-num sn-verde">${acertos}</span>
+                        <span class="stat-label">Certos</span>
+                        <div class="stat-icon si-verde"><i class="fas fa-check"></i></div>
+                    </div>
+                    <div class="stat-card sc-vermelho">
+                        <span class="stat-num sn-vermelho">${erros}</span>
+                        <span class="stat-label">Erros</span>
+                        <div class="stat-icon si-vermelho"><i class="fas fa-times"></i></div>
+                    </div>
+                    <div class="stat-card sc-laranja">
+                        <span class="stat-num sn-laranja">${ajudasContador}</span>
+                        <span class="stat-label">Ajudas</span>
+                        <div class="stat-icon si-laranja"><i class="fas fa-question"></i></div>
+                    </div>
+                </div>
+            </div>
+        `;
+
+        // 2. Atualizar o Card Fundo com os novos botões
+        const cardFundo = document.querySelector('#view-resultados .card-fundo');
+        cardFundo.innerHTML = `
+            <div class="res-btn-group">
+                <button class="btn-jogar" onclick="mudarEcra('jogo')">
+                    <i class="fas fa-redo"></i> JOGAR DE NOVO
+                </button>
+                <button class="btn-jogar btn-outro" onclick="voltarPagina()">
+                    <i class="fas fa-th"></i> OUTRO JOGO
+                </button>
+            </div>
+        `;
     }
 };
 
