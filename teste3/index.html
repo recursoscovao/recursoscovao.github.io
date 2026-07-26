@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Carregando...</title>
+    <title>Jogo de Memória</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
@@ -24,7 +24,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.03); margin-bottom: 20px;
         }
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
-        #header-icon { height: 70px; object-fit: contain; }
+        #header-icon { height: 70px; width: 70px; object-fit: contain; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         #txt-titulo1 { font-weight: 900; font-size: 1.65rem; }
         #txt-titulo2 { font-weight: 800; font-size: 1.4rem; color: #8792a1; }
@@ -60,10 +60,9 @@
         .card-topo { flex-shrink: 0; text-align: center; padding-bottom: 15px; border-bottom: 1px dashed #eee; margin-bottom: 15px; }
         .card-topo h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; }
 
-        .card-meio { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 20px; background: #fdfdfd; position: relative;}
+        .card-meio { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 20px; background: #fdfdfd; position: relative; }
         .card-meio img { max-width: 100%; max-height: 100%; object-fit: contain; }
         
-        /* Container onde o jogo será injetado */
         #game-injection-point { width: 100%; height: 100%; overflow-y: auto; }
 
         .card-fundo { flex-shrink: 0; display: flex; align-items: center; gap: 15px; padding-top: 20px; }
@@ -177,20 +176,15 @@
             
             if(id === 'jogo') {
                 document.querySelector('footer').style.display = 'none';
-                // Inicia a lógica que está no jogo.js
                 initJogo(); 
-            } 
-            else if(id === 'resultados') {
+            } else if(id === 'resultados') {
                 document.querySelector('footer').style.display = 'flex';
-                
                 const relatorio = JOGO_CONFIG.relatorios.find(r => pontuacaoFinal >= r.min && pontuacaoFinal <= r.max);
-                
                 if(relatorio) {
                     document.getElementById('res-titulo').innerText = relatorio.titulo;
                     document.getElementById('res-img').src = JOGO_CONFIG.caminhoIconsMenu + relatorio.img;
                 }
-            } 
-            else {
+            } else {
                 document.querySelector('footer').style.display = 'flex';
             }
         }
@@ -222,15 +216,16 @@
             document.getElementById('header-icon').src = iconCaminho + config.iconesMenu[anoKey];
             document.getElementById('icon-voltar-top').src = iconCaminho + bibTema.voltarMobile;
 
+            // MENU HAMBÚRGUER COMPLETO
             const menuBox = document.getElementById('dropdownMenu');
             menuBox.innerHTML = '';
-            
-            const labels = { home: "INÍCIO", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
+            const labels = { home: "INÍCIO", pre: "Pré-Escolar", jd: "Destaques", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
 
             Object.keys(config.links).forEach(key => {
-                if (key !== 'jd' && config.iconesMenu[key]) {
+                if (config.iconesMenu[key]) {
                     const a = document.createElement('a');
-                    a.className = 'menu-item'; a.href = config.links[key];
+                    a.className = 'menu-item';
+                    a.href = config.links[key];
                     a.innerHTML = `<img src="${iconCaminho}${config.iconesMenu[key]}"> <span>${labels[key] || key}</span>`;
                     menuBox.appendChild(a);
                 }
@@ -238,11 +233,10 @@
 
             const jogoAtivo = config.listaFases[0].jogos[0];
             if(jogoAtivo) {
-                document.title = jogoAtivo.nome;
                 document.getElementById('jogo-titulo').innerText = jogoAtivo.nome;
                 document.getElementById('jogo-titulo-exec').innerText = jogoAtivo.nome;
                 document.getElementById('area-jogo-conteudo').innerHTML = `<img src="${config.caminhoIconsJogos}${jogoAtivo.icon}">`;
-                document.getElementById('info-texto').innerHTML = `<p>${jogoAtivo.desc || "Sem descrição disponível."}</p>`;
+                document.getElementById('info-texto').innerHTML = `<p>${jogoAtivo.desc}</p>`;
             }
         };
     </script>
