@@ -34,11 +34,11 @@
         .view-container { display: none; flex-direction: column; height: 100%; flex: 1; overflow: hidden; }
         .view-active { display: flex; }
         
+        /* TÍTULOS COM CORES DINÂMICAS */
         .card-topo { flex-shrink: 0; text-align: center; padding-bottom: 15px; border-bottom: 1px dashed #eee; margin-bottom: 15px; }
-        .card-topo h2 { font-size: 1.4rem; font-weight: 900; color: #1A499C; text-transform: uppercase; }
+        .card-topo h2 { font-size: 1.4rem; font-weight: 900; color: var(--cor-dinamica); text-transform: uppercase; }
         
         .card-meio { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; border-radius: 20px; background: #fdfdfd; position: relative; }
-        /* Scroll apenas se o conteúdo do jogo for maior que a área disponível */
         #game-injection-point { width: 100%; height: 100%; overflow-y: auto; padding: 10px; }
         
         .card-fundo { flex-shrink: 0; display: flex; align-items: center; gap: 15px; padding-top: 20px; }
@@ -50,6 +50,8 @@
         
         footer { height: 40px; display: flex; align-items: center; justify-content: center; background: white; border-radius: 35px 35px 0 0; flex-shrink: 0; }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
+        
+        .res-feedback { font-weight: 900; font-size: 1.8rem; color: var(--cor-dinamica); text-transform: uppercase; }
     </style>
 </head>
 <body>
@@ -58,7 +60,7 @@
         <div id="dropdownMenu" class="menu-dropdown"></div>
         
         <div class="header-center">
-            <img id="header-icon" src="" alt="Ícone Ano">
+            <img id="header-icon" src="" alt="">
             <div class="title-group">
                 <div id="txt-titulo1"></div>
                 <div id="txt-titulo2"></div>
@@ -70,36 +72,29 @@
     </header>
 
     <main>
-        <!-- Ecrã 1: Apresentação -->
         <div id="view-apresentacao" class="view-container view-active">
             <div class="card-topo"><h2 id="jogo-titulo">---</h2></div>
-            <div class="card-meio" id="area-jogo-intro">
-                <!-- Imagem/Animação do Jogo -->
-            </div>
+            <div class="card-meio" id="area-jogo-intro"></div>
             <div class="card-fundo">
                 <div class="btn-info" onclick="toggleInfoScreen(true)"><i>i</i></div>
                 <button class="btn-jogar" onclick="mudarEcra('jogo')"><i class="fas fa-play"></i> JOGAR</button>
             </div>
         </div>
 
-        <!-- Ecrã 2: Jogo propriamente dito -->
         <div id="view-jogo" class="view-container">
             <div class="card-topo"><h2 id="jogo-titulo-exec">---</h2></div>
-            <div class="card-meio">
-                <div id="game-injection-point"></div>
-            </div>
+            <div class="card-meio"><div id="game-injection-point"></div></div>
             <div class="card-fundo">
                 <button class="btn-jogar" onclick="mudarEcra('resultados')">TERMINAR</button>
             </div>
         </div>
 
-        <!-- Ecrã 3: Resultados -->
         <div id="view-resultados" class="view-container">
             <div class="card-topo"><h2>RESULTADOS</h2></div>
             <div class="card-meio">
                 <div style="text-align:center">
-                    <img id="res-img" src="" style="width:150px; margin-bottom:15px;">
-                    <div id="res-titulo" style="font-weight:900; font-size:1.8rem; color:var(--cor-dinamica)"></div>
+                    <img id="res-img" src="" style="width:150px; margin-bottom:15px; object-fit:contain;">
+                    <div id="res-titulo" class="res-feedback"></div>
                     <p style="font-weight:700; color:#8792a1;">Desafio Concluído!</p>
                 </div>
             </div>
@@ -111,7 +106,6 @@
 
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
-    <!-- Overlay de Informações -->
     <div id="info-screen">
         <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:20px;">
             <h2 id="info-titulo" style="font-weight:900; color:var(--cor-dinamica);">Instruções</h2>
@@ -124,20 +118,12 @@
     <script src="jogos.js"></script>
 
     <script>
-        // Função para mudar de ecrã (Apresentação, Jogo, Resultados)
         function mudarEcra(id) {
             document.querySelectorAll('.view-container').forEach(v => v.classList.remove('view-active'));
             document.getElementById('view-' + id).classList.add('view-active');
-            
-            if(id === 'jogo') {
-                document.querySelector('footer').style.visibility = 'hidden';
-                if(typeof iniciarLogicaJogo === "function") iniciarLogicaJogo(); 
-            } else {
-                document.querySelector('footer').style.visibility = 'visible';
-            }
+            document.querySelector('footer').style.visibility = (id === 'jogo') ? 'hidden' : 'visible';
 
             if(id === 'resultados') {
-                // Exemplo de cálculo: pontuacaoFinal deve ser definida no teu jogos.js
                 const pontos = window.pontuacaoFinal || 0;
                 const rel = JOGO_CONFIG.relatorios.find(r => pontos >= r.min && pontos <= r.max);
                 if(rel) {
@@ -148,15 +134,8 @@
         }
 
         function voltarPagina() { window.location.href = JOGO_CONFIG.links.home; }
-        
-        function toggleMenu(e) { 
-            if(e) e.stopPropagation(); 
-            const m = document.getElementById('dropdownMenu'); 
-            m.style.display = (m.style.display==='flex') ? 'none' : 'flex'; 
-        }
-
+        function toggleMenu(e) { if(e) e.stopPropagation(); const m = document.getElementById('dropdownMenu'); m.style.display = (m.style.display==='flex') ? 'none' : 'flex'; }
         function toggleInfoScreen(show) { document.getElementById('info-screen').style.display = show ? 'flex' : 'none'; }
-
         window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
 
         window.onload = () => {
@@ -165,49 +144,49 @@
             const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const pathIcons = config.caminhoIconsMenu;
 
-            // 1. Aplicar Identidade Visual
-            document.getElementById('aba-navegador').innerText = config.nomeJogo || "Jogo";
+            // 1. Aplicar Cor Dinâmica ao CSS e Títulos
             document.documentElement.style.setProperty('--cor-dinamica', tema.corPrimaria);
             document.getElementById('txt-titulo1').style.color = tema.corPrimaria;
             
-            // 2. Preencher Textos do Cabeçalho e Rodapé
+            // 2. Preencher Textos
             document.getElementById('txt-titulo1').innerText = conteudo.t1;
             document.getElementById('txt-titulo2').innerText = conteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
             document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
             
-            // 3. Ícones de Topo
+            // 3. Ícones (Garantir que os nomes das propriedades batem com dados.js)
             document.getElementById('header-icon').src = pathIcons + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = pathIcons + tema.voltarMobile;
 
-            // 4. Construir Menu Hambúrguer (Conforme pedido)
+            // 4. Menu Hambúrguer (Home, Pre, Anos 1-4 e Voltar)
             const menuBox = document.getElementById('dropdownMenu');
-            const ordemMenu = ['home', 'pre', 'ano1', 'ano2', 'ano3', 'ano4'];
+            const ordem = ['home', 'pre', 'ano1', 'ano2', 'ano3', 'ano4'];
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
 
-            ordemMenu.forEach(chave => {
-                if(config.links[chave]) {
+            ordem.forEach(key => {
+                if(config.links[key]) {
                     const a = document.createElement('a');
                     a.className = 'menu-item';
-                    a.href = config.links[chave];
-                    a.innerHTML = `<img src="${pathIcons}${config.iconesMenu[chave]}"><span>${labels[chave]}</span>`;
+                    a.href = config.links[key];
+                    a.innerHTML = `<img src="${pathIcons}${config.iconesMenu[key]}"><span>${labels[key]}</span>`;
                     menuBox.appendChild(a);
                 }
             });
 
-            // Adicionar Item Voltar ao final do Menu
-            const btnVoltarMenu = document.createElement('a');
-            btnVoltarMenu.className = 'menu-item';
-            btnVoltarMenu.href = "javascript:history.back()";
-            btnVoltarMenu.innerHTML = `<img src="${pathIcons}${tema.voltarMobile}"><span>VOLTAR</span>`;
-            menuBox.appendChild(btnVoltarMenu);
+            // Botão Voltar no Menu
+            const btnV = document.createElement('a');
+            btnV.className = 'menu-item';
+            btnV.href = "javascript:history.back()";
+            btnV.innerHTML = `<img src="${pathIcons}${tema.voltarMobile}"><span>VOLTAR</span>`;
+            menuBox.appendChild(btnV);
 
-            // 5. Carregar Dados do Jogo na Apresentação
-            const jogoDados = config.listaFases[0].jogos[0];
-            document.getElementById('jogo-titulo').innerText = jogoDados.nome;
-            document.getElementById('jogo-titulo-exec').innerText = jogoDados.nome;
-            document.getElementById('area-jogo-intro').innerHTML = `<img src="${config.caminhoIconsJogos}${jogoDados.icon}" style="max-height:80%; max-width:80%; object-fit:contain;">`;
-            document.getElementById('info-texto').innerHTML = `<p>${jogoDados.desc}</p>`;
+            // 5. Configuração Inicial do Jogo (Apresentação)
+            const jogo = config.listaFases[0].jogos[0];
+            document.getElementById('aba-navegador').innerText = jogo.nome;
+            document.getElementById('jogo-titulo').innerText = jogo.nome;
+            document.getElementById('jogo-titulo-exec').innerText = jogo.nome;
+            document.getElementById('area-jogo-intro').innerHTML = `<img src="${config.caminhoIconsJogos}${jogo.icon}" style="max-height:80%; max-width:80%; object-fit:contain;">`;
+            document.getElementById('info-texto').innerHTML = `<p>${jogo.desc}</p>`;
         };
     </script>
 </body>
