@@ -24,6 +24,7 @@
         .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--cor-dinamica); }
         #icon-voltar-top { height: 42px; width: 42px; object-fit: contain; cursor: pointer; justify-self: end; }
         
+        /* Ajuste do Dropdown */
         .menu-dropdown { position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 8px; z-index: 2000; width: 230px; }
         .menu-item { display: flex; align-items: center; gap: 12px; height: var(--menu-item-h); padding: 0 15px; text-decoration: none; color: #7b899b; font-weight: 800; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); cursor: pointer; text-transform: uppercase; font-size: 0.85rem; transition: 0.2s; }
         .menu-item img { height: 30px; width: 30px; object-fit: contain; }
@@ -34,7 +35,7 @@
         .view-container { display: none; flex-direction: column; height: 100%; flex: 1; overflow: hidden; }
         .view-active { display: flex; }
         
-        /* TÍTULOS COM CORES DINÂMICAS */
+        /* Títulos com Cores Dinâmicas */
         .card-topo { flex-shrink: 0; text-align: center; padding-bottom: 15px; border-bottom: 1px dashed #eee; margin-bottom: 15px; }
         .card-topo h2 { font-size: 1.4rem; font-weight: 900; color: var(--cor-dinamica); text-transform: uppercase; }
         
@@ -50,12 +51,11 @@
         
         footer { height: 40px; display: flex; align-items: center; justify-content: center; background: white; border-radius: 35px 35px 0 0; flex-shrink: 0; }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
-        
-        .res-feedback { font-weight: 900; font-size: 1.8rem; color: var(--cor-dinamica); text-transform: uppercase; }
     </style>
 </head>
 <body>
     <header>
+        <!-- Importante: onclick corrigido -->
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
         
@@ -90,11 +90,12 @@
         </div>
 
         <div id="view-resultados" class="view-container">
+            <!-- Título Resultados também com cor dinâmica via CSS -->
             <div class="card-topo"><h2>RESULTADOS</h2></div>
             <div class="card-meio">
                 <div style="text-align:center">
                     <img id="res-img" src="" style="width:150px; margin-bottom:15px; object-fit:contain;">
-                    <div id="res-titulo" class="res-feedback"></div>
+                    <div id="res-titulo" style="font-weight:900; font-size:1.8rem; color:var(--cor-dinamica); text-transform:uppercase;"></div>
                     <p style="font-weight:700; color:#8792a1;">Desafio Concluído!</p>
                 </div>
             </div>
@@ -118,6 +119,15 @@
     <script src="jogos.js"></script>
 
     <script>
+        // FUNÇÃO TOGGLE MENU CORRIGIDA
+        function toggleMenu(e) {
+            if(e) e.stopPropagation();
+            const m = document.getElementById('dropdownMenu');
+            // Verifica o estado real computado para garantir que abre no primeiro clique
+            const currentDisplay = window.getComputedStyle(m).display;
+            m.style.display = (currentDisplay === 'none') ? 'flex' : 'none';
+        }
+
         function mudarEcra(id) {
             document.querySelectorAll('.view-container').forEach(v => v.classList.remove('view-active'));
             document.getElementById('view-' + id).classList.add('view-active');
@@ -134,9 +144,15 @@
         }
 
         function voltarPagina() { window.location.href = JOGO_CONFIG.links.home; }
-        function toggleMenu(e) { if(e) e.stopPropagation(); const m = document.getElementById('dropdownMenu'); m.style.display = (m.style.display==='flex') ? 'none' : 'flex'; }
         function toggleInfoScreen(show) { document.getElementById('info-screen').style.display = show ? 'flex' : 'none'; }
-        window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
+
+        // Fechar menu ao clicar fora
+        window.onclick = function(event) {
+            const m = document.getElementById('dropdownMenu');
+            if (m.style.display === 'flex') {
+                m.style.display = 'none';
+            }
+        }
 
         window.onload = () => {
             const config = JOGO_CONFIG;
@@ -144,21 +160,21 @@
             const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const pathIcons = config.caminhoIconsMenu;
 
-            // 1. Aplicar Cor Dinâmica ao CSS e Títulos
+            // Cores Dinâmicas
             document.documentElement.style.setProperty('--cor-dinamica', tema.corPrimaria);
             document.getElementById('txt-titulo1').style.color = tema.corPrimaria;
             
-            // 2. Preencher Textos
+            // Textos
             document.getElementById('txt-titulo1').innerText = conteudo.t1;
             document.getElementById('txt-titulo2').innerText = conteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
             document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
             
-            // 3. Ícones (Garantir que os nomes das propriedades batem com dados.js)
+            // Ícones de Topo
             document.getElementById('header-icon').src = pathIcons + config.iconesMenu[config.anoAtivo];
             document.getElementById('icon-voltar-top').src = pathIcons + tema.voltarMobile;
 
-            // 4. Menu Hambúrguer (Home, Pre, Anos 1-4 e Voltar)
+            // Menu Hambúrguer Dinâmico
             const menuBox = document.getElementById('dropdownMenu');
             const ordem = ['home', 'pre', 'ano1', 'ano2', 'ano3', 'ano4'];
             const labels = { home: "Início", pre: "Pré-Escolar", ano1: "1º Ano", ano2: "2º Ano", ano3: "3º Ano", ano4: "4º Ano" };
@@ -173,14 +189,13 @@
                 }
             });
 
-            // Botão Voltar no Menu
             const btnV = document.createElement('a');
             btnV.className = 'menu-item';
             btnV.href = "javascript:history.back()";
             btnV.innerHTML = `<img src="${pathIcons}${tema.voltarMobile}"><span>VOLTAR</span>`;
             menuBox.appendChild(btnV);
 
-            // 5. Configuração Inicial do Jogo (Apresentação)
+            // Jogo Inicial
             const jogo = config.listaFases[0].jogos[0];
             document.getElementById('aba-navegador').innerText = jogo.nome;
             document.getElementById('jogo-titulo').innerText = jogo.nome;
