@@ -1,31 +1,31 @@
 // ==========================================
-// 1. BIBLIOTECA DE TEMAS (Cores e Ícones de Navegação)
+// 1. BIBLIOTECA DE TEMAS
 // ==========================================
 const BIBLIOTECA_TEMAS = {
     "portugues": { 
         corPagina: "#e9f0f8", corPrimaria: "#5ba4e5", corEscura: "#3d7db8", 
-        corTexto: "#5d7082", voltarMobile: "voltar_az.png", corHamburger: "#5ba4e5" 
+        corTexto: "#5d7082", voltarMobile: "voltar_az.png" 
     },
     "matematica": { 
         corPagina: "#e8f9f4", corPrimaria: "#45cfa8", corEscura: "#2BA886", 
-        corTexto: "#45cfa8", voltarMobile: "voltar_vr.png", corHamburger: "#45cfa8" 
+        corTexto: "#45cfa8", voltarMobile: "voltar_vr.png" 
     },
     "estudo": { 
         corPagina: "#EAE2E5", corPrimaria: "#994D4D", corEscura: "#6C3737", 
-        corTexto: "#994D4D", voltarMobile: "voltar_cs.png", corHamburger: "#994D4D" 
+        corTexto: "#994D4D", voltarMobile: "voltar_cs.png" 
     },
     "pre": { 
         corPagina: "#FFF5F7", corPrimaria: "#E691A7", corEscura: "#D54267", 
-        corTexto: "#E691A7", voltarMobile: "voltar_rs.png", corHamburger: "#E691A7" 
+        corTexto: "#E691A7", voltarMobile: "voltar_rs.png" 
     },
     "jd": { 
         corPagina: "#f0f2f5", corPrimaria: "#6c757d", corEscura: "#495057", 
-        corTexto: "#6c757d", voltarMobile: "voltar_cin.png", corHamburger: "#6c757d" 
+        corTexto: "#6c757d", voltarMobile: "voltar_cin.png" 
     }
 };
 
 // ==========================================
-// 2. BIBLIOTECA DE CONTEÚDO (Textos Automáticos)
+// 2. BIBLIOTECA DE CONTEÚDO
 // ==========================================
 const BIBLIOTECA_CONTEUDO = {
     "jd": { "jd": { t1: "Jogos em", t2: "Destaque", sub: "Recursos Especiais", rodape: "&copy; Pequenos Curiosos" } },
@@ -37,14 +37,6 @@ const BIBLIOTECA_CONTEUDO = {
     "ano2": { 
         "portugues": { t1: "Jovens", t2: "Leitores", sub: "2º Ano | Português", rodape: "&copy; Jovens Leitores" },
         "matematica": { t1: "Jovens", t2: "Matemáticos", sub: "2º Ano | Matemática", rodape: "&copy; Jovens Matemáticos" }
-    },
-    "ano3": { 
-        "portugues": { t1: "Exploradores", t2: "Leitores", sub: "3º Ano | Português", rodape: "&copy; Exploradores" },
-        "matematica": { t1: "Exploradores", t2: "Cálculos", sub: "3º Ano | Matemática", rodape: "&copy; Exploradores" }
-    },
-    "ano4": { 
-        "portugues": { t1: "Mestres", t2: "da Língua", sub: "4º Ano | Português", rodape: "&copy; Mestres Curiosos" },
-        "matematica": { t1: "Mestres", t2: "do Cálculo", sub: "4º Ano | Matemática", rodape: "&copy; Mestres Curiosos" }
     }
 };
 
@@ -52,40 +44,32 @@ const BIBLIOTECA_CONTEUDO = {
 // 3. CONFIGURAÇÃO DO JOGO ATUAL
 // ==========================================
 const JOGO_CONFIG = {
-    // TÍTULO DO JOGO (Para aparecer no index.html e na aba do navegador)
     nomeDoJogo: "Encontrar o Par: Animais",
-
-    // ESTADO ATIVO (Muda isto para alterar o tema e os textos automáticos)
-    areaAtiva: "pre",   // Opções: "portugues", "matematica", "estudo", "pre", "jd"
-    anoAtivo: "pre",    // Opções: "pre", "ano1", "ano2", "ano3", "ano4"
+    descricao: "Olha com atenção para as imagens e encontra os pares de animais domésticos!",
     
-    // CAMINHOS DE PASTAS
+    areaAtiva: "pre",   // "portugues", "matematica", "estudo", "pre", "jd"
+    anoAtivo: "pre",    // "pre", "ano1", "ano2", "ano3", "ano4"
+    
     caminhoIconsMenu: "../icons/", 
     caminhoIconsJogos: "../icons/",
 
-    // ESTRUTURA DO MENU HAMBÚRGUER (Apenas o que deve aparecer)
-    // Nota: O ícone do 'voltar' é definido dinamicamente pela áreaAtiva
     menuItens: [
         { id: "home", label: "Início", icon: "home.png", link: "../" },
         { id: "pre", label: "Pré-Escolar", icon: "iconpre.png", link: "../pre" },
         { id: "ano1", label: "1º Ano", icon: "icon1.png", link: "../1" },
         { id: "ano2", label: "2º Ano", icon: "icon2.png", link: "../2" },
-        { id: "ano3", label: "3º Ano", icon: "icon3.png", link: "../3" },
-        { id: "ano4", label: "4º Ano", icon: "icon4.png", link: "../4" },
         { id: "voltar", label: "Voltar", icon: "AUTO", link: "javascript:history.back()" } 
     ],
 
-    // RELATÓRIO FINAL (Troféus por pontuação)
     relatorios: [
-        { min: 9, max: 10, titulo: "És um craque!", img: "taca_1.png" },
-        { min: 7, max: 8, titulo: "Muito bem!", img: "taca_2.png" },
-        { min: 5, max: 6, titulo: "Estás quase lá!", img: "taca_2.png" },
-        { min: 0, max: 4, titulo: "Continua a tentar!", img: "taca_4.png" }
+        { min: 9, max: 12, titulo: "És um craque!", img: "taca_1.png" },
+        { min: 6, max: 8, titulo: "Muito bem!", img: "taca_2.png" },
+        { min: 0, max: 5, titulo: "Continua a tentar!", img: "taca_4.png" }
     ]
 };
 
 // ==========================================
-// 4. DADOS DO CONTEÚDO DO JOGO (Imagens e IDs)
+// 4. DADOS DO CONTEÚDO DO JOGO
 // ==========================================
 const DADOS_JOGO = {
     caminhoImagens: "../img/animaisdomesticos/",
