@@ -51,7 +51,7 @@ const JOGO_CONFIG = {
 };
 
 const DADOS_JOGO_MEMORIA = {
-    caminhoImagens: "img/animaisdomesticos/",
+    caminhoImagens: "../img/animaisdomesticos/",
     itens: [
         { id: 1, img: "cao.png" },
         { id: 2, img: "gato.png" },
