@@ -28,8 +28,8 @@ const BIBLIOTECA_CONTEUDO = {
 // ==========================================
 
 const JOGO_CONFIG = {
-    areaAtiva: "jd", 
-    anoAtivo: "jd",        
+    areaAtiva: "pre", 
+    anoAtivo: "pre",        
     caminhoIconsMenu: "../icons/", 
     caminhoIconsJogos: "../icons/",
     iconesMenu: {
