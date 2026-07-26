@@ -20,7 +20,7 @@ const JOGO_CONFIG = {
     anoAtivo: "pre",        
     caminhoIconsMenu: "../icons/", 
     caminhoIconsJogos: "iconjogos/",
-    caminhoImg: "img/",
+    caminhoImg: "../img/animaisdomesticos",
     sons: { acerto: "sons/acerto.mp3", erro: "sons/erro.mp3", vitoria: "sons/vitoria.mp3" },
     iconesMenu: { home: "home.png", pre: "iconpre.png", jd: "icondestaque.png", ano1: "icon1.png", ano2: "icon2.png", ano3: "icon3.png", ano4: "icon4.png", voltar: "voltar.png" },
     links: { home: "/", pre: "/pre", jd: "/destaques", ano1: "/1", ano2: "/2", ano3: "/3", ano4: "/4" },
