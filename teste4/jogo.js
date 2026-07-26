@@ -7,12 +7,23 @@ let erros = 0;
 let itemAlvo = null;
 
 // =============================================================================
-// 2. MÓDULO: APRESENTAÇÃO (view-apresentacao)
+// MÓDULO: APRESENTAÇÃO (view-apresentacao)
 // =============================================================================
 const ECRA_APRESENTACAO = {
     init() {
         this.injetarAnimacao();
         this.injetarInstrucoes();
+        this.limparLayoutBase();
+    },
+
+    // Garante que o ecrã de jogo terá espaço total escondendo o título/botão padrão
+    limparLayoutBase() {
+        const style = document.createElement('style');
+        style.innerHTML = `
+            #view-jogo .card-topo, #view-jogo .card-fundo { display: none !important; }
+            #view-jogo .card-meio { border-radius: 25px; height: 100% !important; border: none; background: #fff; }
+        `;
+        document.head.appendChild(style);
     },
 
     injetarAnimacao() {
@@ -21,30 +32,24 @@ const ECRA_APRESENTACAO = {
         area.innerHTML = `
         <style>
             .demo-container { display: flex; flex-direction: column; align-items: center; gap: 15px; position: relative; height: 100%; justify-content: center; }
-            .demo-target { width: 100px; height: 100px; border: 4px dashed var(--cor-dinamica); border-radius: 20px; display: flex; align-items: center; justify-content: center; animation: pulseDemo 2s infinite; background: white; }
+            .demo-target { width: 90px; height: 90px; border: 4px dashed var(--cor-dinamica); border-radius: 20px; display: flex; align-items: center; justify-content: center; animation: pulseDemo 2s infinite; background: white; }
             .demo-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin-top: 10px; }
-            .demo-card { width: 60px; height: 60px; border: 2px solid #eee; border-radius: 12px; background: white; display: flex; align-items: center; justify-content: center; }
-            .demo-hand { position: absolute; font-size: 35px; color: var(--cor-dinamica); animation: moveHandDemo 3s infinite; pointer-events: none; z-index: 10; }
+            .demo-card { width: 55px; height: 55px; border: 2px solid #eee; border-radius: 12px; background: white; display: flex; align-items: center; justify-content: center; }
+            .demo-hand { position: absolute; font-size: 32px; color: var(--cor-dinamica); animation: moveHandDemo 3s infinite; pointer-events: none; z-index: 10; }
             @keyframes pulseDemo { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.05); } }
             @keyframes moveHandDemo {
-                0% { transform: translate(60px, 160px); opacity: 0; }
-                20% { transform: translate(60px, 160px); opacity: 1; }
-                50% { transform: translate(5px, 115px); opacity: 1; } 
-                70% { transform: translate(5px, 115px); scale: 0.8; opacity: 1; }
-                100% { transform: translate(5px, 115px); opacity: 0; }
+                0% { transform: translate(55px, 150px); opacity: 0; }
+                20% { transform: translate(55px, 150px); opacity: 1; }
+                50% { transform: translate(0px, 110px); opacity: 1; } 
+                70% { transform: translate(0px, 110px); scale: 0.8; opacity: 1; }
+                100% { transform: translate(0px, 110px); opacity: 0; }
             }
-            .flash-win { animation: flashWinDemo 3s infinite; }
-            @keyframes flashWinDemo { 0%, 50% { background: white; } 60% { background: #8ed131; border-color: #8ed131; } 100% { background: white; } }
-            
-            /* Ajustes para dar mais espaço no ecrã de JOGO */
-            #view-jogo .card-topo, #view-jogo .card-fundo { display: none !important; }
-            #view-jogo .card-meio { border-radius: 25px; height: 100% !important; border: none; }
         </style>
         <div class="demo-container">
             <div class="demo-target"><img src="${DADOS_JOGO.caminhoImagens}${DADOS_JOGO.itens[0].img}" style="width:75%"></div>
             <div class="demo-grid">
                 <div class="demo-card"><img src="${DADOS_JOGO.caminhoImagens}${DADOS_JOGO.itens[1].img}" style="width:70%"></div>
-                <div class="demo-card flash-win"><img src="${DADOS_JOGO.caminhoImagens}${DADOS_JOGO.itens[0].img}" style="width:70%"></div>
+                <div class="demo-card" style="border-color:#8ed131"><img src="${DADOS_JOGO.caminhoImagens}${DADOS_JOGO.itens[0].img}" style="width:70%"></div>
                 <div class="demo-card"><img src="${DADOS_JOGO.caminhoImagens}${DADOS_JOGO.itens[2].img}" style="width:70%"></div>
             </div>
             <i class="fas fa-mouse-pointer demo-hand"></i>
@@ -55,18 +60,40 @@ const ECRA_APRESENTACAO = {
         const info = document.getElementById('info-texto');
         if (!info) return;
         info.innerHTML = `
-            <div style="text-align: left; padding: 10px;">
-                <h3 style="color: var(--cor-dinamica); font-weight: 900;">OBJETIVO</h3>
-                <p>Encontra a imagem igual ao modelo em cada ronda.</p>
-                <h3 style="color: var(--cor-dinamica); margin-top: 15px; font-weight: 900;">REGRAS</h3>
+            <div style="text-align: left; padding: 5px; font-size: 0.95rem; line-height: 1.5;">
+                <h3 style="color: var(--cor-dinamica); font-weight: 900; margin-bottom: 5px; text-transform: uppercase;">Objetivo do jogo</h3>
+                <p>Observa atentamente o animal apresentado no topo do ecrã e encontra a imagem igual entre as várias opções. Clica ou toca no animal correto para avançares para a ronda seguinte.</p>
+                
+                <h3 style="color: var(--cor-dinamica); font-weight: 900; margin-top: 15px; margin-bottom: 5px; text-transform: uppercase;">Como jogar</h3>
                 <ul style="padding-left: 20px;">
-                    <li>Tens 10 rondas no total.</li>
-                    <li>Cada escolha (certa ou errada) avança uma ronda.</li>
-                    <li>Tenta obter a pontuação máxima de 10 acertos!</li>
+                    <li>Observa o animal que aparece no topo do ecrã.</li>
+                    <li>Analisa todas as imagens apresentadas.</li>
+                    <li>Encontra a imagem exatamente igual ao modelo.</li>
+                    <li>Clica ou toca no animal correto.</li>
+                    <li>Se acertares, passas para a próxima ronda.</li>
+                    <li>Se errares, a ronda também avança. Tenta acertar o máximo possível!</li>
+                    <li>Completa as 10 rondas e descobre a tua pontuação final.</li>
                 </ul>
+
+                <h3 style="color: var(--cor-dinamica); font-weight: 900; margin-top: 15px; margin-bottom: 5px; text-transform: uppercase;">Regras</h3>
+                <ul style="padding-left: 20px;">
+                    <li>Existe apenas uma resposta correta em cada ronda.</li>
+                    <li>Observa com atenção antes de responder.</li>
+                    <li>Não há limite de tempo.</li>
+                    <li>O objetivo é acertar no maior número possível de respostas.</li>
+                </ul>
+
+                <h3 style="color: var(--cor-dinamica); font-weight: 900; margin-top: 15px; margin-bottom: 5px; text-transform: uppercase;">Dicas</h3>
+                <p>Observa cuidadosamente: a forma do animal; as cores; os detalhes (orelhas, patas, asas, cauda, etc.). Alguns animais podem ser parecidos, escolhe o que é idêntico.</p>
+
+                <h3 style="color: var(--cor-dinamica); font-weight: 900; margin-top: 15px; margin-bottom: 5px; text-transform: uppercase;">O que vais desenvolver?</h3>
+                <p>Atenção e concentração; Memória visual; Capacidade de observação; Rapidez de identificação; Discriminação visual.</p>
             </div>`;
     }
 };
+
+// Inicialização (colocar no final do ficheiro jogo.js)
+setTimeout(() => ECRA_APRESENTACAO.init(), 150);
 
 // =============================================================================
 // 3. MÓDULO: JOGO (view-jogo)
