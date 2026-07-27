@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plataforma Educativa</title>
+    <!-- O título será preenchido pelo JS -->
+    <title>Carregando...</title>
 
     <!-- Fonte Fredoka -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -15,7 +16,7 @@
         :root {
             --cor-pagina: #f0f0f0;
             --cor-primaria: #333;
-            --cor-primaria-alpha: rgba(0,0,0,0.2); 
+            --cor-primaria-alpha: rgba(0,0,0,0.4); 
             --cor-escura: #000;
             --cor-texto: #5d7082;
             --text-grey: #8792a1;
@@ -55,7 +56,7 @@
             width: 100%;
         }
 
-        .btn-menu { background: none; border: none; cursor: pointer; width: 45px; display: flex; flex-direction: column; gap: 5px; }
+        .btn-menu { background: none; border: none; cursor: pointer; width: 45px; display: flex; flex-direction: column; gap: 5px; z-index: 1200; }
         .btn-menu div { width: 28px; height: 4px; background-color: var(--cor-primaria); border-radius: 10px; }
 
         .header-center { display: flex; align-items: center; gap: 12px; }
@@ -69,23 +70,26 @@
         .btn-voltar-topo img { height: 45px; }
 
         /* ==========================================
-           3. MENU DROPDOWN
+           3. MENU DROPDOWN (LARGURA FIXA E FECHO INTELIGENTE)
            ========================================== */
         .menu-dropdown {
             position: fixed;
-            top: -100%; left: 0; width: 100%;
+            top: -100%; left: 0; width: 100%; height: 100%; /* Ocupa tudo para capturar cliques fora */
             padding: 95px 20px 30px 20px;
-            transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: top 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
             display: flex;
             flex-direction: column;
             gap: 8px;
             align-items: flex-start;
+            background: transparent;
         }
         .menu-dropdown.active { top: 0; }
+
         .menu-btn-item {
-            min-width: 250px; background-color: white; display: flex; align-items: center; gap: 15px;
-            padding: 7px 20px; text-decoration: none; color: var(--cor-texto); border-radius: 18px;
+            width: 280px; /* Largura fixa solicitada */
+            background-color: white; display: flex; align-items: center; gap: 15px;
+            padding: 8px 20px; text-decoration: none; color: var(--cor-texto); border-radius: 18px;
             font-weight: 600; font-size: 1.1rem; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border: 1px solid #f2f2f2;
         }
         .menu-btn-item:hover { background-color: var(--cor-primaria); color: white; transform: translateX(5px); }
@@ -94,7 +98,7 @@
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); display: none; z-index: 900; backdrop-filter: blur(2px); }
 
         /* ==========================================
-           4. MAIN (CARD COM LIMITE COLORIDO VISÍVEL)
+           4. MAIN (CARD EXPANDIDO)
            ========================================== */
         main {
             flex: 1;
@@ -117,8 +121,6 @@
             width: 100%;
             max-width: 1200px;
             margin: 0 auto;
-            
-            /* LIMITE COLORIDO MAIS VISÍVEL */
             border: 3px solid var(--cor-primaria-alpha); 
             box-shadow: 0 0 30px var(--cor-primaria-alpha); 
         }
@@ -130,7 +132,6 @@
             display: inline-block; margin-top: 30px; transition: 0.3s;
             box-shadow: 0 10px 20px rgba(0,0,0,0.1);
         }
-        .btn-jogar:hover { transform: scale(1.05); }
 
         /* ==========================================
            5. FOOTER (40px)
@@ -188,20 +189,23 @@
     <script src="dados.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            // 1. Validar e Aplicar Nome do Jogo ao Título da Página
+            document.title = JOGO_CONFIG.nomeDoJogo || "Jogo Educativo";
+
             const area = JOGO_CONFIG.areaAtiva;
             const ano = JOGO_CONFIG.anoAtivo;
             const tema = BIBLIOTECA_TEMAS[area];
             const conteudo = BIBLIOTECA_CONTEUDO[ano][area];
 
+            // 2. Cores Dinâmicas
             const root = document.documentElement;
             root.style.setProperty('--cor-pagina', tema.corPagina);
             root.style.setProperty('--cor-primaria', tema.corPrimaria);
             root.style.setProperty('--cor-escura', tema.corEscura);
             root.style.setProperty('--cor-texto', tema.corTexto);
-            
-            // MAIS VISÍVEL: Usamos '66' (aprox 40% opacidade) em vez de '22'
             root.style.setProperty('--cor-primaria-alpha', tema.corPrimaria + '66');
 
+            // 3. Textos
             document.getElementById("txt-titulo1").innerText = conteudo.t1;
             document.getElementById("txt-titulo2").innerText = conteudo.t2;
             document.getElementById("txt-subtitulo-header").innerText = conteudo.sub;
@@ -216,6 +220,7 @@
             document.getElementById("ui-nome-jogo").innerText = JOGO_CONFIG.nomeDoJogo;
             document.getElementById("ui-descricao").innerText = JOGO_CONFIG.descricao;
 
+            // 4. Menu Dropdown
             const menuDropdown = document.getElementById("menu-dropdown");
             JOGO_CONFIG.menuItens.forEach(item => {
                 const link = document.createElement("a");
@@ -226,15 +231,23 @@
                 menuDropdown.appendChild(link);
             });
 
+            // 5. Lógica de Abrir/Fechar e Clique Fora
             const btnMenu = document.getElementById("btn-abrir-menu");
             const dropdown = document.getElementById("menu-dropdown");
             const overlay = document.getElementById("overlay");
+
             const toggleMenu = () => {
                 const isActive = dropdown.classList.toggle("active");
                 overlay.style.display = isActive ? "block" : "none";
             };
+
             btnMenu.addEventListener("click", toggleMenu);
             overlay.addEventListener("click", toggleMenu);
+            
+            // Fechar ao clicar no espaço vazio do dropdown (lado ou baixo dos botões)
+            dropdown.addEventListener("click", (e) => {
+                if (e.target === dropdown) toggleMenu();
+            });
         });
     </script>
 </body>
