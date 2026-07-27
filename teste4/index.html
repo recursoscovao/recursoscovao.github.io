@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carregando...</title>
 
-    <!-- Fonte Fredoka -->
+    <!-- Fonte Fredoka - Arredondada e amigável -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
     <style>
@@ -13,8 +13,12 @@
            1. VARIÁVEIS E BASE
            ========================================== */
         :root {
-            --cor-pagina: #f0f0f0; --cor-primaria: #333; --cor-primaria-alpha: rgba(0,0,0,0.4); 
-            --cor-escura: #000; --cor-texto: #5d7082; --text-grey: #8792a1;
+            --cor-pagina: #f0f0f0; 
+            --cor-primaria: #333; 
+            --cor-primaria-alpha: rgba(0,0,0,0.4); 
+            --cor-escura: #000; 
+            --cor-texto: #5d7082; 
+            --text-grey: #8792a1;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -42,24 +46,25 @@
         .btn-voltar-topo img { height: 45px; }
 
         /* ==========================================
-           3. MENU HAMBURGUER (DROPDOWN TOPO)
+           3. MENU HAMBURGUER (MENOS ALTO)
            ========================================== */
         .menu-dropdown { 
             position: fixed; top: 0; left: 0; width: 100%; padding: 100px 20px 30px 20px; 
-            z-index: 1000; display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
+            z-index: 1000; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
             transform: translateY(-110%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
         .menu-dropdown.active { transform: translateY(0); }
         .menu-btn-item { 
-            width: 280px; background: white; display: flex; align-items: center; gap: 15px; padding: 12px 20px; 
-            text-decoration: none; color: var(--cor-texto); border-radius: 18px; font-weight: 600; font-size: 1.1rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #f2f2f2; transition: 0.3s; 
+            width: 270px; background: white; display: flex; align-items: center; gap: 12px; 
+            padding: 8px 18px; /* Menos alto */
+            text-decoration: none; color: var(--cor-texto); border-radius: 18px; font-weight: 600; font-size: 1.05rem;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.08); border: 1px solid #f2f2f2; transition: 0.3s; 
         }
-        .menu-btn-item img { width: 40px; height: 40px; flex-shrink: 0; object-fit: contain; } /* Correção flat */
-        .menu-btn-item:hover { background: var(--cor-primaria); color: white; }
+        .menu-btn-item img { width: 34px; height: 34px; flex-shrink: 0; object-fit: contain; }
+        .menu-btn-item:hover { background: var(--cor-primaria); color: white; transform: translateX(5px); }
 
         /* ==========================================
-           4. PÁGINA DE INFO (FULL SCREEN - SOBE DE BAIXO)
+           4. PÁGINA DE INFO (SOBE DE BAIXO)
            ========================================== */
         .info-full-page {
             position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%;
@@ -67,25 +72,17 @@
             display: flex; flex-direction: column;
         }
         .info-full-page.active { bottom: 0; }
-        
-        .info-header {
-            height: 85px; display: flex; align-items: center; justify-content: space-between;
-            padding: 0 25px; border-bottom: 2px solid var(--cor-pagina);
-        }
+        .info-header { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; border-bottom: 2px solid var(--cor-pagina); }
         .info-header span { font-weight: 900; font-size: 1.5rem; color: var(--cor-primaria); text-transform: uppercase; }
-        .btn-close-info { 
-            background: var(--cor-pagina); border: none; width: 45px; height: 45px; 
-            border-radius: 50%; font-size: 1.5rem; font-weight: 900; color: var(--cor-primaria); cursor: pointer;
-        }
-
+        .btn-close-info { background: var(--cor-pagina); border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.5rem; font-weight: 900; color: var(--cor-primaria); cursor: pointer; }
         .info-body { flex: 1; padding: 40px 25px; overflow-y: auto; text-align: center; }
         .info-body h2 { font-size: 2.2rem; color: var(--cor-primaria); margin-bottom: 20px; }
-        .info-body p { font-size: 1.3rem; line-height: 1.5; color: var(--cor-texto); max-width: 600px; margin: 0 auto; }
+        .info-body p { font-size: 1.2rem; line-height: 1.5; color: var(--cor-texto); max-width: 600px; margin: 0 auto; }
 
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: none; z-index: 900; backdrop-filter: blur(2px); }
 
         /* ==========================================
-           5. MAIN E AS 3 TELAS
+           5. MAIN E AS 3 TELAS (ADAPTÁVEIS)
            ========================================== */
         main { flex: 1; padding: 15px; display: flex; flex-direction: column; }
         .tela {
@@ -100,8 +97,17 @@
 
         /* --- ECRÃ 1: APRESENTAÇÃO --- */
         .intro-container { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: inherit; }
-        .intro-topo { height: 85px; display: flex; align-items: center; justify-content: center; }
-        #ui-nome-jogo-intro { font-size: 2.5rem; font-weight: 900; color: var(--cor-primaria); text-align: center; }
+        
+        .intro-topo { height: 85px; display: flex; align-items: center; justify-content: center; padding: 0 15px; }
+        /* Título Responsivo: escala entre 1.5rem e 2.2rem conforme o ecrã */
+        #ui-nome-jogo-intro { 
+            font-size: clamp(1.4rem, 5vw, 2.2rem); 
+            font-weight: 900; 
+            color: var(--cor-primaria); 
+            text-align: center; 
+            text-transform: uppercase;
+        }
+
         .intro-meio { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
         #container-animacao-tutorial { width: 100%; height: 100%; background: #fafafa; border-radius: 25px; border: 2px dashed #eee; display: flex; align-items: center; justify-content: center; }
 
@@ -109,21 +115,23 @@
         .fundo-flex { display: flex; align-items: center; gap: 20px; width: 100%; }
         
         .btn-info-icon { background: none; border: none; cursor: pointer; flex-shrink: 0; }
-        .btn-info-icon img { width: 55px; height: 55px; }
+        .btn-info-icon img { width: 50px; height: 50px; }
 
+        /* Botão Jogar igual ao Título */
         .btn-jogar-expand { 
             flex: 1; background: var(--cor-primaria); color: white; border: none; 
-            padding: 15px 0; font-size: 1.8rem; font-weight: 900; 
+            padding: 15px 0; 
+            font-size: clamp(1.3rem, 4vw, 1.8rem); 
+            font-weight: 900; /* Igual ao título */
+            text-transform: uppercase;
             border-radius: 60px; cursor: pointer; transition: 0.3s;
             box-shadow: 0 6px 15px rgba(0,0,0,0.1);
         }
 
-        /* --- ECRÃ 2: JOGO --- */
+        /* --- OUTROS ECRÃS --- */
         #container-cartas { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 15px; width: 100%; max-width: 900px; padding: 30px; }
-
-        /* --- ECRÃ 3: RESULTADOS --- */
-        #res-img { width: 160px; margin-bottom: 20px; }
-        #res-titulo { font-size: 2.5rem; color: var(--cor-primaria); margin-bottom: 20px; text-align: center; }
+        #res-img { width: 150px; margin-bottom: 20px; }
+        #res-titulo { font-size: 2.2rem; color: var(--cor-primaria); margin-bottom: 20px; text-align: center; font-weight: 900; }
 
         /* ==========================================
            6. FOOTER
@@ -140,10 +148,8 @@
 
     <div id="overlay" class="overlay"></div>
 
-    <!-- MENU DROPDOWN (HAMBURGUER) -->
     <nav id="menu-dropdown" class="menu-dropdown"></nav>
 
-    <!-- PÁGINA DE INFORMAÇÕES (SOBE DE BAIXO) -->
     <div id="page-info" class="info-full-page">
         <header class="info-header">
             <span>Informação</span>
@@ -155,7 +161,6 @@
         </div>
     </div>
 
-    <!-- HEADER PRINCIPAL -->
     <header>
         <div class="header-flex">
             <button class="btn-menu" id="btn-abrir-menu"><div></div><div></div><div></div></button>
@@ -170,12 +175,11 @@
     </header>
 
     <main>
-        <!-- ECRÃ 1: APRESENTAÇÃO -->
         <section id="tela-apresentacao" class="tela active-tela">
             <div class="intro-container">
                 <div class="intro-topo"><h1 id="ui-nome-jogo-intro"></h1></div>
                 <div class="intro-meio">
-                    <div id="container-animacao-tutorial"><p style="color:#ccc">[ Animação Tutorial ]</p></div>
+                    <div id="container-animacao-tutorial"><p style="color:#ccc">[ Tutorial ]</p></div>
                 </div>
                 <div class="intro-fundo">
                     <div class="fundo-flex">
@@ -186,10 +190,8 @@
             </div>
         </section>
 
-        <!-- ECRÃ 2: JOGO -->
         <section id="tela-jogo" class="tela"><div id="container-cartas"></div></section>
 
-        <!-- ECRÃ 3: RESULTADOS -->
         <section id="tela-resultados" class="tela">
             <img id="res-img" src=""><h2 id="res-titulo"></h2>
             <button class="btn-jogar-expand" style="max-width:300px" onclick="location.reload()">REPETIR</button>
@@ -205,14 +207,12 @@
             const tema = BIBLIOTECA_TEMAS[config.areaAtiva];
             const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
 
-            // 1. UI Setup
             document.title = config.nomeDoJogo;
             const root = document.documentElement;
             root.style.setProperty('--cor-pagina', tema.corPagina);
             root.style.setProperty('--cor-primaria', tema.corPrimaria);
             root.style.setProperty('--cor-primaria-alpha', tema.corPrimaria + '66');
 
-            // 2. Preenchimento de Textos
             document.getElementById("txt-titulo1").innerText = conteudo.t1;
             document.getElementById("txt-titulo2").innerText = conteudo.t2;
             document.getElementById("txt-subtitulo-header").innerText = conteudo.sub;
@@ -220,15 +220,12 @@
             document.getElementById("ui-nome-jogo-intro").innerText = config.nomeDoJogo;
             document.getElementById("ui-seta-voltar").src = config.caminhoIconsMenu + tema.voltarMobile;
             document.getElementById("img-info").src = config.caminhoIconsJogos + "inform.png";
-            
-            // Textos da Página de Info
             document.getElementById("info-game-title").innerText = config.nomeDoJogo;
             document.getElementById("info-instructions").innerText = config.descricao;
 
             const itemAno = config.menuItens.find(item => item.id === config.anoAtivo);
             if (itemAno) document.getElementById("header-icon").src = config.caminhoIconsMenu + itemAno.icon;
 
-            // 3. Menu Dropdown
             const menuDiv = document.getElementById("menu-dropdown");
             config.menuItens.forEach(item => {
                 const link = document.createElement("a");
@@ -238,7 +235,6 @@
                 menuDiv.appendChild(link);
             });
 
-            // 4. Lógica de Interação
             const btnMenu = document.getElementById("btn-abrir-menu");
             const btnOpenInfo = document.getElementById("btn-open-info");
             const btnCloseInfo = document.getElementById("btn-close-info");
