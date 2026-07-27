@@ -10,101 +10,60 @@
 
     <style>
         /* ==========================================
-           1. VARIÁVEIS E BASE
+           1. VARIÁVEIS E BASE (CORES DINÂMICAS)
            ========================================== */
         :root {
-            --cor-pagina: #f0f0f0; --cor-primaria: #333; --cor-primaria-alpha: rgba(0,0,0,0.4); 
-            --cor-escura: #000; --cor-texto: #5d7082; --text-grey: #8792a1;
+            --cor-pagina: #f0f0f0; 
+            --cor-primaria: #333; 
+            --cor-primaria-alpha: rgba(0,0,0,0.4); 
+            --cor-escura: #000; 
+            --cor-texto: #5d7082; 
+            --text-grey: #8792a1;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
         html, body { min-height: 100%; }
-
-        body {
-            display: flex;
-            flex-direction: column;
-            font-family: 'Fredoka', sans-serif;
-            background-color: var(--cor-pagina);
-            overflow-y: auto; 
-            overflow-x: hidden;
-        }
+        body { display: flex; flex-direction: column; font-family: 'Fredoka', sans-serif; background-color: var(--cor-pagina); overflow-y: auto; overflow-x: hidden; }
 
         /* ==========================================
            2. HEADER (85px, BRANCO, ARREDONDADO)
            ========================================== */
         header {
-            height: 85px;
-            background: white;
-            display: flex;
-            align-items: center;
-            padding: 0 20px;
-            border-bottom-left-radius: 35px;
-            border-bottom-right-radius: 35px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-            z-index: 1100;
-            flex-shrink: 0;
-            position: relative;
+            height: 85px; background: white; display: flex; align-items: center; padding: 0 20px;
+            border-bottom-left-radius: 35px; border-bottom-right-radius: 35px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06); z-index: 1100; flex-shrink: 0; position: relative;
         }
-
         .header-flex { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .header-center { display: flex; align-items: center; gap: 12px; }
         #header-icon { height: 65px; object-fit: contain; }
-        
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         #txt-titulo1 { font-weight: 900; font-size: 1.6rem; color: var(--cor-primaria); }
         #txt-titulo2 { font-weight: 800; font-size: 1.3rem; color: var(--text-grey); }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
-        
         .btn-menu { background: none; border: none; cursor: pointer; width: 45px; display: flex; flex-direction: column; gap: 5px; z-index: 1200; }
         .btn-menu div { width: 28px; height: 4px; background-color: var(--cor-primaria); border-radius: 10px; }
         .btn-voltar-topo img { height: 45px; }
 
         /* ==========================================
-           3. MENU DROPDOWN (CORREÇÃO DE ALTURA E VISIBILIDADE)
+           3. MENU DROPDOWN
            ========================================== */
         .menu-dropdown { 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            padding: 100px 20px 30px 20px; 
-            z-index: 1000; 
-            display: flex; 
-            flex-direction: column; 
-            gap: 10px; 
-            align-items: flex-start;
-            /* Esconde movendo para cima do topo */
-            transform: translateY(-110%);
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            background: transparent;
+            position: fixed; top: 0; left: 0; width: 100%; padding: 100px 20px 30px 20px; 
+            z-index: 1000; display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
+            transform: translateY(-110%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
-        
         .menu-dropdown.active { transform: translateY(0); }
-
         .menu-btn-item { 
-            width: 280px; 
-            background: white; 
-            display: flex; 
-            align-items: center; 
-            gap: 15px; 
-            padding: 12px 20px; /* Padding corrigido para altura consistente */
-            text-decoration: none; 
-            color: var(--cor-texto); 
-            border-radius: 18px; 
-            font-weight: 600; 
-            font-size: 1.1rem;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08); 
-            border: 1px solid #f2f2f2; 
-            transition: 0.3s; 
+            width: 280px; background: white; display: flex; align-items: center; gap: 15px; padding: 12px 20px; 
+            text-decoration: none; color: var(--cor-texto); border-radius: 18px; font-weight: 600; font-size: 1.1rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08); border: 1px solid #f2f2f2; transition: 0.3s; 
         }
         .menu-btn-item:hover { background: var(--cor-primaria); color: white; transform: translateX(5px); }
         .menu-btn-item img { width: 32px; height: 32px; object-fit: contain; }
-
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.25); display: none; z-index: 900; backdrop-filter: blur(2px); }
 
         /* ==========================================
-           4. MAIN E ECRÃS
+           4. ESTRUTURA DOS ECRÃS (MAIN)
            ========================================== */
         main { flex: 1; padding: 15px; display: flex; flex-direction: column; }
 
@@ -120,12 +79,25 @@
 
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Cores dos Textos no Jogo */
+        /* --- ESTILOS: ECRÃ 1 (APRESENTAÇÃO) --- */
         #ui-nome-jogo { font-size: 3.2rem; font-weight: 900; color: var(--cor-primaria); text-align: center; margin-bottom: 15px; }
         #ui-descricao { font-size: 1.4rem; color: var(--text-grey); text-align: center; max-width: 700px; margin-bottom: 30px; }
 
-        /* Grid do Jogo */
+        /* --- ESTILOS: ECRÃ 2 (JOGO) --- */
+        #container-jogo { width: 100%; display: flex; flex-direction: column; align-items: center; }
         #container-cartas { display: grid; grid-template-columns: repeat(auto-fit, minmax(110px, 1fr)); gap: 15px; width: 100%; max-width: 900px; padding: 20px; }
+
+        /* --- ESTILOS: ECRÃ 3 (RESULTADOS) --- */
+        #res-img { width: 160px; margin-bottom: 20px; }
+        #res-titulo { font-size: 2.5rem; color: var(--cor-primaria); margin-bottom: 20px; text-align: center; }
+
+        /* BOTÃO DE AÇÃO GLOBAL */
+        .btn-acao { 
+            background: var(--cor-primaria); color: white; border: none; 
+            padding: 20px 70px; font-size: 1.8rem; font-weight: 700; 
+            border-radius: 60px; cursor: pointer; transition: 0.3s;
+        }
+        .btn-acao:hover { transform: scale(1.05); }
 
         /* ==========================================
            5. FOOTER (40px, BRANCO)
@@ -137,25 +109,19 @@
             box-shadow: 0 -4px 15px rgba(0,0,0,0.06); flex-shrink: 0; margin-top: auto;
         }
 
-        .btn-acao { 
-            background: var(--cor-primaria); color: white; border: none; 
-            padding: 20px 70px; font-size: 1.8rem; font-weight: 700; 
-            border-radius: 60px; cursor: pointer; transition: 0.3s;
-        }
-        .btn-acao:hover { transform: scale(1.05); }
-
         @media (max-width: 600px) {
             #ui-nome-jogo { font-size: 2.2rem; }
             #ui-descricao { font-size: 1.1rem; }
-            .menu-btn-item { width: 240px; }
         }
     </style>
 </head>
 <body>
 
+    <!-- OVERLAY E MENU -->
     <div id="overlay" class="overlay"></div>
     <nav id="menu-dropdown" class="menu-dropdown"></nav>
 
+    <!-- HEADER -->
     <header>
         <div class="header-flex">
             <button class="btn-menu" id="btn-abrir-menu"><div></div><div></div><div></div></button>
@@ -170,56 +136,76 @@
     </header>
 
     <main>
-        <!-- ECRÃ 1: APRESENTAÇÃO -->
+        <!-- ==========================================
+             ECRÃ 1: APRESENTAÇÃO DO JOGO
+             ========================================== -->
         <section id="tela-apresentacao" class="tela active-tela">
             <h1 id="ui-nome-jogo"></h1>
             <p id="ui-descricao"></p>
-            <button class="btn-acao" onclick="comecarJogo()">JOGAR</button>
+            <button class="btn-acao" onclick="irParaJogo()">JOGAR</button>
         </section>
 
-        <!-- ECRÃ 2: JOGO -->
+
+        <!-- ==========================================
+             ECRÃ 2: ÁREA DO JOGO
+             ========================================== -->
         <section id="tela-jogo" class="tela">
-            <div id="container-cartas"></div>
+            <div id="container-jogo">
+                <!-- Podes colocar aqui cronómetros ou contadores -->
+                <div id="container-cartas">
+                    <!-- As cartas serão injetadas aqui pelo jogo.js -->
+                </div>
+            </div>
         </section>
 
-        <!-- ECRÃ 3: RESULTADOS -->
+
+        <!-- ==========================================
+             ECRÃ 3: RESULTADOS FINAIS
+             ========================================== -->
         <section id="tela-resultados" class="tela">
-            <img id="res-img" src="" style="width: 160px; margin-bottom: 20px;">
-            <h2 id="res-titulo" style="font-size: 2.5rem; color: var(--cor-primaria); margin-bottom: 20px;"></h2>
+            <img id="res-img" src="" alt="Feedback">
+            <h2 id="res-titulo"></h2>
+            <!-- Podes adicionar aqui o número de jogadas ou tempo -->
             <button class="btn-acao" onclick="location.reload()">REPETIR</button>
         </section>
     </main>
 
+    <!-- FOOTER -->
     <footer><div id="ui-rodape"></div></footer>
 
+    <!-- SCRIPTS -->
     <script src="dados.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            // BUSCAR DADOS DO dados.js
             const area = JOGO_CONFIG.areaAtiva;
             const ano = JOGO_CONFIG.anoAtivo;
             const tema = BIBLIOTECA_TEMAS[area];
             const conteudo = BIBLIOTECA_CONTEUDO[ano][area];
 
-            // 1. Configurações Dinâmicas
+            // 1. CONFIGURAÇÕES TÉCNICAS E CORES
             document.title = JOGO_CONFIG.nomeDoJogo;
             const root = document.documentElement;
             root.style.setProperty('--cor-pagina', tema.corPagina);
             root.style.setProperty('--cor-primaria', tema.corPrimaria);
             root.style.setProperty('--cor-primaria-alpha', tema.corPrimaria + '66');
 
-            // 2. Preencher UI
+            // 2. PREENCHER HEADER E ECRÃ DE APRESENTAÇÃO
             document.getElementById("txt-titulo1").innerText = conteudo.t1;
             document.getElementById("txt-titulo2").innerText = conteudo.t2;
             document.getElementById("txt-subtitulo-header").innerText = conteudo.sub;
             document.getElementById("ui-rodape").innerHTML = conteudo.rodape;
-            document.getElementById("ui-nome-jogo").innerText = JOGO_CONFIG.nomeDoJogo;
-            document.getElementById("ui-descricao").innerText = JOGO_CONFIG.descricao;
             document.getElementById("ui-seta-voltar").src = JOGO_CONFIG.caminhoIconsMenu + tema.voltarMobile;
             
+            // Textos do Ecrã 1
+            document.getElementById("ui-nome-jogo").innerText = JOGO_CONFIG.nomeDoJogo;
+            document.getElementById("ui-descricao").innerText = JOGO_CONFIG.descricao;
+
+            // Ícone do Ano no Centro do Header
             const itemAno = JOGO_CONFIG.menuItens.find(item => item.id === ano);
             if (itemAno) document.getElementById("header-icon").src = JOGO_CONFIG.caminhoIconsMenu + itemAno.icon;
 
-            // 3. Menu
+            // 3. GERAR MENU DROPDOWN
             const menuDropdown = document.getElementById("menu-dropdown");
             JOGO_CONFIG.menuItens.forEach(item => {
                 const link = document.createElement("a");
@@ -229,7 +215,7 @@
                 menuDropdown.appendChild(link);
             });
 
-            // 4. Lógica Menu
+            // 4. LÓGICA DO MENU (ABRIR/FECHAR)
             const btnMenu = document.getElementById("btn-abrir-menu");
             const overlay = document.getElementById("overlay");
             const toggleMenu = () => {
@@ -241,10 +227,36 @@
             menuDropdown.onclick = (e) => { if(e.target === menuDropdown) toggleMenu(); };
         });
 
-        function comecarJogo() {
+        // ==========================================
+        // FUNÇÕES DE NAVEGAÇÃO ENTRE ECRÃS
+        // ==========================================
+
+        function trocarEcra(idAlvo) {
+            // Esconde todas as telas e mostra a selecionada
             document.querySelectorAll('.tela').forEach(t => t.classList.remove('active-tela'));
-            document.getElementById('tela-jogo').classList.add('active-tela');
+            document.getElementById(idAlvo).classList.add('active-tela');
+            // Garante que o scroll volta ao topo no novo ecrã
             window.scrollTo(0, 0);
+        }
+
+        // Função chamada pelo botão "JOGAR" no Ecrã 1
+        function irParaJogo() {
+            trocarEcra('tela-jogo');
+            console.log("O jogo começou...");
+            // Aqui vais chamar a função que baralha e cria as cartas
+        }
+
+        // Função chamada quando o jogo termina
+        function irParaResultados(pontosTotal) {
+            trocarEcra('tela-resultados');
+            
+            // Lógica para buscar o feedback correto no dados.js
+            const relatorio = JOGO_CONFIG.relatorios.find(r => pontosTotal >= r.min && pontosTotal <= r.max);
+            
+            if (relatorio) {
+                document.getElementById("res-titulo").innerText = relatorio.titulo;
+                document.getElementById("res-img").src = JOGO_CONFIG.caminhoIconsJogos + relatorio.img;
+            }
         }
     </script>
 </body>
