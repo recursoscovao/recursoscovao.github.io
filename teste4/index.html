@@ -23,17 +23,17 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            min-height: 100vh;
+            height: 100vh; /* Altura fixa do ecrã */
             display: flex;
             flex-direction: column;
             font-family: 'Fredoka', sans-serif;
             background-color: var(--cor-pagina);
             color: var(--cor-texto);
-            overflow-x: hidden;
+            overflow: hidden; /* Evita scroll na página toda para o card caber certinho */
         }
 
         /* ==========================================
-           2. HEADER (85px, BRANCO, ARREDONDADO EM BAIXO)
+           2. HEADER (85px)
            ========================================== */
         header {
             height: 85px;
@@ -45,7 +45,6 @@
             border-bottom-right-radius: 35px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.06);
             z-index: 1100;
-            position: relative;
         }
 
         .header-flex {
@@ -55,31 +54,25 @@
             width: 100%;
         }
 
-        .btn-menu {
-            background: none; border: none; cursor: pointer;
-            width: 45px; display: flex; flex-direction: column; gap: 5px;
-            z-index: 1200;
-        }
+        .btn-menu { background: none; border: none; cursor: pointer; width: 45px; display: flex; flex-direction: column; gap: 5px; }
         .btn-menu div { width: 28px; height: 4px; background-color: var(--cor-primaria); border-radius: 10px; }
 
-        .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .header-center { display: flex; align-items: center; gap: 12px; }
         #header-icon { height: 70px; object-fit: contain; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         #txt-titulo1 { font-weight: 900; font-size: 1.65rem; color: var(--cor-primaria); }
         #txt-titulo2 { font-weight: 800; font-size: 1.4rem; color: var(--text-grey); }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
 
-        .btn-voltar-topo { width: 45px; display: flex; justify-content: flex-end; text-decoration: none; }
+        .btn-voltar-topo { width: 45px; display: flex; justify-content: flex-end; }
         .btn-voltar-topo img { height: 45px; }
 
         /* ==========================================
-           3. MENU DROPDOWN (TRANSPARENTE / BOTÕES LATERAIS)
+           3. MENU DROPDOWN
            ========================================== */
         .menu-dropdown {
             position: fixed;
-            top: -100%; 
-            left: 0;
-            width: 100%;
+            top: -100%; left: 0; width: 100%;
             background-color: transparent; 
             padding: 95px 20px 30px 20px;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -89,92 +82,72 @@
             gap: 8px;
             align-items: flex-start;
         }
-
         .menu-dropdown.active { top: 0; }
-
         .menu-btn-item {
-            width: auto;
-            min-width: 250px;
-            background-color: white;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            padding: 7px 20px;
-            text-decoration: none;
-            color: var(--cor-texto);
-            border-radius: 18px;
-            font-weight: 600;
-            font-size: 1.1rem;
-            transition: 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.08);
-            border: 1px solid #f2f2f2;
+            min-width: 250px; background-color: white; display: flex; align-items: center; gap: 15px;
+            padding: 7px 20px; text-decoration: none; color: var(--cor-texto); border-radius: 18px;
+            font-weight: 600; font-size: 1.1rem; transition: 0.3s; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border: 1px solid #f2f2f2;
         }
+        .menu-btn-item:hover { background-color: var(--cor-primaria); color: white; transform: translateX(5px); }
+        .menu-btn-item img { width: 32px; height: 32px; }
 
-        .menu-btn-item img { width: 32px; height: 32px; object-fit: contain; }
-
-        .menu-btn-item:hover {
-            background-color: var(--cor-primaria);
-            color: white;
-            transform: translateX(5px);
-        }
-
-        .overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.2);
-            display: none;
-            z-index: 900;
-            backdrop-filter: blur(2px);
-        }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); display: none; z-index: 900; backdrop-filter: blur(2px); }
 
         /* ==========================================
-           4. MAIN (CENTRO)
+           4. MAIN (ÁREA DO CARD EXPANDIDO)
            ========================================== */
         main {
-            flex: 1;
+            flex: 1; /* Ocupa todo o espaço restante */
             display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 40px 20px;
+            flex-direction: column;
+            padding: 15px; /* Espaçamento de 15px solicitado */
+            overflow: hidden;
         }
 
         .card-intro {
+            flex: 1; /* Faz o card crescer para ocupar o main todo */
             background: white;
-            padding: 50px 40px;
             border-radius: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
             text-align: center;
+            padding: 40px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-            max-width: 550px; width: 100%;
+            width: 100%;
+            max-width: 1200px; /* Limite de largura para desktop */
+            margin: 0 auto;
         }
 
         .btn-jogar {
             background-color: var(--cor-primaria);
-            color: white; border: none; padding: 18px 60px; font-size: 1.6rem; 
-            font-weight: 700; border-radius: 50px; cursor: pointer; text-decoration: none;
-            display: inline-block; margin-top: 20px; transition: 0.3s;
+            color: white; border: none; padding: 20px 80px; font-size: 1.8rem; 
+            font-weight: 700; border-radius: 60px; cursor: pointer; text-decoration: none;
+            display: inline-block; margin-top: 30px; transition: 0.3s;
         }
+        .btn-jogar:hover { transform: scale(1.05); }
 
         /* ==========================================
-           5. FOOTER (40px, BRANCO, ARREDONDADO NO TOPO)
+           5. FOOTER (40px)
            ========================================== */
         footer {
             height: 40px;
-            background-color: white; /* Alterado para Branco */
-            color: var(--text-grey); /* Texto Cinzento */
+            background-color: white;
+            color: var(--text-grey);
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 0.85rem;
             border-top-left-radius: 30px; 
             border-top-right-radius: 30px;
-            box-shadow: 0 -4px 15px rgba(0,0,0,0.06); /* Sombra para cima */
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.06);
         }
     </style>
 </head>
 <body>
 
     <div id="overlay" class="overlay"></div>
-
     <nav id="menu-dropdown" class="menu-dropdown"></nav>
 
     <header>
@@ -182,16 +155,14 @@
             <button class="btn-menu" id="btn-abrir-menu">
                 <div></div><div></div><div></div>
             </button>
-
             <div class="header-center">
-                <img id="header-icon" src="" alt="Icon">
+                <img id="header-icon" src="" alt="">
                 <div class="title-group">
                     <span id="txt-titulo1"></span>
                     <span id="txt-titulo2"></span>
                     <span id="txt-subtitulo-header"></span>
                 </div>
             </div>
-
             <a href="javascript:history.back()" class="btn-voltar-topo">
                 <img id="ui-seta-voltar" src="" alt="Voltar">
             </a>
@@ -200,8 +171,8 @@
 
     <main>
         <section class="card-intro">
-            <h1 id="ui-nome-jogo" style="color: var(--cor-primaria); margin-bottom: 10px;"></h1>
-            <p id="ui-descricao" style="font-size: 1.2rem; color: var(--text-grey);"></p>
+            <h1 id="ui-nome-jogo" style="color: var(--cor-primaria); font-size: 3rem; margin-bottom: 15px;"></h1>
+            <p id="ui-descricao" style="font-size: 1.4rem; color: var(--text-grey); max-width: 700px;"></p>
             <a href="jogo.html" class="btn-jogar">JOGAR</a>
         </section>
     </main>
@@ -211,7 +182,6 @@
     </footer>
 
     <script src="dados.js"></script>
-
     <script>
         document.addEventListener("DOMContentLoaded", () => {
             const area = JOGO_CONFIG.areaAtiva;
@@ -252,12 +222,10 @@
             const btnMenu = document.getElementById("btn-abrir-menu");
             const dropdown = document.getElementById("menu-dropdown");
             const overlay = document.getElementById("overlay");
-
             const toggleMenu = () => {
                 const isActive = dropdown.classList.toggle("active");
                 overlay.style.display = isActive ? "block" : "none";
             };
-
             btnMenu.addEventListener("click", toggleMenu);
             overlay.addEventListener("click", toggleMenu);
         });
