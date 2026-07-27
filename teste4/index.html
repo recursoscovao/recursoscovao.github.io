@@ -6,6 +6,9 @@
     <title>Plataforma Educativa</title>
 
     <style>
+        /* ==========================================
+           1. VARIÁVEIS E BASE
+           ========================================== */
         :root {
             --cor-pagina: #f0f0f0;
             --cor-primaria: #333;
@@ -15,11 +18,6 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* GARANTE QUE O FOOTER FIQUE NO FUNDO */
-        body, html {
-            height: 100%;
-        }
-
         body {
             min-height: 100vh;
             display: flex;
@@ -27,16 +25,18 @@
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--cor-pagina);
             color: var(--cor-texto);
-            overflow-x: hidden; /* Evita scroll horizontal */
+            overflow-x: hidden;
         }
 
-        /* HEADER: 85px, BRANCO, ARREDONDADO */
+        /* ==========================================
+           2. HEADER (85px, BRANCO, ARREDONDADO)
+           ========================================== */
         header {
             height: 85px;
             background-color: white;
             display: flex;
             align-items: center;
-            padding: 0 20px; /* Padding solicitado */
+            padding: 0 20px; /* Padding de 20px nas extremidades */
             border-bottom-left-radius: 35px; 
             border-bottom-right-radius: 35px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
@@ -60,44 +60,51 @@
             flex-direction: column;
             gap: 5px;
         }
-        .btn-menu div { width: 28px; height: 3px; background-color: var(--cor-primaria); border-radius: 3px; }
+        .btn-menu div { width: 28px; height: 4px; background-color: var(--cor-primaria); border-radius: 2px; }
 
-        /* CENTRO: Icon + 3 Títulos */
+        /* CENTRO: Ícone + Logótipo (Igual à imagem) */
         .centro-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            text-align: left;
+            gap: 10px;
         }
 
         .centro-header img {
-            height: 55px; /* Tamanho do ícone central */
+            height: 65px; /* Tamanho proporcional */
             width: auto;
+            object-fit: contain;
         }
 
         .titulos-grupo {
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            line-height: 0.85; /* Aproxima as linhas como no logótipo */
         }
 
         .titulos-grupo h1 { 
-            font-size: 1.1rem; 
+            font-size: 1.7rem; 
+            font-weight: 900; 
             text-transform: uppercase; 
-            color: var(--cor-primaria); 
-            line-height: 1; 
+            color: var(--cor-primaria); /* Cor muda com o tema */
+            letter-spacing: -1px;
         }
+
         .titulos-grupo h2 { 
-            font-size: 0.85rem; 
-            font-weight: normal; 
-            color: var(--cor-texto);
-            line-height: 1.1;
+            font-size: 1.7rem; 
+            font-weight: 900; 
+            text-transform: uppercase; 
+            color: #7a8b9a; /* Cinza fixo conforme imagem */
+            letter-spacing: -1px;
         }
+
         .titulos-grupo .sub-titulo { 
-            font-size: 0.75rem; 
-            font-weight: bold; 
-            color: var(--cor-primaria);
-            margin-top: 2px;
+            font-size: 0.85rem; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            color: #5ba4e5; /* Azul/Cinza claro fixo */
+            margin-top: 4px;
+            letter-spacing: 0.5px;
+            line-height: 1;
         }
 
         /* LADO DIREITO: Seta Voltar */
@@ -107,22 +114,27 @@
             justify-content: flex-end;
             text-decoration: none;
         }
-        .btn-voltar-topo img { height: 45px; }
+        .btn-voltar-topo img { height: 45px; width: auto; }
 
-        /* MENU LATERAL */
+        /* ==========================================
+           3. MENU LATERAL
+           ========================================== */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 150; }
-        .side-menu { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; z-index: 200; transition: 0.3s; padding: 25px; }
+        .side-menu { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; z-index: 200; transition: 0.3s ease; padding: 25px; box-shadow: 5px 0 15px rgba(0,0,0,0.1); }
         .side-menu.active { left: 0; }
-        .menu-links-list { list-style: none; margin-top: 20px; }
-        .menu-links-list a { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--cor-texto); font-weight: bold; margin-bottom: 15px;}
-        .menu-links-list img { width: 35px; }
+        .menu-links-list { list-style: none; margin-top: 30px; }
+        .menu-links-list a { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--cor-texto); font-weight: bold; margin-bottom: 20px; font-size: 1.1rem; }
+        .menu-links-list img { width: 35px; height: 35px; object-fit: contain; }
 
-        /* CONTEÚDO PRINCIPAL */
+        /* ==========================================
+           4. CONTEÚDO (MAIN)
+           ========================================== */
         main {
-            flex: 1; /* Faz o main esticar para empurrar o footer */
+            flex: 1; /* Empurra o footer para o fundo */
             display: flex;
             flex-direction: column;
             align-items: center;
+            justify-content: center; /* Centraliza o card no meio do ecrã */
             padding: 40px 20px;
         }
 
@@ -131,18 +143,25 @@
             padding: 40px;
             border-radius: 30px;
             text-align: center;
-            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            max-width: 500px; width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+            max-width: 500px; 
+            width: 100%;
         }
+
+        .card-jogo h3 { font-size: 2.2rem; color: var(--cor-primaria); margin-bottom: 15px; line-height: 1.1; }
+        .card-jogo p { font-size: 1.15rem; margin-bottom: 30px; color: #666; }
 
         .btn-jogar {
             background-color: var(--cor-primaria);
-            color: white; border: none; padding: 18px 60px; font-size: 1.4rem; 
-            font-weight: bold; border-radius: 50px; cursor: pointer; text-decoration: none;
-            display: inline-block; margin-top: 25px;
+            color: white; border: none; padding: 20px 60px; font-size: 1.6rem; 
+            font-weight: 900; border-radius: 60px; cursor: pointer; text-decoration: none;
+            display: inline-block; transition: 0.3s;
         }
+        .btn-jogar:hover { transform: scale(1.05); background-color: var(--cor-escura); }
 
-        /* FOOTER: 40px */
+        /* ==========================================
+           5. FOOTER (40px)
+           ========================================== */
         footer {
             height: 40px;
             background-color: var(--cor-escura);
@@ -151,23 +170,30 @@
             align-items: center;
             justify-content: center;
             font-size: 0.85rem;
+            text-align: center;
         }
 
-        @media (max-width: 480px) {
-            .centro-header img { height: 40px; }
-            .titulos-grupo h1 { font-size: 0.9rem; }
-            .titulos-grupo h2, .titulos-grupo .sub-titulo { font-size: 0.7rem; }
+        /* RESPONSIVIDADE */
+        @media (max-width: 550px) {
+            .titulos-grupo h1, .titulos-grupo h2 { font-size: 1.2rem; }
+            .titulos-grupo .sub-titulo { font-size: 0.65rem; }
+            .centro-header img { height: 45px; }
+            .card-jogo h3 { font-size: 1.6rem; }
         }
     </style>
 </head>
 <body>
 
+    <!-- Overlay para fechar o menu ao clicar fora -->
     <div id="overlay" class="overlay"></div>
+
+    <!-- Menu Lateral (Drawer) -->
     <nav id="side-menu" class="side-menu">
-        <h2 style="color: var(--cor-primaria)">Menu</h2>
+        <h2 id="ui-menu-titulo" style="color: var(--cor-primaria); border-bottom: 2px solid #eee; padding-bottom: 10px;">Menu</h2>
         <ul id="ui-lista-menu" class="menu-links-list"></ul>
     </nav>
 
+    <!-- Cabeçalho -->
     <header>
         <div class="header-flex">
             <!-- ESQUERDA -->
@@ -175,7 +201,7 @@
                 <div></div><div></div><div></div>
             </button>
 
-            <!-- CENTRO (Ícone + T1 + T2 + Sub) -->
+            <!-- CENTRO (Ícone + Texto Dinâmico) -->
             <div class="centro-header">
                 <img id="ui-icon-centro" src="" alt="Ano">
                 <div class="titulos-grupo">
@@ -192,73 +218,87 @@
         </div>
     </header>
 
+    <!-- Corpo do Index -->
     <main>
         <section class="card-jogo">
-            <h3 id="ui-nome-jogo" style="font-size: 2rem; color: var(--cor-primaria); margin-bottom: 10px;"></h3>
+            <h3 id="ui-nome-jogo"></h3>
             <p id="ui-descricao"></p>
             <a href="jogo.html" class="btn-jogar">JOGAR</a>
         </section>
-        <!-- Conteúdo extra para testar o scroll -->
-        <div style="height: 100px;"></div>
     </main>
 
+    <!-- Rodapé -->
     <footer>
         <div id="ui-rodape"></div>
     </footer>
 
+    <!-- Importação dos Dados -->
     <script src="dados.js"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
+            // 1. Obter referências de JOGO_CONFIG
             const area = JOGO_CONFIG.areaAtiva;
             const ano = JOGO_CONFIG.anoAtivo;
             const tema = BIBLIOTECA_TEMAS[area];
             const conteudo = BIBLIOTECA_CONTEUDO[ano][area];
 
-            // 1. Cores
+            // 2. Aplicar Cores do Tema ao CSS
             const root = document.documentElement;
             root.style.setProperty('--cor-pagina', tema.corPagina);
             root.style.setProperty('--cor-primaria', tema.corPrimaria);
             root.style.setProperty('--cor-escura', tema.corEscura);
             root.style.setProperty('--cor-texto', tema.corTexto);
 
-            // 2. Títulos e Footer
+            // 3. Preencher Header e Footer
             document.getElementById("ui-t1").innerText = conteudo.t1;
             document.getElementById("ui-t2").innerText = conteudo.t2;
             document.getElementById("ui-sub").innerText = conteudo.sub;
             document.getElementById("ui-rodape").innerHTML = conteudo.rodape;
+            
+            // Seta de voltar dinâmica com base no tema
             document.getElementById("ui-seta-voltar").src = JOGO_CONFIG.caminhoIconsMenu + tema.voltarMobile;
 
-            // 3. Ícone Central (Lógica para buscar o ícone do ano ativo no menuItens)
-            const itemAtivo = JOGO_CONFIG.menuItens.find(item => item.id === ano);
-            if (itemAtivo) {
-                document.getElementById("ui-icon-centro").src = JOGO_CONFIG.caminhoIconsMenu + itemAtivo.icon;
+            // 4. Ícone Central (Procura o ícone correspondente ao ano ativo)
+            const itemAno = JOGO_CONFIG.menuItens.find(item => item.id === ano);
+            if (itemAno) {
+                document.getElementById("ui-icon-centro").src = JOGO_CONFIG.caminhoIconsMenu + itemAno.icon;
             }
 
-            // 4. Card do Jogo
+            // 5. Card Central do Jogo
             document.getElementById("ui-nome-jogo").innerText = JOGO_CONFIG.nomeDoJogo;
             document.getElementById("ui-descricao").innerText = JOGO_CONFIG.descricao;
 
-            // 5. Gerar Menu Lateral
+            // 6. Gerar Menu Lateral Dinâmico
             const listaMenu = document.getElementById("ui-lista-menu");
             JOGO_CONFIG.menuItens.forEach(item => {
+                // Não incluir o botão voltar no menu lateral pois já está no topo
                 if(item.id === "voltar") return;
+
                 const li = document.createElement("li");
                 const imgFinal = (item.icon === "AUTO") ? tema.voltarMobile : item.icon;
-                li.innerHTML = `<a href="${item.link}"><img src="${JOGO_CONFIG.caminhoIconsMenu}${imgFinal}"><span>${item.label}</span></a>`;
+                
+                li.innerHTML = `
+                    <a href="${item.link}">
+                        <img src="${JOGO_CONFIG.caminhoIconsMenu}${imgFinal}" alt="${item.label}">
+                        <span>${item.label}</span>
+                    </a>
+                `;
                 listaMenu.appendChild(li);
             });
 
-            // 6. Lógica Menu
+            // 7. Lógica de Abrir/Fechar Menu Lateral
             const btnAbrir = document.getElementById("btn-abrir-menu");
             const sideMenu = document.getElementById("side-menu");
             const overlay = document.getElementById("overlay");
-            const toggle = () => {
+
+            const toggleMenu = () => {
                 sideMenu.classList.toggle("active");
                 overlay.style.display = sideMenu.classList.contains("active") ? "block" : "none";
             };
-            btnAbrir.addEventListener("click", toggle);
-            overlay.addEventListener("click", toggle);
+
+            btnAbrir.addEventListener("click", toggleMenu);
+            overlay.addEventListener("click", toggleMenu);
         });
     </script>
 </body>
