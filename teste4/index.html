@@ -33,7 +33,7 @@
         }
 
         /* ==========================================
-           2. HEADER (85px, BRANCO, ARREDONDADO)
+           2. HEADER (85px, BRANCO, ARREDONDADO EM BAIXO)
            ========================================== */
         header {
             height: 85px;
@@ -55,7 +55,6 @@
             width: 100%;
         }
 
-        /* Hambúrguer (Sem animação de X) */
         .btn-menu {
             background: none; border: none; cursor: pointer;
             width: 45px; display: flex; flex-direction: column; gap: 5px;
@@ -63,7 +62,6 @@
         }
         .btn-menu div { width: 28px; height: 4px; background-color: var(--cor-primaria); border-radius: 10px; }
 
-        /* Centro do Header */
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         #header-icon { height: 70px; object-fit: contain; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
@@ -75,7 +73,7 @@
         .btn-voltar-topo img { height: 45px; }
 
         /* ==========================================
-           3. MENU DROPDOWN (MENOS ALTO E ENCOSTADO)
+           3. MENU DROPDOWN (TRANSPARENTE / BOTÕES LATERAIS)
            ========================================== */
         .menu-dropdown {
             position: fixed;
@@ -83,18 +81,17 @@
             left: 0;
             width: 100%;
             background-color: transparent; 
-            padding: 95px 20px 30px 20px; /* Alinhado com o header */
+            padding: 95px 20px 30px 20px;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
             display: flex;
             flex-direction: column;
-            gap: 8px; /* Espaço entre botões */
+            gap: 8px;
             align-items: flex-start;
         }
 
         .menu-dropdown.active { top: 0; }
 
-        /* Botões do Menu (Menos altos) */
         .menu-btn-item {
             width: auto;
             min-width: 250px;
@@ -102,7 +99,7 @@
             display: flex;
             align-items: center;
             gap: 15px;
-            padding: 7px 20px; /* Padding reduzido para ser menos alto */
+            padding: 7px 20px;
             text-decoration: none;
             color: var(--cor-texto);
             border-radius: 18px;
@@ -121,7 +118,6 @@
             transform: translateX(5px);
         }
 
-        /* Overlay (Fecha o menu ao clicar) */
         .overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
@@ -132,7 +128,7 @@
         }
 
         /* ==========================================
-           4. MAIN E FOOTER
+           4. MAIN (CENTRO)
            ========================================== */
         main {
             flex: 1;
@@ -157,17 +153,26 @@
             font-weight: 700; border-radius: 50px; cursor: pointer; text-decoration: none;
             display: inline-block; margin-top: 20px; transition: 0.3s;
         }
-        .btn-jogar:hover { transform: scale(1.05); opacity: 0.9; }
 
+        /* ==========================================
+           5. FOOTER (40px, BRANCO, ARREDONDADO NO TOPO)
+           ========================================== */
         footer {
-            height: 40px; background-color: var(--cor-escura); color: white;
-            display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+            height: 40px;
+            background-color: white; /* Alterado para Branco */
+            color: var(--text-grey); /* Texto Cinzento */
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.85rem;
+            border-top-left-radius: 30px; 
+            border-top-right-radius: 30px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.06); /* Sombra para cima */
         }
     </style>
 </head>
 <body>
 
-    <!-- Overlay que fecha o menu ao clicar -->
     <div id="overlay" class="overlay"></div>
 
     <nav id="menu-dropdown" class="menu-dropdown"></nav>
@@ -214,14 +219,12 @@
             const tema = BIBLIOTECA_TEMAS[area];
             const conteudo = BIBLIOTECA_CONTEUDO[ano][area];
 
-            // 1. Configuração de Cores
             const root = document.documentElement;
             root.style.setProperty('--cor-pagina', tema.corPagina);
             root.style.setProperty('--cor-primaria', tema.corPrimaria);
             root.style.setProperty('--cor-escura', tema.corEscura);
             root.style.setProperty('--cor-texto', tema.corTexto);
 
-            // 2. Preenchimento de Textos
             document.getElementById("txt-titulo1").innerText = conteudo.t1;
             document.getElementById("txt-titulo2").innerText = conteudo.t2;
             document.getElementById("txt-subtitulo-header").innerText = conteudo.sub;
@@ -236,7 +239,6 @@
             document.getElementById("ui-nome-jogo").innerText = JOGO_CONFIG.nomeDoJogo;
             document.getElementById("ui-descricao").innerText = JOGO_CONFIG.descricao;
 
-            // 3. Geração do Menu
             const menuDropdown = document.getElementById("menu-dropdown");
             JOGO_CONFIG.menuItens.forEach(item => {
                 const link = document.createElement("a");
@@ -247,7 +249,6 @@
                 menuDropdown.appendChild(link);
             });
 
-            // 4. Lógica de Abrir/Fechar
             const btnMenu = document.getElementById("btn-abrir-menu");
             const dropdown = document.getElementById("menu-dropdown");
             const overlay = document.getElementById("overlay");
@@ -257,7 +258,6 @@
                 overlay.style.display = isActive ? "block" : "none";
             };
 
-            // Abre/Fecha no botão e fecha ao clicar no overlay (fora)
             btnMenu.addEventListener("click", toggleMenu);
             overlay.addEventListener("click", toggleMenu);
         });
