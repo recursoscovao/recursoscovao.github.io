@@ -15,114 +15,111 @@
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
-        /* SCROLL NA PÁGINA TODA */
+        /* GARANTE QUE O FOOTER FIQUE NO FUNDO */
         body, html {
-            min-height: 100%;
+            height: 100%;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: var(--cor-pagina);
             color: var(--cor-texto);
-            display: flex;
-            flex-direction: column;
+            overflow-x: hidden; /* Evita scroll horizontal */
         }
 
-        /* ==========================================
-           HEADER (BRANCO, ARREDONDADO, 85px)
-           ========================================== */
+        /* HEADER: 85px, BRANCO, ARREDONDADO */
         header {
             height: 85px;
             background-color: white;
             display: flex;
             align-items: center;
-            z-index: 100;
+            padding: 0 20px; /* Padding solicitado */
             border-bottom-left-radius: 35px; 
             border-bottom-right-radius: 35px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-            
-            /* Sticky opcional: se quiseres que o header fique fixo no topo ao fazer scroll */
-            position: sticky;
-            top: 0;
-            
-            /* PADDING DE 20PX NAS EXTREMIDADES */
-            padding: 0 20px;
+            z-index: 100;
         }
 
         .header-flex {
             display: flex;
-            justify-content: space-between; /* Encosta os itens nos lados */
+            justify-content: space-between; /* Esquerda, Centro, Direita */
             align-items: center;
             width: 100%;
-            max-width: 100%; /* Ocupa a largura total */
         }
 
-        /* Hambúrguer à esquerda */
+        /* LADO ESQUERDO: Hambúrguer */
         .btn-menu {
             background: none;
             border: none;
             cursor: pointer;
+            width: 45px;
             display: flex;
             flex-direction: column;
             gap: 5px;
-            width: 45px; /* Área de clique */
+        }
+        .btn-menu div { width: 28px; height: 3px; background-color: var(--cor-primaria); border-radius: 3px; }
+
+        /* CENTRO: Icon + 3 Títulos */
+        .centro-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            text-align: left;
         }
 
-        .btn-menu div {
-            width: 28px;
-            height: 3px;
-            background-color: var(--cor-primaria);
-            border-radius: 3px;
+        .centro-header img {
+            height: 55px; /* Tamanho do ícone central */
+            width: auto;
         }
 
-        /* Títulos centrados */
-        .titulos {
-            flex-grow: 1;
-            text-align: center;
+        .titulos-grupo {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
         }
-        .titulos h1 { font-size: 1.3rem; text-transform: uppercase; color: var(--cor-primaria); line-height: 1; }
-        .titulos h2 { font-size: 0.9rem; font-weight: normal; color: var(--cor-texto); }
 
-        /* Seta Voltar à direita */
+        .titulos-grupo h1 { 
+            font-size: 1.1rem; 
+            text-transform: uppercase; 
+            color: var(--cor-primaria); 
+            line-height: 1; 
+        }
+        .titulos-grupo h2 { 
+            font-size: 0.85rem; 
+            font-weight: normal; 
+            color: var(--cor-texto);
+            line-height: 1.1;
+        }
+        .titulos-grupo .sub-titulo { 
+            font-size: 0.75rem; 
+            font-weight: bold; 
+            color: var(--cor-primaria);
+            margin-top: 2px;
+        }
+
+        /* LADO DIREITO: Seta Voltar */
         .btn-voltar-topo {
             width: 45px;
             display: flex;
             justify-content: flex-end;
             text-decoration: none;
         }
+        .btn-voltar-topo img { height: 45px; }
 
-        .btn-voltar-topo img {
-            height: 45px;
-            transition: transform 0.2s;
-        }
-
-        /* ==========================================
-           SIDE MENU (ESTRUTURA)
-           ========================================== */
-        .overlay {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0,0,0,0.5);
-            display: none;
-            z-index: 150;
-        }
-        .side-menu {
-            position: fixed;
-            top: 0; left: -280px; width: 280px; height: 100%;
-            background: white; z-index: 200;
-            transition: 0.3s ease; padding: 25px;
-        }
+        /* MENU LATERAL */
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 150; }
+        .side-menu { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; z-index: 200; transition: 0.3s; padding: 25px; }
         .side-menu.active { left: 0; }
         .menu-links-list { list-style: none; margin-top: 20px; }
-        .menu-links-list li { margin-bottom: 15px; }
-        .menu-links-list a { 
-            display: flex; align-items: center; gap: 15px; 
-            text-decoration: none; color: var(--cor-texto); font-weight: bold; 
-        }
+        .menu-links-list a { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--cor-texto); font-weight: bold; margin-bottom: 15px;}
         .menu-links-list img { width: 35px; }
 
-        /* ==========================================
-           CORPO PRINCIPAL (SCROLL LIVRE)
-           ========================================== */
+        /* CONTEÚDO PRINCIPAL */
         main {
-            flex: 1;
+            flex: 1; /* Faz o main esticar para empurrar o footer */
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -135,20 +132,17 @@
             border-radius: 30px;
             text-align: center;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
-            max-width: 500px;
-            width: 100%;
+            max-width: 500px; width: 100%;
         }
 
-        .card-jogo h3 { font-size: 2.2rem; color: var(--cor-primaria); margin-bottom: 15px; }
         .btn-jogar {
             background-color: var(--cor-primaria);
-            color: white; border: none;
-            padding: 20px 60px; font-size: 1.5rem; font-weight: bold;
-            border-radius: 50px; cursor: pointer; text-decoration: none;
-            display: inline-block; margin-top: 20px;
+            color: white; border: none; padding: 18px 60px; font-size: 1.4rem; 
+            font-weight: bold; border-radius: 50px; cursor: pointer; text-decoration: none;
+            display: inline-block; margin-top: 25px;
         }
 
-        /* FOOTER (40px) */
+        /* FOOTER: 40px */
         footer {
             height: 40px;
             background-color: var(--cor-escura);
@@ -157,7 +151,12 @@
             align-items: center;
             justify-content: center;
             font-size: 0.85rem;
-            margin-top: auto; /* Garante que fica no fim se o conteúdo for pouco */
+        }
+
+        @media (max-width: 480px) {
+            .centro-header img { height: 40px; }
+            .titulos-grupo h1 { font-size: 0.9rem; }
+            .titulos-grupo h2, .titulos-grupo .sub-titulo { font-size: 0.7rem; }
         }
     </style>
 </head>
@@ -165,24 +164,28 @@
 
     <div id="overlay" class="overlay"></div>
     <nav id="side-menu" class="side-menu">
-        <h2 id="ui-menu-titulo" style="color: var(--cor-primaria)">Menu</h2>
+        <h2 style="color: var(--cor-primaria)">Menu</h2>
         <ul id="ui-lista-menu" class="menu-links-list"></ul>
     </nav>
 
     <header>
         <div class="header-flex">
-            <!-- ÍCONE ESQUERDA -->
+            <!-- ESQUERDA -->
             <button class="btn-menu" id="btn-abrir-menu">
                 <div></div><div></div><div></div>
             </button>
 
-            <!-- TÍTULOS CENTRO -->
-            <div class="titulos">
-                <h1 id="ui-t1"></h1>
-                <h2 id="ui-t2"></h2>
+            <!-- CENTRO (Ícone + T1 + T2 + Sub) -->
+            <div class="centro-header">
+                <img id="ui-icon-centro" src="" alt="Ano">
+                <div class="titulos-grupo">
+                    <h1 id="ui-t1"></h1>
+                    <h2 id="ui-t2"></h2>
+                    <div id="ui-sub" class="sub-titulo"></div>
+                </div>
             </div>
 
-            <!-- ÍCONE DIREITA -->
+            <!-- DIREITA -->
             <a href="javascript:history.back()" class="btn-voltar-topo">
                 <img id="ui-seta-voltar" src="" alt="Voltar">
             </a>
@@ -191,13 +194,12 @@
 
     <main>
         <section class="card-jogo">
-            <h3 id="ui-nome-jogo"></h3>
+            <h3 id="ui-nome-jogo" style="font-size: 2rem; color: var(--cor-primaria); margin-bottom: 10px;"></h3>
             <p id="ui-descricao"></p>
             <a href="jogo.html" class="btn-jogar">JOGAR</a>
         </section>
-        
-        <!-- Espaço extra apenas para testar o scroll se necessário -->
-        <div style="height: 200px;"></div>
+        <!-- Conteúdo extra para testar o scroll -->
+        <div style="height: 100px;"></div>
     </main>
 
     <footer>
@@ -213,22 +215,31 @@
             const tema = BIBLIOTECA_TEMAS[area];
             const conteudo = BIBLIOTECA_CONTEUDO[ano][area];
 
-            // Cores
+            // 1. Cores
             const root = document.documentElement;
             root.style.setProperty('--cor-pagina', tema.corPagina);
             root.style.setProperty('--cor-primaria', tema.corPrimaria);
             root.style.setProperty('--cor-escura', tema.corEscura);
             root.style.setProperty('--cor-texto', tema.corTexto);
 
-            // Conteúdo
+            // 2. Títulos e Footer
             document.getElementById("ui-t1").innerText = conteudo.t1;
             document.getElementById("ui-t2").innerText = conteudo.t2;
+            document.getElementById("ui-sub").innerText = conteudo.sub;
             document.getElementById("ui-rodape").innerHTML = conteudo.rodape;
             document.getElementById("ui-seta-voltar").src = JOGO_CONFIG.caminhoIconsMenu + tema.voltarMobile;
+
+            // 3. Ícone Central (Lógica para buscar o ícone do ano ativo no menuItens)
+            const itemAtivo = JOGO_CONFIG.menuItens.find(item => item.id === ano);
+            if (itemAtivo) {
+                document.getElementById("ui-icon-centro").src = JOGO_CONFIG.caminhoIconsMenu + itemAtivo.icon;
+            }
+
+            // 4. Card do Jogo
             document.getElementById("ui-nome-jogo").innerText = JOGO_CONFIG.nomeDoJogo;
             document.getElementById("ui-descricao").innerText = JOGO_CONFIG.descricao;
 
-            // Menu Lateral
+            // 5. Gerar Menu Lateral
             const listaMenu = document.getElementById("ui-lista-menu");
             JOGO_CONFIG.menuItens.forEach(item => {
                 if(item.id === "voltar") return;
@@ -238,7 +249,7 @@
                 listaMenu.appendChild(li);
             });
 
-            // Toggle Menu
+            // 6. Lógica Menu
             const btnAbrir = document.getElementById("btn-abrir-menu");
             const sideMenu = document.getElementById("side-menu");
             const overlay = document.getElementById("overlay");
