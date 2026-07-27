@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plataforma Educativa</title>
 
-    <!-- Importação da Fonte Fredoka (Arredondada e Bold - Igual à imagem) -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Fonte Fredoka para o aspeto arredondado e amigável -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;900&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================
@@ -17,6 +17,7 @@
             --cor-primaria: #333;
             --cor-escura: #000;
             --cor-texto: #5d7082;
+            --text-grey: #8792a1; /* Variável para o cinza dos títulos */
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -25,7 +26,6 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            /* Aplicar a fonte Fredoka globalmente */
             font-family: 'Fredoka', sans-serif;
             background-color: var(--cor-pagina);
             color: var(--cor-texto);
@@ -33,7 +33,7 @@
         }
 
         /* ==========================================
-           2. HEADER (85px, BRANCO, ARREDONDADO)
+           2. HEADER (ESTRUTURA SOLICITADA)
            ========================================== */
         header {
             height: 85px;
@@ -54,7 +54,7 @@
             width: 100%;
         }
 
-        /* Hambúrguer Esquerda */
+        /* Lado Esquerdo: Hambúrguer */
         .btn-menu {
             background: none;
             border: none;
@@ -64,64 +64,59 @@
             flex-direction: column;
             gap: 5px;
         }
-        .btn-menu div { width: 30px; height: 5px; background-color: var(--cor-primaria); border-radius: 10px; }
+        .btn-menu div { width: 28px; height: 4px; background-color: var(--cor-primaria); border-radius: 10px; }
 
-        /* CENTRO: Logótipo Ajustado */
-        .centro-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
+        /* CENTRO: Configuração exata que enviaste */
+        .header-center { 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            gap: 12px; 
         }
 
-        .centro-header img {
-            height: 60px; 
-            width: auto;
-            object-fit: contain;
+        #header-icon { 
+            height: 70px; 
+            object-fit: contain; 
         }
 
-        .titulos-grupo {
-            display: flex;
-            flex-direction: column;
-            line-height: 0.85; /* Aproximação das linhas conforme a imagem */
-        }
-
-        .titulos-grupo h1 { 
-            font-size: 1.6rem; 
-            font-weight: 700; /* Extra Bold */
+        .title-group { 
+            display: flex; 
+            flex-direction: column; 
+            line-height: 0.85; 
             text-transform: uppercase; 
-            color: var(--cor-primaria); /* Cor dinâmica */
-            letter-spacing: -0.5px;
         }
 
-        .titulos-grupo h2 { 
+        #txt-titulo1 { 
+            font-weight: 900; 
+            font-size: 1.65rem; 
+            color: var(--cor-primaria); /* Dinâmico */
+        }
+
+        #txt-titulo2 { 
+            font-weight: 800; 
             font-size: 1.4rem; 
-            font-weight: 700; 
-            text-transform: uppercase; 
-            color: #8c9ba9; /* Cinza específico da imagem */
-            letter-spacing: -0.5px;
+            color: #8792a1; /* Cinza fixo conforme solicitado */
         }
 
-        .titulos-grupo .sub-titulo { 
-            font-size: 0.86rem; 
+        #txt-subtitulo-header { 
+            color: var(--text-grey); 
             font-weight: 600; 
-            text-transform: uppercase; 
-            color: #AAB0B7; /* Azul/Cinza claro fixo */
-            margin-top: 6px;
-            letter-spacing: 0.2px;
-            line-height: 1;
+            font-size: 0.65rem; 
+            margin-top: 4px; 
+            opacity: 0.9; 
         }
 
-        /* Seta Voltar Direita */
+        /* Lado Direito: Seta Voltar */
         .btn-voltar-topo {
             width: 45px;
             display: flex;
             justify-content: flex-end;
             text-decoration: none;
         }
-        .btn-voltar-topo img { height: 48px; width: auto; }
+        .btn-voltar-topo img { height: 45px; }
 
         /* ==========================================
-           3. MENU LATERAL
+           3. MENU LATERAL (DRAWER)
            ========================================== */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 150; }
         .side-menu { 
@@ -129,17 +124,15 @@
             background: white; z-index: 200; transition: 0.3s ease; padding: 25px; 
         }
         .side-menu.active { left: 0; }
-        .menu-links-list { list-style: none; margin-top: 30px; }
+        .menu-links-list { list-style: none; margin-top: 20px; }
         .menu-links-list a { 
-            display: flex; align-items: center; gap: 15px; 
-            text-decoration: none; color: #5d7082; font-weight: 600; 
-            margin-bottom: 15px; font-size: 1.1rem; padding: 10px; border-radius: 15px;
+            display: flex; align-items: center; gap: 15px; text-decoration: none; 
+            color: var(--cor-texto); font-weight: 600; margin-bottom: 15px;
         }
-        .menu-links-list a:hover { background: var(--cor-pagina); }
         .menu-links-list img { width: 35px; }
 
         /* ==========================================
-           4. CORPO (SCROLL LIVRE)
+           4. MAIN (CENTRO)
            ========================================== */
         main {
             flex: 1;
@@ -152,28 +145,19 @@
 
         .card-jogo {
             background: white;
-            padding: 45px;
+            padding: 40px;
             border-radius: 40px;
             text-align: center;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.04);
-            max-width: 550px; 
-            width: 100%;
-        }
-
-        .card-jogo h3 { 
-            font-size: 2.2rem; 
-            color: var(--cor-primaria); 
-            margin-bottom: 15px; 
-            font-weight: 700;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
+            max-width: 500px; width: 100%;
         }
 
         .btn-jogar {
             background-color: var(--cor-primaria);
-            color: white; border: none; padding: 22px 70px; font-size: 1.8rem; 
+            color: white; border: none; padding: 20px 60px; font-size: 1.6rem; 
             font-weight: 700; border-radius: 50px; cursor: pointer; text-decoration: none;
-            display: inline-block; margin-top: 20px; transition: 0.2s;
+            display: inline-block; margin-top: 20px;
         }
-        .btn-jogar:hover { transform: scale(1.05); }
 
         /* ==========================================
            5. FOOTER (40px)
@@ -185,16 +169,13 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.9rem;
-            font-weight: 400;
+            font-size: 0.85rem;
         }
 
-        /* RESPONSIVIDADE */
         @media (max-width: 600px) {
-            .titulos-grupo h1, .titulos-grupo h2 { font-size: 1.3rem; }
-            .titulos-grupo .sub-titulo { font-size: 0.7rem; }
-            .centro-header img { height: 45px; }
-            header { height: 80px; padding: 0 15px; }
+            #txt-titulo1 { font-size: 1.3rem; }
+            #txt-titulo2 { font-size: 1.1rem; }
+            #header-icon { height: 50px; }
         }
     </style>
 </head>
@@ -203,28 +184,26 @@
     <div id="overlay" class="overlay"></div>
 
     <nav id="side-menu" class="side-menu">
-        <h2 style="color: var(--cor-primaria); font-weight: 700; margin-bottom: 20px;">Menu</h2>
+        <h2 style="color: var(--cor-primaria); margin-bottom: 20px;">Menu</h2>
         <ul id="ui-lista-menu" class="menu-links-list"></ul>
     </nav>
 
     <header>
         <div class="header-flex">
-            <!-- ESQUERDA -->
             <button class="btn-menu" id="btn-abrir-menu">
                 <div></div><div></div><div></div>
             </button>
 
-            <!-- CENTRO (FONTE FREDOKA) -->
-            <div class="centro-header">
-                <img id="ui-icon-centro" src="" alt="Ano">
-                <div class="titulos-grupo">
-                    <h1 id="ui-t1"></h1>
-                    <h2 id="ui-t2"></h2>
-                    <div id="ui-sub" class="sub-titulo"></div>
+            <!-- CONTAINER CENTRALIZADO CONFORME PEDIDO -->
+            <div class="header-center">
+                <img id="header-icon" src="" alt="Logo">
+                <div class="title-group">
+                    <span id="txt-titulo1"></span>
+                    <span id="txt-titulo2"></span>
+                    <span id="txt-subtitulo-header"></span>
                 </div>
             </div>
 
-            <!-- DIREITA -->
             <a href="javascript:history.back()" class="btn-voltar-topo">
                 <img id="ui-seta-voltar" src="" alt="Voltar">
             </a>
@@ -233,12 +212,10 @@
 
     <main>
         <section class="card-jogo">
-            <h3 id="ui-nome-jogo"></h3>
-            <p id="ui-descricao" style="font-size: 1.2rem; color: #7a8b9a; line-height: 1.4;"></p>
+            <h3 id="ui-nome-jogo" style="font-size: 2rem; color: var(--cor-primaria); margin-bottom: 10px;"></h3>
+            <p id="ui-descricao"></p>
             <a href="jogo.html" class="btn-jogar">JOGAR</a>
         </section>
-        <!-- Conteúdo extra se quiseres testar o scroll -->
-        <div style="height: 50px;"></div>
     </main>
 
     <footer>
@@ -254,26 +231,32 @@
             const tema = BIBLIOTECA_TEMAS[area];
             const conteudo = BIBLIOTECA_CONTEUDO[ano][area];
 
+            // Aplicação de Cores
             const root = document.documentElement;
             root.style.setProperty('--cor-pagina', tema.corPagina);
             root.style.setProperty('--cor-primaria', tema.corPrimaria);
             root.style.setProperty('--cor-escura', tema.corEscura);
             root.style.setProperty('--cor-texto', tema.corTexto);
 
-            document.getElementById("ui-t1").innerText = conteudo.t1;
-            document.getElementById("ui-t2").innerText = conteudo.t2;
-            document.getElementById("ui-sub").innerText = conteudo.sub;
+            // Preenchimento dos Títulos com os novos IDs
+            document.getElementById("txt-titulo1").innerText = conteudo.t1;
+            document.getElementById("txt-titulo2").innerText = conteudo.t2;
+            document.getElementById("txt-subtitulo-header").innerText = conteudo.sub;
             document.getElementById("ui-rodape").innerHTML = conteudo.rodape;
+            
+            // Seta e Ícone Central
             document.getElementById("ui-seta-voltar").src = JOGO_CONFIG.caminhoIconsMenu + tema.voltarMobile;
-
+            
             const itemAno = JOGO_CONFIG.menuItens.find(item => item.id === ano);
             if (itemAno) {
-                document.getElementById("ui-icon-centro").src = JOGO_CONFIG.caminhoIconsMenu + itemAno.icon;
+                document.getElementById("header-icon").src = JOGO_CONFIG.caminhoIconsMenu + itemAno.icon;
             }
 
+            // Infos do Jogo
             document.getElementById("ui-nome-jogo").innerText = JOGO_CONFIG.nomeDoJogo;
             document.getElementById("ui-descricao").innerText = JOGO_CONFIG.descricao;
 
+            // Menu Lateral
             const listaMenu = document.getElementById("ui-lista-menu");
             JOGO_CONFIG.menuItens.forEach(item => {
                 if(item.id === "voltar") return;
@@ -283,6 +266,7 @@
                 listaMenu.appendChild(li);
             });
 
+            // Lógica de abertura do menu
             const btnAbrir = document.getElementById("btn-abrir-menu");
             const sideMenu = document.getElementById("side-menu");
             const overlay = document.getElementById("overlay");
