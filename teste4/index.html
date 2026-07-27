@@ -22,19 +22,20 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
-        /* 1. PERMITIR SCROLL APENAS NA PÁGINA TODA */
+        /* 1. LAYOUT BASE: OCUPA 100% DA ALTURA */
         html, body { 
             width: 100%;
-            min-height: 100dvh; /* Ocupa no mínimo a altura do ecrã */
+            height: 100%; /* Base para o dvh */
+            min-height: 100dvh; 
             display: flex; 
             flex-direction: column; 
             background: #f0f2f5; 
             overflow-x: hidden;
-            overflow-y: auto; /* ÚNICO LOCAL COM SCROLL */
+            overflow-y: auto; /* Scroll apenas se o conteúdo crescer além do viewport */
             transition: background 0.3s ease;
         }
         
-        /* 2. HEADER FIXO NO TOPO DO FLUXO */
+        /* 2. HEADER */
         header { 
             height: var(--header-h);
             background: white; 
@@ -58,21 +59,22 @@
         .hamburger-btn { background: none; border: none; font-size: clamp(22px, 3.5dvh, 28px); cursor: pointer; color: var(--cor-dinamica); }
         #icon-voltar-top { height: clamp(30px, 4.5dvh, 42px); width: auto; object-fit: contain; cursor: pointer; justify-self: end; }
 
-        /* 3. MAIN E CONTENTOR (CRESCEM COM O CONTEÚDO) */
+        /* 3. MAIN: EXPANDE PARA OCUPAR TODO O ESPAÇO DISPONÍVEL */
         main { 
-            flex: 1; 
+            flex: 1; /* AQUI ESTÁ O SEGREDO: Ocupa o espaço entre header e footer */
             display: flex; 
             flex-direction: column; 
             align-items: center; 
-            justify-content: center; 
-            padding: clamp(10px, 2dvh, 25px) clamp(10px, 3vw, 30px); 
+            padding: clamp(10px, 2dvh, 20px) clamp(10px, 3vw, 30px); 
             width: 100%; 
             max-width: min(1100px, 100vw); 
             margin: 0 auto; 
         }
 
+        /* 4. GAME-CONTAINER: PREENCHE O MAIN COMPLETAMENTE */
         .game-container {
             width: 100%;
+            flex: 1; /* Expande para ocupar o Main todo */
             display: flex;
             flex-direction: column;
             background: white;
@@ -81,11 +83,16 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
             padding: clamp(15px, 3dvh, 30px);
             position: relative;
-            /* Se o jogo for pequeno, ele ocupa o ecrã, se for grande, o body faz scroll */
-            min-height: 450px; 
+            min-height: 400px; /* Evita colapso em ecrãs minúsculos */
         }
 
-        .view-container { display: none; flex-direction: column; width: 100%; flex: 1; }
+        /* VISTAS (Apresentação, Jogo, Resultados) */
+        .view-container { 
+            display: none; 
+            flex-direction: column; 
+            width: 100%; 
+            flex: 1; /* Garante que a vista ativa ocupe o container todo */
+        }
         .view-active { display: flex; }
         
         .card-topo { 
@@ -98,7 +105,7 @@
         .card-topo h2 { color: var(--cor-dinamica); text-transform: uppercase; font-weight: 900; font-size: clamp(1.2rem, 3dvh, 1.4rem); }
         
         .card-meio { 
-            flex: 1; 
+            flex: 1; /* O JOGO CRESCE PARA OCUPAR O ESPAÇO CENTRAL */
             display: flex; 
             flex-direction: column; 
             align-items: center; 
@@ -109,56 +116,45 @@
             width: 100%;
         }
         
-        .card-fundo { flex-shrink: 0; display: flex; align-items: center; gap: 15px; padding-top: 20px; justify-content: center; }
+        .card-fundo { 
+            flex-shrink: 0; 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            padding-top: 20px; 
+            justify-content: center; 
+        }
 
-        /* 4. BARRA DE STATUS (LINHA ÚNICA) */
+        /* BARRA DE STATUS */
         .game-status-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: nowrap; gap: 4px; }
         .status-group { display: flex; align-items: center; gap: clamp(6px, 1.5vw, 10px); }
-        
-        .stat-pill { 
-            height: clamp(30px, 4.2dvh, 36px); 
-            padding: 0 clamp(8px, 1.5vw, 15px); 
-            border-radius: 10px; 
-            display: flex; align-items: center; justify-content: center; 
-            color: white; font-weight: 800; font-size: clamp(0.75rem, 1.4dvh, 0.95rem); 
-            min-width: clamp(55px, 9vw, 75px); 
-            white-space: nowrap;
-        }
+        .stat-pill { height: clamp(30px, 4.2dvh, 36px); padding: 0 clamp(8px, 1.5vw, 15px); border-radius: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 800; font-size: clamp(0.75rem, 1.4dvh, 0.95rem); min-width: clamp(55px, 9vw, 75px); white-space: nowrap; }
         .pill-ronda { background-color: var(--cor-dinamica); }
         .pill-certo { background-color: var(--cor-certo); }
         .pill-errado { background-color: var(--cor-errado); }
-        #img-lampada { height: clamp(30px, 4.2dvh, 36px); cursor: pointer; }
 
-        /* BOTÃO INFORMAÇÃO (IMAGEM inform.png) */
+        /* ÍCONES E BOTÕES */
         .btn-inform-img { height: clamp(45px, 6dvh, 60px); cursor: pointer; transition: 0.2s; }
         .btn-inform-img-mini { height: clamp(30px, 4.2dvh, 36px); cursor: pointer; transition: 0.2s; }
-
-        /* RESULTADOS */
-        .stats-container { display: flex; gap: 12px; margin: 15px 0; justify-content: center; flex-wrap: wrap; }
-        .stat-card { background: white; border-radius: 18px; padding: 12px; width: 95px; display: flex; flex-direction: column; align-items: center; border: 1px solid #f0f0f0; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
-        .stat-card .num { font-size: 2rem; font-weight: 900; line-height: 1; margin-bottom: 4px; }
-        .stat-card .label { font-size: 0.65rem; font-weight: 800; color: #8792a1; text-transform: uppercase; }
-
-        /* BOTÕES */
         .btn-jogar { flex: 1; background: var(--cor-dinamica); color: white; padding: clamp(12px, 2.2dvh, 18px); border-radius: 18px; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; font-size: 1.1rem; border: none; cursor: pointer; text-transform: uppercase; }
         .btn-secundario { background: #8792a1; }
 
-        /* FOOTER NO FUNDO DA PÁGINA */
+        /* MENU HAMBÚRGUER */
+        .menu-dropdown { position: absolute; top: calc(var(--header-h) - 5px); left: 15px; display: none; flex-direction: column; gap: 8px; z-index: 2000; width: 230px; }
+        .menu-item { display: flex; align-items: center; gap: 12px; height: 50px; padding: 0 15px; text-decoration: none; color: #7b899b; font-weight: 800; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); transition: 0.2s; }
+        .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
+
+        /* FOOTER */
         footer { 
             height: var(--footer-h); 
             display: flex; align-items: center; justify-content: center; 
             background: white; border-radius: clamp(20px, 3vw, 35px) clamp(20px, 3vw, 35px) 0 0; 
             flex-shrink: 0; 
-            margin-top: auto; /* Empurra para o fundo se houver espaço */
+            margin-top: auto; 
         }
         .footer-text { color: var(--text-grey); font-size: clamp(0.7rem, 1.4dvh, 0.85rem); font-weight: 700; }
 
-        /* MENU HAMBÚRGUER */
-        .menu-dropdown { position: absolute; top: calc(var(--header-h) - 5px); left: 15px; display: none; flex-direction: column; gap: 8px; z-index: 2000; width: 230px; }
-        .menu-item { display: flex; align-items: center; gap: 12px; height: 50px; padding: 0 15px; text-decoration: none; color: #7b899b; font-weight: 800; background: white; border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); font-size: 0.85rem; text-transform: uppercase; transition: 0.2s; }
-        .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
-
-        /* MODAL INFO (Único local com scroll interno) */
+        /* OVERLAY INFO */
         #info-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: white; z-index: 3000; display: none; flex-direction: column; padding: 30px; overflow-y: auto; }
     </style>
 </head>
@@ -181,15 +177,17 @@
     <main>
         <div class="game-container">
             
+            <!-- APRESENTAÇÃO -->
             <div id="view-apresentacao" class="view-container view-active">
                 <div class="card-topo"><h2 id="jogo-titulo"></h2></div>
                 <div class="card-meio" id="area-jogo-conteudo"></div>
                 <div class="card-fundo">
-                    <img id="btn-inform-apres" class="btn-inform-img" alt="Informação" onclick="toggleInfoScreen(true)">
+                    <img id="btn-inform-apres" class="btn-inform-img" alt="Info" onclick="toggleInfoScreen(true)">
                     <button class="btn-jogar" onclick="mudarEcra('jogo')"><i class="fas fa-play"></i> JOGAR</button>
                 </div>
             </div>
 
+            <!-- JOGO -->
             <div id="view-jogo" class="view-container">
                 <div class="card-topo">
                     <div class="game-status-bar">
@@ -200,7 +198,7 @@
                         <div class="status-group">
                             <div class="stat-pill pill-certo"><i class="fas fa-check"></i> <span id="cont-certos-jogo">0</span></div>
                             <div class="stat-pill pill-errado"><i class="fas fa-times"></i> <span id="cont-errados-jogo">0</span></div>
-                            <img id="btn-inform-jogo" class="btn-inform-img-mini" alt="Informação" onclick="toggleInfoScreen(true)">
+                            <img id="btn-inform-jogo" class="btn-inform-img-mini" alt="Info" onclick="toggleInfoScreen(true)">
                         </div>
                     </div>
                 </div>
@@ -209,16 +207,23 @@
                 </div>
             </div>
 
+            <!-- RESULTADOS -->
             <div id="view-resultados" class="view-container">
                 <div class="card-topo"><h2>RESULTADOS</h2></div>
                 <div class="card-meio">
                     <img id="res-img" src="" style="height: clamp(85px, 15dvh, 110px); object-fit: contain; margin-bottom: 10px;">
                     <div id="res-titulo" style="font-weight: 900; font-size: 1.6rem; color: var(--cor-dinamica); text-align: center;"></div>
                     <p style="color: #8792a1; font-weight: 700; margin-bottom: 10px;">Desafio concluído com sucesso!</p>
-                    <div class="stats-container">
-                        <div class="stat-card"><span id="res-certos" class="num" style="color:var(--cor-certo)">0</span><span class="label">Certos</span></div>
-                        <div class="stat-card"><span id="res-errados" class="num" style="color:var(--cor-errado)">0</span><span class="label">Errados</span></div>
-                        <div class="stat-card"><span id="res-ajudas" class="num" style="color:var(--cor-ajuda)">0</span><span class="label">Ajudas</span></div>
+                    <div class="stats-container" style="display:flex; gap:10px;">
+                        <div style="text-align:center; padding:10px; background:#fff; border:1px solid #eee; border-radius:15px; width:85px;">
+                            <span id="res-certos" style="font-size:1.6rem; font-weight:900; color:var(--cor-certo)">0</span><br><small style="font-weight:800; color:#8792a1; text-transform:uppercase; font-size:0.6rem;">Certos</small>
+                        </div>
+                        <div style="text-align:center; padding:10px; background:#fff; border:1px solid #eee; border-radius:15px; width:85px;">
+                            <span id="res-errados" style="font-size:1.6rem; font-weight:900; color:var(--cor-errado)">0</span><br><small style="font-weight:800; color:#8792a1; text-transform:uppercase; font-size:0.6rem;">Errados</small>
+                        </div>
+                        <div style="text-align:center; padding:10px; background:#fff; border:1px solid #eee; border-radius:15px; width:85px;">
+                            <span id="res-ajudas" style="font-size:1.6rem; font-weight:900; color:var(--cor-ajuda)">0</span><br><small style="font-weight:800; color:#8792a1; text-transform:uppercase; font-size:0.6rem;">Ajudas</small>
+                        </div>
                     </div>
                 </div>
                 <div class="card-fundo">
@@ -286,8 +291,6 @@
             document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
             document.getElementById('icon-voltar-top').src = pathIcons + tema.voltarMobile;
             document.getElementById('img-lampada').src = pathIcons + "lampada.png";
-            
-            // Atribuição do inform.png
             document.getElementById('btn-inform-apres').src = pathIcons + "inform.png";
             document.getElementById('btn-inform-jogo').src = pathIcons + "inform.png";
 
@@ -299,7 +302,7 @@
                 const a = document.createElement('a');
                 a.className = 'menu-item'; a.href = item.link;
                 const icon = (item.icon === "AUTO") ? tema.voltarMobile : item.icon;
-                a.innerHTML = `<img src="${pathIcons}${icon}"><span>${item.label}</span>`;
+                a.innerHTML = `<img src="${pathIcons}${icon}" style="height:25px;width:25px;object-fit:contain"><span style="margin-left:12px; font-weight:800; color:#7b899b; text-transform:uppercase; font-size:0.85rem;">${item.label}</span>`;
                 menuBox.appendChild(a);
             });
 
