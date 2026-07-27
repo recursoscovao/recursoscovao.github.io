@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plataforma Educativa</title>
 
-    <!-- Fonte Fredoka -->
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <!-- Fonte Fredoka - Arredondada e amigável -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
     <style>
         /* ==========================================
@@ -33,7 +33,7 @@
         }
 
         /* ==========================================
-           2. HEADER
+           2. HEADER (85px, BRANCO, ARREDONDADO)
            ========================================== */
         header {
             height: 85px;
@@ -44,7 +44,7 @@
             border-bottom-left-radius: 35px; 
             border-bottom-right-radius: 35px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.06);
-            z-index: 1000; /* Garante que o header fique por cima do menu ao descer */
+            z-index: 1000;
             position: relative;
         }
 
@@ -68,7 +68,7 @@
         }
         .btn-menu div { width: 28px; height: 4px; background-color: var(--cor-primaria); border-radius: 10px; transition: 0.3s; }
 
-        /* Centro */
+        /* Centro (Logo + 3 Títulos) */
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         #header-icon { height: 70px; object-fit: contain; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
@@ -76,61 +76,60 @@
         #txt-titulo2 { font-weight: 800; font-size: 1.4rem; color: var(--text-grey); }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
 
-        /* Direita */
+        /* Direita (Seta) */
         .btn-voltar-topo { width: 45px; display: flex; justify-content: flex-end; text-decoration: none; }
         .btn-voltar-topo img { height: 45px; }
 
         /* ==========================================
-           3. MENU DROPDOWN (DESCE DO TOPO)
+           3. MENU DROPDOWN (ESTILO CARDS BRANCOS)
            ========================================== */
         .menu-dropdown {
             position: fixed;
-            top: -100%; /* Escondido acima */
+            top: -100%; 
             left: 0;
             width: 100%;
-            background-color: white;
-            padding: 100px 20px 30px 20px; /* Padding top maior para compensar o header */
+            background-color: rgba(255, 255, 255, 0.98);
+            padding: 110px 25px 40px 25px; /* Compensar o header */
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 900;
             border-bottom-left-radius: 40px;
             border-bottom-right-radius: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px; /* Espaço entre botões */
+            align-items: center;
         }
 
-        .menu-dropdown.active {
-            top: 0; /* Desce até ao topo da página */
-        }
+        .menu-dropdown.active { top: 0; }
 
-        /* Estilo dos Botões do Menu */
+        /* Cada item do menu como um Card Branco */
         .menu-btn-item {
+            width: 100%;
+            max-width: 400px;
+            background-color: white;
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 15px 25px;
-            background-color: #f8f9fa;
+            gap: 20px;
+            padding: 12px 25px;
             text-decoration: none;
             color: var(--cor-texto);
-            border-radius: 20px;
+            border-radius: 25px; /* Bem arredondado */
             font-weight: 700;
-            font-size: 1.1rem;
+            font-size: 1.25rem;
             transition: 0.3s;
-            border: 2px solid transparent;
+            box-shadow: 0 6px 15px rgba(0,0,0,0.08); /* Sombra dos cards */
+            border: 1px solid #f0f0f0;
         }
 
-        /* Hover com a cor do Titulo 1 */
+        .menu-btn-item img { width: 40px; height: 40px; object-fit: contain; }
+
+        /* Efeito Hover: fundo ganha a cor do Titulo 1 */
         .menu-btn-item:hover {
             background-color: var(--cor-primaria);
             color: white;
-            transform: translateY(-2px);
-        }
-
-        .menu-btn-item img {
-            width: 35px;
-            height: 35px;
-            object-fit: contain;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
         }
 
         /* Overlay */
@@ -140,7 +139,7 @@
             background: rgba(0,0,0,0.3);
             display: none;
             z-index: 800;
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(3px);
         }
 
         /* ==========================================
@@ -156,26 +155,27 @@
 
         .card-jogo {
             background: white;
-            padding: 40px;
+            padding: 50px 40px;
             border-radius: 40px;
             text-align: center;
             box-shadow: 0 10px 30px rgba(0,0,0,0.04);
-            max-width: 500px; width: 100%;
+            max-width: 550px; width: 100%;
         }
 
         .btn-jogar {
             background-color: var(--cor-primaria);
-            color: white; border: none; padding: 20px 60px; font-size: 1.6rem; 
-            font-weight: 700; border-radius: 50px; cursor: pointer; text-decoration: none;
-            display: inline-block; margin-top: 20px;
+            color: white; border: none; padding: 22px 70px; font-size: 1.7rem; 
+            font-weight: 700; border-radius: 60px; cursor: pointer; text-decoration: none;
+            display: inline-block; margin-top: 25px; transition: 0.3s;
         }
+        .btn-jogar:hover { transform: scale(1.05); }
 
         footer {
             height: 40px; background-color: var(--cor-escura); color: white;
             display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
         }
 
-        /* Animação do ícone hamburguer para "X" (opcional, mas fica bem) */
+        /* Animação Hambúrguer para X */
         .btn-menu.open div:nth-child(1) { transform: translateY(9px) rotate(45deg); }
         .btn-menu.open div:nth-child(2) { opacity: 0; }
         .btn-menu.open div:nth-child(3) { transform: translateY(-9px) rotate(-45deg); }
@@ -185,10 +185,8 @@
 
     <div id="overlay" class="overlay"></div>
 
-    <!-- MENU DROPDOWN (QUE DESCE) -->
-    <nav id="menu-dropdown" class="menu-dropdown">
-        <!-- Itens injetados via JS -->
-    </nav>
+    <!-- MENU DROPDOWN -->
+    <nav id="menu-dropdown" class="menu-dropdown"></nav>
 
     <header>
         <div class="header-flex">
@@ -213,8 +211,8 @@
 
     <main>
         <section class="card-jogo">
-            <h1 id="ui-nome-jogo" style="font-size: 2.2rem; color: var(--cor-primaria); margin-bottom: 15px;"></h1>
-            <p id="ui-descricao" style="font-size: 1.2rem; line-height: 1.4; color: #7a8b9a;"></p>
+            <h1 id="ui-nome-jogo" style="color: var(--cor-primaria); margin-bottom: 15px;"></h1>
+            <p id="ui-descricao" style="font-size: 1.25rem; color: var(--text-grey); line-height: 1.4;"></p>
             <a href="jogo.html" class="btn-jogar">JOGAR</a>
         </section>
     </main>
@@ -232,17 +230,18 @@
             const tema = BIBLIOTECA_TEMAS[area];
             const conteudo = BIBLIOTECA_CONTEUDO[ano][area];
 
-            // 1. Cores Dinâmicas
+            // 1. Cores
             const root = document.documentElement;
             root.style.setProperty('--cor-pagina', tema.corPagina);
             root.style.setProperty('--cor-primaria', tema.corPrimaria);
             root.style.setProperty('--cor-escura', tema.corEscura);
             root.style.setProperty('--cor-texto', tema.corTexto);
 
-            // 2. Preencher Header
+            // 2. Títulos
             document.getElementById("txt-titulo1").innerText = conteudo.t1;
             document.getElementById("txt-titulo2").innerText = conteudo.t2;
             document.getElementById("txt-subtitulo-header").innerText = conteudo.sub;
+            document.getElementById("ui-rodape").innerHTML = conteudo.rodape;
             document.getElementById("ui-seta-voltar").src = JOGO_CONFIG.caminhoIconsMenu + tema.voltarMobile;
             
             const itemAno = JOGO_CONFIG.menuItens.find(item => item.id === ano);
@@ -250,16 +249,13 @@
                 document.getElementById("header-icon").src = JOGO_CONFIG.caminhoIconsMenu + itemAno.icon;
             }
 
-            // 3. Preencher Main e Footer
+            // 3. Info Jogo
             document.getElementById("ui-nome-jogo").innerText = JOGO_CONFIG.nomeDoJogo;
             document.getElementById("ui-descricao").innerText = JOGO_CONFIG.descricao;
-            document.getElementById("ui-rodape").innerHTML = conteudo.rodape;
 
-            // 4. Gerar Menu Dropdown (Botões)
+            // 4. Gerar Menu (Todos cards brancos)
             const menuDropdown = document.getElementById("menu-dropdown");
             JOGO_CONFIG.menuItens.forEach(item => {
-                if(item.id === "voltar") return;
-
                 const link = document.createElement("a");
                 link.href = item.link;
                 link.className = "menu-btn-item";
@@ -273,7 +269,7 @@
                 menuDropdown.appendChild(link);
             });
 
-            // 5. Lógica de Abrir/Fechar Dropdown
+            // 5. Lógica Menu
             const btnMenu = document.getElementById("btn-abrir-menu");
             const dropdown = document.getElementById("menu-dropdown");
             const overlay = document.getElementById("overlay");
