@@ -5,6 +5,48 @@ let errados = 0;
 let ajudasUsadas = 0;
 let itemAlvo = null;
 
+// ==========================================
+// 1. INSTRUÇÕES (ESTÃO AQUI AGORA)
+// ==========================================
+function carregarInstrucoes() {
+    const infoContainer = document.getElementById("info-instructions");
+    if (!infoContainer) return;
+
+    infoContainer.innerHTML = `
+        <h2>Objetivo do Jogo</h2>
+        <p>Observa atentamente o animal apresentado no topo do ecrã e encontra a imagem igual entre as várias opções. Clica ou toca no animal correto para avançares para a ronda seguinte.</p>
+        
+        <h2>Como Jogar</h2>
+        <ul>
+            <li>Observa o animal que aparece no topo do ecrã.</li>
+            <li>Analisa todas as imagens apresentadas.</li>
+            <li>Encontra a imagem exatamente igual ao modelo.</li>
+            <li>Clica ou toca no animal correto.</li>
+            <li>Se acertares, passas para a próxima ronda.</li>
+            <li>Se errares, tenta novamente até encontrares o par correto.</li>
+            <li>Completa as 10 rondas e descobre a tua pontuação final.</li>
+        </ul>
+
+        <h2>Regras</h2>
+        <p>Existe apenas uma resposta correta em cada ronda. Observa com atenção antes de responder. Não há limite de tempo. O objetivo é acertar no maior número possível de respostas.</p>
+        
+        <h2>Dicas</h2>
+        <p>Observa cuidadosamente: a forma do animal, as cores e os detalhes (orelhas, patas, asas, cauda, etc.). Alguns animais podem ser muito parecidos. Escolhe apenas o que é exatamente igual ao modelo.</p>
+        
+        <h2>O que vais desenvolver?</h2>
+        <ul>
+            <li>Atenção e concentração</li>
+            <li>Memória visual</li>
+            <li>Capacidade de observação</li>
+            <li>Rapidez de identificação</li>
+            <li>Discriminação visual</li>
+        </ul>
+    `;
+}
+
+// ==========================================
+// 2. TUTORIAL ANIMADO
+// ==========================================
 function iniciarTutorialVisual() {
     const container = document.getElementById("container-animacao-tutorial");
     if (!container || !DADOS_JOGO.itens.length) return;
@@ -26,6 +68,9 @@ function iniciarTutorialVisual() {
     `;
 }
 
+// ==========================================
+// 3. LÓGICA DO JOGO
+// ==========================================
 function irParaJogo() {
     rondaAtual = 1; certos = 0; errados = 0; ajudasUsadas = 0;
     atualizarInterfaceStats();
