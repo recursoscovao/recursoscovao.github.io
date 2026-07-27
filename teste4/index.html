@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Plataforma Educativa</title>
 
+    <!-- Importação da Fonte Fredoka (Arredondada e Bold - Igual à imagem) -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&display=swap" rel="stylesheet">
+
     <style>
         /* ==========================================
            1. VARIÁVEIS E BASE
@@ -13,7 +16,7 @@
             --cor-pagina: #f0f0f0;
             --cor-primaria: #333;
             --cor-escura: #000;
-            --cor-texto: #555;
+            --cor-texto: #5d7082;
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -22,7 +25,8 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            /* Aplicar a fonte Fredoka globalmente */
+            font-family: 'Fredoka', sans-serif;
             background-color: var(--cor-pagina);
             color: var(--cor-texto);
             overflow-x: hidden;
@@ -36,21 +40,21 @@
             background-color: white;
             display: flex;
             align-items: center;
-            padding: 0 20px; /* Padding de 20px nas extremidades */
+            padding: 0 20px; 
             border-bottom-left-radius: 35px; 
             border-bottom-right-radius: 35px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.08);
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06);
             z-index: 100;
         }
 
         .header-flex {
             display: flex;
-            justify-content: space-between; /* Esquerda, Centro, Direita */
+            justify-content: space-between;
             align-items: center;
             width: 100%;
         }
 
-        /* LADO ESQUERDO: Hambúrguer */
+        /* Hambúrguer Esquerda */
         .btn-menu {
             background: none;
             border: none;
@@ -60,17 +64,17 @@
             flex-direction: column;
             gap: 5px;
         }
-        .btn-menu div { width: 28px; height: 4px; background-color: var(--cor-primaria); border-radius: 2px; }
+        .btn-menu div { width: 30px; height: 5px; background-color: var(--cor-primaria); border-radius: 10px; }
 
-        /* CENTRO: Ícone + Logótipo (Igual à imagem) */
+        /* CENTRO: Logótipo Ajustado */
         .centro-header {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 12px;
         }
 
         .centro-header img {
-            height: 65px; /* Tamanho proporcional */
+            height: 60px; 
             width: auto;
             object-fit: contain;
         }
@@ -78,86 +82,98 @@
         .titulos-grupo {
             display: flex;
             flex-direction: column;
-            line-height: 0.85; /* Aproxima as linhas como no logótipo */
+            line-height: 0.85; /* Aproximação das linhas conforme a imagem */
         }
 
         .titulos-grupo h1 { 
-            font-size: 1.7rem; 
-            font-weight: 900; 
+            font-size: 1.8rem; 
+            font-weight: 700; /* Extra Bold */
             text-transform: uppercase; 
-            color: var(--cor-primaria); /* Cor muda com o tema */
-            letter-spacing: -1px;
+            color: var(--cor-primaria); /* Cor dinâmica */
+            letter-spacing: -0.5px;
         }
 
         .titulos-grupo h2 { 
-            font-size: 1.7rem; 
-            font-weight: 900; 
+            font-size: 1.8rem; 
+            font-weight: 700; 
             text-transform: uppercase; 
-            color: #7a8b9a; /* Cinza fixo conforme imagem */
-            letter-spacing: -1px;
+            color: #8c9ba9; /* Cinza específico da imagem */
+            letter-spacing: -0.5px;
         }
 
         .titulos-grupo .sub-titulo { 
-            font-size: 0.85rem; 
-            font-weight: 700; 
+            font-size: 0.95rem; 
+            font-weight: 600; 
             text-transform: uppercase; 
             color: #5ba4e5; /* Azul/Cinza claro fixo */
-            margin-top: 4px;
-            letter-spacing: 0.5px;
+            margin-top: 6px;
+            letter-spacing: 0.2px;
             line-height: 1;
         }
 
-        /* LADO DIREITO: Seta Voltar */
+        /* Seta Voltar Direita */
         .btn-voltar-topo {
             width: 45px;
             display: flex;
             justify-content: flex-end;
             text-decoration: none;
         }
-        .btn-voltar-topo img { height: 45px; width: auto; }
+        .btn-voltar-topo img { height: 48px; width: auto; }
 
         /* ==========================================
            3. MENU LATERAL
            ========================================== */
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); display: none; z-index: 150; }
-        .side-menu { position: fixed; top: 0; left: -280px; width: 280px; height: 100%; background: white; z-index: 200; transition: 0.3s ease; padding: 25px; box-shadow: 5px 0 15px rgba(0,0,0,0.1); }
+        .side-menu { 
+            position: fixed; top: 0; left: -280px; width: 280px; height: 100%; 
+            background: white; z-index: 200; transition: 0.3s ease; padding: 25px; 
+        }
         .side-menu.active { left: 0; }
         .menu-links-list { list-style: none; margin-top: 30px; }
-        .menu-links-list a { display: flex; align-items: center; gap: 15px; text-decoration: none; color: var(--cor-texto); font-weight: bold; margin-bottom: 20px; font-size: 1.1rem; }
-        .menu-links-list img { width: 35px; height: 35px; object-fit: contain; }
+        .menu-links-list a { 
+            display: flex; align-items: center; gap: 15px; 
+            text-decoration: none; color: #5d7082; font-weight: 600; 
+            margin-bottom: 15px; font-size: 1.1rem; padding: 10px; border-radius: 15px;
+        }
+        .menu-links-list a:hover { background: var(--cor-pagina); }
+        .menu-links-list img { width: 35px; }
 
         /* ==========================================
-           4. CONTEÚDO (MAIN)
+           4. CORPO (SCROLL LIVRE)
            ========================================== */
         main {
-            flex: 1; /* Empurra o footer para o fundo */
+            flex: 1;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center; /* Centraliza o card no meio do ecrã */
+            justify-content: center;
             padding: 40px 20px;
         }
 
         .card-jogo {
             background: white;
-            padding: 40px;
-            border-radius: 30px;
+            padding: 45px;
+            border-radius: 40px;
             text-align: center;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
-            max-width: 500px; 
+            box-shadow: 0 15px 35px rgba(0,0,0,0.04);
+            max-width: 550px; 
             width: 100%;
         }
 
-        .card-jogo h3 { font-size: 2.2rem; color: var(--cor-primaria); margin-bottom: 15px; line-height: 1.1; }
-        .card-jogo p { font-size: 1.15rem; margin-bottom: 30px; color: #666; }
+        .card-jogo h3 { 
+            font-size: 2.2rem; 
+            color: var(--cor-primaria); 
+            margin-bottom: 15px; 
+            font-weight: 700;
+        }
 
         .btn-jogar {
             background-color: var(--cor-primaria);
-            color: white; border: none; padding: 20px 60px; font-size: 1.6rem; 
-            font-weight: 900; border-radius: 60px; cursor: pointer; text-decoration: none;
-            display: inline-block; transition: 0.3s;
+            color: white; border: none; padding: 22px 70px; font-size: 1.8rem; 
+            font-weight: 700; border-radius: 50px; cursor: pointer; text-decoration: none;
+            display: inline-block; margin-top: 20px; transition: 0.2s;
         }
-        .btn-jogar:hover { transform: scale(1.05); background-color: var(--cor-escura); }
+        .btn-jogar:hover { transform: scale(1.05); }
 
         /* ==========================================
            5. FOOTER (40px)
@@ -169,31 +185,28 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 0.85rem;
-            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 400;
         }
 
         /* RESPONSIVIDADE */
-        @media (max-width: 550px) {
-            .titulos-grupo h1, .titulos-grupo h2 { font-size: 1.2rem; }
-            .titulos-grupo .sub-titulo { font-size: 0.65rem; }
+        @media (max-width: 600px) {
+            .titulos-grupo h1, .titulos-grupo h2 { font-size: 1.3rem; }
+            .titulos-grupo .sub-titulo { font-size: 0.7rem; }
             .centro-header img { height: 45px; }
-            .card-jogo h3 { font-size: 1.6rem; }
+            header { height: 80px; padding: 0 15px; }
         }
     </style>
 </head>
 <body>
 
-    <!-- Overlay para fechar o menu ao clicar fora -->
     <div id="overlay" class="overlay"></div>
 
-    <!-- Menu Lateral (Drawer) -->
     <nav id="side-menu" class="side-menu">
-        <h2 id="ui-menu-titulo" style="color: var(--cor-primaria); border-bottom: 2px solid #eee; padding-bottom: 10px;">Menu</h2>
+        <h2 style="color: var(--cor-primaria); font-weight: 700; margin-bottom: 20px;">Menu</h2>
         <ul id="ui-lista-menu" class="menu-links-list"></ul>
     </nav>
 
-    <!-- Cabeçalho -->
     <header>
         <div class="header-flex">
             <!-- ESQUERDA -->
@@ -201,7 +214,7 @@
                 <div></div><div></div><div></div>
             </button>
 
-            <!-- CENTRO (Ícone + Texto Dinâmico) -->
+            <!-- CENTRO (FONTE FREDOKA) -->
             <div class="centro-header">
                 <img id="ui-icon-centro" src="" alt="Ano">
                 <div class="titulos-grupo">
@@ -218,87 +231,67 @@
         </div>
     </header>
 
-    <!-- Corpo do Index -->
     <main>
         <section class="card-jogo">
             <h3 id="ui-nome-jogo"></h3>
-            <p id="ui-descricao"></p>
+            <p id="ui-descricao" style="font-size: 1.2rem; color: #7a8b9a; line-height: 1.4;"></p>
             <a href="jogo.html" class="btn-jogar">JOGAR</a>
         </section>
+        <!-- Conteúdo extra se quiseres testar o scroll -->
+        <div style="height: 50px;"></div>
     </main>
 
-    <!-- Rodapé -->
     <footer>
         <div id="ui-rodape"></div>
     </footer>
 
-    <!-- Importação dos Dados -->
     <script src="dados.js"></script>
 
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            // 1. Obter referências de JOGO_CONFIG
             const area = JOGO_CONFIG.areaAtiva;
             const ano = JOGO_CONFIG.anoAtivo;
             const tema = BIBLIOTECA_TEMAS[area];
             const conteudo = BIBLIOTECA_CONTEUDO[ano][area];
 
-            // 2. Aplicar Cores do Tema ao CSS
             const root = document.documentElement;
             root.style.setProperty('--cor-pagina', tema.corPagina);
             root.style.setProperty('--cor-primaria', tema.corPrimaria);
             root.style.setProperty('--cor-escura', tema.corEscura);
             root.style.setProperty('--cor-texto', tema.corTexto);
 
-            // 3. Preencher Header e Footer
             document.getElementById("ui-t1").innerText = conteudo.t1;
             document.getElementById("ui-t2").innerText = conteudo.t2;
             document.getElementById("ui-sub").innerText = conteudo.sub;
             document.getElementById("ui-rodape").innerHTML = conteudo.rodape;
-            
-            // Seta de voltar dinâmica com base no tema
             document.getElementById("ui-seta-voltar").src = JOGO_CONFIG.caminhoIconsMenu + tema.voltarMobile;
 
-            // 4. Ícone Central (Procura o ícone correspondente ao ano ativo)
             const itemAno = JOGO_CONFIG.menuItens.find(item => item.id === ano);
             if (itemAno) {
                 document.getElementById("ui-icon-centro").src = JOGO_CONFIG.caminhoIconsMenu + itemAno.icon;
             }
 
-            // 5. Card Central do Jogo
             document.getElementById("ui-nome-jogo").innerText = JOGO_CONFIG.nomeDoJogo;
             document.getElementById("ui-descricao").innerText = JOGO_CONFIG.descricao;
 
-            // 6. Gerar Menu Lateral Dinâmico
             const listaMenu = document.getElementById("ui-lista-menu");
             JOGO_CONFIG.menuItens.forEach(item => {
-                // Não incluir o botão voltar no menu lateral pois já está no topo
                 if(item.id === "voltar") return;
-
                 const li = document.createElement("li");
                 const imgFinal = (item.icon === "AUTO") ? tema.voltarMobile : item.icon;
-                
-                li.innerHTML = `
-                    <a href="${item.link}">
-                        <img src="${JOGO_CONFIG.caminhoIconsMenu}${imgFinal}" alt="${item.label}">
-                        <span>${item.label}</span>
-                    </a>
-                `;
+                li.innerHTML = `<a href="${item.link}"><img src="${JOGO_CONFIG.caminhoIconsMenu}${imgFinal}"><span>${item.label}</span></a>`;
                 listaMenu.appendChild(li);
             });
 
-            // 7. Lógica de Abrir/Fechar Menu Lateral
             const btnAbrir = document.getElementById("btn-abrir-menu");
             const sideMenu = document.getElementById("side-menu");
             const overlay = document.getElementById("overlay");
-
-            const toggleMenu = () => {
+            const toggle = () => {
                 sideMenu.classList.toggle("active");
                 overlay.style.display = sideMenu.classList.contains("active") ? "block" : "none";
             };
-
-            btnAbrir.addEventListener("click", toggleMenu);
-            overlay.addEventListener("click", toggleMenu);
+            btnAbrir.addEventListener("click", toggle);
+            overlay.addEventListener("click", toggle);
         });
     </script>
 </body>
