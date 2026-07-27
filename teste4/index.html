@@ -79,6 +79,94 @@
         .active-tela { display: flex !important; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
+        /* Wrapper Principal do Jogo */
+.jogo-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    gap: 15px;
+    padding: 10px;
+}
+
+/* Área do Alvo (Topo do meio) */
+.zona-alvo {
+    flex: 0.4; /* Ocupa 40% da altura do meio */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card-alvo {
+    height: 90%;
+    aspect-ratio: 1/1;
+    background: #fff;
+    border: 4px solid var(--cor-primaria);
+    border-radius: 25px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+.card-alvo img { width: 100%; height: 100%; object-fit: contain; }
+
+/* Grelha de Opções (Fundo do meio) */
+.zona-opcoes {
+    flex: 0.6; /* Ocupa 60% da altura do meio */
+    display: grid;
+    /* Grid Responsivo: 4 colunas em landscape, 2 ou 3 em portrait */
+    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(2, 1fr);
+    gap: 12px;
+    width: 100%;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.card-opcao {
+    background: white;
+    border-radius: 20px;
+    border: 2px solid #eee;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+}
+
+.card-opcao img { width: 85%; height: 85%; object-fit: contain; }
+
+/* Estados das Cartas */
+.card-opcao:hover { transform: scale(1.03); border-color: var(--cor-primaria); }
+.card-opcao.correto { background: #8cc63f !important; border-color: #8cc63f; transform: scale(1.05); }
+.card-opcao.errado { background: #ff5a5f !important; border-color: #ff5a5f; animation: shake 0.4s; }
+.respondido { pointer-events: none; }
+
+/* Animações */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-8px); }
+    75% { transform: translateX(8px); }
+}
+
+.anim-entrada { animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275); }
+@keyframes popIn {
+    from { opacity: 0; transform: scale(0.5); }
+    to { opacity: 1; transform: scale(1); }
+}
+
+/* Ajuste para Telemóvel Vertical */
+@media (max-height: 600px) or (orientation: portrait) {
+    .zona-opcoes {
+        grid-template-columns: repeat(3, 1fr); /* 3 colunas para caber melhor */
+    }
+    .zona-alvo { flex: 0.3; }
+}
+
         /* --- ECRÃ 1: APRESENTAÇÃO --- */
         .intro-container { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: inherit; }
         .intro-topo { height: 85px; display: flex; align-items: center; justify-content: center; }
