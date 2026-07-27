@@ -1,91 +1,58 @@
-// ==========================================
-// VARIÁVEIS DE ESTADO DO JOGO
-// ==========================================
 let rondaAtual = 1;
-let totalRondas = 10;
+const totalRondas = 10;
 let certos = 0;
 let errados = 0;
 let ajudasUsadas = 0;
 let itemAlvo = null;
 
-// ==========================================
-// INICIALIZAÇÃO
-// ==========================================
-window.onload = () => {
-    // Esta função prepara o jogo mas não o inicia até clicar em JOGAR
-    prepararAmbiente();
-};
+function iniciarTutorialVisual() {
+    const container = document.getElementById("container-animacao-tutorial");
+    if (!container || !DADOS_JOGO.itens.length) return;
 
-function prepararAmbiente() {
-    // Preencher as instruções detalhadas na página de info
-    const infoTexto = document.getElementById("info-instructions");
-    if(infoTexto) {
-        infoTexto.innerHTML = `
-            <strong>Objetivo:</strong> Observa o animal no topo e encontra o igual.<br><br>
-            <strong>Como jogar:</strong><br>
-            1. Olha para o animal em destaque.<br>
-            2. Encontra o par idêntico na grelha abaixo.<br>
-            3. Clica no correto para avançar.<br><br>
-            <strong>Desenvolve:</strong> Atenção, Memória Visual e Concentração.
-        `;
-    }
+    const item1 = DADOS_JOGO.itens[0];
+    const item2 = DADOS_JOGO.itens[1] || item1;
+    const item3 = DADOS_JOGO.itens[2] || item1;
+    const caminho = DADOS_JOGO.caminhoImagens;
+
+    container.innerHTML = `
+        <div class="tut-alvo"><img src="${caminho}${item1.img}"></div>
+        <div style="font-size: 0.8rem; font-weight: 800; color: #8792a1;">ENCONTRA O IGUAL</div>
+        <div class="tut-grid">
+            <div class="tut-card"><img src="${caminho}${item2.img}"></div>
+            <div class="tut-card alvo-simulado"><img src="${caminho}${item1.img}"></div>
+            <div class="tut-card"><img src="${caminho}${item3.img}"></div>
+        </div>
+        <img src="${JOGO_CONFIG.caminhoIconsJogos}mao.png" class="tut-mao">
+    `;
 }
 
-// Chamada pelo botão "JOGAR" do index.html
 function irParaJogo() {
-    rondaAtual = 1;
-    certos = 0;
-    errados = 0;
-    ajudasUsadas = 0;
-    
+    rondaAtual = 1; certos = 0; errados = 0; ajudasUsadas = 0;
     atualizarInterfaceStats();
     trocarEcra('tela-jogo');
     proximaRonda();
 }
 
-// ==========================================
-// LÓGICA DAS RONDAS
-// ==========================================
-
 function proximaRonda() {
-    if (rondaAtual > totalRondas) {
-        finalizarJogo();
-        return;
-    }
-
+    if (rondaAtual > totalRondas) { finalizarJogo(); return; }
     atualizarInterfaceStats();
 
-    // 1. Escolher o animal alvo aleatoriamente
     const listaItens = [...DADOS_JOGO.itens];
     itemAlvo = listaItens[Math.floor(Math.random() * listaItens.length)];
 
-    // 2. Escolher 7 distratores (diferentes do alvo)
-    const distratores = listaItens
-        .filter(item => item.id !== itemAlvo.id)
-        .sort(() => Math.random() - 0.5)
-        .slice(0, 7);
+    const distratores = listaItens.filter(i => i.id !== itemAlvo.id).sort(() => 0.5 - Math.random()).slice(0, 7);
+    const opcoesGrid = [...distratores, itemAlvo].sort(() => 0.5 - Math.random());
 
-    // 3. Juntar e baralhar as 8 opções
-    const opcoesGrid = [...distratores, itemAlvo].sort(() => Math.random() - 0.5);
-
-    renderizarJogo(opcoesGrid);
-}
-
-function renderizarJogo(opcoes) {
     const container = document.getElementById("container-jogo-injetado");
-    
-    // Criar estrutura interna do jogo
     container.innerHTML = `
         <div class="jogo-wrapper">
             <div class="zona-alvo">
-                <div class="card-alvo anim-entrada">
-                    <img src="${DADOS_JOGO.caminhoImagens}${itemAlvo.img}" alt="Alvo">
-                </div>
+                <div class="card-alvo anim-entrada"><img src="${DADOS_JOGO.caminhoImagens}${itemAlvo.img}"></div>
             </div>
             <div class="zona-opcoes">
-                ${opcoes.map(item => `
+                ${opcoesGrid.map(item => `
                     <div class="card-opcao anim-entrada" onclick="verificarResposta(this, ${item.id})">
-                        <img src="${DADOS_JOGO.caminhoImagens}${item.img}" alt="Opção">
+                        <img src="${DADOS_JOGO.caminhoImagens}${item.img}">
                     </div>
                 `).join('')}
             </div>
@@ -93,67 +60,29 @@ function renderizarJogo(opcoes) {
     `;
 }
 
-// ==========================================
-// MECÂNICAS
-// ==========================================
+function verificarResposta(el, id) {
+    if (el.classList.contains('respondido')) return;
 
-function verificarResposta(elemento, idEscolhido) {
-    if (elemento.classList.contains('respondido')) return;
-
-    if (idEscolhido === itemAlvo.id) {
-        // ACERTO
-        certos++;
-        elemento.classList.add('correto', 'respondido');
-        // Bloquear outros cliques
+    if (id === itemAlvo.id) {
+        certos++; el.classList.add('correto', 'respondido');
         document.querySelectorAll('.card-opcao').forEach(c => c.classList.add('respondido'));
-        
-        setTimeout(() => {
-            rondaAtual++;
-            proximaRonda();
-        }, 1200);
+        setTimeout(() => { rondaAtual++; proximaRonda(); }, 1000);
     } else {
-        // ERRO
-        errados++;
-        elemento.classList.add('errado');
+        errados++; el.classList.add('errado');
         atualizarInterfaceStats();
-        // Remove a classe de erro após a animação para poder tentar de novo
-        setTimeout(() => elemento.classList.remove('errado'), 500);
+        setTimeout(() => el.classList.remove('errado'), 500);
     }
 }
 
-// Função da Lâmpada (Ajuda)
 document.getElementById("ui-help-lamp").onclick = () => {
-    ajudasUsadas++;
-    atualizarInterfaceStats();
-    
-    // Destacar o correto temporariamente
-    const cards = document.querySelectorAll('.card-opcao');
-    cards.forEach(card => {
-        // Esta lógica assume que guardamos o id no elemento ou comparamos
-        // Para simplificar, vamos apenas dar um brilho ao correto
-    });
-    // Implementação visual da ajuda:
-    const cardsOpcao = document.querySelectorAll('.card-opcao');
-    cardsOpcao.forEach(card => {
-        card.style.opacity = "0.3"; // Escurece todos
-    });
-    
-    // Encontrar o correto e destacar
-    const todosCards = Array.from(document.querySelectorAll('.card-opcao'));
-    const oCorreto = todosCards.find(c => c.innerHTML.includes(itemAlvo.img));
-    if(oCorreto) {
-        oCorreto.style.opacity = "1";
-        oCorreto.style.transform = "scale(1.1)";
-        oCorreto.style.boxShadow = "0 0 20px gold";
+    ajudasUsadas++; atualizarInterfaceStats();
+    const cards = Array.from(document.querySelectorAll('.card-opcao'));
+    const correto = cards.find(c => c.innerHTML.includes(itemAlvo.img));
+    if (correto) {
+        correto.style.boxShadow = "0 0 20px gold";
+        correto.style.transform = "scale(1.1)";
+        setTimeout(() => { correto.style.boxShadow = ""; correto.style.transform = ""; }, 1500);
     }
-
-    setTimeout(() => {
-        cardsOpcao.forEach(card => {
-            card.style.opacity = "1";
-            card.style.transform = "";
-            card.style.boxShadow = "";
-        });
-    }, 1500);
 };
 
 function atualizarInterfaceStats() {
@@ -163,6 +92,13 @@ function atualizarInterfaceStats() {
 }
 
 function finalizarJogo() {
-    // Chama a função que já existe no index.html
-    mostrarResultados(certos, errados, ajudasUsadas);
+    trocarEcra('tela-resultados');
+    document.getElementById("res-val-certos").innerText = certos;
+    document.getElementById("res-val-errados").innerText = errados;
+    document.getElementById("res-val-ajudas").innerText = ajudasUsadas;
+    const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
+    if (rel) {
+        document.getElementById("res-feedback-titulo").innerText = rel.titulo;
+        document.getElementById("res-img").src = JOGO_CONFIG.caminhoIconsJogos + rel.img;
+    }
 }
