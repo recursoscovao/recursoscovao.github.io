@@ -44,7 +44,7 @@
            3. MENUS E OVERLAYS
            ========================================== */
         .menu-dropdown { 
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%; /* Ocupa tudo para fechar ao clicar fora */
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             padding: 100px 20px 30px 20px; 
             z-index: 1000; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
             transform: translateY(-110%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
@@ -88,42 +88,45 @@
         .intro-fundo { height: 85px; display: flex; align-items: center; padding: 0 30px; }
         .fundo-flex { display: flex; align-items: center; gap: 20px; width: 100%; }
 
-        /* --- ECRÃ 2: ÁREA DE JOGO (AJUSTE TAMANHO STATS) --- */
+        /* --- ECRÃ 2: ÁREA DE JOGO --- */
         .game-container { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: inherit; }
-        .game-topo { 
-            height: 85px; display: flex; align-items: center; justify-content: space-between; 
-            padding: 0 25px; border-bottom: 1px solid #f2f2f2; 
-        }
-        
-        .game-topo-left { display: flex; align-items: center; gap: 10px; }
-        .game-topo-right { display: flex; align-items: center; gap: 10px; }
-
+        .game-topo { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; border-bottom: 1px solid #f2f2f2; }
+        .game-topo-left, .game-topo-right { display: flex; align-items: center; gap: 10px; }
         #ui-help-lamp { height: 50px; cursor: pointer; transition: 0.3s; }
-
-        /* Pill das Rondas (Mais pequeno) */
-        .round-pill {
-            background: #6c757d; color: white; padding: 5px 18px; 
-            border-radius: 50px; font-weight: 900; font-size: 1.1rem;
-        }
-
-        /* Boxes Certos/Errados (Mais pequeno) */
-        .stat-box {
-            display: flex; align-items: center; gap: 6px; padding: 4px 12px; 
-            border-radius: 10px; color: white; font-weight: 900; font-size: 1.1rem;
-        }
+        .round-pill { background: #6c757d; color: white; padding: 5px 18px; border-radius: 50px; font-weight: 900; font-size: 1.1rem; }
+        .stat-box { display: flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 10px; color: white; font-weight: 900; font-size: 1.1rem; }
         .box-success { background: #8cc63f; }
         .box-error { background: #ff5a5f; }
-        
         .game-meio { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
 
-        /* --- ECRÃ 3: RESULTADOS --- */
-        #res-img { width: 150px; margin-bottom: 20px; }
-        #res-titulo { font-size: 2.2rem; color: var(--cor-primaria); margin-bottom: 20px; text-align: center; font-weight: 900; }
+        /* --- ECRÃ 3: RESULTADOS (4 PARTES) --- */
+        .results-container { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: inherit; }
+        
+        /* 1ª Parte: Título */
+        .res-topo { height: 85px; display: flex; align-items: center; justify-content: center; }
+        .res-topo h2 { font-size: 2.5rem; font-weight: 900; color: var(--cor-primaria); text-transform: uppercase; }
+
+        /* 2ª Parte: Taças e Descrição */
+        .res-feedback { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+        #res-img { width: 160px; margin-bottom: 15px; }
+        #res-feedback-titulo { font-size: 2.2rem; font-weight: 900; color: var(--cor-primaria); }
+
+        /* 3ª Parte: Stats (Certos, Errados, Ajudas) */
+        .res-stats { display: flex; align-items: center; justify-content: center; gap: 15px; padding: 20px; }
+        .res-stat-pill { display: flex; align-items: center; gap: 8px; padding: 10px 20px; border-radius: 15px; color: white; font-weight: 900; font-size: 1.4rem; }
+        .res-stat-pill img { width: 30px; }
+
+        /* 4ª Parte: Botões */
+        .res-fundo { height: 100px; display: flex; align-items: center; justify-content: center; gap: 20px; padding: 0 30px; }
 
         /* BOTÕES GERAIS */
         .btn-info-icon { background: none; border: none; cursor: pointer; flex-shrink: 0; }
         .btn-info-icon img { width: 45px; height: 45px; }
         .btn-jogar-expand { flex: 1; background: var(--cor-primaria); color: white; border: none; padding: 15px 0; font-size: clamp(1.3rem, 4vw, 1.8rem); font-weight: 900; text-transform: uppercase; border-radius: 60px; cursor: pointer; transition: 0.3s; box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+        
+        /* Botão Secundário para o "Outro Jogo" */
+        .btn-acao-outline { flex: 1; background: white; color: var(--cor-primaria); border: 3px solid var(--cor-primaria); padding: 15px 0; font-size: 1.5rem; font-weight: 900; border-radius: 60px; cursor: pointer; transition: 0.3s; text-transform: uppercase; }
+        .btn-acao-outline:hover { background: var(--cor-pagina); }
 
         /* ==========================================
            5. FOOTER (BRANCO, ARREDONDADO NO TOPO)
@@ -160,6 +163,7 @@
     </header>
 
     <main>
+        <!-- ECRÃ 1 -->
         <section id="tela-apresentacao" class="tela active-tela">
             <div class="intro-container">
                 <div class="intro-topo"><h1 id="ui-nome-jogo-intro"></h1></div>
@@ -173,6 +177,7 @@
             </div>
         </section>
 
+        <!-- ECRÃ 2 -->
         <section id="tela-jogo" class="tela">
             <div class="game-container">
                 <div class="game-topo">
@@ -192,9 +197,36 @@
             </div>
         </section>
 
+        <!-- ECRÃ 3: RESULTADOS (4 PARTES) -->
         <section id="tela-resultados" class="tela">
-            <img id="res-img" src=""><h2 id="res-titulo"></h2>
-            <button class="btn-jogar-expand" style="max-width:300px" onclick="location.reload()">REPETIR</button>
+            <div class="results-container">
+                <!-- 1. Título -->
+                <div class="res-topo">
+                    <h2>RESULTADOS</h2>
+                </div>
+                
+                <!-- 2. Feedback Visual -->
+                <div class="res-feedback">
+                    <img id="res-img" src="" alt="Troféu">
+                    <h3 id="res-feedback-titulo"></h3>
+                </div>
+
+                <!-- 3. Estatísticas -->
+                <div class="res-stats">
+                    <div class="res-stat-pill box-success">✓ <span id="res-val-certos">0</span></div>
+                    <div class="res-stat-pill box-error">X <span id="res-val-errados">0</span></div>
+                    <div class="res-stat-pill" style="background: #f39c12;">
+                        <img id="res-icon-lamp" src="" alt="Lâmpada">
+                        <span id="res-val-ajudas">0</span>
+                    </div>
+                </div>
+
+                <!-- 4. Botões de Ação -->
+                <div class="res-fundo">
+                    <button class="btn-acao-outline" onclick="location.reload()">REPETIR</button>
+                    <button class="btn-jogar-expand" onclick="window.location.href='../'">OUTRO JOGO</button>
+                </div>
+            </div>
         </section>
     </main>
 
@@ -213,6 +245,7 @@
             root.style.setProperty('--cor-primaria', tema.corPrimaria);
             root.style.setProperty('--cor-primaria-alpha', tema.corPrimaria + '66');
 
+            // Textos Gerais
             document.getElementById("txt-titulo1").innerText = conteudo.t1;
             document.getElementById("txt-titulo2").innerText = conteudo.t2;
             document.getElementById("txt-subtitulo-header").innerText = conteudo.sub;
@@ -220,9 +253,12 @@
             document.getElementById("ui-nome-jogo-intro").innerText = config.nomeDoJogo;
             document.getElementById("ui-seta-voltar").src = config.caminhoIconsMenu + tema.voltarMobile;
             
+            // Iconografia
             document.querySelectorAll(".img-info-src").forEach(img => img.src = config.caminhoIconsJogos + "inform.png");
             document.getElementById("ui-help-lamp").src = config.caminhoIconsJogos + "lampada.png";
+            document.getElementById("res-icon-lamp").src = config.caminhoIconsJogos + "lampada.png";
             
+            // Info Page
             document.getElementById("info-game-title").innerText = config.nomeDoJogo;
             document.getElementById("info-instructions").innerText = config.descricao;
 
@@ -258,10 +294,7 @@
                 overlay.style.display = act ? "block" : "none";
             };
 
-            // FECHAR MENU AO CLICAR FORA DOS ITENS
-            menuDropdown.onclick = (e) => {
-                if (e.target === menuDropdown) closeAll();
-            };
+            menuDropdown.onclick = (e) => { if (e.target === menuDropdown) closeAll(); };
 
             btnTriggersInfo.forEach(btn => btn.onclick = () => pageInfo.classList.add("active"));
             btnCloseInfo.onclick = () => pageInfo.classList.remove("active");
@@ -275,6 +308,25 @@
         }
 
         function irParaJogo() { trocarEcra('tela-jogo'); }
+
+        // Esta função será chamada pelo jogo.js no final
+        function mostrarResultados(certos, errados, ajudas) {
+            trocarEcra('tela-resultados');
+            
+            // Preencher Stats
+            document.getElementById("res-val-certos").innerText = certos;
+            document.getElementById("res-val-errados").innerText = errados;
+            document.getElementById("res-val-ajudas").innerText = ajudas;
+
+            // Lógica de Relatório do dados.js
+            const config = JOGO_CONFIG;
+            const relatorio = config.relatorios.find(r => certos >= r.min && certos <= r.max);
+            
+            if (relatorio) {
+                document.getElementById("res-feedback-titulo").innerText = relatorio.titulo;
+                document.getElementById("res-img").src = config.caminhoIconsJogos + relatorio.img;
+            }
+        }
     </script>
 </body>
 </html>
