@@ -16,7 +16,6 @@
             --cor-pagina: #f0f0f0; --cor-primaria: #333; --cor-primaria-alpha: rgba(0,0,0,0.4); 
             --cor-escura: #000; --cor-texto: #5d7082; --text-grey: #8792a1;
         }
-
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { min-height: 100%; }
         body { display: flex; flex-direction: column; font-family: 'Fredoka', sans-serif; background-color: var(--cor-pagina); overflow-y: auto; overflow-x: hidden; }
@@ -41,13 +40,12 @@
         .btn-voltar-topo img { height: 45px; }
 
         /* ==========================================
-           3. MENUS E OVERLAYS
+           3. MENUS (DROPDOWN E INFO)
            ========================================== */
         .menu-dropdown { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            padding: 100px 20px 30px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
+            padding: 100px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
             transform: translateY(-110%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            background: transparent;
         }
         .menu-dropdown.active { transform: translateY(0); }
         .menu-btn-item { width: 270px; background: white; display: flex; align-items: center; gap: 12px; padding: 8px 18px; text-decoration: none; color: var(--cor-texto); border-radius: 18px; font-weight: 600; font-size: 1.05rem; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border: 1px solid #f2f2f2; transition: 0.3s; }
@@ -59,13 +57,16 @@
         .info-header { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; border-bottom: 2px solid var(--cor-pagina); }
         .info-header span { font-weight: 900; font-size: 1.5rem; color: var(--cor-primaria); text-transform: uppercase; }
         .btn-close-info { background: var(--cor-pagina); border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.5rem; font-weight: 900; color: var(--cor-primaria); cursor: pointer; }
-        .info-body { flex: 1; padding: 40px 25px; overflow-y: auto; text-align: center; }
-        .info-body h2 { font-size: 2.2rem; color: var(--cor-primaria); margin-bottom: 20px; }
-        .info-body p { font-size: 1.2rem; line-height: 1.5; color: var(--cor-texto); max-width: 600px; margin: 0 auto; }
+        
+        .info-body { flex: 1; padding: 30px 25px; overflow-y: auto; text-align: left; color: var(--cor-texto); }
+        .info-body h2 { font-size: 1.6rem; color: var(--cor-primaria); margin-top: 20px; margin-bottom: 10px; border-bottom: 1px solid #eee; }
+        .info-body p, .info-body li { font-size: 1.05rem; line-height: 1.4; margin-bottom: 8px; }
+        .info-body ul { margin-left: 20px; margin-bottom: 15px; }
+
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: none; z-index: 900; backdrop-filter: blur(2px); }
 
         /* ==========================================
-           4. ECRÃS (MAIN)
+           4. ECRÃS (TELA)
            ========================================== */
         main { flex: 1; padding: 15px; display: flex; flex-direction: column; }
         .tela {
@@ -82,22 +83,21 @@
         .intro-topo { height: 85px; display: flex; align-items: center; justify-content: center; }
         #ui-nome-jogo-intro { font-size: clamp(1.4rem, 4vw, 2.2rem); font-weight: 900; color: var(--cor-primaria); text-align: center; text-transform: uppercase; }
         .intro-meio { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
-        
-        /* Tutorial Animado */
         #container-animacao-tutorial { position: relative; width: 100%; max-width: 400px; height: 260px; background: #fafafa; border-radius: 25px; border: 2px dashed #eee; display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 15px; overflow: hidden; }
-        .tut-alvo { width: 80px; height: 80px; background: white; border: 3px solid var(--cor-primaria); border-radius: 15px; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 10px rgba(0,0,0,0.1); }
+        
+        .tut-alvo { width: 70px; height: 70px; background: white; border: 3px solid var(--cor-primaria); border-radius: 15px; display: flex; align-items: center; justify-content: center; }
         .tut-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
-        .tut-card { width: 65px; height: 65px; background: white; border: 2px solid #eee; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .tut-card { width: 60px; height: 60px; background: white; border: 2px solid #eee; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
         .tut-card img, .tut-alvo img { width: 80%; height: 80%; object-fit: contain; }
-        .tut-mao { position: absolute; width: 45px; z-index: 10; bottom: 10px; right: 20%; pointer-events: none; animation: animarMao 3s infinite ease-in-out; }
-        @keyframes animarMao { 0% { transform: translate(0, 0); opacity: 0; } 20% { opacity: 1; } 50% { transform: translate(-90px, -65px); } 60% { transform: translate(-90px, -65px) scale(0.8); } 100% { transform: translate(-90px, -65px); opacity: 0; } }
+        .tut-mao { position: absolute; width: 40px; z-index: 10; bottom: 10px; right: 20%; pointer-events: none; animation: animarMao 3s infinite ease-in-out; }
+        @keyframes animarMao { 0% { transform: translate(0, 0); opacity: 0; } 20% { opacity: 1; } 50% { transform: translate(-85px, -65px); } 60% { transform: translate(-85px, -65px) scale(0.8); } 100% { transform: translate(-85px, -65px); opacity: 0; } }
         .alvo-simulado { animation: brilharSucesso 3s infinite; }
         @keyframes brilharSucesso { 0%, 55% { border-color: #eee; } 60%, 80% { border-color: #8cc63f; background: #eef9e5; } 100% { border-color: #eee; } }
-
+        
         .intro-fundo { height: 85px; display: flex; align-items: center; padding: 0 30px; }
         .fundo-flex { display: flex; align-items: center; gap: 20px; width: 100%; }
 
-        /* --- ECRÃ 2: ÁREA DE JOGO --- */
+        /* --- ECRÃ 2: JOGO --- */
         .game-container { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: inherit; }
         .game-topo { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; border-bottom: 1px solid #f2f2f2; }
         .game-topo-left, .game-topo-right { display: flex; align-items: center; gap: 10px; }
@@ -107,12 +107,11 @@
         .box-success { background: #8cc63f; } .box-error { background: #ff5a5f; }
         .game-meio { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
 
-        /* Estrutura do Jogo */
         .jogo-wrapper { display: flex; flex-direction: column; width: 100%; height: 100%; gap: 10px; padding: 15px; }
-        .zona-alvo { flex: 0.35; display: flex; justify-content: center; align-items: center; }
-        .card-alvo { height: 100%; aspect-ratio: 1/1; background: white; border: 4px solid var(--cor-primaria); border-radius: 25px; display: flex; align-items: center; justify-content: center; padding: 15px; box-shadow: 0 8px 20px rgba(0,0,0,0.05); }
+        .zona-alvo { flex: 0.28; display: flex; justify-content: center; align-items: center; }
+        .card-alvo { height: 85%; aspect-ratio: 1/1; background: white; border: 4px solid var(--cor-primaria); border-radius: 20px; display: flex; align-items: center; justify-content: center; padding: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
         .card-alvo img { width: 90%; height: 90%; object-fit: contain; }
-        .zona-opcoes { flex: 0.65; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 10px; width: 100%; max-width: 800px; margin: 0 auto; }
+        .zona-opcoes { flex: 0.72; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 10px; width: 100%; max-width: 800px; margin: 0 auto; }
         .card-opcao { background: white; border-radius: 18px; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; padding: 8px; cursor: pointer; transition: 0.2s; }
         .card-opcao img { width: 85%; height: 85%; object-fit: contain; }
         .card-opcao.correto { background: #8cc63f !important; border-color: #8cc63f; }
@@ -136,7 +135,6 @@
         .btn-jogar-expand { flex: 1; background: var(--cor-primaria); color: white; border: none; padding: 15px 0; font-size: clamp(1.2rem, 3vw, 1.8rem); font-weight: 900; text-transform: uppercase; border-radius: 60px; cursor: pointer; transition: 0.3s; box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
         .btn-acao-outline { flex: 1; background: white; color: var(--cor-primaria); border: 3px solid var(--cor-primaria); padding: 14px 0; font-size: 1.4rem; font-weight: 900; border-radius: 60px; cursor: pointer; text-transform: uppercase; }
 
-        /* FOOTER */
         footer { height: 40px; background: white; color: var(--text-grey); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; border-top-left-radius: 30px; border-top-right-radius: 30px; box-shadow: 0 -4px 15px rgba(0,0,0,0.06); flex-shrink: 0; margin-top: auto; }
         
         @media (max-width: 600px) { .zona-opcoes { grid-template-columns: repeat(3, 1fr); } }
@@ -147,9 +145,10 @@
     <div id="overlay" class="overlay"></div>
     <nav id="menu-dropdown" class="menu-dropdown"></nav>
 
+    <!-- PÁGINA DE INFORMAÇÃO -->
     <div id="page-info" class="info-full-page">
         <header class="info-header"><span>Informação</span><button class="btn-close-info" id="btn-close-info">X</button></header>
-        <div class="info-body"><h2 id="info-game-title"></h2><p id="info-instructions"></p></div>
+        <div class="info-body" id="info-instructions"></div>
     </div>
 
     <header>
@@ -240,8 +239,6 @@
             document.querySelectorAll(".img-info-src").forEach(img => img.src = config.caminhoIconsJogos + "inform.png");
             document.getElementById("ui-help-lamp").src = config.caminhoIconsJogos + "lampada.png";
             document.getElementById("res-icon-lamp").src = config.caminhoIconsJogos + "lampada.png";
-            document.getElementById("info-game-title").innerText = config.nomeDoJogo;
-            document.getElementById("info-instructions").innerText = config.descricao;
 
             const itemAno = config.menuItens.find(item => item.id === config.anoAtivo);
             if (itemAno) document.getElementById("header-icon").src = config.caminhoIconsMenu + itemAno.icon;
@@ -268,7 +265,9 @@
             btnCloseInfo.onclick = () => pageInfo.classList.remove("active");
             overlay.onclick = () => { menuDropdown.classList.remove("active"); pageInfo.classList.remove("active"); overlay.style.display = "none"; };
             
-            iniciarTutorialVisual();
+            // CARREGA TUTORIAL E INSTRUÇÕES DO JOGO.JS
+            if(typeof iniciarTutorialVisual === 'function') iniciarTutorialVisual();
+            if(typeof carregarInstrucoes === 'function') carregarInstrucoes();
         });
 
         function trocarEcra(id) {
