@@ -79,23 +79,41 @@
 
         /* --- ECRÃ 1: APRESENTAÇÃO --- */
         .intro-container { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: inherit; }
-        .intro-topo { height: 85px; display: flex; align-items: center; justify-content: center; padding: 0 15px; }
+        .intro-topo { height: 85px; display: flex; align-items: center; justify-content: center; }
         #ui-nome-jogo-intro { font-size: clamp(1.4rem, 5vw, 2.2rem); font-weight: 900; color: var(--cor-primaria); text-align: center; text-transform: uppercase; }
         .intro-meio { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
         #container-animacao-tutorial { width: 100%; height: 100%; background: #fafafa; border-radius: 25px; border: 2px dashed #eee; display: flex; align-items: center; justify-content: center; }
         .intro-fundo { height: 85px; display: flex; align-items: center; padding: 0 30px; }
         .fundo-flex { display: flex; align-items: center; gap: 20px; width: 100%; }
 
-        /* --- ECRÃ 2: ÁREA DE JOGO --- */
+        /* --- ECRÃ 2: ÁREA DE JOGO (NOVO TOPO CONFORME IMAGEM) --- */
         .game-container { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: inherit; }
         .game-topo { 
             height: 85px; display: flex; align-items: center; justify-content: space-between; 
             padding: 0 25px; border-bottom: 1px solid #f2f2f2; 
         }
-        .game-topo-items { display: flex; align-items: center; gap: 20px; font-weight: 700; font-size: 1.1rem; color: var(--cor-texto); }
-        .game-topo-items img { height: 45px; width: auto; cursor: pointer; transition: 0.3s; }
-        .game-topo-items img:hover { transform: scale(1.1); }
-        .game-stats-box { background: #f9f9f9; padding: 5px 15px; border-radius: 50px; border: 1px solid #eee; }
+        
+        .game-topo-left { display: flex; align-items: center; gap: 10px; }
+        .game-topo-right { display: flex; align-items: center; gap: 12px; }
+
+        /* Ícone Lâmpada */
+        #ui-help-lamp { height: 55px; cursor: pointer; transition: 0.3s; }
+        #ui-help-lamp:hover { transform: rotate(10deg) scale(1.1); }
+
+        /* Pill das Rondas (Cinza Escuro) */
+        .round-pill {
+            background: #6c757d; color: white; padding: 8px 25px; 
+            border-radius: 50px; font-weight: 900; font-size: 1.4rem;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        /* Boxes Certos/Errados */
+        .stat-box {
+            display: flex; align-items: center; gap: 8px; padding: 6px 15px; 
+            border-radius: 12px; color: white; font-weight: 900; font-size: 1.4rem;
+        }
+        .box-success { background: #8cc63f; } /* Verde da imagem */
+        .box-error { background: #ff5a5f; }   /* Vermelho da imagem */
         
         .game-meio { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
 
@@ -107,12 +125,21 @@
         .btn-info-icon { background: none; border: none; cursor: pointer; flex-shrink: 0; }
         .btn-info-icon img { width: 50px; height: 50px; }
         .btn-jogar-expand { flex: 1; background: var(--cor-primaria); color: white; border: none; padding: 15px 0; font-size: clamp(1.3rem, 4vw, 1.8rem); font-weight: 900; text-transform: uppercase; border-radius: 60px; cursor: pointer; transition: 0.3s; box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
+
+        /* ==========================================
+           5. FOOTER (BRANCO, ARREDONDADO NO TOPO)
+           ========================================== */
+        footer {
+            height: 40px; background: white; color: var(--text-grey); 
+            display: flex; align-items: center; justify-content: center; font-size: 0.85rem;
+            border-top-left-radius: 30px; border-top-right-radius: 30px;
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.06); flex-shrink: 0; margin-top: auto;
+        }
     </style>
 </head>
 <body>
 
     <div id="overlay" class="overlay"></div>
-
     <nav id="menu-dropdown" class="menu-dropdown"></nav>
 
     <div id="page-info" class="info-full-page">
@@ -148,22 +175,26 @@
             </div>
         </section>
 
-        <!-- ECRÃ 2: JOGO -->
+        <!-- ECRÃ 2: ÁREA DE JOGO -->
         <section id="tela-jogo" class="tela">
             <div class="game-container">
-                <!-- TOPO DO JOGO (85px) -->
+                <!-- TOPO DO JOGO (CONFORME IMAGEM) -->
                 <div class="game-topo">
-                    <div class="game-topo-items">
+                    <div class="game-topo-left">
                         <img id="ui-help-lamp" src="" alt="Ajuda">
-                        <div class="game-stats-box">Ronda: <span id="ui-ronda">0/0</span></div>
+                        <div class="round-pill"><span id="ui-ronda">1 / 10</span></div>
                     </div>
-                    <div class="game-topo-items">
-                        <div class="game-stats-box" style="color: #2BA886;">Certos: <span id="ui-certos">0</span></div>
-                        <div class="game-stats-box" style="color: #D54267;">Errados: <span id="ui-errados">0</span></div>
-                        <button class="btn-info-icon btn-trigger-info"><img class="img-info-src" src="" style="width: 45px; height: 45px;"></button>
+                    
+                    <div class="game-topo-right">
+                        <div class="stat-box box-success">✓ <span id="ui-certos">0</span></div>
+                        <div class="stat-box box-error">X <span id="ui-errados">0</span></div>
+                        <button class="btn-info-icon btn-trigger-info">
+                            <img class="img-info-src" src="" style="width: 45px; height: 45px;">
+                        </button>
                     </div>
                 </div>
-                <!-- MEIO DO JOGO (100% RESTANTE) -->
+
+                <!-- MEIO DO JOGO -->
                 <div class="game-meio" id="container-jogo-injetado">
                     <!-- O Jogo será injetado aqui -->
                 </div>
@@ -192,7 +223,7 @@
             root.style.setProperty('--cor-primaria', tema.corPrimaria);
             root.style.setProperty('--cor-primaria-alpha', tema.corPrimaria + '66');
 
-            // Textos Gerais
+            // Textos e Imagens
             document.getElementById("txt-titulo1").innerText = conteudo.t1;
             document.getElementById("txt-titulo2").innerText = conteudo.t2;
             document.getElementById("txt-subtitulo-header").innerText = conteudo.sub;
@@ -200,11 +231,9 @@
             document.getElementById("ui-nome-jogo-intro").innerText = config.nomeDoJogo;
             document.getElementById("ui-seta-voltar").src = config.caminhoIconsMenu + tema.voltarMobile;
             
-            // Iconografia do Jogo
             document.querySelectorAll(".img-info-src").forEach(img => img.src = config.caminhoIconsJogos + "inform.png");
             document.getElementById("ui-help-lamp").src = config.caminhoIconsJogos + "lampada.png";
             
-            // Info Page
             document.getElementById("info-game-title").innerText = config.nomeDoJogo;
             document.getElementById("info-instructions").innerText = config.descricao;
 
