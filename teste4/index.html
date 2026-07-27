@@ -15,6 +15,7 @@
         :root {
             --cor-pagina: #f0f0f0;
             --cor-primaria: #333;
+            --cor-primaria-alpha: rgba(0,0,0,0.1); /* Gerada via JS */
             --cor-escura: #000;
             --cor-texto: #5d7082;
             --text-grey: #8792a1;
@@ -23,13 +24,13 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            height: 100vh; /* Altura fixa do ecrã */
+            height: 100vh;
             display: flex;
             flex-direction: column;
             font-family: 'Fredoka', sans-serif;
             background-color: var(--cor-pagina);
             color: var(--cor-texto);
-            overflow: hidden; /* Evita scroll na página toda para o card caber certinho */
+            overflow: hidden;
         }
 
         /* ==========================================
@@ -73,7 +74,6 @@
         .menu-dropdown {
             position: fixed;
             top: -100%; left: 0; width: 100%;
-            background-color: transparent; 
             padding: 95px 20px 30px 20px;
             transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             z-index: 1000;
@@ -94,18 +94,18 @@
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.2); display: none; z-index: 900; backdrop-filter: blur(2px); }
 
         /* ==========================================
-           4. MAIN (ÁREA DO CARD EXPANDIDO)
+           4. MAIN (CARD COM LIMITE COLORIDO)
            ========================================== */
         main {
-            flex: 1; /* Ocupa todo o espaço restante */
+            flex: 1;
             display: flex;
             flex-direction: column;
-            padding: 15px; /* Espaçamento de 15px solicitado */
+            padding: 15px; /* Margem de 15px a toda a volta */
             overflow: hidden;
         }
 
         .card-intro {
-            flex: 1; /* Faz o card crescer para ocupar o main todo */
+            flex: 1;
             background: white;
             border-radius: 40px;
             display: flex;
@@ -114,10 +114,13 @@
             justify-content: center;
             text-align: center;
             padding: 40px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.04);
             width: 100%;
-            max-width: 1200px; /* Limite de largura para desktop */
+            max-width: 1200px;
             margin: 0 auto;
+            
+            /* LIMITE DISCRETO COM A COR DO TEMA */
+            border: 2px solid var(--cor-primaria-alpha); 
+            box-shadow: 0 0 25px var(--cor-primaria-alpha); 
         }
 
         .btn-jogar {
@@ -171,7 +174,7 @@
 
     <main>
         <section class="card-intro">
-            <h1 id="ui-nome-jogo" style="color: var(--cor-primaria); font-size: 3rem; margin-bottom: 15px;"></h1>
+            <h1 id="ui-nome-jogo" style="color: var(--cor-primaria); font-size: 3rem; margin-bottom: 10px;"></h1>
             <p id="ui-descricao" style="font-size: 1.4rem; color: var(--text-grey); max-width: 700px;"></p>
             <a href="jogo.html" class="btn-jogar">JOGAR</a>
         </section>
@@ -194,6 +197,10 @@
             root.style.setProperty('--cor-primaria', tema.corPrimaria);
             root.style.setProperty('--cor-escura', tema.corEscura);
             root.style.setProperty('--cor-texto', tema.corTexto);
+            
+            // Criar uma versão transparente da cor primária para a sombra/borda
+            // Adiciona '22' ao final do hex para ~13% de opacidade (discreto)
+            root.style.setProperty('--cor-primaria-alpha', tema.corPrimaria + '22');
 
             document.getElementById("txt-titulo1").innerText = conteudo.t1;
             document.getElementById("txt-titulo2").innerText = conteudo.t2;
