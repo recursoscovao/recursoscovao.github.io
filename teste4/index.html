@@ -14,23 +14,23 @@
             --cor-certo: #8CC63F; 
             --cor-errado: #FF5A5F;
             --cor-ajuda: #FFB041;
-            /* Tamanho unificado para os ícones Lâmpada e Info */
             --icon-stat-size: clamp(32px, 4.5dvh, 38px);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
-        /* LAYOUT 100% DA ALTURA */
+        /* 1. LAYOUT 100% E SCROLL GERAL */
         html, body { 
-            height: 100dvh; 
+            min-height: 100dvh; 
             display: flex; 
             flex-direction: column; 
             background: #f0f2f5; 
-            overflow: hidden; 
+            overflow-x: hidden;
+            overflow-y: auto; /* Scroll global permitido */
         }
         
         header { 
-            height: clamp(70px, 10dvh, 95px);
+            height: clamp(70px, 10dvh, 90px);
             background: white; border-radius: 0 0 35px 35px; 
             display: grid; grid-template-columns: 50px 1fr 50px; 
             align-items: center; padding: 0 20px; flex-shrink: 0; 
@@ -47,84 +47,91 @@
         .hamburger-btn { background: none; border: none; font-size: 28px; cursor: pointer; color: var(--cor-dinamica); }
         #icon-voltar-top { height: clamp(32px, 5dvh, 45px); cursor: pointer; justify-self: end; }
 
-        /* MENU HAMBURGUER (Ícones protegidos contra deformação) */
+        /* 2. MENU HAMBURGUER */
         .menu-dropdown { position: absolute; top: 90px; left: 20px; display: none; flex-direction: column; gap: 8px; z-index: 2000; width: 230px; }
         .menu-item { 
             display: flex; align-items: center; gap: 12px; height: 52px; padding: 0 15px; 
             text-decoration: none; color: #7b899b; font-weight: 800; background: white; 
             border-radius: 15px; box-shadow: 0 4px 10px rgba(0,0,0,0.08); font-size: 0.85rem; text-transform: uppercase; transition: 0.2s;
         }
-        .menu-item img { height: 28px; width: 28px; object-fit: contain; flex-shrink: 0; }
+        .menu-item img { height: 28px; width: 28px; object-fit: contain; }
         .menu-item:hover { background-color: var(--cor-dinamica) !important; color: white !important; }
 
-        /* MAIN EXPANSÍVEL (Ocupa o ecrã todo) */
+        /* 3. MAIN EXPANSÍVEL */
         main { 
             flex: 1; display: flex; flex-direction: column; 
             padding: clamp(10px, 2dvh, 20px); width: 100%; 
-            max-width: 1100px; margin: 0 auto; min-height: 0;
+            max-width: 1100px; margin: 0 auto; 
         }
 
         .game-container {
             width: 100%; flex: 1; display: flex; flex-direction: column;
             background: white; border-radius: 35px; border: 2px solid #fff;
             box-shadow: 0 10px 30px rgba(0,0,0,0.05); padding: clamp(10px, 2dvh, 20px);
-            position: relative; min-height: 0; overflow: hidden;
+            position: relative; min-height: 480px;
         }
 
-        .view-container { display: none; flex-direction: column; flex: 1; width: 100%; min-height: 0; }
+        .view-container { display: none; flex-direction: column; flex: 1; width: 100%; }
         .view-active { display: flex; }
 
-        .card-topo { flex-shrink: 0; padding-bottom: 10px; border-bottom: 2px solid #f8f9fa; margin-bottom: 10px; text-align: center; }
-        .card-topo h2 { color: var(--cor-dinamica); text-transform: uppercase; font-weight: 900; font-size: 1.3rem; }
-        
-        .card-meio { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; min-height: 0; }
-        .card-fundo { flex-shrink: 0; display: flex; align-items: center; gap: 15px; padding-top: 15px; justify-content: center; }
-
         /* BARRA DE STATUS */
-        .game-status-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: nowrap; }
-        .status-group { display: flex; align-items: center; gap: 10px; }
-        
+        .game-status-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: nowrap; margin-bottom: 10px; }
+        .status-group { display: flex; align-items: center; gap: 8px; }
         .stat-pill { 
-            height: var(--icon-stat-size); padding: 0 15px; border-radius: 12px; 
+            height: var(--icon-stat-size); padding: 0 12px; border-radius: 12px; 
             display: flex; align-items: center; justify-content: center; 
-            color: white; font-weight: 800; font-size: 0.9rem; min-width: 70px; 
+            color: white; font-weight: 800; font-size: 0.85rem; min-width: 65px; 
         }
         .pill-ronda { background-color: var(--cor-dinamica); }
         .pill-certo { background-color: var(--cor-certo); }
         .pill-errado { background-color: var(--cor-errado); }
 
+        /* ÍCONES STATUS */
         #img-lampada { height: var(--icon-stat-size); width: auto; cursor: pointer; object-fit: contain; }
         .btn-inform-img { height: clamp(45px, 6dvh, 60px); cursor: pointer; object-fit: contain; }
         .btn-inform-img-mini { height: var(--icon-stat-size); width: auto; cursor: pointer; object-fit: contain; }
 
-        /* GRELHA DO JOGO - CONFIGURAÇÃO PORTRAIT (VERTICAL) SOLICITADA */
+        /* 4. ÁREA DO JOGO (ESTILO IMAGEM) */
+        .game-area-wrapper {
+            display: flex; flex-direction: column; align-items: center; 
+            width: 100%; flex: 1; justify-content: center; gap: 15px;
+        }
+
+        .instruction-text { font-weight: 900; color: #1A499C; font-size: clamp(1rem, 2.5dvh, 1.3rem); text-align: center; }
+
+        .target-box {
+            width: clamp(100px, 18dvh, 130px);
+            height: clamp(80px, 14dvh, 100px);
+            background: white; border: 3px solid var(--cor-dinamica);
+            border-radius: 20px; display: flex; align-items: center; 
+            justify-content: center; padding: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+        }
+
+        /* GRELHA IGUAL À IMAGEM */
         .game-grid {
-            display: grid; gap: clamp(8px, 1.2dvh, 12px); width: 100%; flex: 1; min-height: 0;
-            grid-template-columns: repeat(4, 1fr); /* Desktop/Landscape */
-            grid-template-rows: auto;
+            display: grid; gap: 12px; width: 100%; max-width: 750px;
+            grid-template-columns: repeat(4, 1fr); /* PC/Landscape: 4 colunas, 2 linhas */
         }
 
         @media (orientation: portrait) {
             .game-grid { 
-                grid-template-columns: repeat(2, 1fr); /* 2 Colunas */
-                grid-template-rows: repeat(4, 1fr);    /* 4 Linhas */
-            }
-            .card-animal {
-                aspect-ratio: unset !important; /* REMOVE O QUADRADO PARA SER RETANGULAR */
-                height: 100%; 
+                grid-template-columns: repeat(2, 1fr); /* Telemóvel Vertical: 2 colunas, 4 linhas */
             }
         }
 
         .card-animal {
-            background: white; border: 2px solid #eee; border-radius: 15px;
-            aspect-ratio: 1 / 1; display: flex; align-items: center; 
-            justify-content: center; padding: 8px; cursor: pointer;
+            background: white; border: 2px solid #eee; border-radius: 18px;
+            height: clamp(75px, 13dvh, 110px); /* Forma retangular */
+            display: flex; align-items: center; justify-content: center; 
+            padding: 10px; cursor: pointer; transition: 0.2s;
             box-shadow: 0 4px 8px rgba(0,0,0,0.02);
         }
         .card-animal img { max-width: 90%; max-height: 90%; object-fit: contain; }
 
+        /* FOOTER */
         footer { height: clamp(35px, 5dvh, 45px); display: flex; align-items: center; justify-content: center; background: white; border-radius: 35px 35px 0 0; flex-shrink: 0; margin-top: auto; }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
+
         #info-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: white; z-index: 3000; display: none; flex-direction: column; padding: 30px; overflow-y: auto; }
         .btn-jogar { flex: 1; background: var(--cor-dinamica); color: white; padding: 16px; border-radius: 20px; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; font-size: 1.1rem; border: none; cursor: pointer; text-transform: uppercase; }
     </style>
@@ -147,8 +154,9 @@
 
     <main>
         <div class="game-container">
+            <!-- APRESENTAÇÃO -->
             <div id="view-apresentacao" class="view-container view-active">
-                <div class="card-topo"><h2 id="jogo-titulo"></h2></div>
+                <div class="card-topo" style="border:none"><h2 id="jogo-titulo"></h2></div>
                 <div class="card-meio" id="area-jogo-conteudo"></div>
                 <div class="card-fundo">
                     <img id="btn-inform-apres" class="btn-inform-img" alt="Info" onclick="toggleInfoScreen(true)">
@@ -156,23 +164,32 @@
                 </div>
             </div>
 
+            <!-- JOGO (ESTRUTURA IGUAL À IMAGEM) -->
             <div id="view-jogo" class="view-container">
-                <div class="card-topo">
-                    <div class="game-status-bar">
-                        <div class="status-group">
-                            <img id="img-lampada" src="" alt="Ajuda" onclick="if(typeof pedirAjuda === 'function') pedirAjuda()">
-                            <div class="stat-pill pill-ronda"><span id="ronda-atual">1</span> / 10</div>
-                        </div>
-                        <div class="status-group">
-                            <div class="stat-pill pill-certo"><i class="fas fa-check"></i> <span id="cont-certos-jogo">0</span></div>
-                            <div class="stat-pill pill-errado"><i class="fas fa-times"></i> <span id="cont-errados-jogo">0</span></div>
-                            <img id="btn-inform-jogo" class="btn-inform-img-mini" alt="Info" onclick="toggleInfoScreen(true)">
-                        </div>
+                <div class="game-status-bar">
+                    <div class="status-group">
+                        <img id="img-lampada" src="" alt="Ajuda" onclick="if(typeof pedirAjuda === 'function') pedirAjuda()">
+                        <div class="stat-pill pill-ronda"><span id="ronda-atual">1</span> / 10</div>
+                    </div>
+                    <div class="status-group">
+                        <div class="stat-pill pill-certo"><i class="fas fa-check"></i> <span id="cont-certos-jogo">0</span></div>
+                        <div class="stat-pill pill-errado"><i class="fas fa-times"></i> <span id="cont-errados-jogo">0</span></div>
+                        <img id="btn-inform-jogo" class="btn-inform-img-mini" alt="Info" onclick="toggleInfoScreen(true)">
                     </div>
                 </div>
-                <div class="card-meio" id="game-injection-point"></div>
+                
+                <div class="game-area-wrapper">
+                    <div class="instruction-text">Qual é igual?</div>
+                    <div id="target-container" class="target-box">
+                        <!-- Alvo injetado pelo jogo.js -->
+                    </div>
+                    <div id="game-injection-point" class="game-grid">
+                        <!-- Cartões injetados pelo jogo.js -->
+                    </div>
+                </div>
             </div>
 
+            <!-- RESULTADOS -->
             <div id="view-resultados" class="view-container">
                 <div class="card-topo"><h2>RESULTADOS</h2></div>
                 <div class="card-meio">
