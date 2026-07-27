@@ -16,14 +16,13 @@
             --cor-errado: #FF5A5F;
             --cor-ajuda: #FFB041;
             
-            /* Alturas adaptáveis */
             --header-h: clamp(65px, 10dvh, 90px);
             --footer-h: clamp(35px, 5dvh, 45px);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
-        /* 1. LAYOUT 100% ALTURA FIXA */
+        /* 1. LAYOUT 100% ALTURA FIXA SEM SCROLL NA PÁGINA */
         html, body { 
             width: 100%;
             height: 100dvh; 
@@ -58,7 +57,7 @@
         .hamburger-btn { background: none; border: none; font-size: clamp(22px, 3.5dvh, 28px); cursor: pointer; color: var(--cor-dinamica); }
         #icon-voltar-top { height: clamp(30px, 4.5dvh, 42px); width: auto; object-fit: contain; cursor: pointer; justify-self: end; }
 
-        /* 3. MAIN E CONTENTOR JOGO */
+        /* 3. MAIN E GAME-CONTAINER */
         main { 
             flex: 1; 
             min-height: 0; 
@@ -104,12 +103,12 @@
             background: #fdfdfd; 
             padding: 5px; 
             width: 100%;
-            overflow-y: auto; /* Scroll apenas aqui se as cartas não couberem */
+            overflow-y: auto; 
         }
         
         .card-fundo { flex-shrink: 0; display: flex; align-items: center; gap: 15px; padding-top: 15px; justify-content: center; }
 
-        /* BARRA DE STATUS (UMA LINHA) */
+        /* 4. BARRA DE STATUS (LINHA ÚNICA) */
         .game-status-bar { display: flex; justify-content: space-between; align-items: center; width: 100%; flex-wrap: nowrap; }
         .status-group { display: flex; align-items: center; gap: clamp(6px, 1.5vw, 10px); }
         .stat-pill { 
@@ -126,20 +125,18 @@
         .pill-errado { background-color: var(--cor-errado); }
         #img-lampada { height: clamp(30px, 4.2dvh, 36px); width: auto; cursor: pointer; }
 
-        /* BOTÃO INFORMAÇÃO (IMAGEM oinform.png) */
+        /* BOTÃO INFORMAÇÃO (IMAGEM inform.png) */
         .btn-inform-img { 
-            height: clamp(45px, 6dvh, 60px); /* Tamanho no ecrã inicial */
+            height: clamp(45px, 6dvh, 60px); 
             width: auto; 
             cursor: pointer; 
             transition: transform 0.2s; 
-            display: block;
         }
         .btn-inform-img-mini { 
-            height: clamp(30px, 4.2dvh, 36px); /* Tamanho dentro do jogo */
+            height: clamp(30px, 4.2dvh, 36px); 
             width: auto; 
             cursor: pointer; 
             transition: transform 0.2s; 
-            display: block;
         }
         .btn-inform-img:active, .btn-inform-img-mini:active { transform: scale(0.9); }
 
@@ -149,7 +146,7 @@
         .stat-card .num { font-size: clamp(1.5rem, 3dvh, 2rem); font-weight: 900; line-height: 1; margin-bottom: 4px; }
         .stat-card .label { font-size: 0.6rem; font-weight: 800; color: #8792a1; text-transform: uppercase; }
 
-        /* BOTÕES GERAIS */
+        /* BOTÕES */
         .btn-jogar { flex: 1; background: var(--cor-dinamica); color: white; padding: clamp(12px, 2.2dvh, 18px); border-radius: 18px; display: flex; align-items: center; justify-content: center; gap: 10px; font-weight: 900; font-size: 1.1rem; border: none; cursor: pointer; text-transform: uppercase; }
         .btn-secundario { background: #8792a1; }
 
@@ -162,7 +159,7 @@
         footer { height: var(--footer-h); display: flex; align-items: center; justify-content: center; background: white; border-radius: clamp(20px, 3vw, 35px) clamp(20px, 3vw, 35px) 0 0; flex-shrink: 0; }
         .footer-text { color: var(--text-grey); font-size: clamp(0.7rem, 1.4dvh, 0.85rem); font-weight: 700; }
 
-        /* MODAL INFO */
+        /* OVERLAY INFO */
         #info-screen { position: fixed; top: 0; left: 0; width: 100vw; height: 100dvh; background: white; z-index: 3000; display: none; flex-direction: column; padding: 30px; overflow-y: auto; }
     </style>
 </head>
@@ -190,7 +187,7 @@
                 <div class="card-topo"><h2 id="jogo-titulo"></h2></div>
                 <div class="card-meio" id="area-jogo-conteudo"></div>
                 <div class="card-fundo">
-                    <img id="btn-inform-apres" class="btn-inform-img" alt="Info" onclick="toggleInfoScreen(true)">
+                    <img id="btn-inform-apres" class="btn-inform-img" alt="Informação" onclick="toggleInfoScreen(true)">
                     <button class="btn-jogar" onclick="mudarEcra('jogo')"><i class="fas fa-play"></i> JOGAR</button>
                 </div>
             </div>
@@ -206,7 +203,7 @@
                         <div class="status-group">
                             <div class="stat-pill pill-certo"><i class="fas fa-check"></i> <span id="cont-certos-jogo">0</span></div>
                             <div class="stat-pill pill-errado"><i class="fas fa-times"></i> <span id="cont-errados-jogo">0</span></div>
-                            <img id="btn-inform-jogo" class="btn-inform-img-mini" alt="Info" onclick="toggleInfoScreen(true)">
+                            <img id="btn-inform-jogo" class="btn-inform-img-mini" alt="Informação" onclick="toggleInfoScreen(true)">
                         </div>
                     </div>
                 </div>
@@ -294,8 +291,8 @@
             document.getElementById('icon-voltar-top').src = pathIcons + tema.voltarMobile;
             document.getElementById('img-lampada').src = pathIcons + "lampada.png";
             
-            // ATRIBUIÇÃO DOS ÍCONES DE INFORMAÇÃO
-            const informIcon = pathIcons + "oinform.png";
+            // ATRIBUIÇÃO CORRETA DO inform.png (mesma pasta dos ícones e seta)
+            const informIcon = pathIcons + "inform.png";
             document.getElementById('btn-inform-apres').src = informIcon;
             document.getElementById('btn-inform-jogo').src = informIcon;
 
