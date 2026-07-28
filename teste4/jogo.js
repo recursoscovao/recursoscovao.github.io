@@ -1,11 +1,12 @@
 let rondaAtual = 1; const totalRondas = 10;
 let certos = 0, errados = 0, ajudasUsadas = 0, itemAlvo = null;
 
+// Gestão de Sons
 const tocarSom = (tipo) => {
     try {
         const audio = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons[tipo]);
         audio.play();
-    } catch(e) {}
+    } catch(e) { console.log("Erro ao tocar som"); }
 };
 
 function engineInit() {
@@ -16,8 +17,10 @@ function engineInit() {
 function carregarInstrucoes() {
     const area = document.getElementById("ui-area-instrucoes");
     const ins = JOGO_CONFIG.instrucoes;
+    if(!area || !ins) return;
+
     area.innerHTML = `
-        <div style="border-left: 6px solid var(--cor-primaria); padding-left: 15px; margin-bottom: 40px;">
+        <div style="border-left:6px solid var(--cor-primaria); padding-left:15px; margin-bottom:40px;">
             <h2 style="margin:0; font-size:1.6rem; text-transform:uppercase;">Objetivo do jogo</h2>
             <p style="margin-top:10px; font-size:1.1rem;">${ins.objetivo}</p>
         </div>
@@ -27,6 +30,10 @@ function carregarInstrucoes() {
         <ul style="list-style:none; padding:0;">${ins.regras.map(r => `<li style="margin-bottom:12px; display:flex; gap:10px; font-size:1.1rem;">• ${r}</li>`).join('')}</ul>
         <h2 style="color:var(--cor-primaria); text-transform:uppercase; font-size:1.3rem; margin-top:35px; margin-bottom:15px;">Dicas</h2>
         <p style="line-height:1.5; font-size:1.1rem; margin-bottom:40px;">${ins.dicas}</p>
+        <div style="background:#f9f9f9; padding:25px; border-radius:20px; border:1px solid #eee;">
+            <h2 style="margin:0 0 10px 0; font-size:1.1rem; text-transform:uppercase;">O que vais desenvolver?</h2>
+            <ul style="list-style:none; padding:0;">${ins.desenvolvimento.map(d => `<li style="margin-bottom:5px; font-size:1rem;">• ${d}</li>`).join('')}</ul>
+        </div>
     `;
 }
 
@@ -36,9 +43,9 @@ function renderIntro() {
     const path = DADOS_JOGO.caminhoImagens;
     container.innerHTML = `
         <div style="height:85px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <h1 style="font-size:1.1rem; font-weight:900; color:var(--cor-primaria); text-transform:uppercase; text-align:center;">${JOGO_CONFIG.nomeDoJogo}</h1>
+            <h1 style="font-size:1.1rem; font-weight:900; color:var(--cor-primaria); text-transform:uppercase; text-align:center; padding:0 20px;">${JOGO_CONFIG.nomeDoJogo}</h1>
         </div>
-        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; gap:20px;">
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; gap:20px; min-height:0;">
             <div style="border:3px solid var(--cor-primaria); border-radius:20px; padding:15px; background:white; width:120px; height:120px; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(0,0,0,0.05);">
                 <img src="${path}${item.img}" style="height:65%; object-fit:contain;">
             </div>
@@ -49,9 +56,9 @@ function renderIntro() {
                 <div style="width:70px; height:70px; background:white; border:2px solid #eee; border-radius:15px; display:flex; align-items:center; justify-content:center;"><img src="${path}${DADOS_JOGO.itens[2].img}" style="height:60%;"></div>
             </div>
         </div>
-        <div style="height:85px; display:flex; align-items:center; padding:0 30px; gap:20px; border-top:1px solid #f2f2f2;">
+        <div style="height:85px; display:flex; align-items:center; padding:0 30px; gap:20px; border-top:1px solid #f2f2f2; flex-shrink:0;">
             <img src="${JOGO_CONFIG.caminhoIconsJogos}inform.png" width="55" style="cursor:pointer;" onclick="document.getElementById('page-info').classList.add('active')">
-            <button onclick="irParaJogo()" style="flex:1; background:var(--cor-primaria); color:white; border:none; padding:15px; border-radius:50px; font-weight:900; font-size:1.5rem; cursor:pointer;">JOGAR</button>
+            <button onclick="irParaJogo()" style="flex:1; background:var(--cor-primaria); color:white; border:none; padding:15px; border-radius:50px; font-weight:900; font-size:1.5rem; cursor:pointer; text-transform:uppercase;">JOGAR</button>
         </div>
     `;
 }
@@ -78,7 +85,7 @@ function renderGameContent() {
                 <img src="${JOGO_CONFIG.caminhoIconsJogos}inform.png" width="35" style="cursor:pointer;" onclick="document.getElementById('page-info').classList.add('active')">
             </div>
         </div>
-        <div id="game-grid" style="flex:1; display:grid; gap:10px; padding:15px; align-content:center; justify-content:center;"></div>
+        <div id="game-grid" style="flex:1; display:grid; gap:10px; padding:15px; align-content:center; justify-content:center; min-height:0; width:100%;"></div>
     `;
 }
 
@@ -101,12 +108,12 @@ function proximaRonda() {
     const opcaoH = isPortrait ? "70px" : "85px";
 
     grid.innerHTML = `
-        <div style="grid-column: 1 / -1; justify-self: center; height: ${destaqueH}; aspect-ratio: 1/1; background: white; border: 4px solid var(--cor-primaria); border-radius: 20px; display: flex; align-items: center; justify-content: center; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05);">
+        <div style="grid-column: 1 / -1; justify-self: center; height: ${destaqueH}; aspect-ratio: 1/1; background: white; border: 4px solid var(--cor-primaria); border-radius: 20px; display: flex; align-items: center; justify-content: center; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom:5px;">
             <img src="${DADOS_JOGO.caminhoImagens}${itemAlvo.img}" style="height: 60%; width: auto; object-fit: contain;">
         </div>
         ${opcoes.map(item => `
-            <div class="card-opcao" onclick="verificar(this, ${item.id})" style="background: white; border: 2px solid #eee; border-radius: 15px; display: flex; align-items: center; justify-content: center; height: ${opcaoH}; cursor: pointer;">
-                <img src="${DADOS_JOGO.caminhoImagens}${item.img}" style="height: 55%; width: auto; object-fit: contain;">
+            <div class="card-opcao" onclick="verificar(this, ${item.id})" style="background: white; border: 2px solid #eee; border-radius: 15px; display: flex; align-items: center; justify-content: center; height: ${opcaoH}; cursor: pointer; transition: 0.2s;">
+                <img src="${DADOS_JOGO.caminhoImagens}${item.img}" style="height: 60%; width: auto; object-fit: contain;">
             </div>
         `).join('')}
     `;
@@ -115,19 +122,20 @@ function proximaRonda() {
 function verificar(el, id) {
     if (document.querySelector('.bloqueio')) return;
     document.querySelectorAll('.card-opcao').forEach(c => c.style.pointerEvents = "none");
+    document.body.classList.add('bloqueio');
 
     if (id === itemAlvo.id) {
         tocarSom('acerto');
         el.style.background = "#eef9e5"; el.style.borderColor = "#8cc63f";
         certos++;
-        setTimeout(() => { rondaAtual++; proximaRonda(); }, 1000);
+        setTimeout(() => { document.body.classList.remove('bloqueio'); rondaAtual++; proximaRonda(); }, 1000);
     } else {
         tocarSom('erro');
         el.style.background = "#ffebeb"; el.style.borderColor = "#ff5a5f";
         errados++;
         const oCorreto = Array.from(document.querySelectorAll('.card-opcao')).find(c => c.innerHTML.includes(itemAlvo.img));
         if (oCorreto) { oCorreto.style.boxShadow = "0 0 15px #8cc63f"; oCorreto.style.borderColor = "#8cc63f"; }
-        setTimeout(() => { rondaAtual++; proximaRonda(); }, 1800);
+        setTimeout(() => { document.body.classList.remove('bloqueio'); rondaAtual++; proximaRonda(); }, 1800);
     }
 }
 
