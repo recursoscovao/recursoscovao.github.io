@@ -1,1 +1,80 @@
+/* --- BASE --- */
+:root {
+    --cor-pagina: #f0f0f0;
+    --cor-primaria: #333;
+    --cor-primaria-alpha: rgba(0,0,0,0.4);
+    --text-grey: #8792a1;
+}
 
+* { margin: 0; padding: 0; box-sizing: border-box; }
+html, body { height: 100vh; width: 100vw; overflow: hidden; position: fixed; }
+body { display: flex; flex-direction: column; font-family: 'Fredoka', sans-serif; background-color: var(--cor-pagina); }
+
+/* --- HEADER (85px) --- */
+header {
+    height: 85px; background: white; display: flex; align-items: center; padding: 0 20px;
+    border-bottom-left-radius: 35px; border-bottom-right-radius: 35px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.06); z-index: 1100; flex-shrink: 0;
+}
+.header-flex { display: flex; justify-content: space-between; align-items: center; width: 100%; }
+.header-center { display: flex; align-items: center; gap: 12px; }
+#header-icon { height: 60px; width: 60px; object-fit: contain; }
+.title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
+#txt-titulo1 { font-weight: 900; font-size: 1.5rem; color: var(--cor-primaria); }
+#txt-titulo2 { font-weight: 800; font-size: 1.2rem; color: var(--text-grey); }
+#txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.6rem; margin-top: 4px; }
+
+.btn-menu { background: none; border: none; cursor: pointer; width: 45px; }
+.btn-menu div { width: 28px; height: 4px; background-color: var(--cor-primaria); border-radius: 10px; margin: 4px 0; }
+.btn-voltar-topo img { height: 45px; }
+
+/* --- MENUS --- */
+.menu-dropdown { 
+    position: fixed; top: 0; left: 0; width: 100%; height: auto;
+    padding: 100px 20px 30px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px;
+    transform: translateY(-120%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.menu-dropdown.active { transform: translateY(0); }
+.menu-btn-item { 
+    width: 270px; height: 45px; background: white; display: flex; align-items: center; gap: 12px; 
+    padding: 0 18px; text-decoration: none; color: #5d7082; border-radius: 18px; 
+    font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #f2f2f2; 
+}
+
+.info-full-page { 
+    position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; 
+    background: white; z-index: 2000; transition: bottom 0.5s ease-in-out; 
+    display: flex; flex-direction: column; 
+}
+.info-full-page.active { bottom: 0; }
+.overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.35); display: none; z-index: 900; backdrop-filter: blur(2px); }
+
+/* --- TELAS E JOGO --- */
+main { flex: 1; padding: 15px; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
+
+.tela { 
+    width: 100%; height: 100%; background: white; border-radius: 40px; 
+    border: 3px solid var(--cor-primaria-alpha); box-shadow: 0 0 25px var(--cor-primaria-alpha);
+    margin: 0 auto; max-width: 1100px; overflow: hidden; display: flex; flex-direction: column;
+    animation: fadeIn 0.4s ease;
+}
+
+#game-grid-container {
+    flex: 1; display: grid; gap: 10px; padding: 15px; align-content: center; justify-content: center;
+}
+
+/* Regras de Grelha Inteligente */
+@media (orientation: portrait) {
+    #game-grid-container { grid-template-columns: repeat(2, 1fr); grid-template-rows: 1.2fr repeat(4, 1fr); }
+}
+@media (orientation: landscape) {
+    #game-grid-container { grid-template-columns: repeat(4, 1fr); grid-template-rows: 1.4fr 1fr 1fr; }
+}
+
+.card-opcao { background: white; border: 2px solid #eee; border-radius: 15px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; height: 100%; }
+.card-opcao img { height: 55%; width: auto; object-fit: contain; }
+
+/* --- FOOTER --- */
+footer { height: 40px; background: white; color: var(--text-grey); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; border-top-left-radius: 30px; border-top-right-radius: 30px; box-shadow: 0 -4px 15px rgba(0,0,0,0.06); flex-shrink: 0; }
+
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
