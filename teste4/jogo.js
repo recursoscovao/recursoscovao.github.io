@@ -6,41 +6,35 @@ let ajudasUsadas = 0;
 let itemAlvo = null;
 
 // ==========================================
-// 1. INSTRUÇÕES (INJETADAS PELO SCRIPT)
+// 1. INSTRUÇÕES ORGANIZADAS
 // ==========================================
 function carregarInstrucoes() {
     const infoContainer = document.getElementById("info-instructions");
     if (!infoContainer) return;
 
     infoContainer.innerHTML = `
-        <h2>Objetivo do Jogo</h2>
-        <p>Observa atentamente o animal apresentado no topo do ecrã e encontra a imagem igual entre as várias opções. Clica ou toca no animal correto para avançares para a ronda seguinte.</p>
+        <div style="border-left: 5px solid var(--cor-primaria); padding-left: 15px; margin-bottom: 25px;">
+            <h2 style="margin:0; font-size: 1.8rem;">Objetivo</h2>
+            <p style="margin-top:5px;">Encontra o animal idêntico ao modelo em destaque no topo.</p>
+        </div>
         
-        <h2>Como Jogar</h2>
-        <ul>
-            <li>Observa o animal que aparece no topo do ecrã.</li>
-            <li>Analisa todas as imagens apresentadas.</li>
-            <li>Encontra a imagem exatamente igual ao modelo.</li>
-            <li>Clica ou toca no animal correto.</li>
-            <li>Se acertares, passas para a próxima ronda.</li>
-            <li>Se errares, tenta novamente até encontrares o par correto.</li>
-            <li>Completa as 10 rondas e descobre a tua pontuação final.</li>
+        <h3 style="color: var(--cor-primaria); text-transform: uppercase; font-size: 1.1rem; margin-bottom: 10px;">➔ Como Jogar</h3>
+        <ul style="list-style: none; padding: 0;">
+            <li style="margin-bottom: 10px; display: flex; gap: 10px;"><strong>1.</strong> Observa o animal no topo do ecrã.</li>
+            <li style="margin-bottom: 10px; display: flex; gap: 10px;"><strong>2.</strong> Analisa as 8 opções na grelha abaixo.</li>
+            <li style="margin-bottom: 10px; display: flex; gap: 10px;"><strong>3.</strong> Clica na imagem exatamente igual.</li>
+            <li style="margin-bottom: 10px; display: flex; gap: 10px;"><strong>4.</strong> Acerta 10 rondas para terminar!</li>
         </ul>
 
-        <h2>Regras</h2>
-        <p>Existe apenas uma resposta correta em cada ronda. Observa com atenção antes de responder. Não há limite de tempo. O objetivo é acertar no maior número possível de respostas.</p>
+        <h3 style="color: var(--cor-primaria); text-transform: uppercase; font-size: 1.1rem; margin: 20px 0 10px 0;">➔ Regras e Dicas</h3>
+        <p>• Apenas uma resposta está correta.<br>
+           • Observa as <strong>cores, formas e detalhes</strong> (orelhas, patas, cauda).<br>
+           • Não há pressa! O importante é não errar.</p>
         
-        <h2>Dicas</h2>
-        <p>Observa cuidadosamente: a forma do animal, as cores e os detalhes (orelhas, patas, asas, cauda, etc.). Alguns animais podem ser muito parecidos. Escolhe apenas o que é exatamente igual ao modelo.</p>
-        
-        <h2>O que vais desenvolver?</h2>
-        <ul>
-            <li>Atenção e concentração</li>
-            <li>Memória visual</li>
-            <li>Capacidade de observação</li>
-            <li>Rapidez de identificação</li>
-            <li>Discriminação visual</li>
-        </ul>
+        <div style="background: var(--cor-pagina); padding: 15px; border-radius: 15px; margin-top: 25px;">
+            <h3 style="margin:0 0 10px 0; font-size: 1rem;">O que vais desenvolver?</h3>
+            <p style="font-size: 0.95rem; margin:0;">Atenção, Memória Visual, Concentração e Discriminação Visual.</p>
+        </div>
     `;
 }
 
@@ -58,7 +52,7 @@ function iniciarTutorialVisual() {
 
     container.innerHTML = `
         <div class="tut-alvo"><img src="${caminho}${item1.img}"></div>
-        <div style="font-size: 0.8rem; font-weight: 800; color: #8792a1;">ENCONTRA O IGUAL</div>
+        <div style="font-size: 0.8rem; font-weight: 800; color: #8792a1; letter-spacing:1px;">ENCONTRA O IGUAL</div>
         <div class="tut-grid">
             <div class="tut-card"><img src="${caminho}${item2.img}"></div>
             <div class="tut-card alvo-simulado"><img src="${caminho}${item1.img}"></div>
@@ -124,8 +118,8 @@ document.getElementById("ui-help-lamp").onclick = () => {
     const cards = Array.from(document.querySelectorAll('.card-opcao'));
     const correto = cards.find(c => c.innerHTML.includes(itemAlvo.img));
     if (correto) {
-        correto.style.boxShadow = "0 0 20px gold";
-        correto.style.transform = "scale(1.1)";
+        correto.style.boxShadow = "0 0 25px gold";
+        correto.style.transform = "scale(1.05)";
         setTimeout(() => { correto.style.boxShadow = ""; correto.style.transform = ""; }, 1500);
     }
 };
