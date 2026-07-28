@@ -6,14 +6,35 @@
     <title>Pequenos Curiosos</title>
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;900&display=swap" rel="stylesheet">
     <style>
-        :root { --cor-pagina: #f0f0f0; --cor-primaria: #333; --cor-primaria-alpha: rgba(0,0,0,0.2); --text-grey: #8792a1; }
+        /* ==========================================
+           1. VARIÁVEIS E BASE (APP LAYOUT)
+           ========================================== */
+        :root {
+            --cor-pagina: #f0f0f0; --cor-primaria: #333; --cor-primaria-alpha: rgba(0,0,0,0.4); 
+            --cor-escura: #000; --cor-texto: #5d7082; --text-grey: #8792a1;
+        }
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        html, body { height: 100%; width: 100%; overflow: hidden; position: fixed; }
-        body { display: flex; flex-direction: column; font-family: 'Fredoka', sans-serif; background-color: var(--cor-pagina); }
+        
+        /* BLOQUEIO DE SCROLL TOTAL */
+        html, body { height: 100vh; width: 100%; overflow: hidden; position: fixed; }
 
-        header { height: 85px; background: white; display: flex; align-items: center; padding: 0 20px; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); z-index: 1100; flex-shrink: 0; position: relative; }
+        body { 
+            display: flex; 
+            flex-direction: column; 
+            font-family: 'Fredoka', sans-serif; 
+            background-color: var(--cor-pagina); 
+        }
+
+        /* ==========================================
+           2. HEADER (85px)
+           ========================================== */
+        header {
+            height: 85px; background: white; display: flex; align-items: center; padding: 0 20px;
+            border-bottom-left-radius: 35px; border-bottom-right-radius: 35px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06); z-index: 1100; flex-shrink: 0; position: relative;
+        }
         .header-flex { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .header-center { display: flex; align-items: center; gap: 12px; }
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         #header-icon { height: 60px; width: 60px; object-fit: contain; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         #txt-titulo1 { font-weight: 900; font-size: 1.5rem; color: var(--cor-primaria); }
@@ -23,25 +44,66 @@
         .btn-menu div { width: 28px; height: 4px; background-color: var(--cor-primaria); border-radius: 10px; margin: 4px 0; }
         .btn-voltar-topo img { height: 45px; }
 
-        .menu-dropdown { position: fixed; top: 0; left: 0; width: 100%; height: auto; padding: 100px 20px 30px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; transform: translateY(-120%); transition: transform 0.5s; background: transparent; }
+        /* ==========================================
+           3. MENU HAMBURGUER (TRANSPARENTE / BOTÕES 45PX)
+           ========================================== */
+        .menu-dropdown { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            padding: 100px 20px 30px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
+            transform: translateY(-120%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent !important;
+        }
         .menu-dropdown.active { transform: translateY(0); }
-        .menu-btn-item { width: 270px; height: 45px; background: white; display: flex; align-items: center; gap: 12px; padding: 0 18px; text-decoration: none; color: #5d7082; border-radius: 18px; font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #f2f2f2; }
-        .menu-btn-item img { width: 30px; height: 30px; object-fit: contain; }
+        .menu-btn-item { 
+            width: 270px; height: 45px; background: white; display: flex; align-items: center; gap: 12px; padding: 0 18px; 
+            text-decoration: none; color: var(--cor-texto); border-radius: 18px; 
+            font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #f2f2f2; 
+        }
+        .menu-btn-item img { width: 32px; height: 32px; object-fit: contain; }
 
-        .info-full-page { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; transition: bottom 0.5s; display: flex; flex-direction: column; }
+        /* PÁGINA DE INFO */
+        .info-full-page { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; transition: bottom 0.5s ease-in-out; display: flex; flex-direction: column; }
         .info-full-page.active { bottom: 0; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.35); display: none; z-index: 900; backdrop-filter: blur(2px); }
 
-        main { flex: 1; padding: 15px; display: flex; flex-direction: column; min-height: 0; overflow: hidden; }
-        .tela { display: none; width: 100%; height: 100%; background: white; border-radius: 40px; border: 3px solid var(--cor-primaria-alpha); box-shadow: 0 0 30px var(--cor-primaria-alpha); margin: 0 auto; max-width: 1100px; overflow: hidden; flex-direction: column; }
+        /* ==========================================
+           4. MAIN (SCROLL INTERNO)
+           ========================================== */
+        main { 
+            flex: 1; 
+            padding: 15px; 
+            display: flex; 
+            flex-direction: column; 
+            overflow-y: auto; /* Scroll apenas aqui */
+            align-items: center; /* Centra o jogo horizontalmente */
+            justify-content: center; /* Centra o jogo verticalmente */
+        }
+
+        .tela {
+            display: none; width: 100%; min-height: 100%; flex-direction: column; 
+            background: white; border-radius: 40px; 
+            border: 3px solid var(--cor-primaria-alpha); box-shadow: 0 0 30px var(--cor-primaria-alpha);
+            margin: auto; max-width: 1100px; overflow: hidden;
+        }
         .active-tela { display: flex !important; }
 
-        footer { height: 40px; background: white; color: var(--text-grey); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; border-top-left-radius: 30px; border-top-right-radius: 30px; box-shadow: 0 -4px 15px rgba(0,0,0,0.06); flex-shrink: 0; }
+        /* ==========================================
+           5. FOOTER (BRANCO, 40PX, ARREDONDADO TOPO)
+           ========================================== */
+        footer { 
+            height: 40px; background: white; color: var(--text-grey); 
+            display: flex; align-items: center; justify-content: center; 
+            font-size: 0.85rem; flex-shrink: 0;
+            border-top-left-radius: 30px; border-top-right-radius: 30px; 
+            box-shadow: 0 -4px 15px rgba(0,0,0,0.06);
+        }
     </style>
 </head>
 <body>
+
     <div id="overlay" class="overlay"></div>
     <nav id="menu-dropdown" class="menu-dropdown"></nav>
+
     <div id="page-info" class="info-full-page">
         <header style="height:85px; display:flex; align-items:center; justify-content:space-between; padding:0 25px; border-bottom:1px solid #eee; flex-shrink:0;">
             <span style="font-weight:900; font-size:1.5rem; color:var(--cor-primaria);">INFORMAÇÃO</span>
@@ -53,7 +115,12 @@
     <header>
         <div class="header-flex">
             <button class="btn-menu" id="btn-abrir-menu"><div></div><div></div><div></div></button>
-            <div class="header-center"><img id="header-icon" src=""><div class="title-group"><span id="txt-titulo1"></span><span id="txt-titulo2"></span><span id="txt-subtitulo-header"></span></div></div>
+            <div class="header-center">
+                <img id="header-icon" src="">
+                <div class="title-group">
+                    <span id="txt-titulo1"></span><span id="txt-titulo2"></span><span id="txt-subtitulo-header"></span>
+                </div>
+            </div>
             <a href="javascript:history.back()" class="btn-voltar-topo"><img id="ui-seta-voltar" src=""></a>
         </div>
     </header>
@@ -70,17 +137,16 @@
     <script src="jogo.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            if (typeof JOGO_CONFIG === 'undefined') {
-                alert("Erro: dados.js não carregado!");
-                return;
-            }
             const config = JOGO_CONFIG; const tema = BIBLIOTECA_TEMAS[config.areaAtiva]; const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
             const root = document.documentElement;
             root.style.setProperty('--cor-pagina', tema.corPagina); root.style.setProperty('--cor-primaria', tema.corPrimaria); root.style.setProperty('--cor-primaria-alpha', tema.corPrimaria + '66');
-            document.getElementById("txt-titulo1").innerText = conteudo.t1; document.getElementById("txt-titulo2").innerText = conteudo.t2; document.getElementById("txt-subtitulo-header").innerText = conteudo.sub;
-            document.getElementById("ui-rodape").innerHTML = conteudo.rodape; document.getElementById("ui-seta-voltar").src = config.caminhoIconsMenu + tema.voltarMobile;
-            const itemAno = config.menuItens.find(item => item.id === config.anoAtivo);
-            if (itemAno) document.getElementById("header-icon").src = config.caminhoIconsMenu + itemAno.icon;
+
+            document.getElementById("txt-titulo1").innerText = conteudo.t1;
+            document.getElementById("txt-titulo2").innerText = conteudo.t2;
+            document.getElementById("txt-subtitulo-header").innerText = conteudo.sub;
+            document.getElementById("ui-rodape").innerHTML = conteudo.rodape;
+            document.getElementById("ui-seta-voltar").src = config.caminhoIconsMenu + tema.voltarMobile;
+            if (config.menuItens.find(i => i.id === config.anoAtivo)) document.getElementById("header-icon").src = config.caminhoIconsMenu + config.menuItens.find(i => i.id === config.anoAtivo).icon;
 
             const menuDiv = document.getElementById("menu-dropdown");
             config.menuItens.forEach(item => {
@@ -90,9 +156,15 @@
                 menuDiv.appendChild(link);
             });
 
-            document.getElementById("btn-abrir-menu").onclick = () => { const act = menuDiv.classList.toggle("active"); document.getElementById("overlay").style.display = act ? "block" : "none"; };
-            document.querySelector(".btn-close-info").onclick = () => document.getElementById("page-info").classList.remove("active");
-            document.getElementById("overlay").onclick = () => { menuDiv.classList.remove("active"); document.getElementById("page-info").classList.remove("active"); document.getElementById("overlay").style.display = "none"; };
+            const btnMenu = document.getElementById("btn-abrir-menu");
+            const overlay = document.getElementById("overlay");
+            const pageInfo = document.getElementById("page-info");
+
+            const closeAll = () => { menuDiv.classList.remove("active"); pageInfo.classList.remove("active"); overlay.style.display = "none"; };
+            btnMenu.onclick = () => { const act = menuDiv.classList.toggle("active"); overlay.style.display = act ? "block" : "none"; };
+            overlay.onclick = closeAll;
+            document.querySelector(".btn-close-info").onclick = closeAll;
+            menuDiv.onclick = (e) => { if(e.target === menuDiv) closeAll(); };
 
             if(typeof engineInit === 'function') engineInit();
         });
