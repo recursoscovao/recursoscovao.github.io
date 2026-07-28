@@ -1,1 +1,58 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pequenos Curiosos</title>
+    
+    <!-- Link para o CSS Externo -->
+    <link rel="stylesheet" href="style.css">
+    <!-- Fonte Fredoka -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+</head>
+<body>
 
+    <div id="overlay" class="overlay"></div>
+    <nav id="menu-dropdown" class="menu-dropdown"></nav>
+
+    <!-- Página de Informações -->
+    <div id="page-info" class="info-full-page">
+        <header class="info-header">
+            <span id="ui-info-title">INFORMAÇÃO</span>
+            <button class="btn-close-info">X</button>
+        </header>
+        <div class="info-body" id="ui-area-instrucoes"></div>
+    </div>
+
+    <!-- Header Fixo -->
+    <header>
+        <div class="header-flex">
+            <button class="btn-menu" id="btn-abrir-menu"><div></div><div></div><div></div></button>
+            <div class="header-center">
+                <img id="header-icon" src="" alt="Icone">
+                <div class="title-group">
+                    <span id="txt-titulo1"></span>
+                    <span id="txt-titulo2"></span>
+                    <span id="txt-subtitulo-header"></span>
+                </div>
+            </div>
+            <div class="header-right">
+                <a href="javascript:history.back()" class="btn-voltar-topo">
+                    <img id="ui-seta-voltar" src="" alt="Voltar">
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Motor do Jogo (Onde tudo acontece) -->
+    <main id="game-engine"></main>
+
+    <!-- Footer Fixo -->
+    <footer>
+        <div id="ui-rodape"></div>
+    </footer>
+
+    <!-- Script Principal (que agora contém os dados e a lógica) -->
+    <script src="script.js"></script>
+</body>
+</html>
