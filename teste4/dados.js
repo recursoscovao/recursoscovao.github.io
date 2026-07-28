@@ -61,7 +61,7 @@ const BIBLIOTECA_CONTEUDO = {
 // ==========================================
 const JOGO_CONFIG = {
     nomeDoJogo: "Encontrar o Par: Animais",
-    descricao: "Olha com atenção para as imagens e encontra os pares de animais domésticos!",
+    descricao: "Identifica o animal igual ao modelo em destaque!",
     
     areaAtiva: "pre",   // "portugues", "matematica", "estudo", "pre", "jd"
     anoAtivo: "pre",    // "pre", "ano1", "ano2", "ano3", "ano4"
@@ -78,6 +78,34 @@ const JOGO_CONFIG = {
         { id: "ano4", label: "4º Ano", icon: "icon4.png", link: "../4" },
         { id: "voltar", label: "Voltar", icon: "AUTO", link: "javascript:history.back()" } 
     ],
+
+    // ESPAÇO PARA INSTRUÇÕES DETALHADAS
+    instrucoes: {
+        objetivo: "Observa atentamente o animal apresentado no topo do ecrã e encontra a imagem igual entre as várias opções. Clica ou toca no animal correto para avançares para a ronda seguinte.",
+        comoJogar: [
+            "Observa o animal que aparece no topo do ecrã.",
+            "Analisa todas as imagens apresentadas.",
+            "Encontra a imagem exatamente igual ao modelo.",
+            "Clica ou toca no animal correto.",
+            "Se acertares, passas para a próxima ronda.",
+            "Se errares, tenta novamente até encontrares o par correto.",
+            "Completa as 10 rondas e descobre a tua pontuação final."
+        ],
+        regras: [
+            "Existe apenas uma resposta correta em cada ronda.",
+            "Observa com atenção antes de responder.",
+            "Não há limite de tempo.",
+            "O objetivo é acertar no maior número possível de respostas."
+        ],
+        dicas: "Observa cuidadosamente a forma do animal, as cores e os detalhes (orelhas, patas, asas, cauda, etc.). Alguns animais podem ser muito parecidos. Escolhe apenas o que é exatamente igual ao modelo.",
+        desenvolvimento: [
+            "Atenção e concentração",
+            "Memória visual",
+            "Capacidade de observação",
+            "Rapidez de identificação",
+            "Discriminação visual"
+        ]
+    },
 
     relatorios: [
         { min: 9, max: 10, titulo: "És um craque!", img: "taca_1.png" },
