@@ -30,7 +30,7 @@
         }
         .header-flex { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .header-center { display: flex; align-items: center; gap: 12px; }
-        #header-icon { height: 65px; width: 65px; object-fit: contain; }
+        #header-icon { height: 70px; width: 70px; object-fit: contain; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         #txt-titulo1 { font-weight: 900; font-size: 1.65rem; color: var(--cor-primaria); }
         #txt-titulo2 { font-weight: 800; font-size: 1.4rem; color: var(--text-grey); }
@@ -40,12 +40,13 @@
         .btn-voltar-topo img { height: 45px; }
 
         /* ==========================================
-           3. MENUS (DROPDOWN E INFO)
+           3. MENUS
            ========================================== */
         .menu-dropdown { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             padding: 100px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
             transform: translateY(-110%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent;
         }
         .menu-dropdown.active { transform: translateY(0); }
         .menu-btn-item { width: 270px; background: white; display: flex; align-items: center; gap: 12px; padding: 8px 18px; text-decoration: none; color: var(--cor-texto); border-radius: 18px; font-weight: 600; font-size: 1.05rem; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border: 1px solid #f2f2f2; transition: 0.3s; }
@@ -57,12 +58,7 @@
         .info-header { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; border-bottom: 2px solid var(--cor-pagina); }
         .info-header span { font-weight: 900; font-size: 1.5rem; color: var(--cor-primaria); text-transform: uppercase; }
         .btn-close-info { background: var(--cor-pagina); border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.5rem; font-weight: 900; color: var(--cor-primaria); cursor: pointer; }
-        
         .info-body { flex: 1; padding: 30px 25px; overflow-y: auto; text-align: left; color: var(--cor-texto); }
-        .info-body h2 { font-size: 1.6rem; color: var(--cor-primaria); margin-top: 20px; margin-bottom: 10px; border-bottom: 1px solid #eee; }
-        .info-body p, .info-body li { font-size: 1.05rem; line-height: 1.4; margin-bottom: 8px; }
-        .info-body ul { margin-left: 20px; margin-bottom: 15px; }
-
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: none; z-index: 900; backdrop-filter: blur(2px); }
 
         /* ==========================================
@@ -84,16 +80,14 @@
         #ui-nome-jogo-intro { font-size: clamp(1.4rem, 4vw, 2.2rem); font-weight: 900; color: var(--cor-primaria); text-align: center; text-transform: uppercase; }
         .intro-meio { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
         #container-animacao-tutorial { position: relative; width: 100%; max-width: 400px; height: 260px; background: #fafafa; border-radius: 25px; border: 2px dashed #eee; display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 15px; overflow: hidden; }
-        
         .tut-alvo { width: 70px; height: 70px; background: white; border: 3px solid var(--cor-primaria); border-radius: 15px; display: flex; align-items: center; justify-content: center; }
         .tut-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .tut-card { width: 60px; height: 60px; background: white; border: 2px solid #eee; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
-        .tut-card img, .tut-alvo img { width: 80%; height: 80%; object-fit: contain; }
+        .tut-card img, .tut-alvo img { height: 75%; width: auto; object-fit: contain; }
         .tut-mao { position: absolute; width: 40px; z-index: 10; bottom: 10px; right: 20%; pointer-events: none; animation: animarMao 3s infinite ease-in-out; }
         @keyframes animarMao { 0% { transform: translate(0, 0); opacity: 0; } 20% { opacity: 1; } 50% { transform: translate(-85px, -65px); } 60% { transform: translate(-85px, -65px) scale(0.8); } 100% { transform: translate(-85px, -65px); opacity: 0; } }
         .alvo-simulado { animation: brilharSucesso 3s infinite; }
         @keyframes brilharSucesso { 0%, 55% { border-color: #eee; } 60%, 80% { border-color: #8cc63f; background: #eef9e5; } 100% { border-color: #eee; } }
-        
         .intro-fundo { height: 85px; display: flex; align-items: center; padding: 0 30px; }
         .fundo-flex { display: flex; align-items: center; gap: 20px; width: 100%; }
 
@@ -107,13 +101,16 @@
         .box-success { background: #8cc63f; } .box-error { background: #ff5a5f; }
         .game-meio { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
 
+        /* Ajuste de Tamanho e Altura das Imagens (Uniformidade) */
         .jogo-wrapper { display: flex; flex-direction: column; width: 100%; height: 100%; gap: 10px; padding: 15px; }
-        .zona-alvo { flex: 0.28; display: flex; justify-content: center; align-items: center; }
-        .card-alvo { height: 85%; aspect-ratio: 1/1; background: white; border: 4px solid var(--cor-primaria); border-radius: 20px; display: flex; align-items: center; justify-content: center; padding: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .card-alvo img { width: 90%; height: 90%; object-fit: contain; }
+        .zona-alvo { flex: 0.28; display: flex; justify(content: center; align-items: center; }
+        .card-alvo { height: 80%; aspect-ratio: 1/1; background: white; border: 4px solid var(--cor-primaria); border-radius: 20px; display: flex; align-items: center; justify-content: center; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .card-alvo img { height: 75%; width: auto; object-fit: contain; } /* Imagem menor e altura fixa */
+        
         .zona-opcoes { flex: 0.72; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 10px; width: 100%; max-width: 800px; margin: 0 auto; }
-        .card-opcao { background: white; border-radius: 18px; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; padding: 8px; cursor: pointer; transition: 0.2s; }
-        .card-opcao img { width: 85%; height: 85%; object-fit: contain; }
+        .card-opcao { background: white; border-radius: 18px; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; padding: 5px; cursor: pointer; transition: 0.2s; }
+        .card-opcao img { height: 75%; width: auto; object-fit: contain; } /* Imagem menor e altura fixa */
+        
         .card-opcao.correto { background: #8cc63f !important; border-color: #8cc63f; }
         .card-opcao.errado { background: #ff5a5f !important; border-color: #ff5a5f; animation: shake 0.4s; }
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
@@ -145,7 +142,6 @@
     <div id="overlay" class="overlay"></div>
     <nav id="menu-dropdown" class="menu-dropdown"></nav>
 
-    <!-- PÁGINA DE INFORMAÇÃO -->
     <div id="page-info" class="info-full-page">
         <header class="info-header"><span>Informação</span><button class="btn-close-info" id="btn-close-info">X</button></header>
         <div class="info-body" id="info-instructions"></div>
@@ -165,7 +161,6 @@
     </header>
 
     <main>
-        <!-- ECRÃ 1 -->
         <section id="tela-apresentacao" class="tela active-tela">
             <div class="intro-container">
                 <div class="intro-topo"><h1 id="ui-nome-jogo-intro"></h1></div>
@@ -179,7 +174,6 @@
             </div>
         </section>
 
-        <!-- ECRÃ 2 -->
         <section id="tela-jogo" class="tela">
             <div class="game-container">
                 <div class="game-topo">
@@ -197,7 +191,6 @@
             </div>
         </section>
 
-        <!-- ECRÃ 3 -->
         <section id="tela-resultados" class="tela">
             <div class="results-container">
                 <div class="res-topo"><h2>RESULTADOS</h2></div>
@@ -265,7 +258,6 @@
             btnCloseInfo.onclick = () => pageInfo.classList.remove("active");
             overlay.onclick = () => { menuDropdown.classList.remove("active"); pageInfo.classList.remove("active"); overlay.style.display = "none"; };
             
-            // CARREGA TUTORIAL E INSTRUÇÕES DO JOGO.JS
             if(typeof iniciarTutorialVisual === 'function') iniciarTutorialVisual();
             if(typeof carregarInstrucoes === 'function') carregarInstrucoes();
         });
