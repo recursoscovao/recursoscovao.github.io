@@ -40,20 +40,20 @@
         .btn-voltar-topo img { height: 45px; }
 
         /* ==========================================
-           3. MENUS (SEM FUNDO NO HAMBURGUER)
+           3. MENUS (SEM FORMA/FUNDO NO HAMBURGUER)
            ========================================== */
         .menu-dropdown { 
             position: fixed; top: 0; left: 0; width: 100%; height: auto;
             padding: 100px 20px 30px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
             transform: translateY(-120%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            background: transparent !important; /* Apenas botões flutuantes */
+            background: transparent !important; /* APENAS BOTÕES */
         }
         .menu-dropdown.active { transform: translateY(0); }
         .menu-btn-item { width: 270px; background: white; display: flex; align-items: center; gap: 12px; padding: 10px 18px; text-decoration: none; color: var(--cor-texto); border-radius: 18px; font-weight: 600; font-size: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #f2f2f2; transition: 0.3s; }
         .menu-btn-item img { width: 34px; height: 34px; object-fit: contain; }
         .menu-btn-item:hover { background: var(--cor-primaria); color: white; transform: translateX(5px); }
 
-        /* Página de Info */
+        /* PÁGINA DE INFORMAÇÃO */
         .info-full-page { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; transition: bottom 0.5s ease-in-out; display: flex; flex-direction: column; }
         .info-full-page.active { bottom: 0; }
         .info-header { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; border-bottom: 2px solid #f9f9f9; flex-shrink: 0; }
@@ -64,7 +64,7 @@
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.35); display: none; z-index: 900; backdrop-filter: blur(2px); }
 
         /* ==========================================
-           4. MAIN E ECRÃS
+           4. MAIN E AS 3 TELAS
            ========================================== */
         main { flex: 1; padding: 15px; display: flex; flex-direction: column; overflow: hidden; }
         .tela {
@@ -76,16 +76,14 @@
         .active-tela { display: flex !important; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Ecrã 1: Divisão Topo / Meio / Fundo */
+        /* ECRÃ 1: APRESENTAÇÃO */
         .intro-wrapper { display: flex; flex-direction: column; height: 100%; width: 100%; }
-        .intro-topo { height: 85px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; padding: 0 20px; }
-        .intro-meio { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px; overflow: hidden; }
+        .intro-topo { height: 85px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .intro-meio { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px; }
         .intro-fundo { height: 85px; display: flex; align-items: center; padding: 0 30px; gap: 20px; flex-shrink: 0; border-top: 1px solid #f9f9f9; }
-        
-        /* Título do jogo menor */
         #ui-nome-jogo-intro { font-size: clamp(1.1rem, 4vw, 1.6rem); font-weight: 900; color: var(--cor-primaria); text-align: center; text-transform: uppercase; }
 
-        /* Ecrã 2: Jogo */
+        /* ECRÃ 2: JOGO */
         .game-container { display: flex; flex-direction: column; height: 100%; width: 100%; }
         .game-topo { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #f2f2f2; flex-shrink: 0; }
         .round-pill { background: #6c757d; color: white; padding: 5px 15px; border-radius: 50px; font-weight: 900; font-size: 1rem; }
@@ -108,7 +106,7 @@
     <div id="page-info" class="info-full-page">
         <header class="info-header">
             <span>Informação</span>
-            <button class="btn-close-info">X</button>
+            <button class="btn-close-info" id="btn-close-info">X</button>
         </header>
         <div class="info-body" id="ui-area-instrucoes"></div>
     </div>
@@ -131,15 +129,12 @@
         <!-- ECRÃ 1: APRESENTAÇÃO -->
         <section id="tela-apresentacao" class="tela active-tela">
             <div class="intro-wrapper">
-                <div class="intro-topo">
-                    <h1 id="ui-nome-jogo-intro"></h1>
-                </div>
-                <div class="intro-meio">
-                    <!-- Tutorial Animado será injetado pelo jogo.js -->
-                    <div id="container-animacao-tutorial" style="width:100%; height:100%;"></div>
-                </div>
+                <div class="intro-topo"><h1 id="ui-nome-jogo-intro"></h1></div>
+                <div class="intro-meio"><div id="container-animacao-tutorial" style="width:100%; height:100%;"></div></div>
                 <div class="intro-fundo">
+                    <!-- BOTÃO INFORMAÇÃO -->
                     <img class="img-info-src btn-trigger-info" src="" width="50" style="cursor:pointer; flex-shrink: 0;">
+                    <!-- BOTÃO JOGAR -->
                     <button id="btn-jogar-main" style="flex:1; background:var(--cor-primaria); color:white; border:none; padding:15px; border-radius:50px; font-weight:900; font-size:1.5rem; cursor:pointer; text-transform:uppercase;">JOGAR</button>
                 </div>
             </div>
@@ -156,6 +151,7 @@
                     <div style="display:flex; align-items:center; gap:8px;">
                         <div class="stat-box box-success">✓ <span id="ui-certos">0</span></div>
                         <div class="stat-box box-error">X <span id="ui-errados">0</span></div>
+                        <!-- BOTÃO INFORMAÇÃO NO TOPO DO JOGO -->
                         <img class="img-info-src btn-trigger-info" src="" width="35" style="cursor:pointer;">
                     </div>
                 </div>
@@ -175,20 +171,18 @@
     <script src="jogo.js"></script>
     <script>
         document.addEventListener("DOMContentLoaded", () => {
-            if (typeof JOGO_CONFIG === 'undefined') return;
-
             const config = JOGO_CONFIG;
             const tema = BIBLIOTECA_TEMAS[config.areaAtiva];
             const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
 
-            // 1. Aplicar Estética Geral
+            // 1. Configurar Cores e Título
             document.title = config.nomeDoJogo;
             const root = document.documentElement;
             root.style.setProperty('--cor-pagina', tema.corPagina);
             root.style.setProperty('--cor-primaria', tema.corPrimaria);
             root.style.setProperty('--cor-primaria-alpha', tema.corPrimaria + '66');
 
-            // 2. Preencher Header
+            // 2. Preencher Interface
             document.getElementById("txt-titulo1").innerText = conteudo.t1;
             document.getElementById("txt-titulo2").innerText = conteudo.t2;
             document.getElementById("txt-subtitulo-header").innerText = conteudo.sub;
@@ -200,7 +194,7 @@
             const itemAno = config.menuItens.find(item => item.id === config.anoAtivo);
             if (itemAno) document.getElementById("header-icon").src = config.caminhoIconsMenu + itemAno.icon;
 
-            // 3. Menu Hambúrguer (Apenas botões)
+            // 3. Gerar Menu Hamburguer
             const menuDiv = document.getElementById("menu-dropdown");
             config.menuItens.forEach(item => {
                 const link = document.createElement("a");
@@ -210,59 +204,54 @@
                 menuDiv.appendChild(link);
             });
 
-            // 4. Injetar Instruções Dinâmicas do dados.js
+            // 4. Injetar Instruções do dados.js
             const areaInstrucoes = document.getElementById("ui-area-instrucoes");
             const ins = config.instrucoes;
             areaInstrucoes.innerHTML = `
                 <div style="border-left: 6px solid var(--cor-primaria); padding-left: 15px; margin-bottom: 30px;">
-                    <h2 style="margin:0; font-size:1.4rem;">Objetivo do jogo</h2>
-                    <p style="margin-top:10px;">${ins.objetivo}</p>
+                    <h2 style="margin:0;">Objetivo do jogo</h2><p>${ins.objetivo}</p>
                 </div>
-                <h2 style="font-size:1.2rem;">Como Jogar</h2>
-                <ul style="padding-left:0; margin-bottom:25px;">${ins.comoJogar.map(s => `<li style="display:flex; gap:10px; margin-bottom:8px;">➔ ${s}</li>`).join('')}</ul>
-                <h2 style="font-size:1.2rem;">Regras</h2>
-                <ul style="padding-left:0; margin-bottom:25px;">${ins.regras.map(r => `<li style="display:flex; gap:10px; margin-bottom:8px;">➔ ${r}</li>`).join('')}</ul>
-                <h2 style="font-size:1.2rem;">Dicas</h2>
-                <p style="margin-bottom:25px;">${ins.dicas}</p>
-                <div style="background:#f9f9f9; padding:20px; border-radius:20px;">
-                    <h2 style="margin-top:0; font-size:1.1rem;">O que vais desenvolver?</h2>
-                    <ul style="padding-left:0;">${ins.desenvolvimento.map(d => `<li style="display:flex; gap:10px; margin-bottom:5px;">➔ ${d}</li>`).join('')}</ul>
+                <h2>Como Jogar</h2><ul>${ins.comoJogar.map(s => `<li>${s}</li>`).join('')}</ul>
+                <h2>Regras</h2><ul>${ins.regras.map(r => `<li>${r}</li>`).join('')}</ul>
+                <h2>Dicas</h2><p>${ins.dicas}</p>
+                <div style="background:#f9f9f9; padding:20px; border-radius:20px; margin-top:20px;">
+                    <h2 style="margin:0;">O que vais desenvolver?</h2><ul>${ins.desenvolvimento.map(d => `<li>${d}</li>`).join('')}</ul>
                 </div>
             `;
 
-            // 5. Controlo de Menus e Navegação
-            const menuDropdown = document.getElementById("menu-dropdown");
-            const pageInfo = document.getElementById("page-info");
-            const overlay = document.getElementById("overlay");
-
-            const fecharTudo = () => {
-                menuDropdown.classList.remove("active");
-                pageInfo.classList.remove("active");
-                overlay.style.display = "none";
+            // 5. EVENTOS: BOTÃO JOGAR (CORRIGIDO)
+            document.getElementById("btn-jogar-main").onclick = () => {
+                trocarEcra('tela-jogo'); // Muda o ecrã imediatamente
+                if (typeof irParaJogo === 'function') irParaJogo(); // Inicia a lógica no jogo.js
             };
 
+            // 6. EVENTOS: BOTÕES INFORMAÇÃO (CORRIGIDO)
+            document.querySelectorAll(".btn-trigger-info").forEach(btn => {
+                btn.onclick = () => document.getElementById("page-info").classList.add("active");
+            });
+
+            // 7. EVENTOS: FECHAR MENUS
+            const menuDropdown = document.getElementById("menu-dropdown");
+            const overlay = document.getElementById("overlay");
+            
             document.getElementById("btn-abrir-menu").onclick = () => {
                 const act = menuDropdown.classList.toggle("active");
                 overlay.style.display = act ? "block" : "none";
             };
-
-            // Ativar Botão Jogar
-            document.getElementById("btn-jogar-main").onclick = () => {
-                if (typeof irParaJogo === 'function') irParaJogo();
+            
+            document.getElementById("btn-close-info").onclick = () => document.getElementById("page-info").classList.remove("active");
+            
+            overlay.onclick = () => {
+                menuDropdown.classList.remove("active");
+                overlay.style.display = "none";
             };
-
-            // Ativar Todos os botões de Informação
-            document.querySelectorAll(".btn-trigger-info").forEach(btn => {
-                btn.onclick = (e) => {
-                    e.stopPropagation();
-                    pageInfo.classList.add("active");
+            
+            menuDropdown.onclick = (e) => {
+                if (e.target === menuDropdown) {
+                    menuDropdown.classList.remove("active");
                     overlay.style.display = "none";
                 }
-            });
-
-            document.querySelector(".btn-close-info").onclick = fecharTudo;
-            overlay.onclick = fecharTudo;
-            menuDropdown.onclick = (e) => { if(e.target === menuDropdown) fecharTudo(); };
+            };
 
             // Iniciar componentes do jogo.js
             if(typeof iniciarTutorialVisual === 'function') iniciarTutorialVisual();
