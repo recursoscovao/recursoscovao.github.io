@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carregando...</title>
 
+    <!-- Fonte Fredoka -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
     <style>
@@ -20,7 +21,7 @@
         body { display: flex; flex-direction: column; font-family: 'Fredoka', sans-serif; background-color: var(--cor-pagina); overflow-y: auto; overflow-x: hidden; }
 
         /* ==========================================
-           2. HEADER (85px, BRANCO, ARREDONDADO)
+           2. HEADER PRINCIPAL (85px)
            ========================================== */
         header {
             height: 85px; background: white; display: flex; align-items: center; padding: 0 20px;
@@ -29,41 +30,39 @@
         }
         .header-flex { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .header-center { display: flex; align-items: center; gap: 12px; }
-        #header-icon { height: 65px; width: 65px; object-fit: contain; }
+        #header-icon { height: 70px; width: 70px; object-fit: contain; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
-        #txt-titulo1 { font-weight: 900; font-size: 1.6rem; color: var(--cor-primaria); }
-        #txt-titulo2 { font-weight: 800; font-size: 1.3rem; color: var(--text-grey); }
+        #txt-titulo1 { font-weight: 900; font-size: 1.65rem; color: var(--cor-primaria); }
+        #txt-titulo2 { font-weight: 800; font-size: 1.4rem; color: var(--text-grey); }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
         .btn-menu { background: none; border: none; cursor: pointer; width: 45px; display: flex; flex-direction: column; gap: 5px; }
         .btn-menu div { width: 28px; height: 4px; background-color: var(--cor-primaria); border-radius: 10px; }
         .btn-voltar-topo img { height: 45px; }
 
         /* ==========================================
-           3. MENUS (BOTÕES FLUTUANTES)
+           3. MENU HAMBURGUER (SEM FORMA / FUNDO)
            ========================================== */
         .menu-dropdown { 
             position: fixed; top: 0; left: 0; width: 100%; height: auto;
             padding: 100px 20px 30px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
             transform: translateY(-120%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            background: transparent;
+            background: transparent; /* Sem fundo por baixo */
         }
         .menu-dropdown.active { transform: translateY(0); }
-        .menu-btn-item { width: 275px; background: white; display: flex; align-items: center; gap: 12px; padding: 10px 18px; text-decoration: none; color: var(--cor-texto); border-radius: 18px; font-weight: 600; font-size: 1.05rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #f2f2f2; transition: 0.3s; }
+        .menu-btn-item { width: 270px; background: white; display: flex; align-items: center; gap: 12px; padding: 10px 18px; text-decoration: none; color: var(--cor-texto); border-radius: 18px; font-weight: 600; font-size: 1.05rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #f2f2f2; transition: 0.3s; }
         .menu-btn-item img { width: 34px; height: 34px; object-fit: contain; }
         .menu-btn-item:hover { background: var(--cor-primaria); color: white; transform: translateX(5px); }
 
-        /* Página de Info */
         .info-full-page { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; transition: bottom 0.5s ease-in-out; display: flex; flex-direction: column; }
         .info-full-page.active { bottom: 0; }
         .info-header { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; border-bottom: 2px solid var(--cor-pagina); }
         .info-header span { font-weight: 900; font-size: 1.5rem; color: var(--cor-primaria); text-transform: uppercase; }
         .btn-close-info { background: var(--cor-pagina); border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.5rem; font-weight: 900; color: var(--cor-primaria); cursor: pointer; }
         .info-body { flex: 1; padding: 30px 25px; overflow-y: auto; color: var(--cor-texto); }
-
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.35); display: none; z-index: 900; backdrop-filter: blur(2px); }
 
         /* ==========================================
-           4. ECRÃS E JOGO (REDUÇÃO DE TAMANHO)
+           4. ECRÃS (MAIN)
            ========================================== */
         main { flex: 1; padding: 15px; display: flex; flex-direction: column; }
         .tela {
@@ -75,43 +74,56 @@
         .active-tela { display: flex !important; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* --- JOGO: ESTRUTURA E RESPONSIVIDADE --- */
+        /* --- ECRÃ 1: APRESENTAÇÃO (TOP/MEIO/FUNDO) --- */
+        .intro-container { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: inherit; }
+        .intro-topo { height: 85px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; border-bottom: 1px solid #f9f9f9; }
+        #ui-nome-jogo-intro { font-size: clamp(1.4rem, 4vw, 2rem); font-weight: 900; color: var(--cor-primaria); text-align: center; text-transform: uppercase; }
+
+        .intro-meio { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px; position: relative; }
+        
+        /* TUTORIAL ANIMADO (NO MEIO) */
+        #container-animacao-tutorial { position: relative; width: 100%; max-width: 450px; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 20px; overflow: hidden; }
+        .tut-alvo-box { width: 90px; height: 90px; background: white; border: 3px solid var(--cor-primaria); border-radius: 20px; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .tut-grid-opcoes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; width: 100%; }
+        .tut-card-opcao { width: 100%; aspect-ratio: 1.2/1; background: white; border: 2px solid #eee; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
+        .tut-card-opcao img, .tut-alvo-box img { height: 60%; width: auto; object-fit: contain; }
+        
+        .tut-mao { position: absolute; width: 45px; z-index: 10; bottom: 20px; right: 20%; pointer-events: none; animation: animarMaoTutorial 3.5s infinite ease-in-out; }
+        @keyframes animarMaoTutorial { 
+            0% { transform: translate(0, 0); opacity: 0; } 
+            20% { opacity: 1; } 
+            50% { transform: translate(-100px, -85px); } /* Move para o centro da grelha */
+            60% { transform: translate(-100px, -85px) scale(0.8); } 
+            100% { transform: translate(-100px, -85px); opacity: 0; } 
+        }
+        .tut-alvo-simulado { animation: brilharTutorial 3.5s infinite; }
+        @keyframes brilharTutorial { 0%, 55% { border-color: #eee; } 60%, 80% { border-color: #8cc63f; background: #eef9e5; transform: scale(1.05); } 100% { border-color: #eee; } }
+
+        .intro-fundo { height: 85px; display: flex; align-items: center; padding: 0 30px; flex-shrink: 0; border-top: 1px solid #f9f9f9; }
+        .fundo-flex { display: flex; align-items: center; gap: 20px; width: 100%; }
+
+        /* --- ECRÃ 2: JOGO (CENTRADO) --- */
         .game-container { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: inherit; }
         .game-topo { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #f2f2f2; }
         .round-pill { background: #6c757d; color: white; padding: 5px 15px; border-radius: 50px; font-weight: 900; font-size: 1rem; }
         .stat-box { display: flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 10px; color: white; font-weight: 900; font-size: 1rem; }
         .box-success { background: #8cc63f; } .box-error { background: #ff5a5f; }
-
         .game-meio { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; padding: 10px; }
-        .jogo-wrapper { display: flex; flex-direction: column; width: 100%; height: 100%; align-items: center; justify-content: center; gap: 10px; }
         
-        /* Destaque Menor */
-        .zona-alvo { flex: 0.22; display: flex; justify-content: center; align-items: center; width: 100%; }
+        .jogo-wrapper { display: flex; flex-direction: column; width: 100%; height: 100%; align-items: center; justify-content: center; gap: 10px; }
+        .zona-alvo { flex: 0.25; width: 100%; display: flex; justify-content: center; align-items: center; }
         .card-alvo { height: 85%; aspect-ratio: 1/1; background: white; border: 3px solid var(--cor-primaria); border-radius: 15px; display: flex; align-items: center; justify-content: center; padding: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
         .card-alvo img { height: 55%; width: auto; object-fit: contain; }
-
-        /* Grelha de 2 Colunas para Vertical */
-        .zona-opcoes { 
-            flex: 0.78; width: 100%; display: grid; 
-            grid-template-columns: repeat(4, 1fr); /* Desktop/Horizontal */
-            gap: 8px; max-width: 600px; align-content: center; justify-content: center; 
-        }
-
-        @media (orientation: portrait) {
-            .zona-opcoes { grid-template-columns: repeat(2, 1fr); max-width: 280px; } /* 2 colunas solicitadas */
-            .card-opcao { height: 65px; } /* Altura controlada */
-        }
-
+        
+        .zona-opcoes { flex: 0.75; width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; max-width: 600px; align-content: center; justify-content: center; }
+        @media (orientation: portrait) { .zona-opcoes { grid-template-columns: repeat(2, 1fr); max-width: 280px; } .card-opcao { height: 65px; } }
         .card-opcao { background: white; border-radius: 12px; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; height: 75px; }
-        .card-opcao img { height: 50%; width: auto; object-fit: contain; } /* Imagem menor */
+        .card-opcao img { height: 50%; width: auto; object-fit: contain; }
         .card-opcao.correto, .revelar-correto { background: #eef9e5 !important; border-color: #8cc63f !important; box-shadow: 0 0 15px #8cc63f; }
         .card-opcao.errado { background: #ffebeb !important; border-color: #ff5a5f !important; animation: shake 0.4s; }
-
         @keyframes shake { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
 
-        /* ==========================================
-           5. FOOTER (BRANCO, ARREDONDADO TOPO)
-           ========================================== */
+        /* FOOTER */
         footer { height: 40px; background: white; color: var(--text-grey); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; border-top-left-radius: 30px; border-top-right-radius: 30px; box-shadow: 0 -4px 15px rgba(0,0,0,0.06); flex-shrink: 0; margin-top: auto; }
     </style>
 </head>
@@ -139,14 +151,15 @@
     </header>
 
     <main>
+        <!-- ECRÃ 1: APRESENTAÇÃO -->
         <section id="tela-apresentacao" class="tela active-tela">
             <div class="intro-container">
                 <div class="intro-topo"><h1 id="ui-nome-jogo-intro"></h1></div>
                 <div class="intro-meio"><div id="container-animacao-tutorial"></div></div>
                 <div class="intro-fundo">
                     <div class="fundo-flex">
-                        <button class="btn-info-icon btn-trigger-info" style="background:none; border:none; cursor:pointer;"><img class="img-info-src" src="" width="50"></button>
-                        <button id="btn-jogar-main" onclick="irParaJogo()" style="flex:1; background:var(--cor-primaria); color:white; border:none; padding:15px; border-radius:50px; font-weight:900; font-size:1.5rem; cursor:pointer; text-transform:uppercase;">JOGAR</button>
+                        <button class="btn-trigger-info" style="background:none; border:none; cursor:pointer;"><img class="img-info-src" src="" width="50"></button>
+                        <button onclick="irParaJogo()" style="flex:1; background:var(--cor-primaria); color:white; border:none; padding:15px; border-radius:50px; font-weight:900; font-size:1.5rem; cursor:pointer; text-transform:uppercase;">JOGAR</button>
                     </div>
                 </div>
             </div>
@@ -156,7 +169,7 @@
             <div class="game-container">
                 <div class="game-topo">
                     <div style="display:flex; align-items:center; gap:10px;">
-                        <img id="ui-help-lamp" src="" height="45" style="cursor:pointer;">
+                        <img id="ui-help-lamp" src="" height="45">
                         <div class="round-pill" id="ui-ronda">1/10</div>
                     </div>
                     <div style="display:flex; align-items:center; gap:8px;">
@@ -169,19 +182,20 @@
             </div>
         </section>
 
+        <!-- ECRÃ 3: RESULTADOS (Mantido igual) -->
         <section id="tela-resultados" class="tela">
             <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px;">
-                <h2 style="font-size:2rem; font-weight:900; color:var(--cor-primaria); margin-bottom:20px;">RESULTADOS</h2>
-                <img id="res-img" src="" width="130" style="margin-bottom:15px;">
-                <h3 id="res-feedback-titulo" style="font-size:1.5rem; font-weight:900; color:var(--cor-primaria); margin-bottom:20px;"></h3>
-                <div style="display:flex; gap:10px; margin-bottom:30px;">
-                    <div class="stat-box box-success" style="padding:10px 20px;">✓ <span id="res-val-certos">0</span></div>
-                    <div class="stat-box box-error" style="padding:10px 20px;">X <span id="res-val-errados">0</span></div>
-                    <div class="stat-box" style="padding:10px 20px; background:#f39c12;"><img id="res-icon-lamp" src="" width="20"> <span id="res-val-ajudas">0</span></div>
+                <h2 style="font-size:2rem; font-weight:900; color:var(--cor-primaria); margin-bottom:15px;">RESULTADOS</h2>
+                <img id="res-img" src="" width="120" style="margin-bottom:10px;">
+                <h3 id="res-feedback-titulo" style="font-size:1.5rem; font-weight:900; color:var(--cor-primaria); margin-bottom:15px;"></h3>
+                <div style="display:flex; gap:10px; margin-bottom:25px;">
+                    <div class="stat-box box-success" style="padding:8px 15px;">✓ <span id="res-val-certos">0</span></div>
+                    <div class="stat-box box-error" style="padding:8px 15px;">X <span id="res-val-errados">0</span></div>
+                    <div class="stat-box" style="padding:8px 15px; background:#f39c12;"><img id="res-icon-lamp" src="" width="18"> <span id="res-val-ajudas">0</span></div>
                 </div>
-                <div style="display:flex; gap:15px; width:100%; max-width:400px;">
-                    <button onclick="location.reload()" style="flex:1; padding:15px; border-radius:50px; border:2px solid var(--cor-primaria); background:white; color:var(--cor-primaria); font-weight:900; cursor:pointer;">REPETIR</button>
-                    <button onclick="window.location.href='../'" style="flex:1; padding:15px; border-radius:50px; border:none; background:var(--cor-primaria); color:white; font-weight:900; cursor:pointer;">OUTROS</button>
+                <div style="display:flex; gap:15px; width:100%; max-width:350px;">
+                    <button onclick="location.reload()" style="flex:1; padding:12px; border-radius:50px; border:2px solid var(--cor-primaria); background:white; color:var(--cor-primaria); font-weight:900; cursor:pointer;">REPETIR</button>
+                    <button onclick="window.location.href='../'" style="flex:1; padding:12px; border-radius:50px; border:none; background:var(--cor-primaria); color:white; font-weight:900; cursor:pointer;">OUTROS</button>
                 </div>
             </div>
         </section>
@@ -236,8 +250,8 @@
             btnCloseInfo.onclick = () => pageInfo.classList.remove("active");
             overlay.onclick = () => { menuDropdown.classList.remove("active"); pageInfo.classList.remove("active"); overlay.style.display = "none"; };
             
-            if(typeof iniciarTutorialVisual === 'function') iniciarTutorialVisual();
-            if(typeof carregarInstrucoes === 'function') carregarInstrucoes();
+            iniciarTutorialVisual();
+            carregarInstrucoes();
         });
 
         function trocarEcra(id) {
