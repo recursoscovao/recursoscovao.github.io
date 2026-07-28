@@ -4,67 +4,86 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Carregando...</title>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;900&display=swap" rel="stylesheet">
-    <style>
-        :root { --cor-pagina: #f0f0f0; --cor-primaria: #333; --cor-primaria-alpha: rgba(0,0,0,0.4); --text-grey: #8792a1; }
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
-        /* BLOQUEIO DE SCROLL TOTAL */
-        html, body { height: 100%; width: 100%; overflow: hidden; position: fixed; }
 
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+
+    <style>
+        /* ==========================================
+           1. VARIÁVEIS E BASE
+           ========================================== */
+        :root {
+            --cor-pagina: #f0f0f0; --cor-primaria: #333; --cor-primaria-alpha: rgba(0,0,0,0.4); 
+            --cor-escura: #000; --cor-texto: #5d7082; --text-grey: #8792a1;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { height: 100%; width: 100%; overflow: hidden; position: fixed; }
         body { display: flex; flex-direction: column; font-family: 'Fredoka', sans-serif; background-color: var(--cor-pagina); }
 
-        /* HEADER & FOOTER */
-        header { height: 85px; background: white; display: flex; align-items: center; padding: 0 20px; border-bottom-left-radius: 35px; border-bottom-right-radius: 35px; box-shadow: 0 4px 15px rgba(0,0,0,0.06); z-index: 1100; flex-shrink: 0; }
+        /* ==========================================
+           2. HEADER (85px, BRANCO, ARREDONDADO) - RESTAURADO
+           ========================================== */
+        header {
+            height: 85px; background: white; display: flex; align-items: center; padding: 0 20px;
+            border-bottom-left-radius: 35px; border-bottom-right-radius: 35px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.06); z-index: 1100; flex-shrink: 0;
+        }
         .header-flex { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        #header-icon { height: 60px; width: 60px; object-fit: contain; }
+        
+        /* Centro do Header com o Icon e os 3 títulos */
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
+        #header-icon { height: 70px; object-fit: contain; }
+        
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
-        #txt-titulo1 { font-weight: 900; font-size: 1.4rem; color: var(--cor-primaria); }
-        #txt-titulo2 { font-weight: 800; font-size: 1.1rem; color: var(--text-grey); }
-        #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.6rem; margin-top: 4px; }
+        #txt-titulo1 { font-weight: 900; font-size: 1.65rem; color: var(--cor-primaria); }
+        #txt-titulo2 { font-weight: 800; font-size: 1.4rem; color: #8792a1; }
+        #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
+
+        .btn-menu { background: none; border: none; cursor: pointer; width: 45px; }
         .btn-menu div { width: 28px; height: 4px; background-color: var(--cor-primaria); border-radius: 10px; margin: 4px 0; }
         .btn-voltar-topo img { height: 45px; }
 
-        /* MENUS */
-        .menu-dropdown { position: fixed; top: 0; left: 0; width: 100%; padding: 100px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; transform: translateY(-120%); transition: transform 0.5s; }
+        /* ==========================================
+           3. MENUS (HAMBURGUER TRANSPARENTE)
+           ========================================== */
+        .menu-dropdown { 
+            position: fixed; top: 0; left: 0; width: 100%; height: auto;
+            padding: 100px 20px 30px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
+            transform: translateY(-120%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent !important;
+        }
         .menu-dropdown.active { transform: translateY(0); }
-        .menu-btn-item { width: 260px; background: white; display: flex; align-items: center; gap: 12px; padding: 10px 15px; text-decoration: none; color: #5d7082; border-radius: 15px; font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+        .menu-btn-item { width: 270px; background: white; display: flex; align-items: center; gap: 12px; padding: 10px 18px; text-decoration: none; color: var(--cor-texto); border-radius: 18px; font-weight: 600; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #f2f2f2; }
+        
         .info-full-page { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; transition: bottom 0.5s; display: flex; flex-direction: column; }
         .info-full-page.active { bottom: 0; }
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: none; z-index: 900; }
 
-        /* MAIN & TELAS (ALTURA CONTROLADA) */
+        /* ==========================================
+           4. MAIN E ECRÃS
+           ========================================== */
         main { flex: 1; padding: 10px; display: flex; flex-direction: column; overflow: hidden; }
         .tela { 
-            display: none; width: 100%; height: 100%; 
-            background: white; border-radius: 35px; 
-            border: 3px solid var(--cor-primaria-alpha); 
-            box-shadow: 0 0 20px var(--cor-primaria-alpha); 
-            margin: 0 auto; max-width: 1000px; overflow: hidden;
+            display: none; width: 100%; height: 100%; background: white; border-radius: 35px; 
+            border: 3px solid var(--cor-primaria-alpha); box-shadow: 0 0 20px var(--cor-primaria-alpha); 
+            margin: 0 auto; max-width: 1100px; overflow: hidden;
         }
         .active-tela { display: flex !important; flex-direction: column; }
 
-        /* ECRÃ 2: GAME LAYOUT */
-        .game-container { display: flex; flex-direction: column; height: 100%; width: 100%; }
+        /* Ecrã Jogo */
         .game-topo { height: 75px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #f2f2f2; flex-shrink: 0; }
-        .game-meio { 
-            flex: 1; 
-            padding: 10px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            overflow: hidden; /* IMPORTANTE: Impede o crescimento do espaço */
-        }
+        .game-meio { flex: 1; display: flex; align-items: center; justify-content: center; overflow: hidden; }
         #container-jogo-injetado { width: 100%; height: 100%; }
 
-        footer { height: 40px; background: white; color: var(--text-grey); display: flex; align-items: center; justify-content: center; font-size: 0.8rem; border-top-left-radius: 25px; border-top-right-radius: 25px; box-shadow: 0 -4px 10px rgba(0,0,0,0.05); flex-shrink: 0; }
+        footer { height: 40px; background: white; color: var(--text-grey); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; border-top-left-radius: 30px; border-top-right-radius: 30px; box-shadow: 0 -4px 15px rgba(0,0,0,0.06); flex-shrink: 0; }
     </style>
 </head>
 <body>
+
     <div id="overlay" class="overlay"></div>
     <nav id="menu-dropdown" class="menu-dropdown"></nav>
+
     <div id="page-info" class="info-full-page">
-        <header class="info-header" style="height:85px; display:flex; align-items:center; justify-content:space-between; padding:0 20px; border-bottom:1px solid #eee;">
+        <header style="height:85px; display:flex; align-items:center; justify-content:space-between; padding:0 20px; border-bottom:1px solid #eee;">
             <span style="font-weight:900; color:var(--cor-primaria);">INFORMAÇÃO</span>
             <button class="btn-close-info" style="width:40px; height:40px; border-radius:50%; border:none; background:#eee; font-weight:900;">X</button>
         </header>
@@ -73,8 +92,15 @@
 
     <header>
         <div class="header-flex">
-            <button class="btn-menu" id="btn-abrir-menu" style="background:none; border:none; cursor:pointer;"><div></div><div></div><div></div></button>
-            <div class="header-center"><img id="header-icon" src=""><div class="title-group"><span id="txt-titulo1"></span><span id="txt-titulo2"></span><span id="txt-subtitulo-header"></span></div></div>
+            <button class="btn-menu" id="btn-abrir-menu"><div></div><div></div><div></div></button>
+            <div class="header-center">
+                <img id="header-icon" src="">
+                <div class="title-group">
+                    <span id="txt-titulo1"></span>
+                    <span id="txt-titulo2"></span>
+                    <span id="txt-subtitulo-header"></span>
+                </div>
+            </div>
             <a href="javascript:history.back()" class="btn-voltar-topo"><img id="ui-seta-voltar" src=""></a>
         </div>
     </header>
@@ -83,12 +109,12 @@
         <section id="tela-apresentacao" class="tela active-tela">
             <div style="display:flex; flex-direction:column; height:100%; justify-content:space-between;">
                 <div style="height:70px; display:flex; align-items:center; justify-content:center; text-align:center; padding:0 15px;">
-                    <h1 id="ui-nome-jogo-intro" style="font-size:1.2rem; font-weight:900; color:var(--cor-primaria); text-transform:uppercase;"></h1>
+                    <h1 id="ui-nome-jogo-intro" style="font-size:1.1rem; font-weight:900; color:var(--cor-primaria); text-transform:uppercase;"></h1>
                 </div>
                 <div style="flex:1; display:flex; align-items:center; justify-content:center;" id="container-animacao-tutorial"></div>
-                <div style="height:80px; display:flex; align-items:center; padding:0 25px; gap:15px;">
-                    <img class="img-info-src btn-trigger-info" src="" width="45" style="cursor:pointer;">
-                    <button id="btn-jogar-main" style="flex:1; background:var(--cor-primaria); color:white; border:none; padding:15px; border-radius:50px; font-weight:900; font-size:1.3rem; cursor:pointer;">JOGAR</button>
+                <div style="height:85px; display:flex; align-items:center; padding:0 30px; gap:20px;">
+                    <img class="img-info-src btn-trigger-info" src="" width="55" style="cursor:pointer;">
+                    <button id="btn-jogar-main" style="flex:1; background:var(--cor-primaria); color:white; border:none; padding:15px; border-radius:50px; font-weight:900; font-size:1.5rem; cursor:pointer;">JOGAR</button>
                 </div>
             </div>
         </section>
@@ -97,20 +123,20 @@
             <div class="game-container">
                 <div class="game-topo">
                     <div style="display:flex; align-items:center; gap:10px;">
-                        <img id="ui-help-lamp" src="" height="40" style="cursor:pointer;">
-                        <div id="ui-ronda" style="background:#6c757d; color:white; padding:4px 12px; border-radius:50px; font-weight:900; font-size:0.9rem;">1/10</div>
+                        <img id="ui-help-lamp" src="" height="45" style="cursor:pointer;">
+                        <div id="ui-ronda" style="background:#6c757d; color:white; padding:5px 15px; border-radius:50px; font-weight:900;">1/10</div>
                     </div>
                     <div style="display:flex; align-items:center; gap:8px;">
-                        <div style="background:#8cc63f; color:white; padding:4px 10px; border-radius:8px; font-weight:900; font-size:0.9rem;">✓ <span id="ui-certos">0</span></div>
-                        <div style="background:#ff5a5f; color:white; padding:4px 10px; border-radius:8px; font-weight:900; font-size:0.9rem;">X <span id="ui-errados">0</span></div>
-                        <img class="img-info-src btn-trigger-info" src="" width="30" style="cursor:pointer;">
+                        <div style="background:#8cc63f; color:white; padding:5px 12px; border-radius:10px; font-weight:900;">✓ <span id="ui-certos">0</span></div>
+                        <div style="background:#ff5a5f; color:white; padding:5px 12px; border-radius:10px; font-weight:900;">X <span id="ui-errados">0</span></div>
+                        <img class="img-info-src btn-trigger-info" src="" width="35" style="cursor:pointer;">
                     </div>
                 </div>
                 <div class="game-meio" id="container-jogo-injetado"></div>
             </div>
         </section>
 
-        <section id="tela-resultados" class="tela"><div id="container-resultados-injetado" style="height:100%; display:flex; align-items:center; justify-content:center;"></div></section>
+        <section id="tela-resultados" class="tela"><div id="container-resultados-injetado" style="height:100%;"></div></section>
     </main>
 
     <footer><div id="ui-rodape"></div></footer>
@@ -123,29 +149,37 @@
             document.title = config.nomeDoJogo;
             const root = document.documentElement;
             root.style.setProperty('--cor-pagina', tema.corPagina); root.style.setProperty('--cor-primaria', tema.corPrimaria); root.style.setProperty('--cor-primaria-alpha', tema.corPrimaria + '66');
-            document.getElementById("txt-titulo1").innerText = conteudo.t1; document.getElementById("txt-titulo2").innerText = conteudo.t2; document.getElementById("txt-subtitulo-header").innerText = conteudo.sub;
-            document.getElementById("ui-rodape").innerHTML = conteudo.rodape; document.getElementById("ui-nome-jogo-intro").innerText = config.nomeDoJogo;
+            
+            document.getElementById("txt-titulo1").innerText = conteudo.t1;
+            document.getElementById("txt-titulo2").innerText = conteudo.t2;
+            document.getElementById("txt-subtitulo-header").innerText = conteudo.sub;
+            document.getElementById("ui-rodape").innerHTML = conteudo.rodape;
+            document.getElementById("ui-nome-jogo-intro").innerText = config.nomeDoJogo;
             document.getElementById("ui-seta-voltar").src = config.caminhoIconsMenu + tema.voltarMobile;
             document.querySelectorAll(".img-info-src").forEach(img => img.src = config.caminhoIconsJogos + "inform.png");
+            
             const itemAno = config.menuItens.find(item => item.id === config.anoAtivo);
             if (itemAno) document.getElementById("header-icon").src = config.caminhoIconsMenu + itemAno.icon;
+
             const menuDiv = document.getElementById("menu-dropdown");
             config.menuItens.forEach(item => {
                 const link = document.createElement("a"); link.href = item.link; link.className = "menu-btn-item";
                 const icon = (item.icon === "AUTO") ? tema.voltarMobile : item.icon;
-                link.innerHTML = `<img src="${config.caminhoIconsMenu}${icon}" width="30"><span>${item.label}</span>`;
+                link.innerHTML = `<img src="${config.caminhoIconsMenu}${icon}" width="34"><span>${item.label}</span>`;
                 menuDiv.appendChild(link);
             });
-            const areaInst = document.getElementById("ui-area-instrucoes"); const ins = config.instrucoes;
-            areaInst.innerHTML = `<div style="border-left:6px solid var(--cor-primaria); padding-left:15px; margin-bottom:20px;"><h2 style="margin:0; font-size:1.4rem;">Objetivo</h2><p>${ins.objetivo}</p></div><h2 style="font-size:1.1rem; margin-top:20px;">COMO JOGAR</h2><ul>${ins.comoJogar.map(s => `<li style="margin-bottom:8px">➔ ${s}</li>`).join('')}</ul><h2 style="font-size:1.1rem; margin-top:20px;">REGRAS</h2><ul>${ins.regras.map(r => `<li style="margin-bottom:8px">➔ ${r}</li>`).join('')}</ul><h2 style="font-size:1.1rem; margin-top:20px;">DICAS</h2><p>${ins.dicas}</p>`;
+
             document.getElementById("btn-jogar-main").onclick = () => { trocarEcra('tela-jogo'); if (typeof irParaJogo === 'function') irParaJogo(); };
             document.querySelectorAll(".btn-trigger-info").forEach(btn => btn.onclick = () => document.getElementById("page-info").classList.add("active"));
             document.querySelector(".btn-close-info").onclick = () => document.getElementById("page-info").classList.remove("active");
             document.getElementById("overlay").onclick = () => { menuDiv.classList.remove("active"); document.getElementById("overlay").style.display="none"; };
             document.getElementById("btn-abrir-menu").onclick = () => { const act = menuDiv.classList.toggle("active"); document.getElementById("overlay").style.display = act ? "block" : "none"; };
             menuDiv.onclick = (e) => { if(e.target === menuDiv) { menuDiv.classList.remove("active"); document.getElementById("overlay").style.display="none"; } };
+
+            if(typeof carregarInstrucoes === 'function') carregarInstrucoes();
             if(typeof iniciarTutorialVisual === 'function') iniciarTutorialVisual();
         });
+
         function trocarEcra(id) { document.querySelectorAll('.tela').forEach(t => t.classList.remove('active-tela')); document.getElementById(id).classList.add('active-tela'); }
     </script>
 </body>
