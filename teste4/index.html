@@ -8,10 +8,11 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
     <style>
-        :root { 
+        :root {
             --primary-color: #5EA2E6; 
-            --bg-color: #EAF4FE; 
-            --text-color: #5d7082; 
+            --bg-color: #EAF4FE;
+            --text-grey: #8792a1;
+            --menu-item-h: 65px; /* Aumentado para acomodar ícones de 40px */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
@@ -34,21 +35,21 @@
         
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         #txt-titulo1 { color: var(--primary-color); font-weight: 900; font-size: 1.5rem; }
-        #txt-titulo2 { color: #8792a1; font-weight: 800; font-size: 1.3rem; }
-        #txt-subtitulo-header { color: #8792a1; font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
+        #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 1.3rem; }
+        #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
 
         .hamburger-btn { background: none; border: none; color: var(--primary-color); font-size: 28px; cursor: pointer; }
         #icon-voltar-top { height: 45px; width: 45px; object-fit: contain; cursor: pointer; justify-self: end;}
 
-        /* MENU DROPDOWN (AJUSTADO PARA ICONS 40PX) */
+        /* MENU DROPDOWN (Estilo do código enviado) */
         .menu-dropdown { 
             position: absolute; top: 85px; left: 15px; display: none; 
             flex-direction: column; gap: 8px; z-index: 2000; 
         }
         .menu-item { 
             display: flex; align-items: center; gap: 15px; 
-            height: 65px; padding: 0 20px; /* Altura aumentada para acomodar icon maior */
-            text-decoration: none; color: #5d7082; 
+            height: var(--menu-item-h); padding: 0 20px;
+            text-decoration: none; color: var(--text-grey); 
             font-weight: 800; background: white; border-radius: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.12); transition: 0.2s; min-width: 260px;
         }
@@ -62,21 +63,18 @@
             flex-shrink: 0;
         }
 
-        .menu-item span { font-size: 1.1rem; }
-
         /* ÁREA PRINCIPAL */
         main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
         
-        #intro-screen { text-align: center; width: 100%; display: flex; justify-content: center; }
         .game-intro-card {
             background: white; padding: 35px 25px; border-radius: 40px;
             border: 4px solid var(--primary-color);
-            max-width: 500px; width: 90%;
+            max-width: 500px; width: 90%; text-align: center;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
 
         #game-nome { color: var(--primary-color); font-size: 1.8rem; font-weight: 900; margin-bottom: 10px; }
-        #game-descricao { color: var(--text-color); font-size: 1.1rem; margin-bottom: 30px; line-height: 1.4; }
+        #game-descricao { color: #5d7082; font-size: 1.1rem; margin-bottom: 30px; line-height: 1.4; }
 
         .btn-jogar {
             background: var(--primary-color); color: white;
@@ -88,10 +86,10 @@
         }
         .btn-jogar:hover { transform: scale(1.05); }
 
-        #game-container { display: none; width: 100%; height: 100%; }
+        #game-container { display: none; width: 100%; }
 
         footer { background: white; padding: 15px; text-align: center; border-radius: 35px 35px 0 0; }
-        .footer-text { color: #8792a1; font-size: 0.85rem; font-weight: 700; }
+        .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
     </style>
 </head>
 <body>
@@ -100,7 +98,7 @@
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
         <div class="header-center">
-            <img id="header-icon" src="" alt="Icone">
+            <img id="header-icon" src="" alt="">
             <div class="title-group">
                 <div id="txt-titulo1"></div>
                 <div id="txt-titulo2"></div>
@@ -111,7 +109,6 @@
     </header>
 
     <main>
-        <!-- Ecrã Inicial -->
         <div id="intro-screen">
             <div class="game-intro-card">
                 <h1 id="game-nome"></h1>
@@ -119,8 +116,6 @@
                 <button class="btn-jogar" onclick="iniciarJogoTecnico()">COMEÇAR JOGO</button>
             </div>
         </div>
-
-        <!-- Contentor do Jogo (preenchido pelo jogo.js) -->
         <div id="game-container"></div>
     </main>
 
@@ -128,6 +123,7 @@
 
     <script src="dados.js"></script>
     <script>
+        // LÓGICA DO MENU HAMBÚRGUER (Do código que enviaste)
         function toggleMenu(e) { 
             if(e) e.stopPropagation(); 
             const menu = document.getElementById('dropdownMenu');
@@ -141,29 +137,25 @@
             const tema = BIBLIOTECA_TEMAS[area];
             const conteudo = BIBLIOTECA_CONTEUDO[ano][area];
 
-            // Cores
+            // Cores Dinâmicas
             document.documentElement.style.setProperty('--primary-color', tema.corPrimaria);
             document.documentElement.style.setProperty('--bg-color', tema.corPagina);
-            document.documentElement.style.setProperty('--text-color', tema.corTexto);
 
-            // Textos
+            // Textos do Header/Rodapé
             document.getElementById('txt-titulo1').innerText = conteudo.t1;
             document.getElementById('txt-titulo2').innerText = conteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
             document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
             
-            // Ícone Header
-            const itemAtivo = JOGO_CONFIG.menuItens.find(i => i.id === ano);
-            if(itemAtivo) document.getElementById('header-icon').src = JOGO_CONFIG.caminhoIconsMenu + itemAtivo.icon;
-            
-            // Ícone Voltar Topo
+            // Ícone Voltar e Jogo
             document.getElementById('icon-voltar-top').src = JOGO_CONFIG.caminhoIconsMenu + tema.voltarMobile;
-
-            // Info Jogo
             document.getElementById('game-nome').innerText = JOGO_CONFIG.nomeDoJogo;
             document.getElementById('game-descricao').innerText = JOGO_CONFIG.descricao;
 
-            // Construir Menu Hamburguer
+            const itemAtivo = JOGO_CONFIG.menuItens.find(i => i.id === ano);
+            if(itemAtivo) document.getElementById('header-icon').src = JOGO_CONFIG.caminhoIconsMenu + itemAtivo.icon;
+
+            // GERAR MENU DINAMICAMENTE (Com icons de 40px)
             const menuBox = document.getElementById('dropdownMenu');
             JOGO_CONFIG.menuItens.forEach(item => {
                 const a = document.createElement('a');
@@ -171,6 +163,7 @@
                 a.href = item.link;
                 
                 let iconPath = JOGO_CONFIG.caminhoIconsMenu + item.icon;
+                // Se o ícone for AUTO (como no teu dados.js), usa o ícone de voltar do tema
                 if(item.icon === "AUTO") iconPath = JOGO_CONFIG.caminhoIconsMenu + tema.voltarMobile;
 
                 a.innerHTML = `<img src="${iconPath}"> <span>${item.label}</span>`;
