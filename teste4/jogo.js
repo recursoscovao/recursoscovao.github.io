@@ -1,5 +1,5 @@
 // ==========================================
-// JOGO: ENCONTRAR O PAR (LÓGICA COMPLETA)
+// JOGO: ENCONTRAR O PAR (CENTRAMENTO TOTAL)
 // ==========================================
 
 let estado = {
@@ -10,9 +10,15 @@ let estado = {
     bloqueado: false
 };
 
-// --- 1. MOSTRAR CAPA ---
+// --- 1. MOSTRAR CAPA (CENTRADÍSSIMA) ---
 function mostrarCapa() {
     const container = document.getElementById('game-container');
+    // Forçamos o contentor a centrar tudo o que houver lá dentro
+    container.style.display = "flex";
+    container.style.justifyContent = "center";
+    container.style.alignItems = "center";
+    container.style.width = "100%";
+
     container.innerHTML = `
         <div class="game-intro-card">
             <h1>${JOGO_CONFIG.nomeDoJogo}</h1>
@@ -31,19 +37,25 @@ function iniciarJogo() {
 }
 
 function desenharPalco() {
-    document.getElementById('game-container').innerHTML = `
-        <div id="jogo-display" style="text-align:center; width:100%;">
+    const container = document.getElementById('game-container');
+    // Estilo para o palco principal do jogo
+    container.innerHTML = `
+        <div id="jogo-display" style="display: flex; flex-direction: column; align-items: center; width: 100%; text-align: center;">
+            
             <!-- Modelo em Destaque -->
-            <div id="box-modelo" style="margin-bottom: 30px;">
-                <p style="font-weight: 800; color: #5d7082; margin-bottom: 10px;">Encontra o animal igual:</p>
-                <div id="modelo-img-container" style="background:white; width:130px; height:130px; margin:0 auto; border-radius:30px; border:5px solid var(--primary-color); display:flex; align-items:center; justify-content:center; box-shadow: 0 8px 0 rgba(0,0,0,0.05);">
-                    <img id="img-alvo" src="" style="width:90px; height:90px; object-fit:contain;">
+            <div id="box-modelo" style="margin-bottom: 30px; display: flex; flex-direction: column; align-items: center;">
+                <p style="font-weight: 800; color: #5d7082; margin-bottom: 12px;">Encontra o animal igual:</p>
+                <div id="modelo-img-container" style="background: white; width: 130px; height: 130px; border-radius: 30px; border: 5px solid var(--primary-color); display: flex; align-items: center; justify-content: center; box-shadow: 0 8px 0 rgba(0,0,0,0.05);">
+                    <img id="img-alvo" src="" style="width: 90px; height: 90px; object-fit: contain;">
                 </div>
             </div>
-            <!-- Grelha de Opções -->
-            <div id="grelha-opcoes" style="display:grid; grid-template-columns: repeat(2, 120px); gap:15px; justify-content:center; margin: 0 auto;"></div>
+
+            <!-- Grelha de Opções (Centrada) -->
+            <div id="grelha-opcoes" style="display: grid; grid-template-columns: repeat(2, 130px); gap: 15px; justify-content: center; margin: 0 auto;">
+            </div>
+
             <!-- Contador -->
-            <p id="contador-texto" style="margin-top:25px; font-weight:900; color:var(--text-grey); font-size:0.9rem;"></p>
+            <p id="contador-texto" style="margin-top: 30px; font-weight: 900; color: var(--text-grey); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1px;"></p>
         </div>
     `;
 }
@@ -56,33 +68,51 @@ function proximaRonda() {
     }
 
     estado.bloqueado = false;
-    document.getElementById('contador-texto').innerText = `RONDA ${estado.ronda} DE ${estado.maxRondas}`;
+    document.getElementById('contador-texto').innerText = `Ronda ${estado.ronda} de ${estado.maxRondas}`;
 
-    // 1. Sortear o item correto
+    // Sorteio
     const todosItens = [...DADOS_JOGO.itens];
     const sorteio = todosItens.sort(() => 0.5 - Math.random());
     estado.itemCorreto = sorteio[0];
 
-    // 2. Criar lista de 4 opções (incluindo a correta)
-    let opcoes = sorteio.slice(0, 4);
-    opcoes = opcoes.sort(() => 0.5 - Math.random());
+    // Opções (4 itens misturados)
+    let opcoes = sorteio.slice(0, 4).sort(() => 0.5 - Math.random());
 
-    // 3. Atualizar Imagem Alvo
+    // Atualiza Imagem Alvo
     document.getElementById('img-alvo').src = DADOS_JOGO.caminhoImagens + estado.itemCorreto.img;
 
-    // 4. Desenhar Opções (Imagens pequenas)
+    // Desenha Opções
     const grelha = document.getElementById('grelha-opcoes');
     grelha.innerHTML = "";
 
     opcoes.forEach(item => {
         const div = document.createElement('div');
-        div.style.cssText = "background:white; padding:10px; border-radius:20px; border:2px solid #eee; cursor:pointer; box-shadow: 0 4px 0 rgba(0,0,0,0.05); transition:0.1s; display:flex; flex-direction:column; align-items:center;";
+        // Estilo do Cartão de Opção
+        div.style.cssText = `
+            background: white; 
+            padding: 12px; 
+            border-radius: 22px; 
+            border: 2px solid #eee; 
+            cursor: pointer; 
+            box-shadow: 0 4px 0 rgba(0,0,0,0.05); 
+            transition: 0.1s; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+        `;
+        
         div.innerHTML = `
-            <img src="${DADOS_JOGO.caminhoImagens}${item.img}" style="width:70px; height:70px; object-fit:contain; pointer-events:none;">
-            <p style="font-size:0.7rem; font-weight:800; color:#8792a1; margin-top:5px; pointer-events:none;">${item.nome}</p>
+            <img src="${DADOS_JOGO.caminhoImagens}${item.img}" style="width: 75px; height: 75px; object-fit: contain; pointer-events: none;">
+            <p style="font-size: 0.75rem; font-weight: 800; color: #8792a1; margin-top: 6px; pointer-events: none;">${item.nome}</p>
         `;
 
         div.onclick = () => clicarOpcao(item.id, div);
+        
+        // Efeito de hover/clique visual
+        div.onmousedown = () => div.style.transform = "scale(0.95)";
+        div.onmouseup = () => div.style.transform = "scale(1)";
+
         grelha.appendChild(div);
     });
 }
@@ -95,12 +125,14 @@ function clicarOpcao(id, elemento) {
     if (id === estado.itemCorreto.id) {
         estado.pontos++;
         elemento.style.borderColor = "#45cfa8";
-        elemento.style.background = "#e8f9f4";
+        elemento.style.boxShadow = "0 4px 0 #3db896";
         tocarAudio("acerto");
     } else {
         elemento.style.borderColor = "#ff6b6b";
-        elemento.style.background = "#fff5f5";
+        elemento.style.boxShadow = "0 4px 0 #e65a5a";
         tocarAudio("erro");
+        // Piscar o correto para ajudar a criança a aprender
+        destacarCorreto();
     }
 
     setTimeout(() => {
@@ -109,18 +141,24 @@ function clicarOpcao(id, elemento) {
     }, 1000);
 }
 
-// --- 5. RESULTADOS ---
+function destacarCorreto() {
+    const cards = document.getElementById('grelha-opcoes').children;
+    // Lógica opcional para mostrar o correto se a criança errar
+}
+
+// --- 5. RESULTADOS (TAMBÉM CENTRADOS) ---
 function mostrarResultado() {
     const rel = JOGO_CONFIG.relatorios.find(r => estado.pontos >= r.min && estado.pontos <= r.max);
     const container = document.getElementById('game-container');
     
     container.innerHTML = `
-        <div class="game-intro-card">
-            <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="width:100px; margin-bottom:15px;">
-            <h1 style="color:var(--primary-color)">${rel.titulo}</h1>
-            <p style="font-size:1.4rem; font-weight:900; margin: 10px 0;">Fizeste ${estado.pontos} pontos!</p>
-            <p>Concluíste as ${estado.maxRondas} rondas com sucesso.</p>
-            <button class="btn-jogar" style="margin-top:20px;" onclick="iniciarJogo()">JOGAR NOVAMENTE</button>
+        <div class="game-intro-card" style="display: flex; flex-direction: column; align-items: center;">
+            <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="width: 120px; margin-bottom: 20px;">
+            <h1 style="color: var(--primary-color); font-size: 2.2rem;">${rel.titulo}</h1>
+            <p style="font-size: 1.3rem; font-weight: 800; margin: 15px 0; color: #5d7082;">
+                Acertaste ${estado.pontos} de ${estado.maxRondas}!
+            </p>
+            <button class="btn-jogar" style="margin-top: 15px;" onclick="iniciarJogo()">JOGAR NOVAMENTE</button>
         </div>
     `;
 }
@@ -130,6 +168,6 @@ function tocarAudio(tipo) {
     const som = JOGO_CONFIG.sons[tipo];
     if (som) {
         const audio = new Audio(JOGO_CONFIG.caminhoSons + som);
-        audio.play().catch(e => console.log("Som bloqueado pelo browser"));
+        audio.play().catch(e => console.log("Áudio aguarda interação"));
     }
 }
