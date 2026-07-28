@@ -6,61 +6,60 @@ let ajudasUsadas = 0;
 let itemAlvo = null;
 
 // ==========================================
-// 1. INSTRUÇÕES DETALHADAS (INJETADAS)
+// 1. INSTRUÇÕES DETALHADAS ORGANIZADAS
 // ==========================================
 function carregarInstrucoes() {
     const infoContainer = document.getElementById("info-instructions");
     if (!infoContainer) return;
 
     infoContainer.innerHTML = `
-        <div style="border-left: 6px solid var(--cor-primaria); padding-left: 15px; margin-bottom: 40px;">
-            <h2 style="margin:0; font-size: 1.8rem; text-transform:uppercase;">Objetivo do jogo</h2>
-            <p style="margin-top:10px; font-size:1.1rem;">Observa atentamente o animal apresentado no topo do ecrã e encontra a imagem igual entre as várias opções. Clica ou toca no animal correto para avançares para a ronda seguinte.</p>
+        <div style="border-left: 6px solid var(--cor-primaria); padding-left: 15px; margin-bottom: 30px;">
+            <h2 style="margin:0; font-size: 1.6rem; text-transform:uppercase;">Objetivo do jogo</h2>
+            <p style="margin-top:10px; font-size:1.05rem;">Observa atentamente o animal apresentado no topo do ecrã e encontra a imagem igual entre as várias opções.</p>
         </div>
         
-        <h2 style="color: var(--cor-primaria); text-transform: uppercase; font-size: 1.4rem; margin-bottom: 20px; margin-top: 40px;">Como jogar</h2>
-        <ul style="list-style: none; padding: 0; margin-bottom:40px;">
-            <li style="margin-bottom: 12px;">• Observa o animal que aparece no topo do ecrã.</li>
-            <li style="margin-bottom: 12px;">• Analisa todas as imagens apresentadas na grelha.</li>
-            <li style="margin-bottom: 12px;">• Encontra a imagem exatamente igual ao modelo.</li>
-            <li style="margin-bottom: 12px;">• Clica ou toca no animal correto.</li>
-            <li style="margin-bottom: 12px;">• Se acertares, passas para a próxima ronda.</li>
-            <li style="margin-bottom: 12px;">• Se errares, o jogo mostrará a resposta certa antes de avançar.</li>
-            <li style="margin-bottom: 12px;">• Completa 10 rondas e descobre a tua pontuação.</li>
+        <h2 style="color: var(--cor-primaria); text-transform: uppercase; font-size: 1.3rem; margin-top: 30px; margin-bottom: 15px;">Como jogar</h2>
+        <ul style="list-style: none; padding: 0; margin-bottom:30px;">
+            <li style="margin-bottom: 10px;">➔ Observa o animal que aparece no topo do ecrã.</li>
+            <li style="margin-bottom: 10px;">➔ Analisa todas as imagens apresentadas na grelha.</li>
+            <li style="margin-bottom: 10px;">➔ Clica na imagem <strong>exatamente igual</strong> ao modelo.</li>
+            <li style="margin-bottom: 10px;">➔ Se acertares, passas de ronda. Se errares, mostramos a certa e avançamos.</li>
         </ul>
 
-        <h2 style="color: var(--cor-primaria); text-transform: uppercase; font-size: 1.4rem; margin-bottom: 20px;">Regras</h2>
-        <p style="margin-bottom:40px;">Existe apenas uma resposta correta em cada ronda. Observa com atenção antes de responder. Não há limite de tempo.</p>
+        <h2 style="color: var(--cor-primaria); text-transform: uppercase; font-size: 1.3rem; margin-bottom: 15px;">Regras</h2>
+        <p style="margin-bottom:30px;">Existe apenas uma resposta correta em cada ronda. Observa com atenção. Não há limite de tempo.</p>
 
-        <h2 style="color: var(--cor-primaria); text-transform: uppercase; font-size: 1.4rem; margin-bottom: 20px;">Dicas</h2>
-        <p style="margin-bottom:40px;">Observa cuidadosamente: a forma do animal, as cores e os detalhes (orelhas, patas, asas, cauda, etc.). Alguns animais podem ser muito parecidos.</p>
+        <h2 style="color: var(--cor-primaria); text-transform: uppercase; font-size: 1.3rem; margin-bottom: 15px;">Dicas</h2>
+        <p style="margin-bottom:30px;">Observa a forma, as cores e os detalhes (orelhas, patas, asas, cauda). Alguns animais podem ser muito parecidos!</p>
 
-        <div style="background: #f9f9f9; padding: 25px; border-radius: 20px; border:1px solid #eee;">
-            <h2 style="margin:0 0 15px 0; font-size: 1.2rem;">O que vais desenvolver?</h2>
-            <p style="font-size: 1rem; margin:0; line-height:1.6;">
-                Atenção e concentração; Memória visual; Capacidade de observação; Rapidez de identificação; Discriminação visual.
+        <div style="background: #f9f9f9; padding: 20px; border-radius: 20px; border:1px solid #eee; margin-top: 30px;">
+            <h2 style="margin:0 0 10px 0; font-size: 1.1rem;">O que vais desenvolver?</h2>
+            <p style="font-size: 0.95rem; margin:0; line-height:1.5;">
+                Atenção e concentração; Memória visual; Capacidade de observação; Discriminação visual.
             </p>
         </div>
     `;
 }
 
 // ==========================================
-// 2. TUTORIAL ANIMADO
+// 2. TUTORIAL ANIMADO (SIMULADOR DE JOGO)
 // ==========================================
 function iniciarTutorialVisual() {
     const container = document.getElementById("container-animacao-tutorial");
     if (!container || !DADOS_JOGO.itens.length) return;
-    const item1 = DADOS_JOGO.itens[0];
-    const item2 = DADOS_JOGO.itens[1] || item1;
-    const item3 = DADOS_JOGO.itens[2] || item1;
+
+    const item1 = DADOS_JOGO.itens[0]; // Galo
+    const item2 = DADOS_JOGO.itens[1] || item1; // Galinha
+    const item3 = DADOS_JOGO.itens[2] || item1; // Cabra
     const caminho = DADOS_JOGO.caminhoImagens;
+
     container.innerHTML = `
-        <div class="tut-alvo"><img src="${caminho}${item1.img}"></div>
-        <div style="font-size: 0.8rem; font-weight: 800; color: #8792a1;">ENCONTRA O IGUAL</div>
-        <div class="tut-grid">
-            <div class="tut-card"><img src="${caminho}${item2.img}"></div>
-            <div class="tut-card alvo-simulado"><img src="${caminho}${item1.img}"></div>
-            <div class="tut-card"><img src="${caminho}${item3.img}"></div>
+        <div class="tut-alvo-box"><img src="${caminho}${item1.img}"></div>
+        <div style="font-size: 0.75rem; font-weight: 800; color: #8792a1; letter-spacing:1px; text-transform:uppercase;">Encontra o igual</div>
+        <div class="tut-grid-opcoes">
+            <div class="tut-card-opcao"><img src="${caminho}${item2.img}"></div>
+            <div class="tut-card-opcao tut-alvo-simulado"><img src="${caminho}${item1.img}"></div>
+            <div class="tut-card-opcao"><img src="${caminho}${item3.img}"></div>
         </div>
         <img src="${JOGO_CONFIG.caminhoIconsJogos}mao.png" class="tut-mao">
     `;
@@ -83,6 +82,7 @@ function proximaRonda() {
     itemAlvo = listaItens[Math.floor(Math.random() * listaItens.length)];
     const distratores = listaItens.filter(i => i.id !== itemAlvo.id).sort(() => 0.5 - Math.random()).slice(0, 7);
     const opcoesGrid = [...distratores, itemAlvo].sort(() => 0.5 - Math.random());
+    
     const container = document.getElementById("container-jogo-injetado");
     container.innerHTML = `
         <div class="jogo-wrapper">
