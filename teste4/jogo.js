@@ -1,12 +1,11 @@
 let rondaAtual = 1; const totalRondas = 10;
 let certos = 0, errados = 0, ajudasUsadas = 0, itemAlvo = null;
 
-// Gestão de Sons
 const tocarSom = (tipo) => {
     try {
         const audio = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons[tipo]);
         audio.play();
-    } catch(e) { console.log("Erro ao tocar som"); }
+    } catch(e) {}
 };
 
 function engineInit() {
@@ -17,11 +16,9 @@ function engineInit() {
 function carregarInstrucoes() {
     const area = document.getElementById("ui-area-instrucoes");
     const ins = JOGO_CONFIG.instrucoes;
-    if(!area || !ins) return;
-
     area.innerHTML = `
-        <div style="border-left:6px solid var(--cor-primaria); padding-left:15px; margin-bottom:40px;">
-            <h2 style="margin:0; font-size:1.6rem; text-transform:uppercase;">Objetivo do jogo</h2>
+        <div style="border-left: 6px solid var(--cor-primaria); padding-left: 15px; margin-bottom: 40px;">
+            <h2 style="margin:0; font-size:1.6rem; text-transform:uppercase;">Objetivo</h2>
             <p style="margin-top:10px; font-size:1.1rem;">${ins.objetivo}</p>
         </div>
         <h2 style="color:var(--cor-primaria); text-transform:uppercase; font-size:1.3rem; margin-top:35px; margin-bottom:15px;">Como jogar</h2>
@@ -29,11 +26,7 @@ function carregarInstrucoes() {
         <h2 style="color:var(--cor-primaria); text-transform:uppercase; font-size:1.3rem; margin-top:35px; margin-bottom:15px;">Regras</h2>
         <ul style="list-style:none; padding:0;">${ins.regras.map(r => `<li style="margin-bottom:12px; display:flex; gap:10px; font-size:1.1rem;">• ${r}</li>`).join('')}</ul>
         <h2 style="color:var(--cor-primaria); text-transform:uppercase; font-size:1.3rem; margin-top:35px; margin-bottom:15px;">Dicas</h2>
-        <p style="line-height:1.5; font-size:1.1rem; margin-bottom:40px;">${ins.dicas}</p>
-        <div style="background:#f9f9f9; padding:25px; border-radius:20px; border:1px solid #eee;">
-            <h2 style="margin:0 0 10px 0; font-size:1.1rem; text-transform:uppercase;">O que vais desenvolver?</h2>
-            <ul style="list-style:none; padding:0;">${ins.desenvolvimento.map(d => `<li style="margin-bottom:5px; font-size:1rem;">• ${d}</li>`).join('')}</ul>
-        </div>
+        <p style="line-height:1.5; font-size:1.1rem;">${ins.dicas}</p>
     `;
 }
 
@@ -42,17 +35,13 @@ function renderIntro() {
     const item = DADOS_JOGO.itens[0];
     const path = DADOS_JOGO.caminhoImagens;
     container.innerHTML = `
-        <div style="height:85px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
-            <h1 style="font-size:1.1rem; font-weight:900; color:var(--cor-primaria); text-transform:uppercase; text-align:center; padding:0 20px;">${JOGO_CONFIG.nomeDoJogo}</h1>
-        </div>
-        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; gap:20px; min-height:0;">
-            <div style="border:3px solid var(--cor-primaria); border-radius:20px; padding:15px; background:white; width:120px; height:120px; display:flex; align-items:center; justify-content:center; box-shadow:0 8px 20px rgba(0,0,0,0.05);">
-                <img src="${path}${item.img}" style="height:65%; object-fit:contain;">
-            </div>
-            <p style="font-weight:900; color:var(--text-grey); font-size:1rem; text-transform:uppercase;">Encontra o igual</p>
-            <div style="display:flex; gap:12px;">
+        <div style="height:85px; display:flex; align-items:center; justify-content:center; flex-shrink:0;"><h1 style="font-size:1.1rem; font-weight:900; color:var(--cor-primaria); text-transform:uppercase; text-align:center; padding:0 20px;">${JOGO_CONFIG.nomeDoJogo}</h1></div>
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px; gap:20px;">
+            <div style="border:4px solid var(--cor-primaria); border-radius:20px; padding:15px; background:white; width:120px; height:120px; display:flex; align-items:center; justify-content:center; box-shadow:0 10px 25px rgba(0,0,0,0.05);"><img src="${path}${item.img}" style="height:65%; object-fit:contain;"></div>
+            <p style="font-weight:900; color:var(--text-grey); font-size:1.1rem; text-transform:uppercase;">Tutorial de Jogo</p>
+            <div style="display:flex; gap:15px;">
                 <div style="width:70px; height:70px; background:white; border:2px solid #eee; border-radius:15px; display:flex; align-items:center; justify-content:center;"><img src="${path}${DADOS_JOGO.itens[1].img}" style="height:60%;"></div>
-                <div style="width:70px; height:70px; background:white; border:3px solid #8cc63f; border-radius:15px; display:flex; align-items:center; justify-content:center;"><img src="${path}${item.img}" style="height:60%;"></div>
+                <div style="width:70px; height:70px; background:white; border:3px solid #8cc63f; border-radius:15px; display:flex; align-items:center; justify-content:center; box-shadow:0 0 15px rgba(140, 198, 63, 0.4);"><img src="${path}${item.img}" style="height:60%;"></div>
                 <div style="width:70px; height:70px; background:white; border:2px solid #eee; border-radius:15px; display:flex; align-items:center; justify-content:center;"><img src="${path}${DADOS_JOGO.itens[2].img}" style="height:60%;"></div>
             </div>
         </div>
@@ -85,7 +74,7 @@ function renderGameContent() {
                 <img src="${JOGO_CONFIG.caminhoIconsJogos}inform.png" width="35" style="cursor:pointer;" onclick="document.getElementById('page-info').classList.add('active')">
             </div>
         </div>
-        <div id="game-grid" style="flex:1; display:grid; gap:10px; padding:15px; align-content:center; justify-content:center; min-height:0; width:100%;"></div>
+        <div id="game-grid" style="flex:1; display:grid; gap:15px; padding:30px 15px; align-content:center; justify-content:center; width:100%;"></div>
     `;
 }
 
@@ -105,10 +94,10 @@ function proximaRonda() {
     const opcoes = [...dist, itemAlvo].sort(() => 0.5 - Math.random());
 
     const destaqueH = isPortrait ? "100px" : "130px";
-    const opcaoH = isPortrait ? "70px" : "85px";
+    const opcaoH = isPortrait ? "75px" : "90px";
 
     grid.innerHTML = `
-        <div style="grid-column: 1 / -1; justify-self: center; height: ${destaqueH}; aspect-ratio: 1/1; background: white; border: 4px solid var(--cor-primaria); border-radius: 20px; display: flex; align-items: center; justify-content: center; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom:5px;">
+        <div style="grid-column: 1 / -1; justify-self: center; height: ${destaqueH}; aspect-ratio: 1/1; background: white; border: 4px solid var(--cor-primaria); border-radius: 20px; display: flex; align-items: center; justify-content: center; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); margin-bottom:10px;">
             <img src="${DADOS_JOGO.caminhoImagens}${itemAlvo.img}" style="height: 60%; width: auto; object-fit: contain;">
         </div>
         ${opcoes.map(item => `
@@ -122,20 +111,19 @@ function proximaRonda() {
 function verificar(el, id) {
     if (document.querySelector('.bloqueio')) return;
     document.querySelectorAll('.card-opcao').forEach(c => c.style.pointerEvents = "none");
-    document.body.classList.add('bloqueio');
 
     if (id === itemAlvo.id) {
         tocarSom('acerto');
         el.style.background = "#eef9e5"; el.style.borderColor = "#8cc63f";
         certos++;
-        setTimeout(() => { document.body.classList.remove('bloqueio'); rondaAtual++; proximaRonda(); }, 1000);
+        setTimeout(() => { rondaAtual++; proximaRonda(); }, 1000);
     } else {
         tocarSom('erro');
         el.style.background = "#ffebeb"; el.style.borderColor = "#ff5a5f";
         errados++;
         const oCorreto = Array.from(document.querySelectorAll('.card-opcao')).find(c => c.innerHTML.includes(itemAlvo.img));
         if (oCorreto) { oCorreto.style.boxShadow = "0 0 15px #8cc63f"; oCorreto.style.borderColor = "#8cc63f"; }
-        setTimeout(() => { document.body.classList.remove('bloqueio'); rondaAtual++; proximaRonda(); }, 1800);
+        setTimeout(() => { rondaAtual++; proximaRonda(); }, 1800);
     }
 }
 
@@ -150,16 +138,16 @@ function renderResults() {
     const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
     trocarEcra('tela-resultados');
     container.innerHTML = `
-        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:20px;">
-            <h2 style="color:var(--cor-primaria); font-weight:900; margin-bottom:20px; font-size:2rem; text-transform:uppercase;">Resultados</h2>
-            <img src="${JOGO_CONFIG.caminhoIconsJogos}${rel.img}" width="120" style="margin-bottom:15px;">
-            <h3 style="color:var(--cor-primaria); margin-bottom:20px; font-size:1.5rem;">${rel.titulo}</h3>
-            <div style="display:flex; gap:10px; margin-bottom:30px;">
-                <div style="background:#8cc63f; color:white; padding:10px 20px; border-radius:15px; font-weight:900; font-size:1.2rem;">✓ ${certos}</div>
-                <div style="background:#ff5a5f; color:white; padding:10px 20px; border-radius:15px; font-weight:900; font-size:1.2rem;">X ${errados}</div>
-                <div style="background:#f39c12; color:white; padding:10px 20px; border-radius:15px; font-weight:900; font-size:1.2rem;">💡 ${ajudasUsadas}</div>
+        <div style="flex:1; display:flex; flex-direction:column; align-items:center; justify-content:center; text-align:center; padding:40px 20px;">
+            <h2 style="color:var(--cor-primaria); font-weight:900; margin-bottom:20px; font-size:2.2rem; text-transform:uppercase;">Resultados</h2>
+            <img src="${JOGO_CONFIG.caminhoIconsJogos}${rel.img}" width="140" style="margin-bottom:20px;">
+            <h3 style="color:var(--cor-primaria); margin-bottom:30px; font-size:1.8rem;">${rel.titulo}</h3>
+            <div style="display:flex; gap:15px; margin-bottom:40px;">
+                <div style="background:#8cc63f; color:white; padding:15px 30px; border-radius:15px; font-weight:900; font-size:1.4rem;">✓ ${certos}</div>
+                <div style="background:#ff5a5f; color:white; padding:15px 30px; border-radius:15px; font-weight:900; font-size:1.4rem;">X ${errados}</div>
+                <div style="background:#f39c12; color:white; padding:15px 30px; border-radius:15px; font-weight:900; font-size:1.4rem;">💡 ${ajudasUsadas}</div>
             </div>
-            <div style="display:flex; gap:15px; width:100%; max-width:320px;">
+            <div style="display:flex; gap:15px; width:100%; max-width:400px;">
                 <button onclick="location.reload()" style="flex:1; background:white; color:var(--cor-primaria); border:2px solid var(--cor-primaria); padding:15px; border-radius:50px; font-weight:900; cursor:pointer;">REPETIR</button>
                 <button onclick="window.location.href='../'" style="flex:1; background:var(--cor-primaria); color:white; border:none; padding:15px; border-radius:50px; font-weight:900; cursor:pointer;">OUTROS</button>
             </div>
