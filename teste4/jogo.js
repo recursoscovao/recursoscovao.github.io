@@ -3,8 +3,10 @@ let certos = 0, errados = 0, ajudasUsadas = 0, itemAlvo = null;
 
 // Gestão de Sons
 const tocarSom = (tipo) => {
-    const audio = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons[tipo]);
-    audio.play().catch(e => console.log("Som bloqueado pelo browser antes da interação."));
+    try {
+        const audio = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons[tipo]);
+        audio.play();
+    } catch(e) { console.log("Erro ao tocar som"); }
 };
 
 function engineInit() {
@@ -15,9 +17,11 @@ function engineInit() {
 function carregarInstrucoes() {
     const area = document.getElementById("ui-area-instrucoes");
     const ins = JOGO_CONFIG.instrucoes;
+    if(!area || !ins) return;
+
     area.innerHTML = `
         <div style="border-left:6px solid var(--cor-primaria); padding-left:15px; margin-bottom:40px;">
-            <h2 style="margin:0; font-size:1.6rem; text-transform:uppercase;">Objetivo</h2>
+            <h2 style="margin:0; font-size:1.6rem; text-transform:uppercase;">Objetivo do jogo</h2>
             <p style="margin-top:10px; font-size:1.1rem;">${ins.objetivo}</p>
         </div>
         <h2 style="color:var(--cor-primaria); text-transform:uppercase; font-size:1.3rem; margin-top:35px; margin-bottom:15px;">Como jogar</h2>
@@ -26,13 +30,17 @@ function carregarInstrucoes() {
         <ul style="list-style:none; padding:0;">${ins.regras.map(r => `<li style="margin-bottom:12px; display:flex; gap:10px; font-size:1.1rem;">• ${r}</li>`).join('')}</ul>
         <h2 style="color:var(--cor-primaria); text-transform:uppercase; font-size:1.3rem; margin-top:35px; margin-bottom:15px;">Dicas</h2>
         <p style="line-height:1.5; font-size:1.1rem; margin-bottom:40px;">${ins.dicas}</p>
+        <div style="background:#f9f9f9; padding:25px; border-radius:20px; border:1px solid #eee;">
+            <h2 style="margin:0 0 10px 0; font-size:1.1rem; text-transform:uppercase;">O que vais desenvolver?</h2>
+            <ul style="list-style:none; padding:0;">${ins.desenvolvimento.map(d => `<li style="margin-bottom:5px; font-size:1rem;">• ${d}</li>`).join('')}</ul>
+        </div>
     `;
 }
 
 function renderIntro() {
     const container = document.getElementById("tela-apresentacao");
-    const path = DADOS_JOGO.caminhoImagens;
     const item = DADOS_JOGO.itens[0];
+    const path = DADOS_JOGO.caminhoImagens;
     container.innerHTML = `
         <div style="height:85px; display:flex; align-items:center; justify-content:center; flex-shrink:0;">
             <h1 style="font-size:1.1rem; font-weight:900; color:var(--cor-primaria); text-transform:uppercase; text-align:center; padding:0 20px;">${JOGO_CONFIG.nomeDoJogo}</h1>
@@ -114,27 +122,27 @@ function proximaRonda() {
 function verificar(el, id) {
     if (document.querySelector('.bloqueio')) return;
     document.querySelectorAll('.card-opcao').forEach(c => c.style.pointerEvents = "none");
+    document.body.classList.add('bloqueio');
 
     if (id === itemAlvo.id) {
         tocarSom('acerto');
-        certos++; el.style.background = "#eef9e5"; el.style.borderColor = "#8cc63f";
-        setTimeout(() => { rondaAtual++; proximaRonda(); }, 1000);
+        el.style.background = "#eef9e5"; el.style.borderColor = "#8cc63f";
+        certos++;
+        setTimeout(() => { document.body.classList.remove('bloqueio'); rondaAtual++; proximaRonda(); }, 1000);
     } else {
         tocarSom('erro');
-        errados++; el.style.background = "#ffebeb"; el.style.borderColor = "#ff5a5f";
-        const correctCard = Array.from(document.querySelectorAll('.card-opcao')).find(c => c.innerHTML.includes(itemAlvo.img));
-        if (correctCard) correctCard.style.boxShadow = "0 0 15px #8cc63f";
-        setTimeout(() => { rondaAtual++; proximaRonda(); }, 1800);
+        el.style.background = "#ffebeb"; el.style.borderColor = "#ff5a5f";
+        errados++;
+        const oCorreto = Array.from(document.querySelectorAll('.card-opcao')).find(c => c.innerHTML.includes(itemAlvo.img));
+        if (oCorreto) { oCorreto.style.boxShadow = "0 0 15px #8cc63f"; oCorreto.style.borderColor = "#8cc63f"; }
+        setTimeout(() => { document.body.classList.remove('bloqueio'); rondaAtual++; proximaRonda(); }, 1800);
     }
 }
 
 function usarAjuda() {
     ajudasUsadas++;
     const oCorreto = Array.from(document.querySelectorAll('.card-opcao')).find(c => c.innerHTML.includes(itemAlvo.img));
-    if (oCorreto) { 
-        oCorreto.style.boxShadow = "0 0 25px gold"; 
-        setTimeout(() => oCorreto.style.boxShadow = "", 1500); 
-    }
+    if (oCorreto) { oCorreto.style.boxShadow = "0 0 25px gold"; setTimeout(() => oCorreto.style.boxShadow = "", 1500); }
 }
 
 function renderResults() {
