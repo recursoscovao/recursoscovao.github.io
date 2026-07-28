@@ -17,12 +17,17 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
+        /* Força o body a ocupar o ecrã todo sem scroll desnecessário */
         body, html { 
-            min-height: 100dvh; width: 100vw; background-color: var(--bg-color); 
-            display: flex; flex-direction: column; overflow-x: hidden; 
+            height: 100vh; 
+            height: 100dvh; 
+            width: 100vw; 
+            background-color: var(--bg-color); 
+            display: flex; 
+            flex-direction: column; 
+            overflow: hidden; 
         }
 
-        /* HEADER */
         header { 
             background: white; border-radius: 0 0 35px 35px;
             display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; 
@@ -32,7 +37,6 @@
 
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         #header-icon { height: 65px; object-fit: contain; }
-        
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         #txt-titulo1 { color: var(--primary-color); font-weight: 900; font-size: 1.5rem; }
         #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 1.3rem; }
@@ -41,7 +45,7 @@
         .hamburger-btn { background: none; border: none; color: var(--primary-color); font-size: 28px; cursor: pointer; }
         #icon-voltar-top { height: 45px; width: 45px; object-fit: contain; cursor: pointer; justify-self: end;}
 
-        /* MENU DROPDOWN */
+        /* MENU HAMBURGUER (Configurações Exatas) */
         .menu-dropdown { 
             position: absolute; top: 85px; left: 15px; display: none; 
             flex-direction: column; gap: 6px; z-index: 2000; 
@@ -51,35 +55,39 @@
             height: var(--menu-item-h); padding: 0 15px;
             text-decoration: none; color: var(--text-grey); 
             font-weight: 800; background: white; border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; min-width: 240px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 240px;
         }
-        .menu-item:hover { background-color: var(--primary-color); color: white; }
-        .menu-item img { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; }
+        .menu-item img { width: 32px; height: 32px; object-fit: contain; }
         .menu-item span { font-size: 0.8rem; text-transform: uppercase; white-space: nowrap; }
 
-        /* CONTENTOR PRINCIPAL */
-        main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        #game-container { width: 100%; max-width: 800px; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        /* O MAIN É O SEGREDO DO CENTRAMENTO */
+        main { 
+            flex: 1; /* Ocupa todo o espaço entre header e footer */
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; /* Centro Vertical */
+            align-items: center;     /* Centro Horizontal */
+            padding: 15px;           /* Padding de 15px solicitado */
+            overflow-y: auto;        /* Permite scroll se os 10 animais forem muitos para o ecrã */
+        }
 
-        /* ESTILO DA CAPA */
+        #game-container { 
+            width: 100%; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+        }
+
+        /* Estilo da Capa */
         .game-intro-card {
             background: white; padding: 35px 25px; border-radius: 40px;
             border: 4px solid var(--primary-color);
-            max-width: 500px; width: 90%; text-align: center;
+            max-width: 500px; width: 100%; text-align: center;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
-        .game-intro-card h1 { color: var(--primary-color); font-size: 1.8rem; font-weight: 900; margin-bottom: 10px; }
-        .game-intro-card p { color: #5d7082; font-size: 1.1rem; margin-bottom: 30px; line-height: 1.4; }
-        .btn-jogar {
-            background: var(--primary-color); color: white;
-            padding: 18px 45px; border-radius: 50px;
-            text-decoration: none; font-weight: 900; font-size: 1.3rem;
-            display: inline-block; cursor: pointer; border: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.2s;
-        }
-        .btn-jogar:hover { transform: scale(1.05); }
 
-        footer { background: white; padding: 15px; text-align: center; border-radius: 35px 35px 0 0; }
+        footer { background: white; padding: 15px; text-align: center; border-radius: 35px 35px 0 0; flex-shrink: 0; }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
     </style>
 </head>
@@ -99,7 +107,9 @@
         <img id="icon-voltar-top" src="" alt="Voltar" onclick="location.reload()">
     </header>
 
-    <main id="game-container"></main>
+    <main>
+        <div id="game-container"></div>
+    </main>
 
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
@@ -115,10 +125,8 @@
         window.onload = () => {
             const config = JOGO_CONFIG;
             document.title = config.nomeDoJogo;
-            const area = config.areaAtiva;
-            const ano = config.anoAtivo;
-            const tema = BIBLIOTECA_TEMAS[area];
-            const conteudo = BIBLIOTECA_CONTEUDO[ano][area];
+            const tema = BIBLIOTECA_TEMAS[config.areaAtiva];
+            const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
 
             document.documentElement.style.setProperty('--primary-color', tema.corPrimaria);
             document.documentElement.style.setProperty('--bg-color', tema.corPagina);
@@ -129,7 +137,7 @@
             document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + tema.voltarMobile;
 
-            const itemAtivo = config.menuItens.find(i => i.id === ano);
+            const itemAtivo = config.menuItens.find(i => i.id === config.anoAtivo);
             if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
 
             const menuBox = document.getElementById('dropdownMenu');
