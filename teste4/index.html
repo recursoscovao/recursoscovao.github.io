@@ -5,7 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Carregando...</title>
 
-    <!-- Fonte Fredoka -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;900&display=swap" rel="stylesheet">
 
     <style>
@@ -30,42 +29,41 @@
         }
         .header-flex { display: flex; justify-content: space-between; align-items: center; width: 100%; }
         .header-center { display: flex; align-items: center; gap: 12px; }
-        #header-icon { height: 70px; width: 70px; object-fit: contain; }
+        #header-icon { height: 65px; width: 65px; object-fit: contain; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
-        #txt-titulo1 { font-weight: 900; font-size: 1.65rem; color: var(--cor-primaria); }
-        #txt-titulo2 { font-weight: 800; font-size: 1.4rem; color: var(--text-grey); }
+        #txt-titulo1 { font-weight: 900; font-size: 1.6rem; color: var(--cor-primaria); }
+        #txt-titulo2 { font-weight: 800; font-size: 1.3rem; color: var(--text-grey); }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.9; }
         .btn-menu { background: none; border: none; cursor: pointer; width: 45px; display: flex; flex-direction: column; gap: 5px; }
         .btn-menu div { width: 28px; height: 4px; background-color: var(--cor-primaria); border-radius: 10px; }
         .btn-voltar-topo img { height: 45px; }
 
         /* ==========================================
-           3. MENUS (AJUSTE PARA HORIZONTAL)
+           3. MENU HAMBURGUER (SEM FORMA POR BAIXO)
            ========================================== */
         .menu-dropdown { 
-            position: fixed; top: 0; left: 0; width: 100%; height: auto; /* Altura auto evita sobras */
-            max-height: 100vh; overflow-y: auto;
+            position: fixed; top: 0; left: 0; width: 100%; height: auto;
             padding: 100px 20px 30px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
-            transform: translateY(-120%); /* Maior deslocamento para garantir que some */
-            transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            background: rgba(255,255,255,0.95); /* Leve fundo para leitura em landscape */
-            border-bottom-left-radius: 35px; border-bottom-right-radius: 35px;
+            transform: translateY(-120%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+            background: transparent; /* Removida a forma branca/arredondada */
         }
         .menu-dropdown.active { transform: translateY(0); }
-        .menu-btn-item { width: 270px; background: white; display: flex; align-items: center; gap: 12px; padding: 10px 18px; text-decoration: none; color: var(--cor-texto); border-radius: 18px; font-weight: 600; font-size: 1.05rem; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border: 1px solid #f2f2f2; transition: 0.3s; }
+        .menu-btn-item { width: 270px; background: white; display: flex; align-items: center; gap: 12px; padding: 10px 18px; text-decoration: none; color: var(--cor-texto); border-radius: 18px; font-weight: 600; font-size: 1.05rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #f2f2f2; transition: 0.3s; }
         .menu-btn-item img { width: 34px; height: 34px; object-fit: contain; }
         .menu-btn-item:hover { background: var(--cor-primaria); color: white; transform: translateX(5px); }
 
+        /* Página de Informações Full Screen */
         .info-full-page { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; transition: bottom 0.5s ease-in-out; display: flex; flex-direction: column; }
         .info-full-page.active { bottom: 0; }
         .info-header { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; border-bottom: 2px solid var(--cor-pagina); }
         .info-header span { font-weight: 900; font-size: 1.5rem; color: var(--cor-primaria); text-transform: uppercase; }
         .btn-close-info { background: var(--cor-pagina); border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.5rem; font-weight: 900; color: var(--cor-primaria); cursor: pointer; }
-        .info-body { flex: 1; padding: 30px 25px; overflow-y: auto; text-align: left; color: var(--cor-texto); }
-        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: none; z-index: 900; backdrop-filter: blur(2px); }
+        .info-body { flex: 1; padding: 30px 25px; overflow-y: auto; color: var(--cor-texto); }
+
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.35); display: none; z-index: 900; backdrop-filter: blur(3px); }
 
         /* ==========================================
-           4. ECRÃS (TELA)
+           4. ECRÃS (MAIN)
            ========================================== */
         main { flex: 1; padding: 15px; display: flex; flex-direction: column; }
         .tela {
@@ -86,7 +84,7 @@
         .tut-alvo { width: 70px; height: 70px; background: white; border: 3px solid var(--cor-primaria); border-radius: 15px; display: flex; align-items: center; justify-content: center; }
         .tut-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .tut-card { width: 60px; height: 60px; background: white; border: 2px solid #eee; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
-        .tut-card img, .tut-alvo img { height: 70%; width: auto; object-fit: contain; }
+        .tut-card img, .tut-alvo img { height: 65%; width: auto; object-fit: contain; }
         .tut-mao { position: absolute; width: 40px; z-index: 10; bottom: 10px; right: 20%; pointer-events: none; animation: animarMao 3s infinite ease-in-out; }
         @keyframes animarMao { 0% { transform: translate(0, 0); opacity: 0; } 20% { opacity: 1; } 50% { transform: translate(-85px, -65px); } 60% { transform: translate(-85px, -65px) scale(0.8); } 100% { transform: translate(-85px, -65px); opacity: 0; } }
         .alvo-simulado { animation: brilharSucesso 3s infinite; }
@@ -94,7 +92,7 @@
         .intro-fundo { height: 85px; display: flex; align-items: center; padding: 0 30px; }
         .fundo-flex { display: flex; align-items: center; gap: 20px; width: 100%; }
 
-        /* --- ECRÃ 2: ÁREA DE JOGO --- */
+        /* --- ECRÃ 2: JOGO (CENTRADO E IMAGENS MENORES) --- */
         .game-container { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: inherit; }
         .game-topo { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; border-bottom: 1px solid #f2f2f2; }
         .game-topo-left, .game-topo-right { display: flex; align-items: center; gap: 10px; }
@@ -102,18 +100,18 @@
         .round-pill { background: #6c757d; color: white; padding: 5px 18px; border-radius: 50px; font-weight: 900; font-size: 1.1rem; }
         .stat-box { display: flex; align-items: center; gap: 6px; padding: 4px 12px; border-radius: 10px; color: white; font-weight: 900; font-size: 1.1rem; }
         .box-success { background: #8cc63f; } .box-error { background: #ff5a5f; }
+        
         .game-meio { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; padding: 10px; }
 
-        /* CARTÕES DO JOGO (REDUZIDOS) */
-        .jogo-wrapper { display: flex; flex-direction: column; width: 100%; height: 100%; gap: 8px; padding: 5px; }
-        .zona-alvo { flex: 0.25; display: flex; justify-content: center; align-items: center; }
+        /* Layout Jogo Centrado */
+        .jogo-wrapper { display: flex; flex-direction: column; width: 100%; height: 100%; align-items: center; justify-content: center; gap: 10px; }
+        .zona-alvo { flex: 0.25; width: 100%; display: flex; justify-content: center; align-items: center; }
         .card-alvo { height: 85%; aspect-ratio: 1/1; background: white; border: 4px solid var(--cor-primaria); border-radius: 20px; display: flex; align-items: center; justify-content: center; padding: 8px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .card-alvo img { height: 65%; width: auto; object-fit: contain; } /* Imagens 10% menores */
+        .card-alvo img { height: 55%; width: auto; object-fit: contain; } /* Reduzido mais 10% */
         
-        .zona-opcoes { flex: 0.75; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 8px; width: 100%; max-width: 700px; margin: 0 auto; }
-        .card-opcao { background: white; border-radius: 15px; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; padding: 5px; cursor: pointer; transition: 0.2s; }
-        .card-opcao img { height: 65%; width: auto; object-fit: contain; } /* Imagens 10% menores */
-        
+        .zona-opcoes { flex: 0.7; width: 100%; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 10px; max-width: 750px; align-content: center; justify-content: center; }
+        .card-opcao { background: white; border-radius: 15px; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; padding: 5px; cursor: pointer; transition: 0.2s; height: 100%; width: 100%; }
+        .card-opcao img { height: 55%; width: auto; object-fit: contain; } /* Reduzido mais 10% */
         .card-opcao.correto { background: #8cc63f !important; border-color: #8cc63f; }
         .card-opcao.errado { background: #ff5a5f !important; border-color: #ff5a5f; animation: shake 0.4s; }
 
@@ -136,13 +134,8 @@
 
         footer { height: 40px; background: white; color: var(--text-grey); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; border-top-left-radius: 30px; border-top-right-radius: 30px; box-shadow: 0 -4px 15px rgba(0,0,0,0.06); flex-shrink: 0; margin-top: auto; }
         
-        /* Ajuste Responsive Grid */
         @media (max-width: 600px) { .zona-opcoes { grid-template-columns: repeat(4, 1fr); } }
-        @media (orientation: landscape) and (max-height: 500px) {
-            .zona-opcoes { grid-template-columns: repeat(4, 1fr); max-width: 600px; }
-            .zona-alvo { flex: 0.2; }
-            .card-alvo { height: 70%; }
-        }
+        @media (orientation: landscape) and (max-height: 500px) { .zona-alvo { flex: 0.2; } .card-alvo { height: 70%; } .menu-btn-item { width: 220px; padding: 8px 15px; } }
     </style>
 </head>
 <body>
@@ -260,19 +253,12 @@
             const pageInfo = document.getElementById("page-info");
             const overlay = document.getElementById("overlay");
 
+            const fecharMenu = () => { menuDropdown.classList.remove("active"); overlay.style.display = "none"; };
             btnMenu.onclick = () => { const act = menuDropdown.classList.toggle("active"); overlay.style.display = act ? "block" : "none"; };
-            
-            // Correção para fechar ao clicar fora no transparente
-            menuDropdown.onclick = (e) => { 
-                if (e.target === menuDropdown) { 
-                    menuDropdown.classList.remove("active"); 
-                    overlay.style.display = "none"; 
-                } 
-            };
-
+            menuDropdown.onclick = (e) => { if (e.target === menuDropdown) fecharMenu(); };
             btnTriggersInfo.forEach(btn => btn.onclick = () => pageInfo.classList.add("active"));
             btnCloseInfo.onclick = () => pageInfo.classList.remove("active");
-            overlay.onclick = () => { menuDropdown.classList.remove("active"); pageInfo.classList.remove("active"); overlay.style.display = "none"; };
+            overlay.onclick = () => { fecharMenu(); pageInfo.classList.remove("active"); };
             
             if(typeof iniciarTutorialVisual === 'function') iniciarTutorialVisual();
             if(typeof carregarInstrucoes === 'function') carregarInstrucoes();
