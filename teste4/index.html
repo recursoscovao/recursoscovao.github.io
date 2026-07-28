@@ -59,9 +59,9 @@
 
         /* CONTENTOR PRINCIPAL */
         main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        #game-container { width: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+        #game-container { width: 100%; max-width: 800px; display: flex; justify-content: center; align-items: center; flex-direction: column; }
 
-        /* ESTILO DA CAPA (INTRO CARD) */
+        /* ESTILO DA CAPA */
         .game-intro-card {
             background: white; padding: 35px 25px; border-radius: 40px;
             border: 4px solid var(--primary-color);
@@ -79,7 +79,7 @@
         }
         .btn-jogar:hover { transform: scale(1.05); }
 
-        footer { background: white; padding: 15px; text-align: center; border-radius: 35px 35px 0 0; flex-shrink: 0; }
+        footer { background: white; padding: 15px; text-align: center; border-radius: 35px 35px 0 0; }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
     </style>
 </head>
@@ -99,15 +99,12 @@
         <img id="icon-voltar-top" src="" alt="Voltar" onclick="location.reload()">
     </header>
 
-    <main id="game-container">
-        <!-- O jogo.js vai injetar o conteúdo aqui -->
-    </main>
+    <main id="game-container"></main>
 
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
     <script src="dados.js"></script>
     <script>
-        // Funções de Interface do Index
         function toggleMenu(e) { 
             if(e) e.stopPropagation(); 
             const menu = document.getElementById('dropdownMenu');
@@ -115,11 +112,9 @@
         }
         window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
 
-        // Inicialização do Tema e Moldura
         window.onload = () => {
             const config = JOGO_CONFIG;
             document.title = config.nomeDoJogo;
-
             const area = config.areaAtiva;
             const ano = config.anoAtivo;
             const tema = BIBLIOTECA_TEMAS[area];
@@ -147,7 +142,6 @@
                 menuBox.appendChild(a);
             });
 
-            // Chamar a Capa que está no jogo.js
             if(typeof mostrarCapa === "function") mostrarCapa();
         };
     </script>
