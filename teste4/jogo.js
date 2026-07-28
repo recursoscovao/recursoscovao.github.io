@@ -6,7 +6,7 @@ let ajudasUsadas = 0;
 let itemAlvo = null;
 
 // ==========================================
-// 1. INSTRUÇÕES (ESTÃO AQUI AGORA)
+// 1. INSTRUÇÕES (FORMATADAS)
 // ==========================================
 function carregarInstrucoes() {
     const infoContainer = document.getElementById("info-instructions");
