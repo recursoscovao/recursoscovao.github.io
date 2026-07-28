@@ -1,1 +1,144 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Pequenos Exploradores</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+    
+    <style>
+        :root { --primary-color: #5EA2E6; --bg-color: #EAF4FE; --text-color: #5d7082; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
+        body, html { min-height: 100dvh; width: 100vw; background-color: var(--bg-color); display: flex; flex-direction: column; overflow-x: hidden; }
 
+        /* HEADER */
+        header { 
+            background: white; border-radius: 0 0 35px 35px; height: 95px;
+            display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; 
+            padding: 0 15px; z-index: 1000; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
+        #header-icon { height: 60px; object-fit: contain; }
+        .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
+        #txt-titulo1 { color: var(--primary-color); font-weight: 900; font-size: 1.5rem; }
+        #txt-titulo2 { color: #8792a1; font-weight: 800; font-size: 1.3rem; }
+        #txt-subtitulo-header { color: #8792a1; font-weight: 600; font-size: 0.65rem; margin-top: 4px; }
+        .hamburger-btn { background: none; border: none; color: var(--primary-color); font-size: 28px; cursor: pointer; }
+        #icon-voltar-top { height: 40px; cursor: pointer; justify-self: end;}
+
+        /* MENU */
+        .menu-dropdown { position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 5px; z-index: 2000; }
+        .menu-item { 
+            display: flex; align-items: center; gap: 12px; height: 55px; padding: 0 20px;
+            text-decoration: none; color: #5d7082; font-weight: 800; background: white; 
+            border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 230px;
+        }
+
+        /* ECRÃS */
+        main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
+        
+        #intro-screen { text-align: center; }
+        .game-intro-card {
+            background: white; padding: 30px; border-radius: 40px; border: 4px solid var(--primary-color);
+            max-width: 500px; width: 90%; box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+        }
+        .btn-jogar {
+            background: var(--primary-color); color: white; padding: 15px 40px; border-radius: 50px;
+            text-decoration: none; font-weight: 900; font-size: 1.2rem; display: inline-block; cursor: pointer; border: none;
+        }
+
+        /* CONTENTOR ONDE O JOGO VAI APARECER */
+        #game-container { display: none; width: 100%; max-width: 800px; }
+
+        footer { background: white; padding: 15px; text-align: center; border-radius: 35px 35px 0 0; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
+        <div id="dropdownMenu" class="menu-dropdown"></div>
+        <div class="header-center">
+            <img id="header-icon" src="" alt="">
+            <div class="title-group">
+                <div id="txt-titulo1"></div>
+                <div id="txt-titulo2"></div>
+                <div id="txt-subtitulo-header"></div>
+            </div>
+        </div>
+        <img id="icon-voltar-top" src="" alt="Voltar" onclick="location.reload()">
+    </header>
+
+    <main>
+        <!-- Ecrã de Introdução -->
+        <div id="intro-screen">
+            <div class="game-intro-card">
+                <h1 id="game-nome" style="color: var(--primary-color); margin-bottom: 10px; font-weight: 900;"></h1>
+                <p id="game-descricao" style="margin-bottom: 25px; color: var(--text-color);"></p>
+                <button class="btn-jogar" onclick="iniciarJogoTecnico()">COMEÇAR JOGO</button>
+            </div>
+        </div>
+
+        <!-- Ecrã do Jogo (Vazio, preenchido pelo jogo.js) -->
+        <div id="game-container"></div>
+    </main>
+
+    <footer><span id="txt-rodape" style="color: #8792a1; font-weight: 700;"></span></footer>
+
+    <!-- 1º Carrega os Dados -->
+    <script src="dados.js"></script>
+    
+    <!-- 2º Lógica de Interface do Index -->
+    <script>
+        function toggleMenu(e) { 
+            if(e) e.stopPropagation(); 
+            const menu = document.getElementById('dropdownMenu');
+            menu.style.display = (menu.style.display === 'flex') ? 'none' : 'flex'; 
+        }
+
+        window.onload = () => {
+            const area = JOGO_CONFIG.areaAtiva;
+            const ano = JOGO_CONFIG.anoAtivo;
+            const tema = BIBLIOTECA_TEMAS[area];
+            const conteudo = BIBLIOTECA_CONTEUDO[ano][area];
+
+            document.documentElement.style.setProperty('--primary-color', tema.corPrimaria);
+            document.documentElement.style.setProperty('--bg-color', tema.corPagina);
+            
+            document.getElementById('txt-titulo1').innerText = conteudo.t1;
+            document.getElementById('txt-titulo2').innerText = conteudo.t2;
+            document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
+            document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
+            document.getElementById('icon-voltar-top').src = JOGO_CONFIG.caminhoIconsMenu + tema.voltarMobile;
+            document.getElementById('game-nome').innerText = JOGO_CONFIG.nomeDoJogo;
+            document.getElementById('game-descricao').innerText = JOGO_CONFIG.descricao;
+
+            const itemAtivo = JOGO_CONFIG.menuItens.find(i => i.id === ano);
+            if(itemAtivo) document.getElementById('header-icon').src = JOGO_CONFIG.caminhoIconsMenu + itemAtivo.icon;
+
+            const menuBox = document.getElementById('dropdownMenu');
+            JOGO_CONFIG.menuItens.forEach(item => {
+                const a = document.createElement('a');
+                a.className = 'menu-item'; a.href = item.link;
+                let iconPath = JOGO_CONFIG.caminhoIconsMenu + item.icon;
+                if(item.icon === "AUTO") iconPath = JOGO_CONFIG.caminhoIconsMenu + tema.voltarMobile;
+                a.innerHTML = `<img src="${iconPath}"> <span>${item.label}</span>`;
+                menuBox.appendChild(a);
+            });
+        };
+
+        function iniciarJogoTecnico() {
+            document.getElementById('intro-screen').style.display = 'none';
+            document.getElementById('game-container').style.display = 'block';
+            // Chama a função que estará dentro do jogo.js
+            if(typeof inicializarLogicaJogo === "function") {
+                inicializarLogicaJogo();
+            }
+        }
+    </script>
+
+    <!-- 3º Carrega a lógica do Jogo -->
+    <script src="jogo.js"></script>
+</body>
+</html>
