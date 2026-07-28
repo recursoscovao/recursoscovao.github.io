@@ -21,7 +21,7 @@
         body { display: flex; flex-direction: column; font-family: 'Fredoka', sans-serif; background-color: var(--cor-pagina); overflow-y: auto; overflow-x: hidden; }
 
         /* ==========================================
-           2. HEADER PRINCIPAL (85px)
+           2. HEADER PRINCIPAL (85px, BRANCO)
            ========================================== */
         header {
             height: 85px; background: white; display: flex; align-items: center; padding: 0 20px;
@@ -40,16 +40,15 @@
         .btn-voltar-topo img { height: 45px; }
 
         /* ==========================================
-           3. MENUS
+           3. MENUS (DROPDOWN E INFO)
            ========================================== */
         .menu-dropdown { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             padding: 100px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
-            transform: translateY(-110%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            background: transparent;
+            transform: translateY(-110%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); background: transparent;
         }
         .menu-dropdown.active { transform: translateY(0); }
-        .menu-btn-item { width: 270px; background: white; display: flex; align-items: center; gap: 12px; padding: 8px 18px; text-decoration: none; color: var(--cor-texto); border-radius: 18px; font-weight: 600; font-size: 1.05rem; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border: 1px solid #f2f2f2; transition: 0.3s; }
+        .menu-btn-item { width: 280px; background: white; display: flex; align-items: center; gap: 12px; padding: 10px 18px; text-decoration: none; color: var(--cor-texto); border-radius: 18px; font-weight: 600; font-size: 1.05rem; box-shadow: 0 4px 10px rgba(0,0,0,0.08); border: 1px solid #f2f2f2; transition: 0.3s; }
         .menu-btn-item img { width: 34px; height: 34px; object-fit: contain; }
         .menu-btn-item:hover { background: var(--cor-primaria); color: white; transform: translateX(5px); }
 
@@ -59,10 +58,11 @@
         .info-header span { font-weight: 900; font-size: 1.5rem; color: var(--cor-primaria); text-transform: uppercase; }
         .btn-close-info { background: var(--cor-pagina); border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.5rem; font-weight: 900; color: var(--cor-primaria); cursor: pointer; }
         .info-body { flex: 1; padding: 30px 25px; overflow-y: auto; text-align: left; color: var(--cor-texto); }
+
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.3); display: none; z-index: 900; backdrop-filter: blur(2px); }
 
         /* ==========================================
-           4. ECRÃS (TELA)
+           4. ECRÃS (MAIN)
            ========================================== */
         main { flex: 1; padding: 15px; display: flex; flex-direction: column; }
         .tela {
@@ -77,13 +77,13 @@
         /* --- ECRÃ 1: APRESENTAÇÃO --- */
         .intro-container { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: inherit; }
         .intro-topo { height: 85px; display: flex; align-items: center; justify-content: center; }
-        #ui-nome-jogo-intro { font-size: clamp(1.4rem, 4vw, 2.2rem); font-weight: 900; color: var(--cor-primaria); text-align: center; text-transform: uppercase; }
+        #ui-nome-jogo-intro { font-size: clamp(1.2rem, 4vw, 2rem); font-weight: 900; color: var(--cor-primaria); text-align: center; text-transform: uppercase; padding: 0 15px; }
         .intro-meio { flex: 1; display: flex; align-items: center; justify-content: center; padding: 20px; }
         #container-animacao-tutorial { position: relative; width: 100%; max-width: 400px; height: 260px; background: #fafafa; border-radius: 25px; border: 2px dashed #eee; display: flex; flex-direction: column; align-items: center; justify-content: space-around; padding: 15px; overflow: hidden; }
         .tut-alvo { width: 70px; height: 70px; background: white; border: 3px solid var(--cor-primaria); border-radius: 15px; display: flex; align-items: center; justify-content: center; }
         .tut-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
         .tut-card { width: 60px; height: 60px; background: white; border: 2px solid #eee; border-radius: 12px; display: flex; align-items: center; justify-content: center; }
-        .tut-card img, .tut-alvo img { height: 75%; width: auto; object-fit: contain; }
+        .tut-card img, .tut-alvo img { height: 70%; width: auto; object-fit: contain; }
         .tut-mao { position: absolute; width: 40px; z-index: 10; bottom: 10px; right: 20%; pointer-events: none; animation: animarMao 3s infinite ease-in-out; }
         @keyframes animarMao { 0% { transform: translate(0, 0); opacity: 0; } 20% { opacity: 1; } 50% { transform: translate(-85px, -65px); } 60% { transform: translate(-85px, -65px) scale(0.8); } 100% { transform: translate(-85px, -65px); opacity: 0; } }
         .alvo-simulado { animation: brilharSucesso 3s infinite; }
@@ -91,7 +91,7 @@
         .intro-fundo { height: 85px; display: flex; align-items: center; padding: 0 30px; }
         .fundo-flex { display: flex; align-items: center; gap: 20px; width: 100%; }
 
-        /* --- ECRÃ 2: JOGO --- */
+        /* --- ECRÃ 2: ÁREA DE JOGO --- */
         .game-container { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: inherit; }
         .game-topo { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; border-bottom: 1px solid #f2f2f2; }
         .game-topo-left, .game-topo-right { display: flex; align-items: center; gap: 10px; }
@@ -101,15 +101,15 @@
         .box-success { background: #8cc63f; } .box-error { background: #ff5a5f; }
         .game-meio { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; }
 
-        /* Ajuste de Tamanho e Altura das Imagens (Uniformidade) */
+        /* ESTILO DOS CARTÕES (IMAGENS 10% MENORES E MESMA ALTURA) */
         .jogo-wrapper { display: flex; flex-direction: column; width: 100%; height: 100%; gap: 10px; padding: 15px; }
-        .zona-alvo { flex: 0.28; display: flex; justify(content: center; align-items: center; }
-        .card-alvo { height: 80%; aspect-ratio: 1/1; background: white; border: 4px solid var(--cor-primaria); border-radius: 20px; display: flex; align-items: center; justify-content: center; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
-        .card-alvo img { height: 75%; width: auto; object-fit: contain; } /* Imagem menor e altura fixa */
+        .zona-alvo { flex: 0.3; display: flex; justify-content: center; align-items: center; }
+        .card-alvo { height: 85%; aspect-ratio: 1/1; background: white; border: 4px solid var(--cor-primaria); border-radius: 20px; display: flex; align-items: center; justify-content: center; padding: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
+        .card-alvo img { height: 72%; width: auto; object-fit: contain; } /* -10% e Altura Fixa */
         
-        .zona-opcoes { flex: 0.72; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 10px; width: 100%; max-width: 800px; margin: 0 auto; }
+        .zona-opcoes { flex: 0.7; display: grid; grid-template-columns: repeat(4, 1fr); grid-template-rows: repeat(2, 1fr); gap: 10px; width: 100%; max-width: 800px; margin: 0 auto; }
         .card-opcao { background: white; border-radius: 18px; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; padding: 5px; cursor: pointer; transition: 0.2s; }
-        .card-opcao img { height: 75%; width: auto; object-fit: contain; } /* Imagem menor e altura fixa */
+        .card-opcao img { height: 72%; width: auto; object-fit: contain; } /* -10% e Altura Fixa */
         
         .card-opcao.correto { background: #8cc63f !important; border-color: #8cc63f; }
         .card-opcao.errado { background: #ff5a5f !important; border-color: #ff5a5f; animation: shake 0.4s; }
@@ -132,6 +132,7 @@
         .btn-jogar-expand { flex: 1; background: var(--cor-primaria); color: white; border: none; padding: 15px 0; font-size: clamp(1.2rem, 3vw, 1.8rem); font-weight: 900; text-transform: uppercase; border-radius: 60px; cursor: pointer; transition: 0.3s; box-shadow: 0 6px 15px rgba(0,0,0,0.1); }
         .btn-acao-outline { flex: 1; background: white; color: var(--cor-primaria); border: 3px solid var(--cor-primaria); padding: 14px 0; font-size: 1.4rem; font-weight: 900; border-radius: 60px; cursor: pointer; text-transform: uppercase; }
 
+        /* FOOTER (BRANCO) */
         footer { height: 40px; background: white; color: var(--text-grey); display: flex; align-items: center; justify-content: center; font-size: 0.85rem; border-top-left-radius: 30px; border-top-right-radius: 30px; box-shadow: 0 -4px 15px rgba(0,0,0,0.06); flex-shrink: 0; margin-top: auto; }
         
         @media (max-width: 600px) { .zona-opcoes { grid-template-columns: repeat(3, 1fr); } }
