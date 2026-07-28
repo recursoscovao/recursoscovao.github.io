@@ -6,7 +6,7 @@ let ajudasUsadas = 0;
 let itemAlvo = null;
 
 // ==========================================
-// 1. INSTRUÇÕES (FORMATADAS)
+// 1. INSTRUÇÕES (FORMATADAS PARA A PÁGINA INFO)
 // ==========================================
 function carregarInstrucoes() {
     const infoContainer = document.getElementById("info-instructions");
@@ -85,6 +85,7 @@ function proximaRonda() {
     const listaItens = [...DADOS_JOGO.itens];
     itemAlvo = listaItens[Math.floor(Math.random() * listaItens.length)];
 
+    // Selecionar 7 distratores diferentes do alvo
     const distratores = listaItens.filter(i => i.id !== itemAlvo.id).sort(() => 0.5 - Math.random()).slice(0, 7);
     const opcoesGrid = [...distratores, itemAlvo].sort(() => 0.5 - Math.random());
 
@@ -109,22 +110,25 @@ function verificarResposta(el, id) {
     if (el.classList.contains('respondido')) return;
 
     if (id === itemAlvo.id) {
+        // ACERTO
         certos++; el.classList.add('correto', 'respondido');
         document.querySelectorAll('.card-opcao').forEach(c => c.classList.add('respondido'));
-        setTimeout(() => { rondaAtual++; proximaRonda(); }, 1000);
+        setTimeout(() => { rondaAtual++; proximaRonda(); }, 1200);
     } else {
+        // ERRO
         errados++; el.classList.add('errado');
         atualizarInterfaceStats();
         setTimeout(() => el.classList.remove('errado'), 500);
     }
 }
 
+// Sistema de Ajuda (Lâmpada)
 document.getElementById("ui-help-lamp").onclick = () => {
     ajudasUsadas++; atualizarInterfaceStats();
     const cards = Array.from(document.querySelectorAll('.card-opcao'));
     const correto = cards.find(c => c.innerHTML.includes(itemAlvo.img));
     if (correto) {
-        correto.style.boxShadow = "0 0 20px gold";
+        correto.style.boxShadow = "0 0 25px gold";
         correto.style.transform = "scale(1.1)";
         setTimeout(() => { correto.style.boxShadow = ""; correto.style.transform = ""; }, 1500);
     }
@@ -141,6 +145,7 @@ function finalizarJogo() {
     document.getElementById("res-val-certos").innerText = certos;
     document.getElementById("res-val-errados").innerText = errados;
     document.getElementById("res-val-ajudas").innerText = ajudasUsadas;
+    
     const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
     if (rel) {
         document.getElementById("res-feedback-titulo").innerText = rel.titulo;
