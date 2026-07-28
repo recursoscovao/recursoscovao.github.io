@@ -3,7 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Pequenos Exploradores</title>
+    <!-- O título será substituído pelo JavaScript via dados.js -->
+    <title>Carregando...</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     
@@ -12,8 +13,7 @@
             --primary-color: #5EA2E6; 
             --bg-color: #EAF4FE;
             --text-grey: #8792a1;
-            /* Altura definida como 45px conforme solicitado */
-            --menu-item-h: 45px; 
+            --menu-item-h: 45px; /* Altura exata solicitada */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
@@ -56,14 +56,20 @@
         }
         .menu-item:hover { background-color: var(--primary-color); color: white; }
         
-        /* Ícones adequados à altura de 45px (tamanho sugerido: 32px) */
+        /* Ícones do Menu adequados a 45px */
         .menu-item img { 
             width: 32px; 
             height: 32px; 
             object-fit: contain; 
             flex-shrink: 0;
         }
-        .menu-item span { font-size: 0.85rem; text-transform: uppercase; }
+
+        /* Texto do Menu Reduzido */
+        .menu-item span { 
+            font-size: 0.8rem; 
+            text-transform: uppercase; 
+            white-space: nowrap;
+        }
 
         /* ÁREA PRINCIPAL */
         main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
@@ -123,6 +129,7 @@
 
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
+    <!-- Scripts -->
     <script src="dados.js"></script>
     <script>
         function toggleMenu(e) { 
@@ -134,26 +141,35 @@
 
         window.onload = () => {
             const config = JOGO_CONFIG;
+            
+            // 1. Define o Título da Página (Tag <title>)
+            document.title = config.nomeDoJogo;
+
             const area = config.areaAtiva;
             const ano = config.anoAtivo;
             const tema = BIBLIOTECA_TEMAS[area];
             const conteudo = BIBLIOTECA_CONTEUDO[ano][area];
 
+            // 2. Cores Dinâmicas
             document.documentElement.style.setProperty('--primary-color', tema.corPrimaria);
             document.documentElement.style.setProperty('--bg-color', tema.corPagina);
 
+            // 3. Textos do Header e Rodapé
             document.getElementById('txt-titulo1').innerText = conteudo.t1;
             document.getElementById('txt-titulo2').innerText = conteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
             document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
             
+            // 4. Ícones (Voltar e Jogo)
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + tema.voltarMobile;
             document.getElementById('game-nome').innerText = config.nomeDoJogo;
             document.getElementById('game-descricao').innerText = config.descricao;
 
+            // Define o ícone principal do header com base no ano ativo
             const itemAtivo = config.menuItens.find(i => i.id === ano);
             if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
 
+            // 5. Gerar Menu Hamburguer dinamicamente
             const menuBox = document.getElementById('dropdownMenu');
             config.menuItens.forEach(item => {
                 const a = document.createElement('a');
@@ -171,6 +187,7 @@
         function iniciarJogoTecnico() {
             document.getElementById('intro-screen').style.display = 'none';
             document.getElementById('game-container').style.display = 'block';
+            // Chama a inicialização que está no ficheiro jogo.js
             if(typeof inicializarLogicaJogo === "function") {
                 inicializarLogicaJogo();
             }
