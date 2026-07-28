@@ -29,7 +29,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.06); z-index: 1100; flex-shrink: 0; position: relative;
         }
         .header-flex { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .header-center { display: flex; align-items: center; gap: 12px; }
         #header-icon { height: 60px; width: 60px; object-fit: contain; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         #txt-titulo1 { font-weight: 900; font-size: 1.5rem; color: var(--cor-primaria); }
@@ -40,20 +40,19 @@
         .btn-voltar-topo img { height: 45px; }
 
         /* ==========================================
-           3. MENUS (SEM FORMA/FUNDO NO HAMBURGUER)
+           3. MENUS
            ========================================== */
         .menu-dropdown { 
             position: fixed; top: 0; left: 0; width: 100%; height: auto;
-            padding: 100px 20px 30px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 10px; align-items: flex-start;
+            padding: 100px 20px 30px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
             transform: translateY(-120%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-            background: transparent !important; /* APENAS BOTÕES */
+            background: transparent !important;
         }
         .menu-dropdown.active { transform: translateY(0); }
         .menu-btn-item { width: 270px; background: white; display: flex; align-items: center; gap: 12px; padding: 10px 18px; text-decoration: none; color: var(--cor-texto); border-radius: 18px; font-weight: 600; font-size: 1rem; box-shadow: 0 4px 15px rgba(0,0,0,0.1); border: 1px solid #f2f2f2; transition: 0.3s; }
         .menu-btn-item img { width: 34px; height: 34px; object-fit: contain; }
         .menu-btn-item:hover { background: var(--cor-primaria); color: white; transform: translateX(5px); }
 
-        /* PÁGINA DE INFORMAÇÃO */
         .info-full-page { position: fixed; bottom: -100%; left: 0; width: 100%; height: 100%; background: white; z-index: 2000; transition: bottom 0.5s ease-in-out; display: flex; flex-direction: column; }
         .info-full-page.active { bottom: 0; }
         .info-header { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 25px; border-bottom: 2px solid #f9f9f9; flex-shrink: 0; }
@@ -64,7 +63,7 @@
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.35); display: none; z-index: 900; backdrop-filter: blur(2px); }
 
         /* ==========================================
-           4. MAIN E AS 3 TELAS
+           4. MAIN E ECRÃS (OCUPAÇÃO 100%)
            ========================================== */
         main { flex: 1; padding: 15px; display: flex; flex-direction: column; overflow: hidden; }
         .tela {
@@ -76,20 +75,51 @@
         .active-tela { display: flex !important; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* ECRÃ 1: APRESENTAÇÃO */
+        /* Ecrã 1 */
         .intro-wrapper { display: flex; flex-direction: column; height: 100%; width: 100%; }
         .intro-topo { height: 85px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
-        .intro-meio { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px; }
+        .intro-meio { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px; overflow: hidden; }
         .intro-fundo { height: 85px; display: flex; align-items: center; padding: 0 30px; gap: 20px; flex-shrink: 0; border-top: 1px solid #f9f9f9; }
         #ui-nome-jogo-intro { font-size: clamp(1.1rem, 4vw, 1.6rem); font-weight: 900; color: var(--cor-primaria); text-align: center; text-transform: uppercase; }
 
-        /* ECRÃ 2: JOGO */
+        /* Ecrã 2: JOGO (Ocupação 100%) */
         .game-container { display: flex; flex-direction: column; height: 100%; width: 100%; }
         .game-topo { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #f2f2f2; flex-shrink: 0; }
         .round-pill { background: #6c757d; color: white; padding: 5px 15px; border-radius: 50px; font-weight: 900; font-size: 1rem; }
         .stat-box { display: flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 10px; color: white; font-weight: 900; font-size: 1rem; }
         .box-success { background: #8cc63f; } .box-error { background: #ff5a5f; }
-        .game-meio { flex: 1; display: flex; align-items: center; justify-content: center; overflow-y: auto; padding: 15px; }
+        
+        .game-meio { 
+            flex: 1; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            width: 100%; 
+            height: 100%; 
+            padding: 10px; 
+            overflow: hidden; 
+        }
+
+        /* Layout Interno Injetado */
+        .jogo-wrapper { 
+            display: flex; 
+            flex-direction: column; 
+            width: 100%; 
+            height: 100%; 
+            justify-content: space-between; 
+            align-items: center; 
+            gap: 10px; 
+        }
+        .zona-alvo { flex: 0.3; display: flex; align-items: center; justify-content: center; width: 100%; }
+        .zona-opcoes { flex: 0.7; display: grid; width: 100%; gap: 10px; align-content: center; justify-content: center; }
+
+        /* Responsividade da Grelha */
+        @media (orientation: portrait) {
+            .zona-opcoes { grid-template-columns: repeat(2, 1fr); max-width: 350px; }
+        }
+        @media (orientation: landscape) {
+            .zona-opcoes { grid-template-columns: repeat(4, 1fr); max-width: 800px; }
+        }
 
         /* ==========================================
            5. FOOTER (BRANCO)
@@ -102,16 +132,11 @@
     <div id="overlay" class="overlay"></div>
     <nav id="menu-dropdown" class="menu-dropdown"></nav>
 
-    <!-- Página de Informações -->
     <div id="page-info" class="info-full-page">
-        <header class="info-header">
-            <span>Informação</span>
-            <button class="btn-close-info" id="btn-close-info">X</button>
-        </header>
+        <header class="info-header"><span>Informação</span><button class="btn-close-info">X</button></header>
         <div class="info-body" id="ui-area-instrucoes"></div>
     </div>
 
-    <!-- Header Principal -->
     <header>
         <div class="header-flex">
             <button class="btn-menu" id="btn-abrir-menu"><div></div><div></div><div></div></button>
@@ -126,32 +151,28 @@
     </header>
 
     <main>
-        <!-- ECRÃ 1: APRESENTAÇÃO -->
         <section id="tela-apresentacao" class="tela active-tela">
             <div class="intro-wrapper">
                 <div class="intro-topo"><h1 id="ui-nome-jogo-intro"></h1></div>
                 <div class="intro-meio"><div id="container-animacao-tutorial" style="width:100%; height:100%;"></div></div>
                 <div class="intro-fundo">
-                    <!-- BOTÃO INFORMAÇÃO -->
                     <img class="img-info-src btn-trigger-info" src="" width="50" style="cursor:pointer; flex-shrink: 0;">
-                    <!-- BOTÃO JOGAR -->
                     <button id="btn-jogar-main" style="flex:1; background:var(--cor-primaria); color:white; border:none; padding:15px; border-radius:50px; font-weight:900; font-size:1.5rem; cursor:pointer; text-transform:uppercase;">JOGAR</button>
                 </div>
             </div>
         </section>
 
-        <!-- ECRÃ 2: JOGO -->
         <section id="tela-jogo" class="tela">
             <div class="game-container">
                 <div class="game-topo">
                     <div style="display:flex; align-items:center; gap:10px;">
-                        <img id="ui-help-lamp" src="" height="45" style="cursor:pointer;">
+                        <!-- Icon da Lâmpada (Ajuda) -->
+                        <img id="ui-help-lamp" src="" height="50" style="cursor:pointer;">
                         <div class="round-pill" id="ui-ronda">1/10</div>
                     </div>
                     <div style="display:flex; align-items:center; gap:8px;">
                         <div class="stat-box box-success">✓ <span id="ui-certos">0</span></div>
                         <div class="stat-box box-error">X <span id="ui-errados">0</span></div>
-                        <!-- BOTÃO INFORMAÇÃO NO TOPO DO JOGO -->
                         <img class="img-info-src btn-trigger-info" src="" width="35" style="cursor:pointer;">
                     </div>
                 </div>
@@ -159,7 +180,6 @@
             </div>
         </section>
 
-        <!-- ECRÃ 3: RESULTADOS -->
         <section id="tela-resultados" class="tela">
             <div id="container-resultados-injetado" style="flex:1; display:flex; align-items:center; justify-content:center; width:100%;"></div>
         </section>
@@ -175,14 +195,12 @@
             const tema = BIBLIOTECA_TEMAS[config.areaAtiva];
             const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
 
-            // 1. Configurar Cores e Título
             document.title = config.nomeDoJogo;
             const root = document.documentElement;
             root.style.setProperty('--cor-pagina', tema.corPagina);
             root.style.setProperty('--cor-primaria', tema.corPrimaria);
             root.style.setProperty('--cor-primaria-alpha', tema.corPrimaria + '66');
 
-            // 2. Preencher Interface
             document.getElementById("txt-titulo1").innerText = conteudo.t1;
             document.getElementById("txt-titulo2").innerText = conteudo.t2;
             document.getElementById("txt-subtitulo-header").innerText = conteudo.sub;
@@ -194,7 +212,6 @@
             const itemAno = config.menuItens.find(item => item.id === config.anoAtivo);
             if (itemAno) document.getElementById("header-icon").src = config.caminhoIconsMenu + itemAno.icon;
 
-            // 3. Gerar Menu Hamburguer
             const menuDiv = document.getElementById("menu-dropdown");
             config.menuItens.forEach(item => {
                 const link = document.createElement("a");
@@ -204,7 +221,7 @@
                 menuDiv.appendChild(link);
             });
 
-            // 4. Injetar Instruções do dados.js
+            // Injetar Instruções
             const areaInstrucoes = document.getElementById("ui-area-instrucoes");
             const ins = config.instrucoes;
             areaInstrucoes.innerHTML = `
@@ -219,41 +236,25 @@
                 </div>
             `;
 
-            // 5. EVENTOS: BOTÃO JOGAR (CORRIGIDO)
             document.getElementById("btn-jogar-main").onclick = () => {
-                trocarEcra('tela-jogo'); // Muda o ecrã imediatamente
-                if (typeof irParaJogo === 'function') irParaJogo(); // Inicia a lógica no jogo.js
+                trocarEcra('tela-jogo');
+                if (typeof irParaJogo === 'function') irParaJogo();
             };
 
-            // 6. EVENTOS: BOTÕES INFORMAÇÃO (CORRIGIDO)
             document.querySelectorAll(".btn-trigger-info").forEach(btn => {
                 btn.onclick = () => document.getElementById("page-info").classList.add("active");
             });
 
-            // 7. EVENTOS: FECHAR MENUS
             const menuDropdown = document.getElementById("menu-dropdown");
             const overlay = document.getElementById("overlay");
-            
             document.getElementById("btn-abrir-menu").onclick = () => {
                 const act = menuDropdown.classList.toggle("active");
                 overlay.style.display = act ? "block" : "none";
             };
-            
-            document.getElementById("btn-close-info").onclick = () => document.getElementById("page-info").classList.remove("active");
-            
-            overlay.onclick = () => {
-                menuDropdown.classList.remove("active");
-                overlay.style.display = "none";
-            };
-            
-            menuDropdown.onclick = (e) => {
-                if (e.target === menuDropdown) {
-                    menuDropdown.classList.remove("active");
-                    overlay.style.display = "none";
-                }
-            };
+            document.querySelector(".btn-close-info").onclick = () => document.getElementById("page-info").classList.remove("active");
+            overlay.onclick = () => { menuDropdown.classList.remove("active"); overlay.style.display = "none"; };
+            menuDropdown.onclick = (e) => { if (e.target === menuDropdown) { menuDropdown.classList.remove("active"); overlay.style.display = "none"; } };
 
-            // Iniciar componentes do jogo.js
             if(typeof iniciarTutorialVisual === 'function') iniciarTutorialVisual();
         });
 
