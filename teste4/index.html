@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <!-- O título será substituído pelo JavaScript via dados.js -->
     <title>Carregando...</title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
@@ -13,7 +12,7 @@
             --primary-color: #5EA2E6; 
             --bg-color: #EAF4FE;
             --text-grey: #8792a1;
-            --menu-item-h: 45px; /* Altura exata solicitada */
+            --menu-item-h: 45px;
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
@@ -55,48 +54,32 @@
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; min-width: 240px;
         }
         .menu-item:hover { background-color: var(--primary-color); color: white; }
-        
-        /* Ícones do Menu adequados a 45px */
-        .menu-item img { 
-            width: 32px; 
-            height: 32px; 
-            object-fit: contain; 
-            flex-shrink: 0;
-        }
+        .menu-item img { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; }
+        .menu-item span { font-size: 0.8rem; text-transform: uppercase; white-space: nowrap; }
 
-        /* Texto do Menu Reduzido */
-        .menu-item span { 
-            font-size: 0.8rem; 
-            text-transform: uppercase; 
-            white-space: nowrap;
-        }
-
-        /* ÁREA PRINCIPAL */
+        /* CONTENTOR PRINCIPAL */
         main { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; }
-        
+        #game-container { width: 100%; display: flex; justify-content: center; align-items: center; flex-direction: column; }
+
+        /* ESTILO DA CAPA (INTRO CARD) */
         .game-intro-card {
             background: white; padding: 35px 25px; border-radius: 40px;
             border: 4px solid var(--primary-color);
             max-width: 500px; width: 90%; text-align: center;
             box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
-
-        #game-nome { color: var(--primary-color); font-size: 1.8rem; font-weight: 900; margin-bottom: 10px; }
-        #game-descricao { color: #5d7082; font-size: 1.1rem; margin-bottom: 30px; line-height: 1.4; }
-
+        .game-intro-card h1 { color: var(--primary-color); font-size: 1.8rem; font-weight: 900; margin-bottom: 10px; }
+        .game-intro-card p { color: #5d7082; font-size: 1.1rem; margin-bottom: 30px; line-height: 1.4; }
         .btn-jogar {
             background: var(--primary-color); color: white;
             padding: 18px 45px; border-radius: 50px;
             text-decoration: none; font-weight: 900; font-size: 1.3rem;
             display: inline-block; cursor: pointer; border: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-            transition: transform 0.2s;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: transform 0.2s;
         }
         .btn-jogar:hover { transform: scale(1.05); }
 
-        #game-container { display: none; width: 100%; }
-
-        footer { background: white; padding: 15px; text-align: center; border-radius: 35px 35px 0 0; }
+        footer { background: white; padding: 15px; text-align: center; border-radius: 35px 35px 0 0; flex-shrink: 0; }
         .footer-text { color: var(--text-grey); font-size: 0.85rem; font-weight: 700; }
     </style>
 </head>
@@ -116,22 +99,15 @@
         <img id="icon-voltar-top" src="" alt="Voltar" onclick="location.reload()">
     </header>
 
-    <main>
-        <div id="intro-screen">
-            <div class="game-intro-card">
-                <h1 id="game-nome"></h1>
-                <p id="game-descricao"></p>
-                <button class="btn-jogar" onclick="iniciarJogoTecnico()">COMEÇAR JOGO</button>
-            </div>
-        </div>
-        <div id="game-container"></div>
+    <main id="game-container">
+        <!-- O jogo.js vai injetar o conteúdo aqui -->
     </main>
 
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
-    <!-- Scripts -->
     <script src="dados.js"></script>
     <script>
+        // Funções de Interface do Index
         function toggleMenu(e) { 
             if(e) e.stopPropagation(); 
             const menu = document.getElementById('dropdownMenu');
@@ -139,10 +115,9 @@
         }
         window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
 
+        // Inicialização do Tema e Moldura
         window.onload = () => {
             const config = JOGO_CONFIG;
-            
-            // 1. Define o Título da Página (Tag <title>)
             document.title = config.nomeDoJogo;
 
             const area = config.areaAtiva;
@@ -150,48 +125,31 @@
             const tema = BIBLIOTECA_TEMAS[area];
             const conteudo = BIBLIOTECA_CONTEUDO[ano][area];
 
-            // 2. Cores Dinâmicas
             document.documentElement.style.setProperty('--primary-color', tema.corPrimaria);
             document.documentElement.style.setProperty('--bg-color', tema.corPagina);
 
-            // 3. Textos do Header e Rodapé
             document.getElementById('txt-titulo1').innerText = conteudo.t1;
             document.getElementById('txt-titulo2').innerText = conteudo.t2;
             document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
             document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
-            
-            // 4. Ícones (Voltar e Jogo)
             document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + tema.voltarMobile;
-            document.getElementById('game-nome').innerText = config.nomeDoJogo;
-            document.getElementById('game-descricao').innerText = config.descricao;
 
-            // Define o ícone principal do header com base no ano ativo
             const itemAtivo = config.menuItens.find(i => i.id === ano);
             if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
 
-            // 5. Gerar Menu Hamburguer dinamicamente
             const menuBox = document.getElementById('dropdownMenu');
             config.menuItens.forEach(item => {
                 const a = document.createElement('a');
-                a.className = 'menu-item';
-                a.href = item.link;
-                
+                a.className = 'menu-item'; a.href = item.link;
                 let iconPath = config.caminhoIconsMenu + item.icon;
                 if(item.icon === "AUTO") iconPath = config.caminhoIconsMenu + tema.voltarMobile;
-
                 a.innerHTML = `<img src="${iconPath}"> <span>${item.label}</span>`;
                 menuBox.appendChild(a);
             });
-        };
 
-        function iniciarJogoTecnico() {
-            document.getElementById('intro-screen').style.display = 'none';
-            document.getElementById('game-container').style.display = 'block';
-            // Chama a inicialização que está no ficheiro jogo.js
-            if(typeof inicializarLogicaJogo === "function") {
-                inicializarLogicaJogo();
-            }
-        }
+            // Chamar a Capa que está no jogo.js
+            if(typeof mostrarCapa === "function") mostrarCapa();
+        };
     </script>
     <script src="jogo.js"></script>
 </body>
