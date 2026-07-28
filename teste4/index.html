@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Plataforma Educativa</title>
+    <title>Carregando...</title>
 
     <!-- Fonte Fredoka -->
     <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700;900&display=swap" rel="stylesheet">
@@ -29,7 +29,7 @@
             box-shadow: 0 4px 15px rgba(0,0,0,0.06); z-index: 1100; flex-shrink: 0; position: relative;
         }
         .header-flex { display: flex; justify-content: space-between; align-items: center; width: 100%; }
-        .header-center { display: flex; align-items: center; gap: 12px; }
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         #header-icon { height: 60px; width: 60px; object-fit: contain; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         #txt-titulo1 { font-weight: 900; font-size: 1.5rem; color: var(--cor-primaria); }
@@ -40,11 +40,11 @@
         .btn-voltar-topo img { height: 45px; }
 
         /* ==========================================
-           3. MENUS
+           3. MENUS (HAMBURGUER E INFO)
            ========================================== */
         .menu-dropdown { 
-            position: fixed; top: 0; left: 0; width: 100%; height: auto;
-            padding: 100px 20px 30px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            padding: 100px 20px; z-index: 1000; display: flex; flex-direction: column; gap: 8px; align-items: flex-start;
             transform: translateY(-120%); transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1);
             background: transparent !important;
         }
@@ -59,11 +59,10 @@
         .info-header span { font-weight: 900; font-size: 1.5rem; color: var(--cor-primaria); text-transform: uppercase; }
         .btn-close-info { background: #eee; border: none; width: 45px; height: 45px; border-radius: 50%; font-size: 1.5rem; font-weight: 900; color: #555; cursor: pointer; }
         .info-body { flex: 1; padding: 30px 25px; overflow-y: auto; color: var(--cor-texto); }
-        
         .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.35); display: none; z-index: 900; backdrop-filter: blur(2px); }
 
         /* ==========================================
-           4. MAIN E ECRÃS (OCUPAÇÃO 100%)
+           4. MAIN E ECRÃS
            ========================================== */
         main { flex: 1; padding: 15px; display: flex; flex-direction: column; overflow: hidden; }
         .tela {
@@ -75,51 +74,60 @@
         .active-tela { display: flex !important; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Ecrã 1 */
+        /* Ecrã 1: Apresentação */
         .intro-wrapper { display: flex; flex-direction: column; height: 100%; width: 100%; }
         .intro-topo { height: 85px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
         .intro-meio { flex: 1; display: flex; align-items: center; justify-content: center; padding: 10px; overflow: hidden; }
         .intro-fundo { height: 85px; display: flex; align-items: center; padding: 0 30px; gap: 20px; flex-shrink: 0; border-top: 1px solid #f9f9f9; }
         #ui-nome-jogo-intro { font-size: clamp(1.1rem, 4vw, 1.6rem); font-weight: 900; color: var(--cor-primaria); text-align: center; text-transform: uppercase; }
 
-        /* Ecrã 2: JOGO (Ocupação 100%) */
+        /* ==========================================
+           ECRÃ 2: JOGO (GRELHA INTELIGENTE)
+           ========================================== */
         .game-container { display: flex; flex-direction: column; height: 100%; width: 100%; }
         .game-topo { height: 85px; display: flex; align-items: center; justify-content: space-between; padding: 0 20px; border-bottom: 1px solid #f2f2f2; flex-shrink: 0; }
         .round-pill { background: #6c757d; color: white; padding: 5px 15px; border-radius: 50px; font-weight: 900; font-size: 1rem; }
         .stat-box { display: flex; align-items: center; gap: 6px; padding: 5px 12px; border-radius: 10px; color: white; font-weight: 900; font-size: 1rem; }
         .box-success { background: #8cc63f; } .box-error { background: #ff5a5f; }
         
-        .game-meio { 
-            flex: 1; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-            width: 100%; 
-            height: 100%; 
-            padding: 10px; 
-            overflow: hidden; 
+        .game-meio { flex: 1; display: flex; align-items: center; justify-content: center; padding: 15px; overflow-y: auto; }
+
+        /* Contentor Injetado pelo JS */
+        #container-jogo-injetado {
+            display: grid;
+            gap: 12px;
+            width: 100%;
+            height: 100%;
+            align-content: center; 
+            justify-content: center;
         }
 
-        /* Layout Interno Injetado */
-        .jogo-wrapper { 
-            display: flex; 
-            flex-direction: column; 
-            width: 100%; 
-            height: 100%; 
-            justify-content: space-between; 
-            align-items: center; 
-            gap: 10px; 
+        /* CONFIGURAÇÃO PC / TABLET LANDSCAPE (3 linhas totais) */
+        @media (min-width: 768px) or (orientation: landscape) {
+            #container-jogo-injetado { grid-template-columns: repeat(4, 1fr); }
+            /* 1ª Linha: O Destaque ocupa 4 colunas */
+            #container-jogo-injetado div:first-child { 
+                grid-column: span 4; 
+                justify-self: center; 
+                height: 120px; /* Tamanho controlado */
+            }
         }
-        .zona-alvo { flex: 0.3; display: flex; align-items: center; justify-content: center; width: 100%; }
-        .zona-opcoes { flex: 0.7; display: grid; width: 100%; gap: 10px; align-content: center; justify-content: center; }
 
-        /* Responsividade da Grelha */
-        @media (orientation: portrait) {
-            .zona-opcoes { grid-template-columns: repeat(2, 1fr); max-width: 350px; }
+        /* CONFIGURAÇÃO TELEMÓVEL PORTRAIT (5 linhas totais) */
+        @media (max-width: 767px) and (orientation: portrait) {
+            #container-jogo-injetado { grid-template-columns: repeat(2, 1fr); }
+            /* 1ª Linha: O Destaque ocupa 2 colunas */
+            #container-jogo-injetado div:first-child { 
+                grid-column: span 2; 
+                justify-self: center; 
+                height: 100px;
+            }
         }
-        @media (orientation: landscape) {
-            .zona-opcoes { grid-template-columns: repeat(4, 1fr); max-width: 800px; }
-        }
+
+        /* Cartões Internos */
+        .card-jogo-base { background: white; border-radius: 15px; border: 2px solid #eee; display: flex; align-items: center; justify-content: center; padding: 10px; transition: 0.2s; }
+        .card-jogo-base img { height: 60%; width: auto; object-fit: contain; } /* Imagens 10% menores */
+        .card-destaque { border: 4px solid var(--cor-primaria); aspect-ratio: 1/1; box-shadow: 0 5px 15px rgba(0,0,0,0.05); }
 
         /* ==========================================
            5. FOOTER (BRANCO)
@@ -132,11 +140,16 @@
     <div id="overlay" class="overlay"></div>
     <nav id="menu-dropdown" class="menu-dropdown"></nav>
 
+    <!-- Página de Informação Full Screen -->
     <div id="page-info" class="info-full-page">
-        <header class="info-header"><span>Informação</span><button class="btn-close-info">X</button></header>
+        <header class="info-header">
+            <span>Informação</span>
+            <button class="btn-close-info">X</button>
+        </header>
         <div class="info-body" id="ui-area-instrucoes"></div>
     </div>
 
+    <!-- Header Principal -->
     <header>
         <div class="header-flex">
             <button class="btn-menu" id="btn-abrir-menu"><div></div><div></div><div></div></button>
@@ -151,6 +164,7 @@
     </header>
 
     <main>
+        <!-- ECRÃ 1: APRESENTAÇÃO -->
         <section id="tela-apresentacao" class="tela active-tela">
             <div class="intro-wrapper">
                 <div class="intro-topo"><h1 id="ui-nome-jogo-intro"></h1></div>
@@ -162,11 +176,12 @@
             </div>
         </section>
 
+        <!-- ECRÃ 2: JOGO -->
         <section id="tela-jogo" class="tela">
             <div class="game-container">
                 <div class="game-topo">
                     <div style="display:flex; align-items:center; gap:10px;">
-                        <!-- Icon da Lâmpada (Ajuda) -->
+                        <!-- Icon da Lâmpada -->
                         <img id="ui-help-lamp" src="" height="50" style="cursor:pointer;">
                         <div class="round-pill" id="ui-ronda">1/10</div>
                     </div>
@@ -176,10 +191,15 @@
                         <img class="img-info-src btn-trigger-info" src="" width="35" style="cursor:pointer;">
                     </div>
                 </div>
-                <div class="game-meio" id="container-jogo-injetado"></div>
+                <div class="game-meio">
+                    <div id="container-jogo-injetado">
+                        <!-- O JS vai injetar aqui 9 DIVS (1 destaque + 8 opções) -->
+                    </div>
+                </div>
             </div>
         </section>
 
+        <!-- ECRÃ 3: RESULTADOS -->
         <section id="tela-resultados" class="tela">
             <div id="container-resultados-injetado" style="flex:1; display:flex; align-items:center; justify-content:center; width:100%;"></div>
         </section>
@@ -201,6 +221,7 @@
             root.style.setProperty('--cor-primaria', tema.corPrimaria);
             root.style.setProperty('--cor-primaria-alpha', tema.corPrimaria + '66');
 
+            // Preenchimento de UI
             document.getElementById("txt-titulo1").innerText = conteudo.t1;
             document.getElementById("txt-titulo2").innerText = conteudo.t2;
             document.getElementById("txt-subtitulo-header").innerText = conteudo.sub;
@@ -208,10 +229,12 @@
             document.getElementById("ui-nome-jogo-intro").innerText = config.nomeDoJogo;
             document.getElementById("ui-seta-voltar").src = config.caminhoIconsMenu + tema.voltarMobile;
             document.querySelectorAll(".img-info-src").forEach(img => img.src = config.caminhoIconsJogos + "inform.png");
+            document.getElementById("ui-help-lamp").src = config.caminhoIconsJogos + "lampada.png";
             
             const itemAno = config.menuItens.find(item => item.id === config.anoAtivo);
             if (itemAno) document.getElementById("header-icon").src = config.caminhoIconsMenu + itemAno.icon;
 
+            // Menu Hambúrguer
             const menuDiv = document.getElementById("menu-dropdown");
             config.menuItens.forEach(item => {
                 const link = document.createElement("a");
@@ -221,12 +244,12 @@
                 menuDiv.appendChild(link);
             });
 
-            // Injetar Instruções
+            // Instruções
             const areaInstrucoes = document.getElementById("ui-area-instrucoes");
             const ins = config.instrucoes;
             areaInstrucoes.innerHTML = `
                 <div style="border-left: 6px solid var(--cor-primaria); padding-left: 15px; margin-bottom: 30px;">
-                    <h2 style="margin:0;">Objetivo do jogo</h2><p>${ins.objetivo}</p>
+                    <h2 style="margin:0;">Objetivo</h2><p>${ins.objetivo}</p>
                 </div>
                 <h2>Como Jogar</h2><ul>${ins.comoJogar.map(s => `<li>${s}</li>`).join('')}</ul>
                 <h2>Regras</h2><ul>${ins.regras.map(r => `<li>${r}</li>`).join('')}</ul>
@@ -236,15 +259,18 @@
                 </div>
             `;
 
+            // Botão Jogar
             document.getElementById("btn-jogar-main").onclick = () => {
                 trocarEcra('tela-jogo');
                 if (typeof irParaJogo === 'function') irParaJogo();
             };
 
+            // Abrir Info
             document.querySelectorAll(".btn-trigger-info").forEach(btn => {
                 btn.onclick = () => document.getElementById("page-info").classList.add("active");
             });
 
+            // Lógica de menus fechar
             const menuDropdown = document.getElementById("menu-dropdown");
             const overlay = document.getElementById("overlay");
             document.getElementById("btn-abrir-menu").onclick = () => {
