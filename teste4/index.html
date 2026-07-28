@@ -12,6 +12,7 @@
             --primary-color: #5EA2E6; 
             --bg-color: #EAF4FE;
             --text-grey: #8792a1;
+            --shadow-color: rgba(0, 0, 0, 0.1); /* Será atualizada via JS */
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
@@ -21,7 +22,7 @@
             background-color: var(--bg-color); display: flex; flex-direction: column; overflow: hidden; 
         }
 
-        /* HEADER SUPERIOR (SITE) */
+        /* HEADER SUPERIOR */
         header { 
             background: white; border-radius: 0 0 35px 35px;
             display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; 
@@ -37,50 +38,51 @@
         .hamburger-btn { background: none; border: none; color: var(--primary-color); font-size: 26px; cursor: pointer; }
         #icon-voltar-top { height: 40px; cursor: pointer; justify-self: end; }
 
-        /* MENU DROPDOWN */
+        /* MENU DROPDOWN - FIX DOS ICONS */
         .menu-dropdown { position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
         .menu-item { 
             display: flex; align-items: center; gap: 12px; height: 45px; padding: 0 15px;
             text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; 
             border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 240px;
         }
-        .menu-item img { width: 32px; height: 32px; }
-        .menu-item span { font-size: 0.8rem; text-transform: uppercase; }
+        /* Corrigido: flex-shrink 0 e object-fit para não alargar */
+        .menu-item img { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; }
+        .menu-item span { font-size: 0.8rem; text-transform: uppercase; white-space: nowrap; }
 
-        /* ÁREA DO JOGO (MAIN) */
+        /* ÁREA DO JOGO */
         main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 15px; }
 
-        /* A "FORMA" DA MOLDURA DO JOGO (SHELL) */
+        /* MOLDURA DO JOGO (SHELL) - MAIS LARGA E COM SOMBRA DO TEMA */
         .game-shell {
             background: white;
             width: 100%;
-            max-width: 850px;
+            max-width: 1000px; /* Alargado conforme solicitado */
             height: 100%;
-            max-height: 600px;
+            max-height: 650px;
             border-radius: 50px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.08);
+            /* Sombra dinâmica com a cor do tema */
+            box-shadow: 0 20px 50px var(--shadow-color); 
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            border: 1px solid rgba(0,0,0,0.05);
+            border: 1px solid rgba(0,0,0,0.03);
+            padding: 0; 
         }
 
-        /* Topo Interno da Moldura */
         .shell-header {
-            padding: 20px;
+            padding: 25px;
             text-align: center;
-            border-bottom: 2px dashed #f0f0f0;
+            border-bottom: 2px dashed #f5f5f5;
             flex-shrink: 0;
         }
         .shell-header h2 {
             text-transform: uppercase;
             font-weight: 900;
-            font-size: 1.4rem;
+            font-size: 1.5rem;
             letter-spacing: 1px;
             color: var(--primary-color);
         }
 
-        /* Centro Interno da Moldura (Onde corre o jogo) */
         .shell-body {
             flex: 1;
             display: flex;
@@ -88,20 +90,18 @@
             justify-content: center;
             align-items: center;
             padding: 20px;
-            position: relative;
             overflow-y: auto;
         }
 
-        /* Rodapé Interno da Moldura */
         .shell-footer {
-            padding: 20px 30px;
+            padding: 20px 40px;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 20px;
             flex-shrink: 0;
+            background: #fafafa; /* Ligeiro destaque no fundo do botão */
         }
 
-        /* Botão i (Info) */
         .btn-info-circle {
             width: 55px; height: 55px;
             border-radius: 50%;
@@ -109,22 +109,21 @@
             color: #8792a1;
             display: flex; align-items: center; justify-content: center;
             font-size: 24px; font-weight: bold; font-style: italic;
-            cursor: pointer; background: white;
+            cursor: pointer; background: white; flex-shrink: 0;
         }
 
-        /* Botão JOGAR Gigante */
         .btn-play-rect {
             flex: 1;
             height: 60px;
             border-radius: 30px;
-            background: #6c757d; /* Cor neutra inicial */
+            background: var(--primary-color);
             color: white;
             display: flex; align-items: center; justify-content: center;
             gap: 15px;
-            font-size: 1.4rem; font-weight: 900;
+            font-size: 1.5rem; font-weight: 900;
             text-transform: uppercase;
             cursor: pointer; border: none;
-            box-shadow: 0 4px 0 rgba(0,0,0,0.15);
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
         }
 
         footer { background: white; padding: 10px; text-align: center; border-radius: 30px 30px 0 0; flex-shrink: 0; }
@@ -148,7 +147,6 @@
     </header>
 
     <main>
-        <!-- A MOLDURA DO JOGO -->
         <div class="game-shell">
             <div class="shell-header"><h2 id="shell-title">---</h2></div>
             <div class="shell-body" id="game-content"></div>
@@ -173,8 +171,14 @@
             const tema = BIBLIOTECA_TEMAS[config.areaAtiva];
             const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
 
+            // Cores
             document.documentElement.style.setProperty('--primary-color', tema.corPrimaria);
             document.documentElement.style.setProperty('--bg-color', tema.corPagina);
+            
+            // Sombra do tema (converte a cor primária para transparente)
+            // Pegamos na cor hex e adicionamos 44 (aprox 25% opacidade)
+            const shadowColor = tema.corPrimaria + "44"; 
+            document.documentElement.style.setProperty('--shadow-color', shadowColor);
 
             document.getElementById('txt-titulo1').innerText = conteudo.t1;
             document.getElementById('txt-titulo2').innerText = conteudo.t2;
