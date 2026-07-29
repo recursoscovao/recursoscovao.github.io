@@ -1,1 +1,277 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Plataforma de Jogos Educativos</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #5EA2E6;
+            --bg-color: #EAF4FE;
+            --text-grey: #8792a1;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            /* ESCALA DINÂMICA - Será alterada pelo JS */
+            --ui-scale: 1; 
+        }
 
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
+
+        body, html {
+            height: 100vh;
+            width: 100vw;
+            background-color: var(--bg-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; /* Evita scroll na página toda */
+        }
+
+        /* HEADER FLEXÍVEL */
+        header {
+            background: white;
+            border-radius: 0 0 25px 25px;
+            display: grid;
+            grid-template-columns: 60px 1fr 60px;
+            align-items: center;
+            padding: 0 15px;
+            height: clamp(60px, 10vh, 90px);
+            z-index: 1000;
+            flex-shrink: 0;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+        }
+
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 10px; }
+        #header-icon { height: 70%; max-height: 60px; object-fit: contain; }
+        
+        .title-group { display: flex; flex-direction: column; line-height: 0.9; text-transform: uppercase; }
+        #txt-titulo1 { color: var(--primary-color); font-weight: 900; font-size: calc(1.4rem * var(--ui-scale)); }
+        #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: calc(1.1rem * var(--ui-scale)); }
+        #txt-subtitulo-header { font-weight: 600; font-size: calc(0.6rem * var(--ui-scale)); opacity: 0.7; margin-top: 4px; }
+
+        /* MAIN - ÁREA ÚTIL */
+        main {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: clamp(8px, 2vh, 20px);
+            overflow: hidden;
+        }
+
+        /* GAME SHELL PROFISSIONAL */
+        .game-shell {
+            background: white;
+            width: min(1200px, 100%);
+            height: 100%; /* Ocupa o máximo do main */
+            border-radius: calc(40px * var(--ui-scale));
+            box-shadow: 0 20px 50px var(--shadow-color);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid rgba(0,0,0,0.03);
+        }
+
+        .shell-header {
+            padding: calc(15px * var(--ui-scale));
+            text-align: center;
+            border-bottom: 2px dashed #f5f5f5;
+            flex-shrink: 0;
+        }
+        .shell-header h2 {
+            text-transform: uppercase;
+            font-weight: 900;
+            font-size: calc(1.5rem * var(--ui-scale));
+            color: var(--primary-color);
+        }
+
+        /* O CORAÇÃO DO JOGO */
+        .shell-body {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            overflow: auto; /* Scroll apenas aqui dentro se o jogo transbordar */
+            position: relative;
+        }
+
+        /* FOOTER DA SHELL */
+        .shell-footer {
+            padding: calc(15px * var(--ui-scale)) calc(30px * var(--ui-scale));
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: #fafafa;
+            flex-shrink: 0;
+        }
+
+        .btn-info-circle {
+            width: calc(50px * var(--ui-scale));
+            height: calc(50px * var(--ui-scale));
+            border-radius: 50%;
+            border: 3px solid #8792a1;
+            color: #8792a1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: calc(20px * var(--ui-scale));
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-play-rect {
+            flex: 1;
+            height: calc(60px * var(--ui-scale));
+            border-radius: 30px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            font-size: calc(1.4rem * var(--ui-scale));
+            font-weight: 900;
+            text-transform: uppercase;
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+            display: flex; align-items: center; justify-content: center; gap: 10px;
+        }
+
+        /* RESPONSIVIDADE MOBILE VERTICAL */
+        @media (max-width: 500px) and (orientation: portrait) {
+            .shell-footer { flex-direction: column-reverse; padding: 15px; }
+            .btn-play-rect { width: 100%; }
+            .btn-info-circle { align-self: flex-start; }
+            #txt-subtitulo-header { display: none; }
+        }
+
+        footer { height: 30px; display: flex; align-items: center; justify-content: center; background: white; flex-shrink: 0; }
+        .footer-text { color: var(--text-grey); font-size: 0.7rem; font-weight: 700; }
+
+        /* MENU DROPDOWN */
+        .menu-dropdown {
+            position: absolute; top: 70px; left: 15px; background: white;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2); border-radius: 15px;
+            display: none; flex-direction: column; z-index: 3000; padding: 10px;
+        }
+        .menu-item { display: flex; align-items: center; gap: 10px; padding: 10px; text-decoration: none; color: var(--text-grey); font-weight: 800; font-size: 0.8rem; }
+        .menu-item img { width: 25px; }
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="hamburger-btn" onclick="toggleMenu(event)" style="background:none; border:none; color:var(--primary-color); font-size:24px; cursor:pointer;">
+            <i class="fas fa-bars"></i>
+        </button>
+        <div id="dropdownMenu" class="menu-dropdown"></div>
+        
+        <div class="header-center">
+            <img id="header-icon" src="" alt="">
+            <div class="title-group">
+                <div id="txt-titulo1">---</div>
+                <div id="txt-titulo2">---</div>
+                <div id="txt-subtitulo-header">---</div>
+            </div>
+        </div>
+        
+        <img id="icon-voltar-top" src="" alt="Sair" onclick="window.history.back()" style="height:35px; cursor:pointer; justify-self:end;">
+    </header>
+
+    <main>
+        <div class="game-shell">
+            <div class="shell-header"><h2 id="shell-title">Carregando...</h2></div>
+            <div class="shell-body" id="game-content">
+                <!-- O jogo vai desenhar aqui -->
+            </div>
+            <div class="shell-footer" id="shell-footer">
+                <!-- Botões dinâmicos -->
+            </div>
+        </div>
+    </main>
+
+    <footer><span class="footer-text" id="txt-rodape"></span></footer>
+
+    <!-- SCRIPTS -->
+    <script src="dados.js"></script>
+    <script>
+        // ENGINE DE ESCALA E LAYOUT
+        const Engine = {
+            scale: 1,
+            viewport: { w: 0, h: 0 },
+
+            init() {
+                this.updateScale();
+                window.addEventListener('resize', () => this.updateScale());
+                this.loadConfig();
+            },
+
+            updateScale() {
+                const w = window.innerWidth;
+                const h = window.innerHeight;
+                
+                // Cálculo da escala baseada no dispositivo
+                if (w > 1200) this.scale = 1;
+                else if (w > 768) this.scale = 0.9;
+                else if (w > 480) this.scale = 0.8; // Tablet landscape / Mobile large
+                else this.scale = 0.7; // Mobile portrait
+
+                document.documentElement.style.setProperty('--ui-scale', this.scale);
+                
+                // Guardar espaço útil para o jogo.js usar
+                const body = document.getElementById('game-content');
+                this.viewport.w = body.clientWidth;
+                this.viewport.h = body.clientHeight;
+
+                // Notificar o jogo que o tamanho mudou (se a função existir)
+                if(typeof onResizeGame === "function") onResizeGame(this.viewport);
+            },
+
+            loadConfig() {
+                const config = JOGO_CONFIG;
+                const tema = BIBLIOTECA_TEMAS[config.areaAtiva];
+                const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
+
+                // Aplicar Tema
+                document.documentElement.style.setProperty('--primary-color', tema.corPrimaria);
+                document.documentElement.style.setProperty('--bg-color', tema.corPagina);
+                document.documentElement.style.setProperty('--shadow-color', tema.corPrimaria + "33");
+
+                // Textos
+                document.getElementById('txt-titulo1').innerText = conteudo.t1;
+                document.getElementById('txt-titulo2').innerText = conteudo.t2;
+                document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
+                document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
+                document.getElementById('shell-title').innerText = config.nomeDoJogo;
+                
+                // Ícones
+                document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + tema.voltarMobile;
+                const itemAtivo = config.menuItens.find(i => i.id === config.anoAtivo);
+                if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
+
+                this.renderMenu();
+                
+                // Chamar a função do jogo.js
+                if(typeof mostrarCapa === "function") mostrarCapa();
+            },
+
+            renderMenu() {
+                const menuBox = document.getElementById('dropdownMenu');
+                JOGO_CONFIG.menuItens.forEach(item => {
+                    const a = document.createElement('a');
+                    a.className = 'menu-item';
+                    a.href = item.link;
+                    let icon = (item.icon === "AUTO") ? BIBLIOTECA_TEMAS[JOGO_CONFIG.areaAtiva].voltarMobile : item.icon;
+                    a.innerHTML = `<img src="${JOGO_CONFIG.caminhoIconsMenu + icon}"> <span>${item.label}</span>`;
+                    menuBox.appendChild(a);
+                });
+            }
+        };
+
+        function toggleMenu(e) { e.stopPropagation(); const m = document.getElementById('dropdownMenu'); m.style.display = m.style.display === 'flex' ? 'none' : 'flex'; }
+        window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
+
+        window.onload = () => Engine.init();
+    </script>
+    <script src="jogo.js"></script>
+</body>
+</html>
