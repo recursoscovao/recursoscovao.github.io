@@ -39,16 +39,16 @@
         /* BARRA DE STATUS (IN GAME) */
         .status-bar { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; }
         .status-left, .status-right { display: flex; align-items: center; gap: 10px; }
-        .status-pill { background: #6c757d; color: white; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 1.2rem; }
-        .lamp-icon { height: 45px; }
-        .score-box { padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 5px; font-size: 1.1rem; }
+        .status-pill { background: #6c757d; color: white; padding: 6px 18px; border-radius: 20px; font-weight: 900; font-size: 1.3rem; }
+        .lamp-icon { height: 50px; object-fit: contain; }
+        .score-box { padding: 6px 15px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.2rem; }
         .score-certo { background: #8cc63f; }
         .score-erro { background: #ff5a5f; }
 
         /* RESULTADOS FINAIS */
-        .results-container { text-align: center; padding: 20px; }
-        .trophy-img { height: clamp(100px, 25vh, 180px); margin-bottom: 15px; }
-        .results-title { color: var(--primary-color); font-weight: 900; font-size: 1.8rem; margin-bottom: 10px; }
+        .results-container { text-align: center; padding: 20px; width: 100%; }
+        .trophy-img { height: clamp(120px, 30vh, 220px); margin-bottom: 20px; object-fit: contain; }
+        .results-title { color: var(--primary-color); font-weight: 900; font-size: 2rem; margin-bottom: 15px; text-transform: uppercase; }
         .results-stats { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
 
         .menu-dropdown { position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 6px; z-index: 2000; background: transparent; }
@@ -61,15 +61,14 @@
         .menu-item:hover span { color: white; }
         .menu-item img { width: 32px; height: 32px; object-fit: contain; }
 
-        .shell-header { padding: 20px; text-align: center; border-bottom: 2px dashed #f5f5f5; min-height: 80px; display: flex; align-items: center; justify-content: center; }
-        .shell-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; }
+        .shell-header { padding: 20px; text-align: center; border-bottom: 2px dashed #f5f5f5; min-height: 90px; display: flex; align-items: center; justify-content: center; }
+        .shell-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; position: relative; }
         .shell-footer { padding: 20px 40px; display: flex; align-items: center; gap: 20px; background: #fafafa; min-height: 100px; }
 
         .btn-info-circle { width: 60px; height: 60px; cursor: pointer; flex-shrink: 0; }
         .btn-info-circle img { width: 100%; height: 100%; object-fit: contain; }
         .btn-play-rect { flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
-        /* RESPONSIVIDADE */
         @media (max-width: 500px) and (orientation: portrait) {
             body, html { overflow-y: auto; height: auto; }
             header { height: 75px; }
@@ -111,9 +110,9 @@
 
     <main>
         <div class="game-shell">
-            <div class="shell-header" id="shell-header-content"></div> <!-- SLOT HEADER -->
-            <div class="shell-body" id="game-content"></div>           <!-- SLOT CORPO -->
-            <div class="shell-footer" id="shell-footer-content"></div> <!-- SLOT RODAPÉ -->
+            <div class="shell-header" id="shell-header-content"></div> 
+            <div class="shell-body" id="game-content"></div>           
+            <div class="shell-footer" id="shell-footer-content"></div> 
         </div>
     </main>
 
@@ -150,17 +149,14 @@
 
                 this.renderMenu();
                 this.renderInfoPanel(); 
-                this.showCapa(); // Inicia mostrando a capa
+                this.showCapa(); 
 
                 if(typeof mostrarCapa === "function") mostrarCapa();
             },
 
-            // --- GESTÃO DE SLOTS ---
-            
-            // 1. Mostrar Capa (Título + Botões Play/Info)
+            // 1. MOSTRAR CAPA
             showCapa() {
                 document.getElementById('shell-header-content').innerHTML = `<h2 style="text-transform: uppercase; font-weight: 900; font-size: 1.5rem; color: var(--primary-color);">${JOGO_CONFIG.nomeDoJogo}</h2>`;
-                
                 const footer = document.getElementById('shell-footer-content');
                 footer.style.display = 'flex';
                 footer.innerHTML = `
@@ -169,12 +165,13 @@
                 `;
             },
 
-            // 2. Mostrar Barra de Status (Durante o Jogo)
+            // 2. MOSTRAR STATUS (USANDO LAMPADA.PNG)
             showStatusBar(ronda, total, certos, erros) {
+                const lampPath = JOGO_CONFIG.caminhoIconsMenu + "lampada.png";
                 document.getElementById('shell-header-content').innerHTML = `
                     <div class="status-bar">
                         <div class="status-left">
-                            <img src="${JOGO_CONFIG.caminhoIconsMenu}lampada.png" class="lamp-icon">
+                            <img src="${lampPath}" class="lamp-icon">
                             <div class="status-pill">${ronda} / ${total}</div>
                         </div>
                         <div class="status-right">
@@ -183,17 +180,21 @@
                         </div>
                     </div>
                 `;
-                document.getElementById('shell-footer-content').style.display = 'none'; // Ganha espaço pro jogo
+                document.getElementById('shell-footer-content').style.display = 'none'; 
             },
 
-            // 3. Mostrar Ecrã de Resultados
-            showResults(feedback, imgTaca, certos, erros, ajudas) {
+            // 3. MOSTRAR RESULTADOS (LÓGICA AUTOMÁTICA DAS TAÇAS)
+            showResults(certos, erros) {
+                const config = JOGO_CONFIG;
+                // Procura na biblioteca de relatórios qual se aplica a esta pontuação
+                const rel = config.relatorios.find(r => certos >= r.min && certos <= r.max);
+                
                 document.getElementById('shell-header-content').innerHTML = `<h2 style="text-transform: uppercase; font-weight: 900; font-size: 1.5rem; color: var(--primary-color);">RESULTADOS</h2>`;
                 
                 document.getElementById('game-content').innerHTML = `
                     <div class="results-container">
-                        <img src="${JOGO_CONFIG.caminhoIconsMenu}${imgTaca}" class="trophy-img">
-                        <h2 class="results-title">${feedback}</h2>
+                        <img src="${config.caminhoIconsMenu}${rel.img}" class="trophy-img">
+                        <h2 class="results-title">${rel.titulo}</h2>
                         <div class="results-stats">
                             <div class="score-box score-certo">CERTOS: ${certos}</div>
                             <div class="score-box score-erro">ERROS: ${erros}</div>
@@ -205,7 +206,7 @@
                 footer.style.display = 'flex';
                 footer.innerHTML = `
                     <button class="btn-play-rect" style="background:#6c757d" onclick="location.reload()">REPETIR</button>
-                    <button class="btn-play-rect" onclick="window.history.back()">OUTROS JOGOS</button>
+                    <button class="btn-play-rect" onclick="window.history.back()">SAIR</button>
                 `;
             },
 
