@@ -7,6 +7,9 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
+        /* ============================================================
+           1. ESTILOS GERAIS (PC E TABLETS GRANDES)
+           ============================================================ */
         :root {
             --primary-color: #5EA2E6;
             --bg-color: #EAF4FE;
@@ -18,184 +21,92 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
 
         body, html {
-            height: 100vh;
-            width: 100vw;
-            background-color: var(--bg-color);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            height: 100vh; width: 100vw; background-color: var(--bg-color);
+            display: flex; flex-direction: column; overflow: hidden;
         }
 
         header {
-            background: white;
-            border-radius: 0 0 35px 35px;
-            display: grid;
-            grid-template-columns: 50px 1fr 50px;
-            align-items: center;
-            padding: 0 15px;
-            height: 90px;
-            z-index: 1000;
-            flex-shrink: 0;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03);
+            background: white; border-radius: 0 0 35px 35px;
+            display: grid; grid-template-columns: 50px 1fr 50px;
+            align-items: center; padding: 0 15px; height: 90px;
+            z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03);
         }
 
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         #header-icon { height: 60px; object-fit: contain; }
-        
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         #txt-titulo1 { color: var(--primary-color); font-weight: 900; font-size: calc(1.4rem * var(--ui-scale)); }
         #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: calc(1.1rem * var(--ui-scale)); }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: calc(0.6rem * var(--ui-scale)); margin-top: 4px; opacity: 0.8; }
 
-        /* MENUS DROPDOWN (Geral e Info) */
-        .menu-dropdown, .info-dropdown {
-            position: absolute;
-            display: none;
-            flex-direction: column;
-            z-index: 2000;
-            background: white;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            padding: 15px;
-        }
-
-        .menu-dropdown { top: 85px; left: 15px; gap: 6px; }
-        
-        /* Dropdown de Informação (Abre acima do botão) */
-        .info-dropdown {
-            bottom: 85px;
-            left: 15px;
-            width: min(350px, 90vw);
-            max-height: 60vh;
-            overflow-y: auto;
-            border: 2px solid var(--primary-color);
-        }
-
-        .info-dropdown h3 { color: var(--primary-color); margin-bottom: 8px; font-size: 1.1rem; text-transform: uppercase; }
-        .info-dropdown p { font-size: 0.85rem; color: var(--text-grey); line-height: 1.4; margin-bottom: 10px; }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            height: 45px;
-            padding: 0 15px;
-            text-decoration: none;
-            color: var(--text-grey);
-            font-weight: 800;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-            min-width: 240px;
-            transition: all 0.2s ease;
-        }
-
-        .menu-item:hover {
-            background-color: var(--primary-color);
-            color: white;
-        }
-        .menu-item:hover span { color: white; }
-        .menu-item img { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; }
-        .menu-item span { font-size: 0.8rem; text-transform: uppercase; white-space: nowrap; }
-
-        main {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            padding: 15px;
-            position: relative; /* Necessário para posicionar o info-dropdown */
-        }
+        main { flex: 1; display: flex; justify-content: center; align-items: center; padding: 15px; position: relative; }
 
         .game-shell {
-            background: white;
-            width: min(1100px, 100%);
-            height: 100%;
+            background: white; width: min(1100px, 100%); height: 100%;
             border-radius: calc(45px * var(--ui-scale));
             box-shadow: 0 20px 50px var(--shadow-color);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+            display: flex; flex-direction: column; overflow: hidden;
             border: 1px solid rgba(0,0,0,0.03);
         }
 
-        .shell-header {
-            padding: calc(20px * var(--ui-scale));
-            text-align: center;
-            border-bottom: 2px dashed #f5f5f5;
-            flex-shrink: 0;
-        }
-        .shell-header h2 {
-            text-transform: uppercase;
-            font-weight: 900;
-            font-size: calc(1.5rem * var(--ui-scale));
-            color: var(--primary-color);
-        }
+        .shell-header { padding: calc(20px * var(--ui-scale)); text-align: center; border-bottom: 2px dashed #f5f5f5; flex-shrink: 0; }
+        .shell-header h2 { text-transform: uppercase; font-weight: 900; font-size: calc(1.5rem * var(--ui-scale)); color: var(--primary-color); }
+        .shell-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; overflow: auto; }
+        .shell-footer { padding: calc(15px * var(--ui-scale)) calc(35px * var(--ui-scale)); display: flex; align-items: center; gap: 20px; background: #fafafa; flex-shrink: 0; }
 
-        .shell-body {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            overflow: auto;
-            position: relative;
-        }
-
-        .shell-footer {
-            padding: calc(15px * var(--ui-scale)) calc(35px * var(--ui-scale));
-            display: flex;
-            align-items: center;
-            gap: 20px;
-            background: #fafafa;
-            flex-shrink: 0;
-        }
-
-        .btn-info-circle {
-            width: calc(55px * var(--ui-scale));
-            height: calc(55px * var(--ui-scale));
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-        }
-        .btn-info-circle img {
-            width: 100%;
-            height: 100%;
-            object-fit: contain;
-        }
-
-        .btn-play-rect {
-            flex: 1;
-            height: calc(60px * var(--ui-scale));
-            border-radius: 30px;
-            background: var(--primary-color);
-            color: white;
-            display: flex; align-items: center; justify-content: center; gap: 15px;
-            font-size: calc(1.4rem * var(--ui-scale));
-            font-weight: 900;
-            text-transform: uppercase;
-            cursor: pointer;
-            border: none;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        @media (max-width: 500px) and (orientation: portrait) {
-            .shell-footer { flex-direction: column-reverse; padding: 15px; gap: 10px; }
-            .btn-play-rect { width: 100%; height: 50px; }
-            .btn-info-circle { width: 45px; height: 45px; align-self: center; }
-            header { height: 70px; }
-            #header-icon { height: 45px; }
-            .menu-dropdown { top: 65px; }
-            .info-dropdown { bottom: 130px; left: 5%; width: 90%; }
-        }
+        .btn-info-circle { width: calc(55px * var(--ui-scale)); height: calc(55px * var(--ui-scale)); cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .btn-info-circle img { width: 100%; height: 100%; object-fit: contain; }
+        .btn-play-rect { flex: 1; height: calc(60px * var(--ui-scale)); border-radius: 30px; background: var(--primary-color); color: white; display: flex; align-items: center; justify-content: center; gap: 15px; font-size: calc(1.4rem * var(--ui-scale)); font-weight: 900; text-transform: uppercase; cursor: pointer; border: none; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
         footer { padding: 10px; text-align: center; flex-shrink: 0; background: white; border-radius: 30px 30px 0 0; }
         .footer-text { color: var(--text-grey); font-size: 0.75rem; font-weight: 700; }
 
+        /* DROPDOWNS */
+        .menu-dropdown, .info-dropdown { position: absolute; display: none; flex-direction: column; z-index: 2000; background: white; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.15); padding: 15px; }
+        .menu-dropdown { top: 85px; left: 15px; gap: 6px; }
+        .info-dropdown { bottom: 85px; left: 15px; width: 350px; max-height: 60vh; overflow-y: auto; border: 2px solid var(--primary-color); }
+
+        /* ============================================================
+           2. ÁREA DE MUDANÇA: TELEMÓVEL VERTICAL (PORTRAIT)
+           ============================================================ */
+        @media (max-width: 500px) and (orientation: portrait) {
+            header { height: 70px; }
+            #header-icon { height: 45px; }
+            #txt-titulo1 { font-size: 1.2rem; }
+            #txt-titulo2 { font-size: 1rem; }
+            #txt-subtitulo-header { display: none; } /* Esconde para ganhar espaço */
+
+            .shell-footer { flex-direction: column-reverse; padding: 15px; gap: 10px; }
+            .btn-play-rect { width: 100%; height: 55px; font-size: 1.2rem; }
+            .btn-info-circle { width: 45px; height: 45px; align-self: center; }
+
+            .info-dropdown { bottom: 130px; left: 5%; width: 90%; }
+        }
+
+        /* ============================================================
+           3. ÁREA DE MUDANÇA: TELEMÓVEL LANDSCAPE (HORIZONTAL)
+           ============================================================ */
+        @media (max-height: 500px) and (orientation: landscape) {
+            body, html { overflow-y: auto; } /* Permite scroll se o ecrã for muito baixo */
+            header { height: 60px; }
+            #header-icon { height: 40px; }
+            .title-group { display: none; } /* Esconde o texto para dar foco total ao jogo */
+            
+            main { padding: 5px; }
+            .game-shell { border-radius: 20px; height: auto; min-height: 400px; }
+            .shell-header { padding: 10px; }
+            .shell-header h2 { font-size: 1.1rem; }
+            
+            .shell-footer { padding: 10px 20px; }
+            .btn-play-rect { height: 45px; font-size: 1.1rem; }
+            .btn-info-circle { width: 40px; height: 40px; }
+        }
+
         .hamburger-btn { background: none; border: none; color: var(--primary-color); font-size: 26px; cursor: pointer; }
+        .menu-item { display: flex; align-items: center; gap: 12px; height: 45px; padding: 0 15px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 240px; transition: all 0.2s; }
+        .menu-item:hover { background-color: var(--primary-color); color: white; }
+        .menu-item:hover span { color: white; }
+        .menu-item img { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; }
     </style>
 </head>
 <body>
@@ -203,7 +114,6 @@
     <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
-        
         <div class="header-center">
             <img id="header-icon" src="" alt="">
             <div class="title-group">
@@ -212,13 +122,11 @@
                 <div id="txt-subtitulo-header">---</div>
             </div>
         </div>
-        
         <img id="icon-voltar-top" src="" alt="Voltar" onclick="location.reload()" style="height: 40px; cursor: pointer; justify-self: end;">
     </header>
 
     <main>
-        <div id="infoDropdown" class="info-dropdown"></div> <!-- Painel de Instruções -->
-        
+        <div id="infoDropdown" class="info-dropdown"></div>
         <div class="game-shell">
             <div class="shell-header"><h2 id="shell-title">---</h2></div>
             <div class="shell-body" id="game-content"></div>
@@ -232,114 +140,76 @@
     <script>
         const Engine = {
             scale: 1,
-            viewport: { w: 0, h: 0 },
-
             init() {
                 this.updateScale();
                 window.addEventListener('resize', () => this.updateScale());
                 this.loadConfig();
             },
-
             updateScale() {
                 const w = window.innerWidth;
+                const h = window.innerHeight;
+
+                // Aqui podes mudar a lógica de escala por dispositivo
                 if (w > 1200) this.scale = 1;
                 else if (w > 768) this.scale = 0.9;
-                else if (w > 480) this.scale = 0.8;
-                else this.scale = 0.7;
+                else if (w < h) this.scale = 0.8; // Telemóvel Vertical
+                else this.scale = 0.75; // Telemóvel Landscape
 
                 document.documentElement.style.setProperty('--ui-scale', this.scale);
-                const body = document.getElementById('game-content');
-                this.viewport.w = body.clientWidth;
-                this.viewport.h = body.clientHeight;
-                if(typeof onResizeGame === "function") onResizeGame(this.viewport);
+                if(typeof onResizeGame === "function") onResizeGame({w: document.getElementById('game-content').clientWidth, h: document.getElementById('game-content').clientHeight});
             },
-
             loadConfig() {
                 const config = JOGO_CONFIG;
                 const tema = BIBLIOTECA_TEMAS[config.areaAtiva];
                 const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
-
                 document.documentElement.style.setProperty('--primary-color', tema.corPrimaria);
                 document.documentElement.style.setProperty('--bg-color', tema.corPagina);
                 document.documentElement.style.setProperty('--shadow-color', tema.corPrimaria + "33");
-
                 document.getElementById('txt-titulo1').innerText = conteudo.t1;
                 document.getElementById('txt-titulo2').innerText = conteudo.t2;
                 document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
                 document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
                 document.getElementById('shell-title').innerText = config.nomeDoJogo;
-                
                 document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + tema.voltarMobile;
-                const itemAtivo = config.menu_itens?.find(i => i.id === config.anoAtivo) || config.menuItens?.find(i => i.id === config.anoAtivo);
+                const itemAtivo = config.menuItens.find(i => i.id === config.anoAtivo);
                 if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
-
                 this.renderMenu();
-                this.renderInfoMenu(); // Prepara o conteúdo do menu de informação
-                this.renderFooter(); 
-
+                this.renderInfoMenu();
+                this.renderFooter();
                 if(typeof mostrarCapa === "function") mostrarCapa();
             },
-
             renderMenu() {
                 const menuBox = document.getElementById('dropdownMenu');
                 menuBox.innerHTML = ''; 
-                const itens = JOGO_CONFIG.menuItens || JOGO_CONFIG.menu_itens;
-                itens.forEach(item => {
+                JOGO_CONFIG.menuItens.forEach(item => {
                     const a = document.createElement('a');
                     a.className = 'menu-item';
                     a.href = item.link;
-                    let iconPath = JOGO_CONFIG.caminhoIconsMenu + item.icon;
-                    if(item.icon === "AUTO") iconPath = JOGO_CONFIG.caminhoIconsMenu + BIBLIOTECA_TEMAS[JOGO_CONFIG.areaAtiva].voltarMobile;
-                    a.innerHTML = `<img src="${iconPath}"> <span>${item.label}</span>`;
+                    let icon = (item.icon === "AUTO") ? BIBLIOTECA_TEMAS[JOGO_CONFIG.areaAtiva].voltarMobile : item.icon;
+                    a.innerHTML = `<img src="${JOGO_CONFIG.caminhoIconsMenu + icon}"> <span>${item.label}</span>`;
                     menuBox.appendChild(a);
                 });
             },
-
             renderInfoMenu() {
                 const infoBox = document.getElementById('infoDropdown');
                 const inst = JOGO_CONFIG.instrucoes;
                 infoBox.innerHTML = `
-                    <h3>Objetivo</h3>
-                    <p>${inst.objetivo}</p>
-                    <h3>Como Jogar</h3>
-                    <p>${inst.comoJogar.join(' ')}</p>
-                    <button onclick="toggleInfo(event)" style="width:100%; padding:8px; border-radius:10px; border:none; background:var(--primary-color); color:white; font-weight:bold; cursor:pointer;">FECHAR</button>
+                    <h3>Objetivo</h3><p>${inst.objective || inst.objetivo}</p>
+                    <button onclick="toggleInfo(event)" style="width:100%; padding:10px; background:var(--primary-color); color:white; border:none; border-radius:10px; font-weight:bold; cursor:pointer;">FECHAR</button>
                 `;
             },
-
             renderFooter() {
                 const footer = document.getElementById('shell-footer');
-                const pathIconInfo = JOGO_CONFIG.caminhoIconsMenu + "inform.png";
                 footer.innerHTML = `
-                    <div class="btn-info-circle" onclick="toggleInfo(event)">
-                        <img src="${pathIconInfo}" alt="Info">
-                    </div>
-                    <button class="btn-play-rect" onclick="if(typeof iniciarJogo === 'function') iniciarJogo()">
-                        <i class="fas fa-play"></i> JOGAR
-                    </button>
+                    <div class="btn-info-circle" onclick="toggleInfo(event)"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
+                    <button class="btn-play-rect" onclick="if(typeof iniciarJogo === 'function') iniciarJogo()"><i class="fas fa-play"></i> JOGAR</button>
                 `;
             }
         };
 
-        function toggleMenu(e) { 
-            e.stopPropagation(); 
-            document.getElementById('infoDropdown').style.display = 'none';
-            const m = document.getElementById('dropdownMenu'); 
-            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; 
-        }
-
-        function toggleInfo(e) {
-            e.stopPropagation();
-            document.getElementById('dropdownMenu').style.display = 'none';
-            const i = document.getElementById('infoDropdown');
-            i.style.display = (i.style.display === 'flex') ? 'none' : 'flex';
-        }
-
-        window.onclick = () => {
-            document.getElementById('dropdownMenu').style.display = 'none';
-            document.getElementById('infoDropdown').style.display = 'none';
-        }
-
+        function toggleMenu(e) { e.stopPropagation(); document.getElementById('infoDropdown').style.display = 'none'; const m = document.getElementById('dropdownMenu'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; }
+        function toggleInfo(e) { e.stopPropagation(); document.getElementById('dropdownMenu').style.display = 'none'; const i = document.getElementById('infoDropdown'); i.style.display = (i.style.display === 'flex') ? 'none' : 'flex'; }
+        window.onclick = () => { document.getElementById('dropdownMenu').style.display = 'none'; document.getElementById('infoDropdown').style.display = 'none'; }
         window.onload = () => Engine.init();
     </script>
     <script src="jogo.js"></script>
