@@ -45,10 +45,10 @@
         
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         #txt-titulo1 { color: var(--primary-color); font-weight: 900; font-size: calc(1.4rem * var(--ui-scale)); }
-        #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: calc(1.2rem * var(--ui-scale)); }
+        #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: calc(1.1rem * var(--ui-scale)); }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: calc(0.6rem * var(--ui-scale)); margin-top: 4px; opacity: 0.8; }
 
-        /* MENU DROPDOWN - CONFIGURAÇÃO ORIGINAL RECUPERADA */
+        /* MENU DROPDOWN */
         .menu-dropdown {
             position: absolute;
             top: 85px;
@@ -72,6 +72,16 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             min-width: 240px;
+            transition: background 0.2s, color 0.2s; /* Suavidade no hover */
+        }
+
+        /* ALTERAÇÃO: HOVER COM COR DO TEMA */
+        .menu-item:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+        .menu-item:hover span {
+            color: white;
         }
 
         .menu-item img {
@@ -142,20 +152,20 @@
             flex-shrink: 0;
         }
 
+        /* ALTERAÇÃO: BOTÃO INFORMAÇÃO COMO IMAGEM */
         .btn-info-circle {
             width: calc(55px * var(--ui-scale));
             height: calc(55px * var(--ui-scale));
-            border-radius: 50%;
-            border: 3px solid #8792a1;
-            color: #8792a1;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: calc(22px * var(--ui-scale));
-            font-weight: bold;
-            cursor: pointer;
-            background: white;
             flex-shrink: 0;
+        }
+        .btn-info-circle img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
 
         .btn-play-rect {
@@ -264,6 +274,10 @@
                 if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
 
                 this.renderMenu();
+                
+                // ALTERAÇÃO: INSERIR O FOOTER COM O BOTÃO INFORMAÇÃO (IMAGEM)
+                this.renderFooter();
+
                 if(typeof mostrarCapa === "function") mostrarCapa();
             },
 
@@ -280,6 +294,20 @@
                     a.innerHTML = `<img src="${iconPath}"> <span>${item.label}</span>`;
                     menuBox.appendChild(a);
                 });
+            },
+
+            // NOVA FUNÇÃO: GERE O RODAPÉ COM A IMAGEM INFORM.PNG
+            renderFooter() {
+                const footer = document.getElementById('shell-footer');
+                const pathIconInfo = JOGO_CONFIG.caminhoIconsMenu + "inform.png";
+                footer.innerHTML = `
+                    <div class="btn-info-circle" onclick="if(typeof abrirInstrucoes === 'function') abrirInstrucoes()">
+                        <img src="${pathIconInfo}" alt="Info">
+                    </div>
+                    <button class="btn-play-rect" onclick="if(typeof iniciarJogo === 'function') iniciarJogo()">
+                        <i class="fas fa-play"></i> JOGAR
+                    </button>
+                `;
             }
         };
 
