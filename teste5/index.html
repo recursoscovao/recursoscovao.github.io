@@ -47,15 +47,32 @@
         #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: calc(1.1rem * var(--ui-scale)); }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: calc(0.6rem * var(--ui-scale)); margin-top: 4px; opacity: 0.8; }
 
-        .menu-dropdown {
+        /* MENUS DROPDOWN (Geral e Info) */
+        .menu-dropdown, .info-dropdown {
             position: absolute;
-            top: 85px;
-            left: 15px;
             display: none;
             flex-direction: column;
-            gap: 6px;
             z-index: 2000;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            padding: 15px;
         }
+
+        .menu-dropdown { top: 85px; left: 15px; gap: 6px; }
+        
+        /* Dropdown de Informação (Abre acima do botão) */
+        .info-dropdown {
+            bottom: 85px;
+            left: 15px;
+            width: min(350px, 90vw);
+            max-height: 60vh;
+            overflow-y: auto;
+            border: 2px solid var(--primary-color);
+        }
+
+        .info-dropdown h3 { color: var(--primary-color); margin-bottom: 8px; font-size: 1.1rem; text-transform: uppercase; }
+        .info-dropdown p { font-size: 0.85rem; color: var(--text-grey); line-height: 1.4; margin-bottom: 10px; }
 
         .menu-item {
             display: flex;
@@ -73,25 +90,13 @@
             transition: all 0.2s ease;
         }
 
-        /* HOVER COM A COR DO TEMA */
         .menu-item:hover {
             background-color: var(--primary-color);
             color: white;
         }
         .menu-item:hover span { color: white; }
-
-        .menu-item img {
-            width: 32px;
-            height: 32px;
-            object-fit: contain;
-            flex-shrink: 0;
-        }
-
-        .menu-item span {
-            font-size: 0.8rem;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
+        .menu-item img { width: 32px; height: 32px; object-fit: contain; flex-shrink: 0; }
+        .menu-item span { font-size: 0.8rem; text-transform: uppercase; white-space: nowrap; }
 
         main {
             flex: 1;
@@ -99,7 +104,7 @@
             justify-content: center;
             align-items: center;
             padding: 15px;
-            overflow: hidden;
+            position: relative; /* Necessário para posicionar o info-dropdown */
         }
 
         .game-shell {
@@ -147,7 +152,6 @@
             flex-shrink: 0;
         }
 
-        /* BOTÃO INFORMAÇÃO COMO IMAGEM */
         .btn-info-circle {
             width: calc(55px * var(--ui-scale));
             height: calc(55px * var(--ui-scale));
@@ -185,6 +189,7 @@
             header { height: 70px; }
             #header-icon { height: 45px; }
             .menu-dropdown { top: 65px; }
+            .info-dropdown { bottom: 130px; left: 5%; width: 90%; }
         }
 
         footer { padding: 10px; text-align: center; flex-shrink: 0; background: white; border-radius: 30px 30px 0 0; }
@@ -212,6 +217,8 @@
     </header>
 
     <main>
+        <div id="infoDropdown" class="info-dropdown"></div> <!-- Painel de Instruções -->
+        
         <div class="game-shell">
             <div class="shell-header"><h2 id="shell-title">---</h2></div>
             <div class="shell-body" id="game-content"></div>
@@ -267,7 +274,8 @@
                 if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
 
                 this.renderMenu();
-                this.renderFooter(); // Inicializa o rodapé com a imagem inform.png
+                this.renderInfoMenu(); // Prepara o conteúdo do menu de informação
+                this.renderFooter(); 
 
                 if(typeof mostrarCapa === "function") mostrarCapa();
             },
@@ -287,11 +295,23 @@
                 });
             },
 
+            renderInfoMenu() {
+                const infoBox = document.getElementById('infoDropdown');
+                const inst = JOGO_CONFIG.instrucoes;
+                infoBox.innerHTML = `
+                    <h3>Objetivo</h3>
+                    <p>${inst.objetivo}</p>
+                    <h3>Como Jogar</h3>
+                    <p>${inst.comoJogar.join(' ')}</p>
+                    <button onclick="toggleInfo(event)" style="width:100%; padding:8px; border-radius:10px; border:none; background:var(--primary-color); color:white; font-weight:bold; cursor:pointer;">FECHAR</button>
+                `;
+            },
+
             renderFooter() {
                 const footer = document.getElementById('shell-footer');
                 const pathIconInfo = JOGO_CONFIG.caminhoIconsMenu + "inform.png";
                 footer.innerHTML = `
-                    <div class="btn-info-circle" onclick="window.open('instrucoes.html', '_blank')">
+                    <div class="btn-info-circle" onclick="toggleInfo(event)">
                         <img src="${pathIconInfo}" alt="Info">
                     </div>
                     <button class="btn-play-rect" onclick="if(typeof iniciarJogo === 'function') iniciarJogo()">
@@ -303,10 +323,23 @@
 
         function toggleMenu(e) { 
             e.stopPropagation(); 
+            document.getElementById('infoDropdown').style.display = 'none';
             const m = document.getElementById('dropdownMenu'); 
             m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; 
         }
-        window.onclick = () => document.getElementById('dropdownMenu').style.display = 'none';
+
+        function toggleInfo(e) {
+            e.stopPropagation();
+            document.getElementById('dropdownMenu').style.display = 'none';
+            const i = document.getElementById('infoDropdown');
+            i.style.display = (i.style.display === 'flex') ? 'none' : 'flex';
+        }
+
+        window.onclick = () => {
+            document.getElementById('dropdownMenu').style.display = 'none';
+            document.getElementById('infoDropdown').style.display = 'none';
+        }
+
         window.onload = () => Engine.init();
     </script>
     <script src="jogo.js"></script>
