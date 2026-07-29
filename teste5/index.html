@@ -26,7 +26,6 @@
             overflow: hidden;
         }
 
-        /* HEADER */
         header {
             background: white;
             border-radius: 0 0 35px 35px;
@@ -48,7 +47,6 @@
         #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: calc(1.1rem * var(--ui-scale)); }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: calc(0.6rem * var(--ui-scale)); margin-top: 4px; opacity: 0.8; }
 
-        /* MENU DROPDOWN */
         .menu-dropdown {
             position: absolute;
             top: 85px;
@@ -72,17 +70,15 @@
             border-radius: 12px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.1);
             min-width: 240px;
-            transition: background 0.2s, color 0.2s; /* Suavidade no hover */
+            transition: all 0.2s ease;
         }
 
-        /* ALTERAÇÃO: HOVER COM COR DO TEMA */
+        /* HOVER COM A COR DO TEMA */
         .menu-item:hover {
             background-color: var(--primary-color);
             color: white;
         }
-        .menu-item:hover span {
-            color: white;
-        }
+        .menu-item:hover span { color: white; }
 
         .menu-item img {
             width: 32px;
@@ -97,7 +93,6 @@
             white-space: nowrap;
         }
 
-        /* MAIN & SHELL */
         main {
             flex: 1;
             display: flex;
@@ -152,7 +147,7 @@
             flex-shrink: 0;
         }
 
-        /* ALTERAÇÃO: BOTÃO INFORMAÇÃO COMO IMAGEM */
+        /* BOTÃO INFORMAÇÃO COMO IMAGEM */
         .btn-info-circle {
             width: calc(55px * var(--ui-scale));
             height: calc(55px * var(--ui-scale));
@@ -246,11 +241,9 @@
                 else this.scale = 0.7;
 
                 document.documentElement.style.setProperty('--ui-scale', this.scale);
-                
                 const body = document.getElementById('game-content');
                 this.viewport.w = body.clientWidth;
                 this.viewport.h = body.clientHeight;
-
                 if(typeof onResizeGame === "function") onResizeGame(this.viewport);
             },
 
@@ -270,13 +263,11 @@
                 document.getElementById('shell-title').innerText = config.nomeDoJogo;
                 
                 document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + tema.voltarMobile;
-                const itemAtivo = config.menuItens.find(i => i.id === config.anoAtivo);
+                const itemAtivo = config.menu_itens?.find(i => i.id === config.anoAtivo) || config.menuItens?.find(i => i.id === config.anoAtivo);
                 if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
 
                 this.renderMenu();
-                
-                // ALTERAÇÃO: INSERIR O FOOTER COM O BOTÃO INFORMAÇÃO (IMAGEM)
-                this.renderFooter();
+                this.renderFooter(); // Inicializa o rodapé com a imagem inform.png
 
                 if(typeof mostrarCapa === "function") mostrarCapa();
             },
@@ -284,24 +275,23 @@
             renderMenu() {
                 const menuBox = document.getElementById('dropdownMenu');
                 menuBox.innerHTML = ''; 
-                JOGO_CONFIG.menuItens.forEach(item => {
+                const itens = JOGO_CONFIG.menuItens || JOGO_CONFIG.menu_itens;
+                itens.forEach(item => {
                     const a = document.createElement('a');
                     a.className = 'menu-item';
                     a.href = item.link;
                     let iconPath = JOGO_CONFIG.caminhoIconsMenu + item.icon;
                     if(item.icon === "AUTO") iconPath = JOGO_CONFIG.caminhoIconsMenu + BIBLIOTECA_TEMAS[JOGO_CONFIG.areaAtiva].voltarMobile;
-                    
                     a.innerHTML = `<img src="${iconPath}"> <span>${item.label}</span>`;
                     menuBox.appendChild(a);
                 });
             },
 
-            // NOVA FUNÇÃO: GERE O RODAPÉ COM A IMAGEM INFORM.PNG
             renderFooter() {
                 const footer = document.getElementById('shell-footer');
                 const pathIconInfo = JOGO_CONFIG.caminhoIconsMenu + "inform.png";
                 footer.innerHTML = `
-                    <div class="btn-info-circle" onclick="if(typeof abrirInstrucoes === 'function') abrirInstrucoes()">
+                    <div class="btn-info-circle" onclick="window.open('instrucoes.html', '_blank')">
                         <img src="${pathIconInfo}" alt="Info">
                     </div>
                     <button class="btn-play-rect" onclick="if(typeof iniciarJogo === 'function') iniciarJogo()">
