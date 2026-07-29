@@ -99,18 +99,19 @@
         .btn-play-rect { flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
 
         /* ============================================================
-           MUDANÇA SOLICITADA: TELEMÓVEL VERTICAL (PORTRAIT)
+           MUDANÇA SOLICITADA: TELEMÓVEL VERTICAL (PORTRAIT) COM SCROLL
            ============================================================ */
         @media (max-width: 500px) and (orientation: portrait) {
+            body, html { overflow-y: auto; height: auto; }
             header { height: 75px; }
-            /* Coloca botões lado a lado e reduz padding lateral */
+            main { height: auto; overflow: visible; padding: 10px; }
+            .game-shell { height: auto; min-height: 550px; margin-bottom: 20px; }
             .shell-footer { flex-direction: row; padding: 15px; gap: 10px; } 
-            /* Aumenta a altura do botão jogar */
-            .btn-play-rect { height: 70px; font-size: 1.4rem; } 
+            .btn-play-rect { height: 60px; font-size: 1.4rem; } 
             .btn-info-circle { width: 55px; height: 55px; }
         }
 
-        /* LANDSCAPE */
+        /* LANDSCAPE COM SCROLL */
         @media (max-height: 500px) and (orientation: landscape) {
             body, html { overflow-y: auto; height: auto; }
             header { height: 65px; flex-shrink: 0; }
