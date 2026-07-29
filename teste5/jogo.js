@@ -10,36 +10,72 @@ let ajudasUsadas = 0;
 let itemDestaque = null;
 let opcoesRonda = [];
 
-// Pré-carregamento de sons
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.acerto);
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.erro);
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.clique);
 
 // ==========================================
-// 2. CAPA E SIMULAÇÃO
+// 2. CAPA COM SIMULAÇÃO ANIMADA
 // ==========================================
 
 function mostrarCapa() {
     if (jogoAtivo) return;
     const area = document.getElementById('game-content');
     
-    // Simulação que imita o layout do jogo
     area.innerHTML = `
-        <div class="capa-realista" style="display:flex; flex-direction:column; align-items:center; gap:10px; width:100%; opacity:0.8;">
-            <div style="height:12vh; border:2px dashed #ccc; padding:10px; border-radius:15px;">
-                <img src="${DADOS_JOGO.caminhoImagens + DADOS_JOGO.itens[0].img}" style="height:100%;">
+        <div class="capa-container" style="display:flex; flex-direction:column; align-items:center; gap:15px; width:100%;">
+            <div id="simulacao-box" style="display:flex; flex-direction:column; align-items:center; gap:10px;">
+                <!-- Modelo Destaque -->
+                <div style="height:10vh; border:2px dashed #ddd; padding:8px; border-radius:12px;">
+                    <img id="simu-destaque" src="${DADOS_JOGO.caminhoImagens + DADOS_JOGO.itens[0].img}" style="height:100%;">
+                </div>
+                <!-- 3 Opções -->
+                <div style="display:flex; gap:10px;">
+                    <div id="simu-opt-1" style="width:60px; height:60px; border:2px solid #eee; border-radius:10px; display:flex; align-items:center; justify-content:center; background:white;"></div>
+                    <div id="simu-opt-2" style="width:60px; height:60px; border:2px solid #eee; border-radius:10px; display:flex; align-items:center; justify-content:center; background:white;"></div>
+                    <div id="simu-opt-3" style="width:60px; height:60px; border:2px solid #eee; border-radius:10px; display:flex; align-items:center; justify-content:center; background:white;"></div>
+                </div>
             </div>
-            <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:5px; width:90%;">
-                ${Array(10).fill(0).map((_, i) => `
-                    <div style="aspect-ratio:1/1; background:#f0f0f0; border-radius:8px; border:1px solid #ddd;"></div>
-                `).join('')}
-            </div>
-            <p style="font-size: calc(1.1rem * var(--ui-scale)); color: var(--text-grey); font-weight:700; margin-top:10px;">
+            <p style="font-size: 1rem; color: var(--text-grey); font-weight:700; text-align:center; padding:0 20px;">
                 ${JOGO_CONFIG.descricao}
             </p>
         </div>
     `;
+    correrSimulacao();
     Engine.showCapa();
+}
+
+let simuInterval;
+function correrSimulacao() {
+    clearInterval(simuInterval);
+    let step = 0;
+    simuInterval = setInterval(() => {
+        const item = DADOS_JOGO.itens[step % DADOS_JOGO.itens.length];
+        const dest = document.getElementById('simu-destaque');
+        const opt2 = document.getElementById('simu-opt-2');
+        const opt1 = document.getElementById('simu-opt-1');
+        const opt3 = document.getElementById('simu-opt-3');
+
+        if(!dest || !opt2) return;
+
+        // Reset cores
+        [opt1, opt2, opt3].forEach(o => { o.style.borderColor = "#eee"; o.innerHTML = ""; });
+
+        // Muda destaque
+        dest.src = DADOS_JOGO.caminhoImagens + item.img;
+        
+        // Simula clique no meio após 800ms
+        setTimeout(() => {
+            if(opt2) {
+                opt2.innerHTML = `<img src="${DADOS_JOGO.caminhoImagens + item.img}" style="height:80%;">`;
+                opt2.style.borderColor = "#8cc63f";
+                opt2.style.transform = "scale(1.1)";
+                setTimeout(() => { if(opt2) opt2.style.transform = "scale(1)"; }, 300);
+            }
+        }, 800);
+
+        step++;
+    }, 2000);
 }
 
 // ==========================================
@@ -47,66 +83,41 @@ function mostrarCapa() {
 // ==========================================
 
 function iniciarJogo() {
+    clearInterval(simuInterval);
     jogoAtivo = true;
-    rondaAtual = 1;
-    certos = 0;
-    erros = 0;
-    ajudasUsadas = 0;
+    rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0;
     proximaRonda();
 }
 
 function proximaRonda() {
-    if (rondaAtual > totalRondas) {
-        finalizarJogo();
-        return;
-    }
+    if (rondaAtual > totalRondas) { finalizarJogo(); return; }
 
-    // Atualizar Barra de Status e tornar a lâmpada clicável para ajuda
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
-    const lampada = document.querySelector('.lamp-icon');
-    if(lampada) {
-        lampada.style.cursor = "pointer";
-        lampada.onclick = darAjuda;
-        lampada.title = "Clique para uma ajuda!";
-    }
+    
+    // Configurar Lâmpada (Ajuda)
+    const lamp = document.querySelector('.lamp-icon');
+    if(lamp) lamp.onclick = darAjuda;
 
     const area = document.getElementById('game-content');
-    area.innerHTML = "";
-
-    // Escolher Destaque
     const todosItens = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
     itemDestaque = todosItens[0];
-    
-    // Escolher 10 opções (incluindo a correta)
     opcoesRonda = todosItens.slice(0, 10).sort(() => Math.random() - 0.5);
 
-    // Ajuste de tamanhos para caber 2 linhas de 5
     const isPortrait = window.innerHeight > window.innerWidth;
-    const imgHeight = isPortrait ? "10vh" : "15vh";
+    const imgHeight = isPortrait ? "10vh" : "14vh";
 
     area.innerHTML = `
-        <div class="jogo-wrapper" style="display:flex; flex-direction:column; align-items:center; width:100%; height:100%; justify-content: space-around;">
-            
-            <div class="destaque-area" style="height:20vh; padding:15px; background:#f9f9f9; border-radius:25px; border:3px dashed var(--primary-color); display:flex; align-items:center; justify-content:center;">
-                <img src="${DADOS_JOGO.caminhoImagens + itemDestaque.img}" style="height:100%; filter: drop-shadow(0 5px 10px rgba(0,0,0,0.1));">
+        <div style="display:flex; flex-direction:column; align-items:center; width:100%; height:100%; justify-content: space-evenly;">
+            <div style="height:18vh; padding:12px; background:#f9f9f9; border-radius:20px; border:2px dashed var(--primary-color);">
+                <img src="${DADOS_JOGO.caminhoImagens + itemDestaque.img}" style="height:100%;">
             </div>
-
-            <div class="grid-opcoes" style="
-                display: grid; 
-                grid-template-columns: repeat(5, 1fr); 
-                grid-template-rows: repeat(2, 1fr); 
-                gap: 8px; 
-                width: 100%; 
-                max-width: 600px;
-                padding: 5px;
-            ">
+            <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:8px; width:100%; max-width:600px;">
                 ${opcoesRonda.map(item => `
                     <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)" style="
-                        background: white; border: 2px solid #e0e0e0; border-radius: 12px; 
-                        padding: 5px; cursor: pointer; display:flex; align-items:center; justify-content:center;
-                        height: ${imgHeight}; transition: transform 0.2s; position:relative;
+                        background:white; border:2px solid #e0e0e0; border-radius:12px; 
+                        height:${imgHeight}; display:flex; align-items:center; justify-content:center; cursor:pointer; position:relative;
                     ">
-                        <img src="${DADOS_JOGO.caminhoImagens + item.img}" style="max-height: 90%; max-width:90%; object-fit:contain;">
+                        <img src="${DADOS_JOGO.caminhoImagens + item.img}" style="max-height:85%; max-width:85%;">
                     </div>
                 `).join('')}
             </div>
@@ -115,103 +126,73 @@ function proximaRonda() {
 }
 
 // ==========================================
-// 4. FUNÇÕES DE APOIO (AJUDA E VERIFICAÇÃO)
+// 4. AJUDA E VERIFICAÇÃO
 // ==========================================
 
 function darAjuda() {
     if (!jogoAtivo) return;
-    somClique.play();
     ajudasUsadas++;
-    
-    // Encontrar 3 itens errados que ainda estejam visíveis
-    let eliminados = 0;
-    const cards = document.querySelectorAll('.opcao-card');
-    
-    cards.forEach(card => {
-        const id = parseInt(card.id.replace('card-', ''));
-        if (id !== itemDestaque.id && card.style.opacity !== "0.2" && eliminados < 3) {
-            card.style.opacity = "0.2";
-            card.style.pointerEvents = "none";
-            eliminados++;
-        }
-    });
-    
-    // Desativar a lâmpada nesta ronda para não abusar
-    const lampada = document.querySelector('.lamp-icon');
-    if(lampada) {
-        lampada.style.filter = "grayscale(100%)";
-        lampada.onclick = null;
+    somClique.play();
+
+    const cardCorreto = document.getElementById(`card-${itemDestaque.id}`);
+    if (cardCorreto) {
+        cardCorreto.style.transition = "0.3s";
+        cardCorreto.style.borderColor = "var(--primary-color)";
+        cardCorreto.style.boxShadow = "0 0 15px var(--primary-color)";
+        // Animação de pulso para destacar
+        cardCorreto.animate([
+            { transform: 'scale(1)', boxShadow: '0 0 0px var(--primary-color)' },
+            { transform: 'scale(1.1)', boxShadow: '0 0 20px var(--primary-color)' },
+            { transform: 'scale(1)', boxShadow: '0 0 0px var(--primary-color)' }
+        ], { duration: 800, iterations: 2 });
     }
 }
 
-function verificarResposta(idEscolhido, elemento) {
+function verificarResposta(id, el) {
     if (!jogoAtivo) return;
-    
-    const cards = document.querySelectorAll('.opcao-card');
-    cards.forEach(c => c.style.pointerEvents = 'none');
+    document.querySelectorAll('.opcao-card').forEach(c => c.style.pointerEvents = 'none');
 
-    if (idEscolhido === itemDestaque.id) {
-        certos++;
-        somAcerto.play();
-        elemento.style.borderColor = "#8cc63f";
-        elemento.style.backgroundColor = "#f0fff0";
-        elemento.innerHTML += '<i class="fas fa-check" style="position:absolute; color:#8cc63f; font-size:1.5rem; bottom:5px; right:5px;"></i>';
+    if (id === itemDestaque.id) {
+        certos++; somAcerto.play();
+        el.style.borderColor = "#8cc63f";
+        el.style.backgroundColor = "#f0fff0";
     } else {
-        erros++;
-        somErro.play();
-        elemento.style.borderColor = "#ff5a5f";
-        elemento.style.backgroundColor = "#fff5f5";
-        
-        // Mostrar a correta
-        cards.forEach(c => {
-            if (c.id === `card-${itemDestaque.id}`) {
-                c.style.borderColor = "#8cc63f";
-                c.style.borderWidth = "4px";
-                c.style.transform = "scale(1.05)";
-            }
-        });
+        erros++; somErro.play();
+        el.style.borderColor = "#ff5a5f";
+        el.style.backgroundColor = "#fff5f5";
+        document.getElementById(`card-${itemDestaque.id}`).style.borderColor = "#8cc63f";
+        document.getElementById(`card-${itemDestaque.id}`).style.borderWidth = "4px";
     }
 
-    setTimeout(() => {
-        rondaAtual++;
-        proximaRonda();
-    }, 1500);
+    setTimeout(() => { rondaAtual++; proximaRonda(); }, 1500);
 }
 
 // ==========================================
-// 5. RESULTADOS (COMPACTO)
+// 5. FINALIZAÇÃO (COM AJUDAS)
 // ==========================================
 
 function finalizarJogo() {
     jogoAtivo = false;
     const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
     
-    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">RESULTADOS</h2>`;
-    
-    // Layout compacto para a taça e botões caberem
+    document.getElementById('shell-header-content').innerHTML = `<h2 style="font-size:1.2rem; color:var(--primary-color);">RESULTADOS</h2>`;
     document.getElementById('game-content').innerHTML = `
-        <div class="results-container" style="display:flex; flex-direction:column; align-items:center; width:100%; height:100%; justify-content:center;">
-            <img src="${JOGO_CONFIG.caminhoIconsMenu + rel.img}" style="height:22vh; margin-bottom:10px;">
-            <h2 style="color:var(--primary-color); font-size:1.4rem; margin-bottom:5px;">${rel.titulo}</h2>
-            
-            <div style="display:flex; gap:15px; margin-bottom:15px;">
-                <div class="score-box score-certo" style="font-size:1rem; padding:5px 12px;">${certos} ACERTOS</div>
-                <div class="score-box score-erro" style="font-size:1rem; padding:5px 12px;">${erros} ERROS</div>
+        <div style="display:flex; flex-direction:column; align-items:center; text-align:center;">
+            <img src="${JOGO_CONFIG.caminhoIconsMenu + rel.img}" style="height:20vh; margin-bottom:10px;">
+            <h2 style="font-size:1.3rem; color:var(--primary-color); margin-bottom:10px;">${rel.titulo}</h2>
+            <div style="display:flex; gap:10px; margin-bottom:10px;">
+                <div class="score-box score-certo">CERTOS: ${certos}</div>
+                <div class="score-box score-erro">ERROS: ${erros}</div>
             </div>
-            
-            <p style="font-size:0.9rem; color:var(--text-grey); font-weight:bold;">Ajudas utilizadas: ${ajudasUsadas}</p>
+            <p style="font-size:0.9rem; color:var(--text-grey); font-weight:800;">💡 AJUDAS UTILIZADAS: ${ajudasUsadas}</p>
         </div>
     `;
-
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = 'flex';
-    footer.style.padding = "10px 20px"; // Footer mais fino
     footer.innerHTML = `
-        <button class="btn-play-rect" style="background:#6c757d; height:50px; font-size:1.1rem;" onclick="location.reload()">REPETIR</button>
-        <button class="btn-play-rect" style="height:50px; font-size:1.1rem;" onclick="window.history.back()">OUTROS JOGOS</button>
+        <button class="btn-play-rect" style="background:#6c757d; height:50px; font-size:1rem;" onclick="location.reload()">REPETIR</button>
+        <button class="btn-play-rect" style="height:50px; font-size:1rem;" onclick="window.history.back()">SAIR</button>
     `;
 }
 
-function onResizeGame(viewport) {
-    if (!jogoAtivo) mostrarCapa();
-}
+function onResizeGame() { if (!jogoAtivo) mostrarCapa(); }
