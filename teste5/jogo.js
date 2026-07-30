@@ -33,15 +33,12 @@ style.innerHTML = `
 
     .grid-opcoes {
         display: grid; grid-template-columns: repeat(5, 1fr); 
-        gap: 10px; width: 100%; max-width: 650px; padding-bottom: 15px;
+        gap: 10px; width: 100%; max-width: 650px;
     }
 
-    /* Forçar a capa a ocupar o espaço todo até ao fundo */
     .capa-container {
         display: flex; flex-direction: column; align-items: center; 
-        justify-content: flex-end; /* Empurra o conteúdo para baixo */
-        gap: 20px; width: 100%; height: 100%; position: relative;
-        padding-bottom: 0 !important; /* Encosta no footer */
+        justify-content: center; width: 100%; height: 100%; position: relative;
     }
 `;
 document.head.appendChild(style);
@@ -61,7 +58,7 @@ function mostrarCapa() {
         <div class="capa-container">
             <div id="simu-hand">👆</div>
             <div style="display:flex; flex-direction:column; align-items:center; gap:15px; flex: 1; justify-content: center;">
-                <div style="height:18vh; min-height:120px; aspect-ratio:1/1; border:3px dashed var(--primary-color); padding:10px; border-radius:25px; background:white; display:flex; align-items:center; justify-content:center;">
+                <div style="height:18vh; min-height:110px; aspect-ratio:1/1; border:3px dashed var(--primary-color); padding:10px; border-radius:25px; background:white; display:flex; align-items:center; justify-content:center;">
                     <img id="simu-destaque" src="" style="height:100%; object-fit:contain;">
                 </div>
                 <div style="display:flex; gap:12px;">
@@ -70,7 +67,7 @@ function mostrarCapa() {
                     <div id="simu-opt-2" class="opcao-card" style="width:75px; height:75px;"><img src=""></div>
                 </div>
             </div>
-            <p style="font-size: 0.95rem; color: var(--text-grey); font-weight:700; text-align:center; padding:0 30px; margin-bottom: 10px;">
+            <p style="font-size: 0.95rem; color: var(--text-grey); font-weight:700; text-align:center; padding:0 10px;">
                 Identifica o animal igual ao modelo em destaque!
             </p>
         </div>
