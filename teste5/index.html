@@ -17,14 +17,9 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
         body, html { 
-            height: auto; 
-            min-height: 100vh; 
-            width: 100%; 
-            background-color: var(--bg-color); 
-            display: flex; 
-            flex-direction: column; 
-            overflow-x: hidden; 
-            overflow-y: auto; 
+            height: auto; min-height: 100vh; width: 100%; 
+            background-color: var(--bg-color); display: flex; flex-direction: column; 
+            overflow-x: hidden; overflow-y: auto; 
         }
 
         header { background: white; border-radius: 0 0 30px 30px; display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; padding: 0 15px; height: 70px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
@@ -35,60 +30,47 @@
         #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 0.9rem; }
         #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.6rem; opacity: 0.8; }
 
-        main { flex: 1; display: flex; justify-content: center; padding: 15px; position: relative; }
+        main { flex: 1; display: flex; justify-content: center; padding: 10px; position: relative; }
 
         .game-shell {
-            background: white; 
-            width: min(1100px, 100%); 
-            height: fit-content;
-            min-height: 100%; 
-            border-radius: 45px; 
-            box-shadow: 0 0 25px 5px var(--shadow-color);
-            border: 2px solid var(--primary-color);
-            display: flex; 
-            flex-direction: column; 
-            overflow: hidden; /* CRUCIAL: Para não cortar os cantos arredondados no fundo */
-            position: relative;
+            background: white; width: min(1100px, 100%); height: fit-content; min-height: 100%; 
+            border-radius: 45px; box-shadow: 0 0 25px 5px var(--shadow-color);
+            border: 2px solid var(--primary-color); display: flex; flex-direction: column; 
+            overflow: hidden; position: relative;
         }
 
-        .shell-header { padding: 15px; text-align: center; border-bottom: 2px dashed #f5f5f5; min-height: 60px; display: flex; align-items: center; justify-content: center; }
-        .shell-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; position: relative; width: 100%; }
+        .shell-header { padding: 10px 15px; text-align: center; border-bottom: 2px dashed #f5f5f5; min-height: 60px; display: flex; align-items: center; justify-content: center; }
+        
+        /* shell-body sem padding em baixo para encostar no footer */
+        .shell-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px 10px 0 10px; position: relative; width: 100%; }
         
         .shell-footer { 
-            padding: 20px 40px; 
-            display: flex; 
-            align-items: center; 
-            gap: 20px; 
-            background: #fafafa; 
-            min-height: 100px; 
-            border-radius: 0 0 45px 45px; /* Arredonda o rodapé também */
+            padding: 15px 30px; display: flex; align-items: center; gap: 15px; 
+            background: #fafafa; min-height: 90px; border-radius: 0 0 45px 45px; 
         }
 
-        /* ESTILO DO MENU HAMBURGUER (COM HOVER) */
-        .menu-dropdown { position: absolute; top: 75px; left: 15px; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
-        .menu-item { 
-            display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 15px; 
-            text-decoration: none; color: var(--text-grey); font-weight: 800; 
-            background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
-            min-width: 250px; transition: 0.2s; 
-        }
-        .menu-item:hover { background-color: var(--primary-color); color: white !important; }
-        .menu-item:hover span { color: white !important; }
-        .menu-item img { width: 28px; height: 28px; object-fit: contain; }
-
-        .status-bar { width: 100%; display: flex; align-items: center; justify-content: space-between; }
-        .status-pill { background: #6c757d; color: white; padding: 6px 18px; border-radius: 20px; font-weight: 900; font-size: 1.1rem; }
-        .lamp-icon { height: 40px; cursor: pointer; }
-        .score-box { padding: 6px 15px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1rem; }
+        /* BARRA DE STATUS EM UMA ÚNICA LINHA */
+        .status-bar { width: 100%; display: flex; flex-direction: row; flex-wrap: nowrap; align-items: center; justify-content: space-between; gap: 5px; }
+        .status-left, .status-right { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+        .status-pill { background: #6c757d; color: white; padding: 5px 12px; border-radius: 15px; font-weight: 900; font-size: 0.9rem; white-space: nowrap; }
+        .lamp-icon { height: 35px; cursor: pointer; flex-shrink: 0; }
+        .score-box { padding: 5px 10px; border-radius: 10px; color: white; font-weight: 900; display: flex; align-items: center; gap: 5px; font-size: 0.85rem; white-space: nowrap; }
         .score-certo { background: #8cc63f; }
         .score-erro { background: #ff5a5f; }
 
-        .btn-play-rect { flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .btn-info-circle { width: 60px; height: 60px; cursor: pointer; }
+        .btn-play-rect { flex: 1; height: 60px; border-radius: 30px; background: var(--primary-color); color: white; border: none; font-size: 1.3rem; font-weight: 900; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .btn-info-circle { width: 55px; height: 55px; cursor: pointer; }
         .btn-info-circle img { width: 100%; height: 100%; }
 
+        /* MENU COM HOVER */
+        .menu-dropdown { position: absolute; top: 75px; left: 15px; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
+        .menu-item { display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 15px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 240px; transition: 0.2s; }
+        .menu-item:hover { background-color: var(--primary-color) !important; color: white !important; }
+        .menu-item:hover span { color: white !important; }
+        .menu-item img { width: 28px; height: 28px; object-fit: contain; }
+
         footer { padding: 10px; text-align: center; background: white; border-radius: 30px 30px 0 0; flex-shrink: 0; }
-        .footer-text { color: var(--text-grey); font-size: 0.75rem; font-weight: 700; }
+        .footer-text { color: var(--text-grey); font-size: 0.7rem; font-weight: 700; }
         .hamburger-btn { background: none; border: none; color: var(--primary-color); font-size: 26px; cursor: pointer; }
         
         .info-dropdown { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 5000; display: none; flex-direction: column; padding: 40px 20px; overflow-y: auto; }
@@ -141,7 +123,7 @@
                 if(typeof mostrarCapa === "function") mostrarCapa();
             },
             showCapa() {
-                document.getElementById('shell-header-content').innerHTML = `<h2 style="font-weight: 900; font-size: 1.4rem; color: var(--primary-color);">${JOGO_CONFIG.nomeDoJogo}</h2>`;
+                document.getElementById('shell-header-content').innerHTML = `<h2 style="font-weight: 900; font-size: 1.3rem; color: var(--primary-color);">${JOGO_CONFIG.nomeDoJogo}</h2>`;
                 const footer = document.getElementById('shell-footer-content');
                 footer.style.display = 'flex';
                 footer.innerHTML = `<div class="btn-info-circle" onclick="toggleInfo(event)"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
@@ -164,6 +146,7 @@
             renderMenu() {
                 const menuBox = document.getElementById('dropdownMenu');
                 const itens = JOGO_CONFIG.menuItens || JOGO_CONFIG.menu_itens;
+                menuBox.innerHTML = '';
                 itens.forEach(item => {
                     const a = document.createElement('a'); a.className = 'menu-item'; a.href = item.link;
                     let iconPath = JOGO_CONFIG.caminhoIconsMenu + item.icon;
