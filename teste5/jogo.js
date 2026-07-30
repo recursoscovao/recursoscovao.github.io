@@ -1,5 +1,5 @@
 // ==========================================
-// 1. ESTADO GLOBAL E ESTILOS CUSTOMIZADOS
+// 1. ESTADO GLOBAL E ESTILOS
 // ==========================================
 let jogoAtivo = false;
 let rondaAtual = 0;
@@ -10,47 +10,36 @@ let ajudasUsadas = 0;
 let itemDestaque = null;
 let opcoesRonda = [];
 
-// Injeção de CSS para reduzir paddings e ajustar tamanhos
 const style = document.createElement('style');
 style.innerHTML = `
-    /* Barra de Status super compacta */
-    #shell-header { height: 38px !important; min-height: 38px !important; padding: 0 !important; background: #fff; border-bottom: 1px solid #eee; }
+    #shell-header { height: 38px !important; min-height: 38px !important; padding: 0 !important; background: #fff; }
     .status-bar-container { height: 38px !important; padding: 0 10px !important; display: flex; align-items: center; justify-content: space-between; }
-    .status-item { font-size: 0.7rem !important; font-weight: 800 !important; color: #555; }
+    .status-item { font-size: 0.7rem !important; font-weight: 800 !important; }
     .status-item img { height: 14px !important; margin-right: 3px !important; }
     
-    /* Área de jogo sem espaços vazios */
-    #game-content { padding: 5px !important; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; }
+    #game-content { padding: 5px !important; display: flex; flex-direction: column; align-items: center; justify-content: flex-start; position: relative; }
 
-    /* Estilo dos cards e imagens */
     .opcao-card {
-        background: white; 
-        border: 2px solid #e0e0e0; 
-        border-radius: 10px; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-        cursor: pointer;
-        padding: 2px;
-        transition: transform 0.2s;
+        background: white; border: 2px solid #e0e0e0; border-radius: 10px; 
+        display: flex; align-items: center; justify-content: center; 
+        cursor: pointer; padding: 2px; transition: transform 0.2s;
     }
-    .opcao-card img {
-        width: 100%;
-        height: 100%;
-        object-fit: contain; /* Faz todos os animais terem o mesmo tamanho proporcional */
-    }
+    .opcao-card img { width: 100%; height: 100%; object-fit: contain; }
+
     .destaque-container {
-        height: 22vh; 
-        width: auto;
-        aspect-ratio: 1/1;
-        padding: 5px; 
-        background: #fdfdfd; 
-        border-radius: 20px; 
-        border: 2px dashed var(--primary-color); 
-        display: flex; 
-        align-items: center; 
-        justify-content: center;
-        margin-bottom: 10px;
+        height: 22vh; width: auto; aspect-ratio: 1/1; padding: 5px; 
+        background: #fdfdfd; border-radius: 20px; border: 2px dashed var(--primary-color); 
+        display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+    }
+
+    /* Estilo da Mão na Simulação */
+    #simu-hand {
+        position: absolute;
+        font-size: 2rem;
+        z-index: 10;
+        transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+        pointer-events: none;
+        display: none;
     }
 `;
 document.head.appendChild(style);
@@ -60,7 +49,7 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.erro);
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.clique);
 
 // ==========================================
-// 2. CAPA COM SIMULAÇÃO ANIMADA
+// 2. CAPA COM SIMULAÇÃO MELHORADA
 // ==========================================
 
 function mostrarCapa() {
@@ -68,17 +57,29 @@ function mostrarCapa() {
     const area = document.getElementById('game-content');
     
     area.innerHTML = `
-        <div class="capa-container" style="display:flex; flex-direction:column; align-items:center; gap:10px; width:100%; justify-content:center; height:100%;">
-            <div id="simulacao-box" style="display:flex; flex-direction:column; align-items:center; gap:10px;">
-                <div style="height:12vh; border:2px dashed #ddd; padding:8px; border-radius:12px;">
-                    <img id="simu-destaque" src="${DADOS_JOGO.caminhoImagens + DADOS_JOGO.itens[0].img}" style="height:100%;">
+        <div class="capa-container" style="display:flex; flex-direction:column; align-items:center; gap:20px; width:100%; justify-content:center; height:100%; position:relative;">
+            <div id="simu-hand">👆</div>
+            
+            <div id="simulacao-box" style="display:flex; flex-direction:column; align-items:center; gap:15px;">
+                <!-- Animal em Destaque -->
+                <div style="height:15vh; aspect-ratio:1/1; border:2px dashed var(--primary-color); padding:8px; border-radius:15px; background:white;">
+                    <img id="simu-destaque" src="" style="height:100%; width:100%; object-fit:contain;">
                 </div>
-                <div style="display:flex; gap:8px;">
-                    <div id="simu-opt-1" style="width:55px; height:55px; border:2px solid #eee; border-radius:10px; display:flex; align-items:center; justify-content:center; background:white;"></div>
-                    <div id="simu-opt-2" style="width:55px; height:55px; border:2px solid #eee; border-radius:10px; display:flex; align-items:center; justify-content:center; background:white;"></div>
-                    <div id="simu-opt-3" style="width:55px; height:55px; border:2px solid #eee; border-radius:10px; display:flex; align-items:center; justify-content:center; background:white;"></div>
+
+                <!-- 3 Opções por baixo -->
+                <div style="display:flex; gap:10px; position:relative;">
+                    <div id="simu-opt-0" class="opcao-card" style="width:65px; height:65px; background:white;">
+                        <img src="" style="width:80%;">
+                    </div>
+                    <div id="simu-opt-1" class="opcao-card" style="width:65px; height:65px; background:white;">
+                        <img src="" style="width:80%;">
+                    </div>
+                    <div id="simu-opt-2" class="opcao-card" style="width:65px; height:65px; background:white;">
+                        <img src="" style="width:80%;">
+                    </div>
                 </div>
             </div>
+
             <p style="font-size: 0.9rem; color: var(--text-grey); font-weight:700; text-align:center; padding:0 20px; margin:0;">
                 ${JOGO_CONFIG.descricao}
             </p>
@@ -91,24 +92,55 @@ function mostrarCapa() {
 let simuInterval;
 function correrSimulacao() {
     clearInterval(simuInterval);
-    let step = 0;
-    simuInterval = setInterval(() => {
-        const item = DADOS_JOGO.itens[step % DADOS_JOGO.itens.length];
-        const dest = document.getElementById('simu-destaque');
-        const opt2 = document.getElementById('simu-opt-2');
-        if(!dest || !opt2) return;
+    const hand = document.getElementById('simu-hand');
+    
+    const animarPasso = () => {
+        // 1. Escolher 3 animais aleatórios diferentes
+        const embaralhado = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
+        const trio = embaralhado.slice(0, 3);
+        const indexCerto = Math.floor(Math.random() * 3);
+        const correto = trio[indexCerto];
 
-        document.querySelectorAll('[id^="simu-opt-"]').forEach(o => { o.style.borderColor = "#eee"; o.innerHTML = ""; });
-        dest.src = DADOS_JOGO.caminhoImagens + item.img;
-        
+        // 2. Atualizar imagens
+        document.getElementById('simu-destaque').src = DADOS_JOGO.caminhoImagens + correto.img;
+        trio.forEach((item, i) => {
+            const container = document.getElementById(`simu-opt-${i}`);
+            container.querySelector('img').src = DADOS_JOGO.caminhoImagens + item.img;
+            container.style.borderColor = "#e0e0e0";
+            container.style.transform = "scale(1)";
+        });
+
+        // 3. Posicionar a mão inicialmente fora
+        hand.style.display = "block";
+        hand.style.opacity = "0";
+        hand.style.top = "60%";
+        hand.style.left = "80%";
+
+        // 4. Mover a mão para o animal correto
         setTimeout(() => {
-            if(opt2) {
-                opt2.innerHTML = `<img src="${DADOS_JOGO.caminhoImagens + item.img}" style="height:80%;">`;
-                opt2.style.borderColor = "#8cc63f";
-            }
-        }, 800);
-        step++;
-    }, 2000);
+            const target = document.getElementById(`simu-opt-${indexCerto}`);
+            const rect = target.getBoundingClientRect();
+            const parentRect = document.querySelector('.capa-container').getBoundingClientRect();
+            
+            hand.style.opacity = "1";
+            hand.style.top = (rect.top - parentRect.top + 40) + "px";
+            hand.style.left = (rect.left - parentRect.left + 20) + "px";
+
+            // 5. Simular o clique
+            setTimeout(() => {
+                target.style.borderColor = "#8cc63f";
+                target.style.transform = "scale(1.1)";
+                hand.style.transform = "scale(0.8)";
+                setTimeout(() => { 
+                    hand.style.transform = "scale(1)";
+                    hand.style.opacity = "0";
+                }, 300);
+            }, 700);
+        }, 500);
+    };
+
+    animarPasso();
+    simuInterval = setInterval(animarPasso, 3000);
 }
 
 // ==========================================
@@ -127,7 +159,6 @@ function proximaRonda() {
 
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
     
-    // Pequeno ajuste para garantir que a lâmpada (ajuda) funcione na nova barra
     setTimeout(() => {
         const lamp = document.querySelector('.lamp-icon');
         if(lamp) lamp.onclick = darAjuda;
@@ -138,8 +169,12 @@ function proximaRonda() {
     itemDestaque = todosItens[0];
     opcoesRonda = todosItens.slice(0, 10).sort(() => Math.random() - 0.5);
 
+    // Garantir que o destaque está nas opções
+    if (!opcoesRonda.find(i => i.id === itemDestaque.id)) {
+        opcoesRonda[Math.floor(Math.random() * 10)] = itemDestaque;
+    }
+
     const isPortrait = window.innerHeight > window.innerWidth;
-    // Aumentamos a altura para os animais ficarem maiores
     const cardHeight = isPortrait ? "12vh" : "16vh"; 
 
     area.innerHTML = `
