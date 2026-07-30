@@ -12,88 +12,55 @@
             --bg-color: #EAF4FE;
             --text-grey: #8792a1;
             --shadow-color: rgba(0, 0, 0, 0.1);
-            --ui-scale: 1; 
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
-
         body, html { height: 100vh; width: 100vw; background-color: var(--bg-color); display: flex; flex-direction: column; overflow: hidden; }
 
-        header { background: white; border-radius: 0 0 35px 35px; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; padding: 0 15px; height: 90px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
-        .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
-        #header-icon { height: 60px; object-fit: contain; }
-        .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
-        #txt-titulo1 { color: var(--primary-color); font-weight: 900; font-size: 1.4rem; }
-        #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 1.2rem; }
-        #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.8; }
+        header { background: white; border-radius: 0 0 30px 30px; display: grid; grid-template-columns: 50px 1fr 50px; align-items: center; padding: 0 15px; height: 70px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 8px; }
+        #header-icon { height: 45px; object-fit: contain; }
+        .title-group { display: flex; flex-direction: column; line-height: 0.9; text-transform: uppercase; }
+        #txt-titulo1 { color: var(--primary-color); font-weight: 900; font-size: 1.1rem; }
+        #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 0.9rem; }
+        #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.6rem; opacity: 0.8; }
 
-        main { flex: 1; display: flex; justify-content: center; padding: 10px 20px; overflow: hidden; position: relative; }
-
+        main { flex: 1; display: flex; justify-content: center; padding: 10px; overflow: hidden; position: relative; }
         .game-shell {
-            background: white; width: min(1100px, 100%); height: 100%; border-radius: 45px; 
+            background: white; width: min(1100px, 100%); height: 100%; border-radius: 35px; 
             box-shadow: 0 0 25px 5px var(--shadow-color);
             border: 1.5px solid var(--primary-color);
             display: flex; flex-direction: column; overflow: hidden; 
         }
 
-        /* BARRA DE STATUS (IN GAME) */
-        .status-bar { width: 100%; display: flex; align-items: center; justify-content: space-between; padding: 0 10px; }
-        .status-left, .status-right { display: flex; align-items: center; gap: 10px; }
-        .status-pill { background: #6c757d; color: white; padding: 6px 18px; border-radius: 20px; font-weight: 900; font-size: 1.3rem; }
-        .lamp-icon { height: 50px; object-fit: contain; }
-        .score-box { padding: 6px 15px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.2rem; }
+        .shell-header { padding: 10px; text-align: center; border-bottom: 2px dashed #f5f5f5; min-height: 50px; display: flex; align-items: center; justify-content: center; overflow: hidden; }
+        .shell-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 10px; position: relative; }
+        .shell-footer { padding: 15px 30px; display: flex; align-items: center; gap: 15px; background: #fafafa; min-height: 80px; }
+
+        /* BARRA DE STATUS (COMPACTA) */
+        .status-bar { width: 100%; display: flex; align-items: center; justify-content: space-between; }
+        .status-left, .status-right { display: flex; align-items: center; gap: 8px; }
+        .status-pill { background: #6c757d; color: white; padding: 4px 15px; border-radius: 15px; font-weight: 900; font-size: 0.9rem; }
+        .lamp-icon { height: 35px; cursor: pointer; object-fit: contain; }
+        .score-box { padding: 4px 12px; border-radius: 10px; color: white; font-weight: 900; display: flex; align-items: center; gap: 5px; font-size: 0.8rem; }
         .score-certo { background: #8cc63f; }
         .score-erro { background: #ff5a5f; }
 
-        /* RESULTADOS FINAIS */
-        .results-container { text-align: center; padding: 20px; width: 100%; }
-        .trophy-img { height: clamp(120px, 30vh, 220px); margin-bottom: 20px; object-fit: contain; }
-        .results-title { color: var(--primary-color); font-weight: 900; font-size: 2rem; margin-bottom: 15px; text-transform: uppercase; }
-        .results-stats { display: flex; justify-content: center; gap: 20px; margin-top: 20px; }
+        .btn-play-rect { flex: 1; height: 55px; border-radius: 30px; background: var(--primary-color); color: white; border: none; font-size: 1.2rem; font-weight: 900; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 10px rgba(0,0,0,0.1); }
+        .btn-info-circle { width: 50px; height: 50px; cursor: pointer; }
+        .btn-info-circle img { width: 100%; height: 100%; }
 
-        .menu-dropdown { position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 6px; z-index: 2000; background: transparent; }
-        .info-dropdown { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 5000; display: none; flex-direction: column; padding: 40px 20px; overflow-y: auto; }
-        .info-dropdown h3 { color: var(--primary-color); margin: 20px 0 10px 0; text-transform: uppercase; font-size: 1.3rem; border-bottom: 2px dashed var(--bg-color); padding-bottom: 5px; }
-        .info-dropdown p, .info-dropdown li { font-size: 1.1rem; color: var(--text-grey); line-height: 1.6; margin-bottom: 10px; }
-
-        .menu-item { display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 15px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 250px; transition: 0.2s; }
-        .menu-item:hover { background-color: var(--primary-color); color: white !important; }
-        .menu-item:hover span { color: white; }
-        .menu-item img { width: 32px; height: 32px; object-fit: contain; }
-
-        .shell-header { padding: 20px; text-align: center; border-bottom: 2px dashed #f5f5f5; min-height: 90px; display: flex; align-items: center; justify-content: center; }
-        .shell-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 20px; position: relative; }
-        .shell-footer { padding: 20px 40px; display: flex; align-items: center; gap: 20px; background: #fafafa; min-height: 100px; }
-
-        .btn-info-circle { width: 60px; height: 60px; cursor: pointer; flex-shrink: 0; }
-        .btn-info-circle img { width: 100%; height: 100%; object-fit: contain; }
-        .btn-play-rect { flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-
-        @media (max-width: 500px) and (orientation: portrait) {
-            body, html { overflow-y: auto; height: auto; }
-            header { height: 75px; }
-            main { height: auto; overflow: visible; padding: 10px 15px; } 
-            .game-shell { height: auto; min-height: 550px; margin-bottom: 0; } 
-            .shell-footer { flex-direction: row; padding: 15px; gap: 10px; } 
-            .btn-play-rect { height: 70px; font-size: 1.4rem; } 
-        }
-
-        @media (max-height: 500px) and (orientation: landscape) {
-            body, html { overflow-y: auto; height: auto; }
-            header { height: 65px; flex-shrink: 0; }
-            .title-group { display: none; }
-            main { height: auto; overflow: visible; padding: 10px; }
-            .game-shell { height: auto; min-height: 400px; margin-bottom: 20px; }
-            .shell-footer { padding: 10px 30px; }
-        }
-
-        footer { padding: 10px; text-align: center; background: white; border-radius: 30px 30px 0 0; flex-shrink: 0; }
-        .footer-text { color: var(--text-grey); font-size: 0.75rem; font-weight: 700; }
-        .hamburger-btn { background: none; border: none; color: var(--primary-color); font-size: 26px; cursor: pointer; }
+        .menu-dropdown { position: absolute; top: 65px; left: 15px; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
+        .menu-item { display: flex; align-items: center; gap: 10px; height: 44px; padding: 0 12px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); min-width: 220px; font-size: 0.9rem; }
+        
+        .info-dropdown { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 5000; display: none; flex-direction: column; padding: 30px 20px; overflow-y: auto; }
+        
+        footer { padding: 8px; text-align: center; background: white; border-radius: 20px 20px 0 0; }
+        .footer-text { color: var(--text-grey); font-size: 0.65rem; font-weight: 700; }
+        .hamburger-btn { background: none; border: none; color: var(--primary-color); font-size: 22px; cursor: pointer; }
     </style>
 </head>
 <body>
-
     <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
@@ -105,7 +72,7 @@
                 <div id="txt-subtitulo-header">---</div>
             </div>
         </div>
-        <img id="icon-voltar-top" src="" alt="Voltar" onclick="location.reload()" style="height: 40px; cursor: pointer; justify-self: end;">
+        <img id="icon-voltar-top" src="" alt="Voltar" onclick="location.reload()" style="height: 30px; cursor: pointer; justify-self: end;">
     </header>
 
     <main>
@@ -117,133 +84,74 @@
     </main>
 
     <div id="infoDropdown" class="info-dropdown"></div>
-
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
     <script src="dados.js"></script>
     <script>
         const Engine = {
-            init() {
-                this.loadConfig();
-                window.addEventListener('resize', () => this.updateScale());
-            },
-
+            init() { this.loadConfig(); window.addEventListener('resize', () => this.updateScale()); },
             loadConfig() {
                 const config = JOGO_CONFIG;
                 const tema = BIBLIOTECA_TEMAS[config.areaAtiva];
                 const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
-
-                document.title = conteudo.t1 + " " + conteudo.t2 + " | " + config.nomeDoJogo;
                 document.documentElement.style.setProperty('--primary-color', tema.corPrimaria);
                 document.documentElement.style.setProperty('--bg-color', tema.corPagina);
-                document.documentElement.style.setProperty('--shadow-color', tema.corPrimaria + "44");
-
                 document.getElementById('txt-titulo1').innerText = conteudo.t1;
                 document.getElementById('txt-titulo2').innerText = conteudo.t2;
                 document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
                 document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
-                
                 document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + tema.voltarMobile;
                 const itemAtivo = (config.menuItens || config.menu_itens).find(i => i.id === config.anoAtivo);
                 if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
-
-                this.renderMenu();
-                this.renderInfoPanel(); 
-                this.showCapa(); 
-
+                this.renderMenu(); this.renderInfoPanel(); this.showCapa();
                 if(typeof mostrarCapa === "function") mostrarCapa();
             },
-
-            // 1. MOSTRAR CAPA
             showCapa() {
-                document.getElementById('shell-header-content').innerHTML = `<h2 style="text-transform: uppercase; font-weight: 900; font-size: 1.5rem; color: var(--primary-color);">${JOGO_CONFIG.nomeDoJogo}</h2>`;
+                document.getElementById('shell-header-content').innerHTML = `<h2 style="font-weight: 900; font-size: 1.2rem; color: var(--primary-color);">${JOGO_CONFIG.nomeDoJogo}</h2>`;
                 const footer = document.getElementById('shell-footer-content');
                 footer.style.display = 'flex';
-                footer.innerHTML = `
-                    <div class="btn-info-circle" onclick="toggleInfo(event)"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
-                    <button class="btn-play-rect" onclick="if(typeof iniciarJogo === 'function') iniciarJogo()"><i class="fas fa-play"></i> JOGAR</button>
-                `;
+                footer.innerHTML = `<div class="btn-info-circle" onclick="toggleInfo(event)"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
+                                    <button class="btn-play-rect" onclick="if(typeof iniciarJogo === 'function') iniciarJogo()"><i class="fas fa-play"></i> JOGAR</button>`;
             },
-
-            // 2. MOSTRAR STATUS (USANDO LAMPADA.PNG)
             showStatusBar(ronda, total, certos, erros) {
                 const lampPath = JOGO_CONFIG.caminhoIconsMenu + "lampada.png";
                 document.getElementById('shell-header-content').innerHTML = `
                     <div class="status-bar">
-                        <div class="status-left">
-                            <img src="${lampPath}" class="lamp-icon">
-                            <div class="status-pill">${ronda} / ${total}</div>
-                        </div>
+                        <div class="status-left"><img src="${lampPath}" class="lamp-icon" onclick="if(typeof darAjuda==='function') darAjuda()">
+                        <div class="status-pill">${ronda} / ${total}</div></div>
                         <div class="status-right">
                             <div class="score-box score-certo"><i class="fas fa-check"></i> ${certos}</div>
                             <div class="score-box score-erro"><i class="fas fa-times"></i> ${erros}</div>
                         </div>
-                    </div>
-                `;
+                    </div>`;
                 document.getElementById('shell-footer-content').style.display = 'none'; 
             },
-
-            // 3. MOSTRAR RESULTADOS (LÓGICA AUTOMÁTICA DAS TAÇAS)
             showResults(certos, erros) {
-                const config = JOGO_CONFIG;
-                // Procura na biblioteca de relatórios qual se aplica a esta pontuação
-                const rel = config.relatorios.find(r => certos >= r.min && certos <= r.max);
-                
-                document.getElementById('shell-header-content').innerHTML = `<h2 style="text-transform: uppercase; font-weight: 900; font-size: 1.5rem; color: var(--primary-color);">RESULTADOS</h2>`;
-                
-                document.getElementById('game-content').innerHTML = `
-                    <div class="results-container">
-                        <img src="${config.caminhoIconsMenu}${rel.img}" class="trophy-img">
-                        <h2 class="results-title">${rel.titulo}</h2>
-                        <div class="results-stats">
-                            <div class="score-box score-certo">CERTOS: ${certos}</div>
-                            <div class="score-box score-erro">ERROS: ${erros}</div>
-                        </div>
-                    </div>
-                `;
-
-                const footer = document.getElementById('shell-footer-content');
-                footer.style.display = 'flex';
-                footer.innerHTML = `
-                    <button class="btn-play-rect" style="background:#6c757d" onclick="location.reload()">REPETIR</button>
-                    <button class="btn-play-rect" onclick="window.history.back()">SAIR</button>
-                `;
+                if(typeof finalizarJogo === 'function') finalizarJogo();
             },
-
             renderMenu() {
                 const menuBox = document.getElementById('dropdownMenu');
-                menuBox.innerHTML = ''; 
                 const itens = JOGO_CONFIG.menuItens || JOGO_CONFIG.menu_itens;
                 itens.forEach(item => {
-                    const a = document.createElement('a');
-                    a.className = 'menu-item'; a.href = item.link;
+                    const a = document.createElement('a'); a.className = 'menu-item'; a.href = item.link;
                     let iconPath = JOGO_CONFIG.caminhoIconsMenu + item.icon;
                     if(item.icon === "AUTO") iconPath = JOGO_CONFIG.caminhoIconsMenu + BIBLIOTECA_TEMAS[JOGO_CONFIG.areaAtiva].voltarMobile;
-                    a.innerHTML = `<img src="${iconPath}"> <span>${item.label}</span>`;
+                    a.innerHTML = `<img src="${iconPath}" style="width:24px;"> <span>${item.label}</span>`;
                     menuBox.appendChild(a);
                 });
             },
-
             renderInfoPanel() {
-                const infoBox = document.getElementById('infoDropdown');
                 const inst = JOGO_CONFIG.instrucoes;
-                let html = `<div style="max-width:800px; margin: 0 auto; padding-bottom: 50px;"><h1 style="text-align:center; color:var(--primary-color); font-weight:900; margin-bottom:30px;">INSTRUÇÕES</h1>`;
-                if(inst.objetivo) html += `<h3>Objetivo</h3><p>${inst.objetivo}</p>`;
-                if(inst.comoJogar) html += `<h3>Como Jogar</h3><ul>${inst.comoJogar.map(i => `<li>${i}</li>`).join('')}</ul>`;
-                html += `<button onclick="toggleInfo(event)" style="width:100%; padding:20px; border:none; border-radius:20px; background:var(--primary-color); color:white; font-size:1.2rem; font-weight:bold; cursor:pointer; margin-top:20px;">VOLTAR</button></div>`;
-                infoBox.innerHTML = html;
+                document.getElementById('infoDropdown').innerHTML = `<div style="max-width:600px; margin: 0 auto;">
+                    <h2 style="color:var(--primary-color); text-align:center;">INSTRUÇÕES</h2>
+                    <p style="margin:20px 0;">${inst.objetivo}</p>
+                    <button onclick="toggleInfo(event)" style="width:100%; padding:15px; border-radius:15px; background:var(--primary-color); color:white; border:none; font-weight:bold;">VOLTAR</button>
+                </div>`;
             },
-
-            updateScale() {
-                if(typeof onResizeGame === "function") {
-                    const body = document.getElementById('game-content');
-                    onResizeGame({w: body.clientWidth, h: body.clientHeight});
-                }
-            }
+            updateScale() { if(typeof onResizeGame === "function") onResizeGame(); }
         };
-
-        function toggleMenu(e) { e.stopPropagation(); document.getElementById('infoDropdown').style.display = 'none'; const m = document.getElementById('dropdownMenu'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; }
-        function toggleInfo(e) { e.stopPropagation(); document.getElementById('dropdownMenu').style.display = 'none'; const i = document.getElementById('infoDropdown'); i.style.display = (i.style.display === 'flex') ? 'none' : 'flex'; }
+        function toggleMenu(e) { e.stopPropagation(); const m = document.getElementById('dropdownMenu'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; }
+        function toggleInfo(e) { e.stopPropagation(); const i = document.getElementById('infoDropdown'); i.style.display = (i.style.display === 'flex') ? 'none' : 'flex'; }
         window.onclick = () => { document.getElementById('dropdownMenu').style.display = 'none'; }
         window.onload = () => Engine.init();
     </script>
