@@ -10,13 +10,12 @@ let ajudasUsadas = 0;
 let itemDestaque = null;
 let opcoesRonda = [];
 
-// Injeção de CSS para garantir que os animais fiquem grandes e a mão apareça
 const style = document.createElement('style');
 style.innerHTML = `
     .opcao-card {
         background: white; border: 2px solid #e0e0e0; border-radius: 12px; 
         display: flex; align-items: center; justify-content: center; 
-        cursor: pointer; padding: 4px; transition: transform 0.2s; overflow: hidden;
+        cursor: pointer; padding: 4px; transition: transform 0.2s;
     }
     .opcao-card img { width: 90%; height: 90%; object-fit: contain; }
     
@@ -26,10 +25,22 @@ style.innerHTML = `
         pointer-events: none; display: none; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
     }
 
+    /* Container de Destaque com altura mínima para scroll vertical */
     .destaque-box {
-        height: 22vh; aspect-ratio: 1/1; padding: 10px; 
+        height: 20vh; min-height: 120px; aspect-ratio: 1/1; padding: 10px; 
         background: #fdfdfd; border-radius: 20px; border: 2.5px dashed var(--primary-color); 
-        display: flex; align-items: center; justify-content: center; margin-bottom: 10px;
+        display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+    }
+
+    /* Grid que permite scroll horizontal em ecrãs estreitos */
+    .grid-opcoes {
+        display: grid; 
+        grid-template-columns: repeat(5, 1fr); 
+        gap: 8px; 
+        width: 100%; 
+        max-width: 650px;
+        overflow-x: auto; /* Permite scroll horizontal se a grid for maior que o ecrã */
+        padding-bottom: 10px;
     }
 `;
 document.head.appendChild(style);
@@ -39,30 +50,26 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.erro);
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.clique);
 
 // ==========================================
-// 2. CAPA COM SIMULAÇÃO (DESTAQUE + 3 OPÇÕES + SETA)
+// 2. CAPA COM SIMULAÇÃO
 // ==========================================
 
 function mostrarCapa() {
     if (jogoAtivo) return;
     const area = document.getElementById('game-content');
-    
     area.innerHTML = `
-        <div class="capa-container" style="display:flex; flex-direction:column; align-items:center; gap:15px; width:100%; justify-content:center; height:100%; position:relative;">
+        <div class="capa-container" style="display:flex; flex-direction:column; align-items:center; gap:20px; width:100%; justify-content:center; padding:20px 0; position:relative;">
             <div id="simu-hand">👆</div>
-            
-            <div style="display:flex; flex-direction:column; align-items:center; gap:12px;">
-                <div style="height:15vh; aspect-ratio:1/1; border:2.5px dashed var(--primary-color); padding:10px; border-radius:20px; background:white; display:flex; align-items:center; justify-content:center;">
+            <div style="display:flex; flex-direction:column; align-items:center; gap:15px;">
+                <div style="height:15vh; min-height:100px; aspect-ratio:1/1; border:2.5px dashed var(--primary-color); padding:10px; border-radius:20px; background:white; display:flex; align-items:center; justify-content:center;">
                     <img id="simu-destaque" src="" style="height:100%; object-fit:contain;">
                 </div>
-
                 <div style="display:flex; gap:10px;">
-                    <div id="simu-opt-0" class="opcao-card" style="width:75px; height:75px;"><img src=""></div>
-                    <div id="simu-opt-1" class="opcao-card" style="width:75px; height:75px;"><img src=""></div>
-                    <div id="simu-opt-2" class="opcao-card" style="width:75px; height:75px;"><img src=""></div>
+                    <div id="simu-opt-0" class="opcao-card" style="width:70px; height:70px;"><img src=""></div>
+                    <div id="simu-opt-1" class="opcao-card" style="width:70px; height:70px;"><img src=""></div>
+                    <div id="simu-opt-2" class="opcao-card" style="width:70px; height:70px;"><img src=""></div>
                 </div>
             </div>
-
-            <p style="font-size: 0.9rem; color: var(--text-grey); font-weight:700; text-align:center; padding:0 20px; margin:0;">
+            <p style="font-size: 0.9rem; color: var(--text-grey); font-weight:700; text-align:center; padding:0 20px;">
                 ${JOGO_CONFIG.descricao}
             </p>
         </div>
@@ -74,34 +81,27 @@ let simuInterval;
 function correrSimulacao() {
     clearInterval(simuInterval);
     const hand = document.getElementById('simu-hand');
-    
     const animar = () => {
         const itens = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
         const trio = itens.slice(0, 3);
         const certoIdx = Math.floor(Math.random() * 3);
         const itemCerto = trio[certoIdx];
-
         if(!document.getElementById('simu-destaque')) return;
-
         document.getElementById('simu-destaque').src = DADOS_JOGO.caminhoImagens + itemCerto.img;
         trio.forEach((it, i) => {
             const card = document.getElementById(`simu-opt-${i}`);
             card.querySelector('img').src = DADOS_JOGO.caminhoImagens + it.img;
             card.style.borderColor = "#e0e0e0";
         });
-
         hand.style.display = "block"; hand.style.opacity = "0";
         hand.style.top = "70%"; hand.style.left = "80%";
-
         setTimeout(() => {
             const target = document.getElementById(`simu-opt-${certoIdx}`);
             const rect = target.getBoundingClientRect();
             const parent = document.querySelector('.capa-container').getBoundingClientRect();
-            
             hand.style.opacity = "1";
             hand.style.top = (rect.top - parent.top + 45) + "px";
             hand.style.left = (rect.left - parent.left + 25) + "px";
-
             setTimeout(() => {
                 target.style.borderColor = "#8cc63f";
                 target.style.transform = "scale(1.1)";
@@ -109,7 +109,6 @@ function correrSimulacao() {
             }, 800);
         }, 400);
     };
-
     animar();
     simuInterval = setInterval(animar, 3500);
 }
@@ -126,27 +125,23 @@ function iniciarJogo() {
 
 function proximaRonda() {
     if (rondaAtual > totalRondas) { finalizarJogo(); return; }
-
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
-    
     const area = document.getElementById('game-content');
     const todos = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
     itemDestaque = todos[0];
     opcoesRonda = todos.slice(0, 10).sort(() => Math.random() - 0.5);
-
     if(!opcoesRonda.find(x => x.id === itemDestaque.id)) opcoesRonda[0] = itemDestaque;
     opcoesRonda.sort(() => Math.random() - 0.5);
 
-    const isPortrait = window.innerHeight > window.innerWidth;
-    const cardHeight = isPortrait ? "11vh" : "15vh"; 
+    const cardHeight = (window.innerHeight > window.innerWidth) ? "11vh" : "18vh"; 
 
     area.innerHTML = `
         <div class="destaque-box">
             <img src="${DADOS_JOGO.caminhoImagens + itemDestaque.img}" style="height:100%; object-fit:contain;">
         </div>
-        <div style="display:grid; grid-template-columns: repeat(5, 1fr); gap:8px; width:100%; max-width:650px;">
+        <div class="grid-opcoes">
             ${opcoesRonda.map(item => `
-                <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)" style="height:${cardHeight};">
+                <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)" style="height:${cardHeight}; min-height:80px;">
                     <img src="${DADOS_JOGO.caminhoImagens + item.img}">
                 </div>
             `).join('')}
@@ -171,7 +166,6 @@ function darAjuda() {
 function verificarResposta(id, el) {
     if (!jogoAtivo) return;
     document.querySelectorAll('.opcao-card').forEach(c => c.style.pointerEvents = 'none');
-
     if (id === itemDestaque.id) {
         certos++; somAcerto.play();
         el.style.borderColor = "#8cc63f";
@@ -189,11 +183,10 @@ function verificarResposta(id, el) {
 function finalizarJogo() {
     jogoAtivo = false;
     const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
-    
     document.getElementById('shell-header-content').innerHTML = `<h2 style="font-size:1rem; color:var(--primary-color);">RESULTADOS</h2>`;
     document.getElementById('game-content').innerHTML = `
-        <div style="text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
-            <img src="${JOGO_CONFIG.caminhoIconsMenu + rel.img}" style="height:20vh; margin-bottom:15px;">
+        <div style="text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px 0;">
+            <img src="${JOGO_CONFIG.caminhoIconsMenu + rel.img}" style="height:20vh; min-height:100px; margin-bottom:15px;">
             <h2 style="color:var(--primary-color); font-size:1.4rem;">${rel.titulo}</h2>
             <div style="display:flex; gap:10px; margin-top:15px;">
                 <div class="score-box score-certo" style="font-size:1rem; padding:8px 20px;">CERTOS: ${certos}</div>
