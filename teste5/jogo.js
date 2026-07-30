@@ -13,34 +13,31 @@ let opcoesRonda = [];
 const style = document.createElement('style');
 style.innerHTML = `
     .opcao-card {
-        background: white; border: 2px solid #e0e0e0; border-radius: 12px; 
+        background: white; border: 2.2px solid #e0e0e0; border-radius: 15px; 
         display: flex; align-items: center; justify-content: center; 
-        cursor: pointer; padding: 4px; transition: transform 0.2s;
+        cursor: pointer; padding: 5px; transition: transform 0.2s;
     }
     .opcao-card img { width: 90%; height: 90%; object-fit: contain; }
     
     #simu-hand {
-        position: absolute; font-size: 2.5rem; z-index: 100;
+        position: absolute; font-size: 2.8rem; z-index: 100;
         transition: all 0.7s cubic-bezier(0.18, 0.89, 0.32, 1.28);
         pointer-events: none; display: none; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
     }
 
-    /* Container de Destaque com altura mínima para scroll vertical */
     .destaque-box {
-        height: 20vh; min-height: 120px; aspect-ratio: 1/1; padding: 10px; 
-        background: #fdfdfd; border-radius: 20px; border: 2.5px dashed var(--primary-color); 
-        display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+        height: 25vh; min-height: 150px; aspect-ratio: 1/1; padding: 12px; 
+        background: #fdfdfd; border-radius: 25px; border: 3px dashed var(--primary-color); 
+        display: flex; align-items: center; justify-content: center; margin-bottom: 25px;
     }
 
-    /* Grid que permite scroll horizontal em ecrãs estreitos */
     .grid-opcoes {
         display: grid; 
         grid-template-columns: repeat(5, 1fr); 
-        gap: 8px; 
+        gap: 12px; 
         width: 100%; 
-        max-width: 650px;
-        overflow-x: auto; /* Permite scroll horizontal se a grid for maior que o ecrã */
-        padding-bottom: 10px;
+        max-width: 700px;
+        padding-bottom: 15px;
     }
 `;
 document.head.appendChild(style);
@@ -57,20 +54,20 @@ function mostrarCapa() {
     if (jogoAtivo) return;
     const area = document.getElementById('game-content');
     area.innerHTML = `
-        <div class="capa-container" style="display:flex; flex-direction:column; align-items:center; gap:20px; width:100%; justify-content:center; padding:20px 0; position:relative;">
+        <div class="capa-container" style="display:flex; flex-direction:column; align-items:center; gap:25px; width:100%; justify-content:center; padding:20px 0; position:relative;">
             <div id="simu-hand">👆</div>
             <div style="display:flex; flex-direction:column; align-items:center; gap:15px;">
-                <div style="height:15vh; min-height:100px; aspect-ratio:1/1; border:2.5px dashed var(--primary-color); padding:10px; border-radius:20px; background:white; display:flex; align-items:center; justify-content:center;">
+                <div style="height:18vh; min-height:120px; aspect-ratio:1/1; border:3px dashed var(--primary-color); padding:12px; border-radius:25px; background:white; display:flex; align-items:center; justify-content:center;">
                     <img id="simu-destaque" src="" style="height:100%; object-fit:contain;">
                 </div>
-                <div style="display:flex; gap:10px;">
-                    <div id="simu-opt-0" class="opcao-card" style="width:70px; height:70px;"><img src=""></div>
-                    <div id="simu-opt-1" class="opcao-card" style="width:70px; height:70px;"><img src=""></div>
-                    <div id="simu-opt-2" class="opcao-card" style="width:70px; height:70px;"><img src=""></div>
+                <div style="display:flex; gap:15px;">
+                    <div id="simu-opt-0" class="opcao-card" style="width:85px; height:85px;"><img src=""></div>
+                    <div id="simu-opt-1" class="opcao-card" style="width:85px; height:85px;"><img src=""></div>
+                    <div id="simu-opt-2" class="opcao-card" style="width:85px; height:85px;"><img src=""></div>
                 </div>
             </div>
-            <p style="font-size: 0.9rem; color: var(--text-grey); font-weight:700; text-align:center; padding:0 20px;">
-                ${JOGO_CONFIG.descricao}
+            <p style="font-size: 1rem; color: var(--text-grey); font-weight:700; text-align:center; padding:0 30px; max-width:600px;">
+                Identifica o animal igual ao modelo em destaque!
             </p>
         </div>
     `;
@@ -94,14 +91,14 @@ function correrSimulacao() {
             card.style.borderColor = "#e0e0e0";
         });
         hand.style.display = "block"; hand.style.opacity = "0";
-        hand.style.top = "70%"; hand.style.left = "80%";
+        hand.style.top = "75%"; hand.style.left = "80%";
         setTimeout(() => {
             const target = document.getElementById(`simu-opt-${certoIdx}`);
             const rect = target.getBoundingClientRect();
             const parent = document.querySelector('.capa-container').getBoundingClientRect();
             hand.style.opacity = "1";
-            hand.style.top = (rect.top - parent.top + 45) + "px";
-            hand.style.left = (rect.left - parent.left + 25) + "px";
+            hand.style.top = (rect.top - parent.top + 50) + "px";
+            hand.style.left = (rect.left - parent.left + 30) + "px";
             setTimeout(() => {
                 target.style.borderColor = "#8cc63f";
                 target.style.transform = "scale(1.1)";
@@ -133,7 +130,7 @@ function proximaRonda() {
     if(!opcoesRonda.find(x => x.id === itemDestaque.id)) opcoesRonda[0] = itemDestaque;
     opcoesRonda.sort(() => Math.random() - 0.5);
 
-    const cardHeight = (window.innerHeight > window.innerWidth) ? "11vh" : "18vh"; 
+    const cardHeight = (window.innerHeight > window.innerWidth) ? "12vh" : "18vh"; 
 
     area.innerHTML = `
         <div class="destaque-box">
@@ -141,7 +138,7 @@ function proximaRonda() {
         </div>
         <div class="grid-opcoes">
             ${opcoesRonda.map(item => `
-                <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)" style="height:${cardHeight}; min-height:80px;">
+                <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)" style="height:${cardHeight}; min-height:90px;">
                     <img src="${DADOS_JOGO.caminhoImagens + item.img}">
                 </div>
             `).join('')}
@@ -183,16 +180,16 @@ function verificarResposta(id, el) {
 function finalizarJogo() {
     jogoAtivo = false;
     const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
-    document.getElementById('shell-header-content').innerHTML = `<h2 style="font-size:1rem; color:var(--primary-color);">RESULTADOS</h2>`;
+    document.getElementById('shell-header-content').innerHTML = `<h2 style="font-size:1.4rem; color:var(--primary-color); font-weight:900;">RESULTADOS</h2>`;
     document.getElementById('game-content').innerHTML = `
-        <div style="text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px 0;">
-            <img src="${JOGO_CONFIG.caminhoIconsMenu + rel.img}" style="height:20vh; min-height:100px; margin-bottom:15px;">
-            <h2 style="color:var(--primary-color); font-size:1.4rem;">${rel.titulo}</h2>
-            <div style="display:flex; gap:10px; margin-top:15px;">
-                <div class="score-box score-certo" style="font-size:1rem; padding:8px 20px;">CERTOS: ${certos}</div>
-                <div class="score-box score-erro" style="font-size:1rem; padding:8px 20px;">ERROS: ${erros}</div>
+        <div style="text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:30px 0;">
+            <img src="${JOGO_CONFIG.caminhoIconsMenu + rel.img}" style="height:22vh; min-height:150px; margin-bottom:20px;">
+            <h2 style="color:var(--primary-color); font-size:1.8rem; font-weight:900;">${rel.titulo}</h2>
+            <div style="display:flex; gap:15px; margin-top:20px;">
+                <div class="score-box score-certo" style="font-size:1.2rem; padding:10px 25px;">CERTOS: ${certos}</div>
+                <div class="score-box score-erro" style="font-size:1.2rem; padding:10px 25px;">ERROS: ${erros}</div>
             </div>
-            <p style="margin-top:15px; font-weight:800; color:var(--text-grey);">💡 AJUDAS: ${ajudasUsadas}</p>
+            <p style="margin-top:20px; font-weight:800; color:var(--text-grey); font-size:1.1rem;">💡 AJUDAS: ${ajudasUsadas}</p>
         </div>`;
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = 'flex';
