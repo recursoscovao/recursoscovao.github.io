@@ -24,7 +24,7 @@ const JOGO_CONFIG = {
     // JOGOS EM DESTAQUE (A caixa branca de baixo)
     // Podes adicionar quantos quiseres aqui.
     listaDestaques: [
-        { nome: "Rastros", icon: "rastros.png", link: "jd/rastros.html", estrelas: 4 },
+        { nome: "Rastros", icon: "rastros.png", link: "jd/rastros", estrelas: 4 },
         { nome: "Memória", icon: "memory.png", link: "jogos/memoria.html", estrelas: 5 },
         { nome: "Labirintos", icon: "maze.png", link: "jogos/labirintos.html", estrelas: 4 },
         { nome: "Desafios", icon: "trophy.png", link: "jogos/desafios.html", estrelas: 5 },
