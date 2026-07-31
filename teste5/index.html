@@ -63,23 +63,69 @@
         }
         /* [FIM DA SECÇÃO 2 - PC / TABLET LANDSCAPE] */
 
-        /* ============================================================
+   /* ============================================================
            3. TELEMÓVEL VERTICAL (PORTRAIT)
            ============================================================ */
         @media screen and (max-width: 500px) and (orientation: portrait) {
-            header { height: 85px; }
-            #header-icon { height: 55px; }
+            /* Ativar o scroll vertical nesta orientação */
+            body, html { 
+                overflow-y: auto !important; 
+                height: auto !important; 
+                display: block !important; 
+            }
+
+            header { 
+                height: 85px; 
+            }
+            #header-icon { 
+                height: 55px; 
+            }
             #txt-titulo1 { font-size: 1.3rem; font-weight: 900; color: var(--primary-color); }
             #txt-titulo2 { font-size: 1.1rem; font-weight: 800; color: var(--text-grey); }
-            #txt-subtitulo-header { font-size: 0.65rem; font-weight: 600; margin-top: 4px; opacity: 0.8; }
+            #txt-subtitulo-header { 
+                display: flex;
+                font-size: 0.65rem; 
+                font-weight: 600; 
+                margin-top: 4px; 
+                opacity: 0.8; 
+                color: var(--text-grey);
+            }
             
-            main { padding: 10px; }
-            .game-shell { border-radius: 40px; }
-            .shell-header { min-height: 65px; padding: 5px 15px; }
-            .shell-body { padding: 15px; }
-            .shell-footer { min-height: 90px; padding: 15px 30px; gap: 15px; }
+            main { 
+                padding: 10px; 
+                height: auto; 
+                overflow: visible; 
+                display: block;
+            }
+
+            .game-shell { 
+                border-radius: 40px; 
+                height: auto; 
+                min-height: 520px; /* Garante uma altura mínima para o jogo não encolher */
+                margin-bottom: 20px;
+                display: flex;
+            }
+
+            .shell-header { 
+                min-height: 65px; 
+                padding: 5px 15px; 
+            }
+            .shell-body { 
+                padding: 15px; 
+                min-height: 350px;
+                overflow: visible;
+            }
+            .shell-footer { 
+                min-height: 90px; 
+                padding: 15px 30px; 
+                gap: 15px; 
+            }
             
-            footer { padding: 8px; border-radius: 25px 25px 0 0; }
+            footer { 
+                padding: 15px; 
+                border-radius: 25px 25px 0 0; 
+                position: relative;
+            }
             .footer-text { font-size: 0.7rem; font-weight: 700; color: var(--text-grey); }
             
             .hamburger-btn { font-size: 26px; }
@@ -87,7 +133,7 @@
             .menu-item { height: 48px; padding: 0 15px; border-radius: 12px; min-width: 250px; }
             .menu-item img { width: 32px; height: 32px; }
         }
-        /* [FIM DA SECÇÃO 3 - TELEMÓVEL VERTICAL] */
+        /* [FIM DA SECÇÃO 3 - TELEMÓVEL VERTICAL COM SCROLL] */
 
 /* ============================================================
            4. TELEMÓVEL HORIZONTAL (LANDSCAPE)
