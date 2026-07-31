@@ -2,7 +2,7 @@
 // 1. ESTADO GLOBAL E SONS
 // ==========================================
 let jogoAtivo = false;
-let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0;
+let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0, ajudasUsadas = 0; // Adicionado ajudasUsadas
 let itemDestaque = null, opcoesRonda = [], simuInterval;
 
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
@@ -55,19 +55,19 @@ style.innerHTML = `
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
         :root { 
             --grid-cols: 6; 
-            --card-size: 135px; /* Aumentado para ocupar mais espaço lateral e vertical */
+            --card-size: 135px; 
             --dest-size: 160px; 
         }
 
         .shell-body {
-            padding-top: 10px !important;    /* Reduz o espaço morto no topo */
-            padding-bottom: 10px !important; /* Reduz o espaço morto no fundo */
+            padding-top: 10px !important;    
+            padding-bottom: 10px !important; 
             justify-content: center !important; 
         }
 
         .destaque-box { 
-            margin-top: 0px;      /* Move o animal de destaque para mais cima */
-            margin-bottom: 30px;  /* Cria o padding/espaço solicitado entre o destaque e as 12 imagens */
+            margin-top: 0px;      
+            margin-bottom: 30px;  
         }
     }
     /* [FIM PC / TABLET LANDSCAPE] */
@@ -170,31 +170,24 @@ function correrSimulacao() {
 // ==========================================
 // 4. LÓGICA DE JOGO (12 ANIMAIS RANDOM)
 // ==========================================
-function iniciarJogo() { clearInterval(simuInterval); jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; proximaRonda(); }
-
-function configurarBarraStatus() {
-    const lamp = JOGO_CONFIG.caminhoIconsMenu + "lampada.png";
-    document.getElementById('shell-header-content').innerHTML = `
-        <div class="status-container">
-            <div style="display:flex; align-items:center; gap:8px;">
-                <img src="${lamp}" style="height:45px; cursor:pointer;" onclick="darAjuda()">
-                <div class="status-pill">${rondaAtual}/${totalRondas}</div>
-            </div>
-            <div class="score-group">
-                <div class="score-box box-v"><i class="fas fa-check"></i> ${certos}</div>
-                <div class="score-box box-x"><i class="fas fa-times"></i> ${erros}</div>
-            </div>
-        </div>`;
-    document.getElementById('shell-footer-content').style.display = 'none';
+function iniciarJogo() { 
+    clearInterval(simuInterval); 
+    jogoAtivo = true; 
+    rondaAtual = 1; 
+    certos = 0; 
+    erros = 0; 
+    ajudasUsadas = 0; // Reset das ajudas
+    proximaRonda(); 
 }
 
 function proximaRonda() {
     if (rondaAtual > totalRondas) { finalizarJogo(); return; }
-    configurarBarraStatus();
+    
+    // Chama a função do Engine no index.html para mostrar o status
+    Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
 
     const area = document.getElementById('game-content');
     
-    // BARALHAR TUDO E ESCOLHER 12 DIFERENTES
     const todos = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
     itemDestaque = todos[0];
     
@@ -233,6 +226,7 @@ function verificarResposta(id, el) {
 
 function darAjuda() {
     if (!jogoAtivo) return;
+    ajudasUsadas++; // Conta a ajuda utilizada
     somClique.play();
     const correto = document.getElementById(`card-${itemDestaque.id}`);
     if (correto) {
@@ -245,18 +239,6 @@ function finalizarJogo() {
     jogoAtivo = false;
     const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
     
-    document.getElementById('shell-header-content').innerHTML = `<h2>RESULTADOS</h2>`;
-    document.getElementById('game-content').innerHTML = `
-        <div style="text-align:center;">
-            <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height:150px;">
-            <h2 style="color:var(--primary-color); margin:10px 0;">${rel.titulo}</h2>
-            <div style="display:flex; justify-content:center; gap:10px;">
-                <div class="score-box box-v">CERTOS: ${certos}</div>
-                <div class="score-box box-x">ERROS: ${erros}</div>
-            </div>
-        </div>`;
-    const footer = document.getElementById('shell-footer-content');
-    footer.style.display = "flex";
-    footer.innerHTML = `<button class="btn-play-rect" style="background:#6c757d" onclick="location.reload()">REPETIR</button>
-                        <button class="btn-play-rect" onclick="window.history.back()">SAIR</button>`;
+    // Agora chama a função do Engine no index.html passando as ajudas
+    Engine.showResults(certos, erros, ajudasUsadas, rel);
 }
