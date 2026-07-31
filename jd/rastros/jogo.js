@@ -1,35 +1,40 @@
-// ==========================================
+// ============================================================
 // 1. ESTADO GLOBAL E SONS
-// ==========================================
+// ============================================================
 let jogoAtivo = false;
-let modoJogo = 'CPU'; 
-let matchScore = [0, 0]; 
-let turnoAtual = 0; 
-let currentGameNum = 1;
-let tabuleiro = []; 
-let posBranca = { x: 4, y: 2 }; 
-let simuInterval; 
+let modoJogo = 'CPU';     // Pode ser 'CPU' ou 'PVP'
+let matchScore = [0, 0];  // [Vitórias J1, Vitórias J2/Pc]
+let turnoAtual = 0;       // 0 para Jogador 1, 1 para Jogador 2/Pc
+let currentGameNum = 1;   // Contador de qual jogo do "Melhor de 5" estamos
+let tabuleiro = [];       // Matriz que guarda o estado das casas (vazio, bloqueado, peça)
+let posBranca = { x: 4, y: 2 }; // Posição atual da peça (e5 por defeito)
+let simuInterval;         // Controla o tempo da simulação na capa
 
+// Caminhos dos ficheiros de som
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
+// [FIM DA SECÇÃO 1]
 
-// ==========================================
+
+// ============================================================
 // 2. CONFIGURAÇÃO VISUAL (CSS INJETADO)
-// ==========================================
+// ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
+    /* --- BARRA DE STATUS (TOP) --- */
     .status-container { width: 100%; display: flex; justify-content: space-between; align-items: center; }
     .status-pill { padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 0.9rem; color: white; transition: 0.3s; }
     .score-group { display: flex; gap: 8px; }
     .score-box { padding: 5px 10px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1rem; min-width: 55px; justify-content: center; }
     
+    /* --- CORES DOS JOGADORES (J1 Verde, J2/Pc Vermelho) --- */
     .box-v, .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .box-x, .pill-j2 { background: #ff5a5f !important; box-shadow: 0 3px 0 #d44348; }
-
-    @keyframes blinker { 50% { opacity: 0.4; } }
     .blinking { animation: blinker 1s linear infinite; }
+    @keyframes blinker { 50% { opacity: 0.4; } }
 
+    /* --- FEEDBACK DE VITÓRIA DE RONDA (OVERLAY) --- */
     #round-feedback {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(255,255,255,0.9); z-index: 1000;
@@ -37,15 +42,18 @@ style.innerHTML = `
         border-radius: 35px; backdrop-filter: blur(4px);
     }
 
+    /* --- BOTÕES DA CAPA --- */
     .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 100%; max-width: 480px; justify-content: center; align-items: center; margin-top: 10px; }
     .btn-capa-small { flex: 1; height: 55px; border-radius: 25px; border: none; color: white; font-weight: 900; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-transform: uppercase; }
     .btn-inform { width: 55px; height: 55px; flex: none; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .btn-inform img { width: 45px; height: 45px; object-fit: contain; }
 
+    /* --- PAINEL DE INSTRUÇÕES --- */
     #instrucoes-panel { position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%; background: white; z-index: 5000; transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1); padding: 40px 25px; overflow-y: auto; }
     #instrucoes-panel.open { bottom: 0; }
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: var(--text-grey); cursor: pointer; font-weight: 900; line-height: 1; }
 
+    /* --- TABULEIRO E CÉLULAS --- */
     .rastros-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #ccc; padding: 4px; border-radius: 8px; width: fit-content; margin: 0 auto; }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; position: relative; border-radius: 4px; color: #bbb; }
     .cell.blocked { background: #444; color: #444; }
@@ -54,19 +62,25 @@ style.innerHTML = `
     .cell.goal { background: #f0f0f0; color: #d54267; border: 2px dashed #bbb; }
     .cell.valid-move { background: #e0f0ff; cursor: pointer; border: 2px solid var(--primary-color); color: transparent; }
 
+    /* --- TAMANHOS POR DISPOSITIVO --- */
     @media screen and (min-width: 1025px) { :root { --cell-size: 60px; } }
     @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 11vw; } }
     @media screen and (max-height: 500px) and (orientation: landscape) { :root { --cell-size: 10vh; } }
 `;
 document.head.appendChild(style);
+// [FIM DA SECÇÃO 2]
 
-// ==========================================
-// 3. CAPA E INSTRUÇÕES (REVERTIDAS)
-// ==========================================
+
+// ============================================================
+// 3. CAPA, SIMULAÇÃO E INSTRUÇÕES
+// ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
+    
+    // Define o título no cabeçalho
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">${JOGO_CONFIG.nomeDoJogo.toUpperCase()}</h2>`;
     
+    // Cria o painel de instruções e feedback (apenas uma vez)
     if(!document.getElementById('instrucoes-panel')) {
         const panel = document.createElement('div');
         panel.id = 'instrucoes-panel';
@@ -92,6 +106,7 @@ function mostrarCapa() {
         document.querySelector('.game-shell').appendChild(feedback);
     }
 
+    // Desenha o conteúdo da capa (Simulação + Botões)
     const area = document.getElementById('game-content');
     area.innerHTML = `
         <div id="simu-container" style="transform: scale(0.65); margin-top: -30px;"></div>
@@ -107,22 +122,77 @@ function mostrarCapa() {
             </button>
         </div>
     `;
+    
     document.getElementById('shell-footer-content').style.display = 'none';
     iniciarSimulacao();
 }
 
+function toggleInstructions() {
+    somClique.play();
+    document.getElementById('instrucoes-panel').classList.toggle('open');
+}
+
+function iniciarSimulacao() {
+    clearInterval(simuInterval);
+    const container = document.getElementById('simu-container');
+    let sTab = Array(7).fill().map(() => Array(7).fill(0));
+    let sPos = { x: 4, y: 2 };
+    sTab[sPos.y][sPos.x] = 2;
+
+    const renderSimu = () => {
+        let html = `<div class="rastros-grid" style="pointer-events:none; opacity:0.7;">`;
+        for (let y = 0; y < 7; y++) {
+            for (let x = 0; x < 7; x++) {
+                let cl = "cell", num = "";
+                if (x === 0 && y === 6) { cl += " goal"; num = "1"; }
+                if (x === 6 && y === 0) { cl += " goal"; num = "2"; }
+                if (sTab[y][x] === 1) cl += " blocked";
+                if (sTab[y][x] === 2) cl += " white-piece";
+                html += `<div class="${cl}">${num}</div>`;
+            }
+        }
+        container.innerHTML = html + `</div>`;
+    };
+
+    const step = () => {
+        let moves = [];
+        for (let dy = -1; dy <= 1; dy++) {
+            for (let dx = -1; dx <= 1; dx++) {
+                let nx = sPos.x + dx, ny = sPos.y + dy;
+                if (nx >= 0 && nx < 7 && ny >= 0 && ny < 7 && sTab[ny][nx] === 0 && !(dx === 0 && dy === 0)) moves.push({x:nx, y:ny});
+            }
+        }
+        if (moves.length === 0 || Math.random() > 0.92) { 
+            sTab = Array(7).fill().map(() => Array(7).fill(0));
+            sPos = { x: 4, y: 2 };
+            sTab[sPos.y][sPos.x] = 2;
+        } else {
+            let m = moves[Math.floor(Math.random() * moves.length)];
+            sTab[sPos.y][sPos.x] = 1;
+            sPos = m;
+            sTab[sPos.y][sPos.x] = 2;
+        }
+        renderSimu();
+    };
+
+    simuInterval = setInterval(step, 1000);
+    renderSimu();
+}
+// [FIM DA SECÇÃO 3]
+
+
+// ============================================================
+// 4. LÓGICA CORE DO JOGO (REGRAS E TURNOS)
+// ============================================================
 function setModo(modo) {
     clearInterval(simuInterval);
     modoJogo = modo;
     matchScore = [0, 0];
     currentGameNum = 1;
-    turnoAtual = 0; 
+    turnoAtual = 0; // J1 começa sempre
     iniciarJogo();
 }
 
-// ==========================================
-// 4. LÓGICA DO JOGO E TURNOS
-// ==========================================
 function iniciarJogo() {
     jogoAtivo = true;
     tabuleiro = Array(7).fill().map(() => Array(7).fill(0));
@@ -140,7 +210,7 @@ function atualizarUI() {
     let turnInfoHTML = "";
     if (modoJogo === 'CPU') {
         if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">VEZ DO JOGADOR 1</div>`;
-        else turnInfoHTML = `<div style="flex:1"></div>`;
+        else turnInfoHTML = `<div style="flex:1"></div>`; // Esconde a informação na vez do PC
     } else {
         const classPill = turnoAtual === 0 ? "pill-j1" : "pill-j2";
         const nomeVez = turnoAtual === 0 ? "JOGADOR 1" : "JOGADOR 2";
@@ -191,10 +261,12 @@ function moverPeca(nx, ny) {
     posBranca = { x: nx, y: ny };
     tabuleiro[ny][nx] = 2;
 
+    // Verificar Vitórias imediatas
     if (nx === 0 && ny === 6) { finalizarRonda(0); return; }
     if (nx === 6 && ny === 0) { finalizarRonda(1); return; }
     if (getMovimentosPosiveis(nx, ny).length === 0) { finalizarRonda(turnoAtual); return; }
 
+    // Trocar Turno
     turnoAtual = (turnoAtual === 0) ? 1 : 0;
     
     if (modoJogo === 'CPU' && turnoAtual === 1) {
@@ -206,13 +278,18 @@ function moverPeca(nx, ny) {
 function cpuJogar() {
     const moves = getMovimentosPosiveis(posBranca.x, posBranca.y);
     if (moves.length === 0) { finalizarRonda(0); return; }
+    
+    // IA básica: Tenta aproximar-se do seu objetivo g7 (6,0)
     moves.sort((a, b) => Math.hypot(a.x - 6, a.y - 0) - Math.hypot(b.x - 6, b.y - 0));
     const alvo = moves.find(m => m.x === 6 && m.y === 0) || moves[0];
+    
     tabuleiro[posBranca.y][posBranca.x] = 1;
     posBranca = { x: alvo.x, y: alvo.y };
     tabuleiro[alvo.y][alvo.x] = 2;
+    
     if (alvo.x === 6 && alvo.y === 0) { finalizarRonda(1); return; }
     if (getMovimentosPosiveis(alvo.x, alvo.y).length === 0) { finalizarRonda(1); return; }
+    
     turnoAtual = 0;
     atualizarUI();
 }
@@ -222,17 +299,23 @@ function getMovimentosPosiveis(cx, cy) {
     for (let dy = -1; dy <= 1; dy++) {
         for (let dx = -1; dx <= 1; dx++) {
             let nx = cx + dx, ny = cy + dy;
-            if (nx >= 0 && nx < 7 && ny >= 0 && ny < 7 && tabuleiro[ny][nx] === 0) possiveis.push({ x: nx, y: ny });
+            if (nx >= 0 && nx < 7 && ny >= 0 && ny < 7 && tabuleiro[ny][nx] === 0 && !(dx===0 && dy===0)) possiveis.push({ x: nx, y: ny });
         }
     }
     return possiveis;
 }
+// [FIM DA SECÇÃO 4]
 
+
+// ============================================================
+// 5. FINALIZAÇÃO (RONDA E MATCH)
+// ============================================================
 function finalizarRonda(vencedorIdx) {
     jogoAtivo = false;
     matchScore[vencedorIdx]++;
     somAcerto.play();
     
+    // Feedback visual da ronda
     const overlay = document.getElementById('round-feedback');
     const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
     const corVencedor = vencedorIdx === 0 ? "#8cc63f" : "#ff5a5f";
@@ -243,6 +326,7 @@ function finalizarRonda(vencedorIdx) {
         <h2 style="color:#666; font-size:1.2rem;">Ganhou a Ronda!</h2>
     `;
 
+    // Verifica se alguém chegou às 3 vitórias
     if (matchScore[0] >= 3 || matchScore[1] >= 3) {
         setTimeout(finalizarMatch, 1500);
     } else {
@@ -256,7 +340,7 @@ function finalizarRonda(vencedorIdx) {
 
 function finalizarMatch() {
     jogoAtivo = false;
-    // IMPORTANTE: Esconder o feedback para ver os resultados
+    // Esconde o feedback da ronda para mostrar os resultados finais
     document.getElementById('round-feedback').style.display = 'none';
 
     const vencedorIdx = (matchScore[0] >= 3) ? 0 : 1;
@@ -279,41 +363,4 @@ function finalizarMatch() {
     footer.innerHTML = `<button class="btn-play-rect" style="background:#6c757d; flex:1;" onclick="location.reload()">REPETIR</button>
                         <button class="btn-play-rect" style="flex:1;" onclick="window.history.back()">SAIR</button>`;
 }
-
-// SIMULAÇÃO DA CAPA
-function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
-function iniciarSimulacao() {
-    clearInterval(simuInterval);
-    const container = document.getElementById('simu-container');
-    let sTab = Array(7).fill().map(() => Array(7).fill(0));
-    let sPos = { x: 4, y: 2 };
-    sTab[sPos.y][sPos.x] = 2;
-    const renderSimu = () => {
-        let html = `<div class="rastros-grid" style="pointer-events:none; opacity:0.7;">`;
-        for (let y = 0; y < 7; y++) {
-            for (let x = 0; x < 7; x++) {
-                let cl = "cell", num = "";
-                if (x === 0 && y === 6) { cl += " goal"; num = "1"; }
-                if (x === 6 && y === 0) { cl += " goal"; num = "2"; }
-                if (sTab[y][x] === 1) cl += " blocked";
-                if (sTab[y][x] === 2) cl += " white-piece";
-                html += `<div class="${cl}">${num}</div>`;
-            }
-        }
-        container.innerHTML = html + `</div>`;
-    };
-    const step = () => {
-        let moves = [];
-        for (let dy = -1; dy <= 1; dy++) {
-            for (let dx = -1; dx <= 1; dx++) {
-                let nx = sPos.x + dx, ny = sPos.y + dy;
-                if (nx >= 0 && nx < 7 && ny >= 0 && ny < 7 && sTab[ny][nx] === 0 && !(dx === 0 && dy === 0)) moves.push({x:nx, y:ny});
-            }
-        }
-        if (moves.length === 0 || Math.random() > 0.92) { sTab = Array(7).fill().map(() => Array(7).fill(0)); sPos = { x: 4, y: 2 }; sTab[sPos.y][sPos.x] = 2; }
-        else { let m = moves[Math.floor(Math.random() * moves.length)]; sTab[sPos.y][sPos.x] = 1; sPos = m; sTab[sPos.y][sPos.x] = 2; }
-        renderSimu();
-    };
-    simuInterval = setInterval(step, 1000);
-    renderSimu();
-}
+// [FIM DA SECÇÃO 5]
