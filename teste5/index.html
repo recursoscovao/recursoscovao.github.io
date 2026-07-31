@@ -89,7 +89,7 @@
         }
         /* [FIM DA SECÇÃO 3 - TELEMÓVEL VERTICAL] */
 
-   /* ============================================================
+/* ============================================================
            4. TELEMÓVEL HORIZONTAL (LANDSCAPE)
            ============================================================ */
         @media screen and (max-height: 500px) and (orientation: landscape) {
@@ -97,19 +97,26 @@
             body, html { 
                 overflow-y: auto !important; 
                 height: auto !important; 
-                display: block !important; /* Permite que o conteúdo empurre a página para baixo */
+                display: block !important; 
             }
 
             header { 
-                height: 65px; 
+                height: 75px; /* Ligeiramente maior para caberem os 3 títulos */
             }
             #header-icon { 
                 height: 45px; 
             }
-            #txt-titulo1 { font-size: 1.1rem; }
-            #txt-titulo2 { font-size: 0.9rem; }
+            
+            /* Configuração dos 3 títulos */
+            #txt-titulo1 { font-size: 1.1rem; color: var(--primary-color); font-weight: 900; }
+            #txt-titulo2 { font-size: 0.9rem; color: var(--text-grey); font-weight: 800; }
             #txt-subtitulo-header { 
-                display: none; /* Escondemos o subtítulo para ganhar espaço vertical */
+                display: flex; /* Garante que aparece */
+                font-size: 0.6rem; 
+                color: var(--text-grey); 
+                font-weight: 600; 
+                margin-top: 2px;
+                opacity: 0.8;
             }
             
             main { 
@@ -121,7 +128,7 @@
 
             .game-shell { 
                 border-radius: 20px; 
-                height: auto; /* A shell cresce de acordo com o conteúdo do jogo */
+                height: auto; 
                 min-height: 420px; 
                 margin-bottom: 20px; 
                 display: flex;
@@ -133,7 +140,7 @@
             }
             .shell-body { 
                 padding: 10px; 
-                min-height: 300px; /* Garante que o jogo tem espaço mínimo para os cards */
+                min-height: 300px; 
                 overflow: visible;
             }
             .shell-footer { 
@@ -145,16 +152,15 @@
             footer { 
                 padding: 10px; 
                 border-radius: 25px 25px 0 0; 
-                position: relative; /* Garante que o rodapé fica no fim da página após o scroll */
+                position: relative; 
             }
-            .footer-text { font-size: 0.7rem; }
             
             .hamburger-btn { font-size: 22px; }
-            .menu-dropdown { top: 65px; left: 10px; }
+            .menu-dropdown { top: 75px; left: 10px; }
             .menu-item { height: 42px; padding: 0 15px; border-radius: 10px; min-width: 200px; }
             .menu-item img { width: 26px; height: 26px; }
         }
-        /* [FIM DA SECÇÃO 4 - TELEMÓVEL HORIZONTAL COM SCROLL] */
+        /* [FIM DA SECÇÃO 4 - TELEMÓVEL HORIZONTAL COM 3 TÍTULOS E SCROLL] */
     </style>
 </head>
 <body>
