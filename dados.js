@@ -8,7 +8,7 @@ const JOGO_CONFIG = {
         rodape: "@recursos digitais"
     },
     caminhoIconsMenu: "icons/", 
-    caminhoIconsJogos: "icons/", 
+    caminhoIconsJogos: "icons/ic_jd", 
     iconesMenu: {
         logo: "jogo.png",
         controller: "controller.png" // Ícone que aparece antes de "Jogos em destaque"
