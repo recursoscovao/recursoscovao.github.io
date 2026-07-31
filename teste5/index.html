@@ -279,6 +279,44 @@
                 });
 
                 if(typeof mostrarCapa === "function") mostrarCapa();
+            },
+
+            // FUNÇÃO PARA MOSTRAR A BARRA DE STATUS DURANTE O JOGO
+            showStatusBar(ronda, total, certos, erros) {
+                const lampPath = JOGO_CONFIG.caminhoIconsMenu + "lampada.png";
+                document.getElementById('shell-header-content').innerHTML = `
+                    <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <img src="${lampPath}" style="height:45px; cursor:pointer;" onclick="darAjuda()">
+                            <div style="background: #6c757d; color: white; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 1.1rem;">${ronda}/${total}</div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; min-width: 60px; justify-content: center; background: #8cc63f; box-shadow: 0 3px 0 #6da32f;"><i class="fas fa-check"></i> ${certos}</div>
+                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; min-width: 60px; justify-content: center; background: #ff5a5f; box-shadow: 0 3px 0 #d44348;"><i class="fas fa-times"></i> ${erros}</div>
+                        </div>
+                    </div>`;
+                document.getElementById('shell-footer-content').style.display = 'none';
+            },
+
+            // FUNÇÃO PARA MOSTRAR OS RESULTADOS COM AS AJUDAS E COR DO TÍTULO
+            showResults(certos, erros, ajudas, rel) {
+                document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">RESULTADOS</h2>`;
+                document.getElementById('game-content').innerHTML = `
+                    <div style="text-align:center;">
+                        <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height:150px; object-fit:contain;">
+                        <h2 style="color:var(--primary-color); margin:10px 0; font-weight:900; text-transform:uppercase;">${rel.titulo}</h2>
+                        <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #8cc63f;">CERTOS: ${certos}</div>
+                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #ff5a5f;">ERROS: ${erros}</div>
+                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #5EA2E6;">AJUDAS: ${ajudas}</div>
+                        </div>
+                    </div>`;
+                
+                const footer = document.getElementById('shell-footer-content');
+                footer.style.display = "flex";
+                footer.innerHTML = `
+                    <button onclick="location.reload()" style="flex: 1; height: 65px; border-radius: 35px; background: #6c757d; color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer;">REPETIR</button>
+                    <button onclick="window.history.back()" style="flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer;">SAIR</button>`;
             }
         };
 
