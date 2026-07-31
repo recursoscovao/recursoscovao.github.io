@@ -60,8 +60,8 @@ const BIBLIOTECA_CONTEUDO = {
 // 3. CONFIGURAÇÃO DO JOGO ATUAL
 // ==========================================
 const JOGO_CONFIG = {
-    nomeDoJogo: "Rastros",
-    descricao: "Encontra a peça que corresponde ao rastro apresentado.",
+    nomeDoJogo: "Gatos & Cães",
+    descricao: "Ganha o jogador que realizar a última jogada.",
     
     areaAtiva: "jd",   
     anoAtivo: "jd",    
@@ -102,7 +102,7 @@ const JOGO_CONFIG = {
 const DADOS_JOGO = {
     caminhoImagens: "../../icons/ic_jd/", 
     itens: [
-        { id: 1, img: "pc_peca.png", nome: "Peça" },
-        { id: 2, img: "pc_rastro.png", nome: "Rastro" }
+        { id: 1, img: "gato.png", nome: "Gatos" },
+        { id: 2, img: "cao.png", nome: "Cães" }
     ]
 };
