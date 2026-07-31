@@ -1,20 +1,26 @@
 // ==========================================
-// CONFIGURAÇÃO DE SONS (Ficheiros acerto.mp3 e erro.mp3 na pasta sons)
+// CONFIGURAÇÃO DE SONS
 // ==========================================
 let jogoAtivo = false;
 let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0;
-let itemDestaque = null, simuInterval;
+let itemDestaque = null, opcoesRonda = [], simuInterval;
 
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ==========================================
-// ESTILOS INJETADOS (Configuração Visual Total)
+// ESTILOS INJETADOS COM MEDIA QUERIES (PC, Mobile V, Mobile H)
 // ==========================================
 const style = document.createElement('style');
 style.innerHTML = `
-    /* BARRA DE STATUS CONFIGURADA PELO JOGO */
+    /* Variáveis base que mudam conforme o dispositivo */
+    :root {
+        --grid-cols: 6;
+        --card-size: 100px;
+        --destaque-size: 170px;
+    }
+
     .status-container { width: 100%; display: flex; justify-content: space-between; align-items: center; }
     .status-pill { background: #6c757d; color: white; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 1.1rem; }
     .score-group { display: flex; gap: 10px; }
@@ -22,7 +28,6 @@ style.innerHTML = `
     .box-v { background: #8cc63f; box-shadow: 0 3px 0 #6da32f; }
     .box-x { background: #ff5a5f; box-shadow: 0 3px 0 #d44348; }
 
-    /* BOTÕES DA CAPA (RECUPERADO O DESIGN AZUL) */
     .btn-play-rect { 
         flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); 
         color: white; border: none; font-size: 1.5rem; font-weight: 900; 
@@ -33,9 +38,8 @@ style.innerHTML = `
     .btn-play-rect:active { transform: scale(0.98); }
     .btn-audio-circle { width: 65px; height: 65px; cursor: pointer; flex-shrink: 0; }
 
-    /* ÁREA DE JOGO */
     .destaque-box {
-        width: 170px; height: 170px; background: #fff; border-radius: 30px; 
+        width: var(--destaque-size); height: var(--destaque-size); background: #fff; border-radius: 30px; 
         border: 3.5px dashed var(--primary-color); display: flex; align-items: center; justify-content: center;
         margin-bottom: 15px;
     }
@@ -43,14 +47,29 @@ style.innerHTML = `
     
     .opcao-card {
         background: white; border: 3px solid #f0f0f0; border-radius: 15px; 
-        aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; 
+        width: var(--card-size); height: var(--card-size);
+        display: flex; align-items: center; justify-content: center; 
         cursor: pointer; position: relative;
     }
     .opcao-card img { width: 80%; height: 80%; object-fit: contain; }
     
-    /* ÍCONES V E X */
-    .feedback-icon { position: absolute; font-size: 3.5rem; z-index: 10; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3)); pointer-events: none; }
+    .feedback-icon { position: absolute; font-size: 3rem; z-index: 10; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3)); pointer-events: none; }
     .icon-v { color: #8cc63f; } .icon-x { color: #ff5a5f; }
+
+    /* --- 1. CONFIGURAÇÃO PC / TABLET LANDSCAPE --- */
+    @media screen and (min-width: 1025px) {
+        :root { --grid-cols: 6; --card-size: 100px; --destaque-size: 170px; }
+    }
+
+    /* --- 2. CONFIGURAÇÃO TELEMÓVEL VERTICAL (PORTRAIT) --- */
+    @media screen and (max-width: 500px) and (orientation: portrait) {
+        :root { --grid-cols: 3; --card-size: 85px; --destaque-size: 150px; }
+    }
+
+    /* --- 3. CONFIGURAÇÃO TELEMÓVEL HORIZONTAL (LANDSCAPE) --- */
+    @media screen and (max-height: 500px) and (orientation: landscape) {
+        :root { --grid-cols: 6; --card-size: 70px; --destaque-size: 120px; }
+    }
 `;
 document.head.appendChild(style);
 
@@ -76,9 +95,9 @@ function mostrarCapa() {
         <div style="display:flex; flex-direction:column; align-items:center;">
             <div class="destaque-box"><img id="simu-destaque" src=""></div>
             <div style="display:flex; gap:8px;">
-                <div id="simu-opt-0" class="opcao-card" style="width:65px;"><img src=""></div>
-                <div id="simu-opt-1" class="opcao-card" style="width:65px;"><img src=""></div>
-                <div id="simu-opt-2" class="opcao-card" style="width:65px;"><img src=""></div>
+                <div id="simu-opt-0" class="opcao-card" style="width:65px; height:65px;"><img src=""></div>
+                <div id="simu-opt-1" class="opcao-card" style="width:65px; height:65px;"><img src=""></div>
+                <div id="simu-opt-2" class="opcao-card" style="width:65px; height:65px;"><img src=""></div>
             </div>
             <p style="color:var(--text-grey); font-weight:800; text-align:center; margin-top:15px; font-size:0.9rem;">${JOGO_CONFIG.descricao}</p>
         </div>`;
@@ -93,7 +112,7 @@ function mostrarCapa() {
 }
 
 // ==========================================
-// BARRA DE STATUS (CONFIGURADA AQUI NO JOGO.JS)
+// BARRA DE STATUS
 // ==========================================
 function configurarBarraStatus() {
     const lamp = JOGO_CONFIG.caminhoIconsMenu + "lampada.png";
@@ -121,17 +140,27 @@ function proximaRonda() {
     configurarBarraStatus();
 
     const area = document.getElementById('game-content');
+    
+    // Baralhar a lista completa para garantir novos animais sempre
     const todos = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
     itemDestaque = todos[0];
-    let selecao = todos.slice(0, 10);
+    
+    // Selecionar 12 itens
+    let selecao = todos.slice(0, 12);
+    
+    // Garantir que o destaque está na seleção
     if (!selecao.find(i => i.id === itemDestaque.id)) selecao[0] = itemDestaque;
+    
+    // Baralhar as opções finais
     opcoesRonda = selecao.sort(() => Math.random() - 0.5);
 
-    const isPortrait = window.innerHeight > window.innerWidth;
     area.innerHTML = `
         <div class="destaque-box"><img src="${DADOS_JOGO.caminhoImagens + itemDestaque.img}"></div>
-        <div style="display:grid; grid-template-columns: repeat(${isPortrait?3:5}, 1fr); gap:8px; width:100%; max-width:550px;">
-            ${opcoesRonda.map(item => `<div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)"><img src="${DADOS_JOGO.caminhoImagens + item.img}"></div>`).join('')}
+        <div style="display:grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap:8px; width:fit-content; max-width:100%;">
+            ${opcoesRonda.map(item => `
+                <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)">
+                    <img src="${DADOS_JOGO.caminhoImagens + item.img}">
+                </div>`).join('')}
         </div>`;
 }
 
