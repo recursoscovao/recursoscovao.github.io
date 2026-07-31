@@ -31,11 +31,29 @@ style.innerHTML = `
     .blinking { animation: blinker 1s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
 
+    /* FEEDBACK DE VITÓRIA DE RONDA MELHORADO */
     #round-feedback {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(255,255,255,0.9); z-index: 1000;
-        display: none; flex-direction: column; align-items: center; justify-content: center;
-        border-radius: 35px; backdrop-filter: blur(4px);
+        background: rgba(255, 255, 255, 0.7); 
+        backdrop-filter: blur(6px); 
+        z-index: 1000;
+        display: none; align-items: center; justify-content: center;
+        border-radius: 35px;
+    }
+
+    .vitoria-card {
+        background: white;
+        padding: 30px 40px;
+        border-radius: 30px;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
+        text-align: center;
+        border: 4px solid var(--bg-color);
+        animation: cardPop 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.28);
+    }
+
+    @keyframes cardPop {
+        0% { transform: scale(0.7); opacity: 0; }
+        100% { transform: scale(1); opacity: 1; }
     }
 
     .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 100%; max-width: 480px; justify-content: center; align-items: center; margin-top: 10px; }
@@ -60,7 +78,6 @@ style.innerHTML = `
     .inst-text { color: #666; font-size: 1.05rem; line-height: 1.6; margin-bottom: 15px; }
     .inst-list { list-style: none; padding: 0; }
     .inst-list li { background: #f9f9f9; margin-bottom: 8px; padding: 12px 15px; border-radius: 12px; border-left: 4px solid var(--bg-color); color: #555; font-size: 1rem; line-height: 1.4; }
-    /* ------------------------------ */
 
     .rastros-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #ccc; padding: 4px; border-radius: 8px; width: fit-content; margin: 0 auto; }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; position: relative; border-radius: 4px; color: #bbb; }
@@ -321,21 +338,35 @@ function finalizarRonda(vencedorIdx) {
     const overlay = document.getElementById('round-feedback');
     const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
     const corVencedor = vencedorIdx === 0 ? "#8cc63f" : "#ff5a5f";
+    const icone = vencedorIdx === 0 ? "fa-star" : "fa-trophy";
     
     overlay.style.display = 'flex';
+    
     overlay.innerHTML = `
-        <h1 style="color:${corVencedor}; font-size:2.5rem; font-weight:900; margin-bottom:10px;">${nomeVencedor}</h1>
-        <h2 style="color:#666; font-size:1.2rem;">Ganhou a Ronda!</h2>
+        <div class="vitoria-card">
+            <div style="font-size: 3rem; color: ${corVencedor}; margin-bottom: 10px;">
+                <i class="fas ${icone}"></i>
+            </div>
+            <h1 style="color:${corVencedor}; font-size:2.2rem; font-weight:900; margin:0; text-transform:uppercase;">
+                ${nomeVencedor}
+            </h1>
+            <p style="color:#666; font-size:1.1rem; font-weight:700; margin:5px 0 0 0;">
+                Venceu esta ronda!
+            </p>
+            <div style="margin-top:15px; padding-top:15px; border-top:2px dashed #eee; color:#aaa; font-weight:800;">
+                PLACAR: ${matchScore[0]} - ${matchScore[1]}
+            </div>
+        </div>
     `;
 
     if (matchScore[0] >= 3 || matchScore[1] >= 3) {
-        setTimeout(finalizarMatch, 1500);
+        setTimeout(finalizarMatch, 2000);
     } else {
         setTimeout(() => {
             currentGameNum++;
             turnoAtual = 0; 
             iniciarJogo();
-        }, 1500);
+        }, 2000);
     }
 }
 
