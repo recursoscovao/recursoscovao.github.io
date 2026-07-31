@@ -1,16 +1,15 @@
 // ==========================================
-// CONFIGURAÇÃO E SONS
+// CONFIGURAÇÃO E SONS (acerto.mp3 e erro.mp3)
 // ==========================================
 let jogoAtivo = false;
 let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0;
 let itemDestaque = null, simuInterval;
 
-const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.acerto);
-const somErro = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.erro);
-const somClique = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.clique);
-const audioInstrucoes = new Audio(JOGO_CONFIG.caminhoSons + "instrucoes.mp3");
+const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
+const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
+const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
-// Estilos específicos para o jogo
+// ESTILOS DO JOGO
 const gameStyle = document.createElement('style');
 gameStyle.innerHTML = `
     .destaque-box {
@@ -18,45 +17,39 @@ gameStyle.innerHTML = `
         border: 3.5px dashed var(--primary-color); display: flex; align-items: center; justify-content: center;
         margin-bottom: 20px; position: relative;
     }
-    /* Animal pequeno e centralizado */
-    .destaque-box img { max-width: 65% !important; max-height: 65% !important; object-fit: contain; }
-
+    .destaque-box img { max-width: 60% !important; max-height: 60% !important; object-fit: contain; }
     .opcao-card {
         background: white; border: 3px solid #f0f0f0; border-radius: 15px; 
         aspect-ratio: 1/1; display: flex; align-items: center; justify-content: center; 
         cursor: pointer; transition: 0.2s; position: relative;
     }
     .opcao-card img { width: 80%; height: 80%; object-fit: contain; }
-    
-    /* Ícones de feedback (V e X) */
-    .feedback-icon {
-        position: absolute; font-size: 3.5rem; z-index: 10;
-        filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3));
-        pointer-events: none;
-    }
-    .icon-v { color: #8cc63f; }
-    .icon-x { color: #ff5a5f; }
-
-    /* Botões da Capa */
+    .feedback-icon { position: absolute; font-size: 3.5rem; z-index: 10; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3)); pointer-events: none; }
+    .icon-v { color: #8cc63f; } .icon-x { color: #ff5a5f; }
     .btn-jogo-audio { width: 65px; height: 65px; cursor: pointer; transition: 0.2s; }
-    .btn-jogo-play { 
-        flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); 
-        color: white; border: none; font-size: 1.5rem; font-weight: 900; 
-        cursor: pointer; box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        display: flex; align-items: center; justify-content: center; gap: 15px;
-    }
+    .btn-jogo-play { flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.5rem; font-weight: 900; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; }
 `;
 document.head.appendChild(gameStyle);
 
-// ==========================================
-// CAPA E ÁUDIO
-// ==========================================
+// FUNÇÃO DE ÁUDIO (Tenta carregar o ficheiro, senão a IA "fala")
+function tocarAudioInstrucoes() {
+    somClique.play();
+    const msg = "Olha para o animal que aparece no quadro em cima e tenta encontrá-lo entre as opções em baixo. Se precisares de uma ajuda, clica na lâmpada. Bom jogo!";
+    
+    const audioInst = new Audio(JOGO_CONFIG.caminhoSons + "instrucoes.mp3");
+    audioInst.play().catch(() => {
+        // Fallback: Se não houver MP3, o navegador fala!
+        const synth = window.speechSynthesis;
+        const utter = new SpeechSynthesisUtterance(msg);
+        utter.lang = 'pt-PT';
+        synth.speak(utter);
+    });
+}
+
 function mostrarCapa() {
     if (jogoAtivo) return;
-    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">${JOGO_CONFIG.nomeDoJogo}</h2>`;
-
-    const area = document.getElementById('game-content');
-    area.innerHTML = `
+    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">${JOGO_CONFIG.nomeDoJogo}</h2>`;
+    document.getElementById('game-content').innerHTML = `
         <div id="simu-hand" style="position:absolute; font-size:3rem; z-index:100; pointer-events:none; display:none;">👆</div>
         <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; gap:15px;">
             <div class="destaque-box"><img id="simu-destaque" src=""></div>
@@ -66,22 +59,13 @@ function mostrarCapa() {
                 <div id="simu-opt-2" class="opcao-card" style="width:70px;"><img src=""></div>
             </div>
             <p style="color:var(--text-grey); font-weight:800; text-align:center;">${JOGO_CONFIG.descricao}</p>
-        </div>
-    `;
-
+        </div>`;
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
     footer.innerHTML = `
-        <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="btn-jogo-audio" onclick="tocarAudioInstrucoes()">
-        <button class="btn-jogo-play" onclick="iniciarJogo()"><i class="fas fa-play"></i> JOGAR</button>
-    `;
+        <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="btn-audio-circle" onclick="tocarAudioInstrucoes()" style="width:65px; cursor:pointer;">
+        <button class="btn-play-rect" onclick="iniciarJogo()"><i class="fas fa-play"></i> JOGAR</button>`;
     correrSimulacao();
-}
-
-function tocarAudioInstrucoes() {
-    somClique.play();
-    audioInstrucoes.currentTime = 0;
-    audioInstrucoes.play().catch(() => {});
 }
 
 function correrSimulacao() {
@@ -90,8 +74,9 @@ function correrSimulacao() {
     const animar = () => {
         const itens = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5).slice(0,3);
         const certoIdx = Math.floor(Math.random() * 3);
-        if(!document.getElementById('simu-destaque')) return;
-        document.getElementById('simu-destaque').src = DADOS_JOGO.caminhoImagens + itens[certoIdx].img;
+        const imgD = document.getElementById('simu-destaque');
+        if(!imgD) return;
+        imgD.src = DADOS_JOGO.caminhoImagens + itens[certoIdx].img;
         itens.forEach((it, i) => { 
             const card = document.getElementById(`simu-opt-${i}`);
             card.querySelector('img').src = DADOS_JOGO.caminhoImagens + it.img;
@@ -114,26 +99,17 @@ function correrSimulacao() {
     animar(); simuInterval = setInterval(animar, 4000);
 }
 
-// ==========================================
-// LÓGICA DO JOGO
-// ==========================================
-function iniciarJogo() {
-    clearInterval(simuInterval); audioInstrucoes.pause();
-    jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0;
-    proximaRonda();
-}
+function iniciarJogo() { clearInterval(simuInterval); window.speechSynthesis.cancel(); jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; proximaRonda(); }
 
 function proximaRonda() {
     if (rondaAtual > totalRondas) { finalizarJogo(); return; }
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
-
     const area = document.getElementById('game-content');
     const todos = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
     itemDestaque = todos[0];
     let selecao = todos.slice(0, 10);
     if (!selecao.find(i => i.id === itemDestaque.id)) selecao[0] = itemDestaque;
     opcoesRonda = selecao.sort(() => Math.random() - 0.5);
-
     const isPortrait = window.innerHeight > window.innerWidth;
     area.innerHTML = `
         <div class="destaque-box"><img src="${DADOS_JOGO.caminhoImagens + itemDestaque.img}"></div>
@@ -141,24 +117,21 @@ function proximaRonda() {
             ${opcoesRonda.map(item => `
                 <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)">
                     <img src="${DADOS_JOGO.caminhoImagens + item.img}">
-                </div>
-            `).join('')}
-        </div>
-    `;
+                </div>`).join('')}
+        </div>`;
 }
 
 function verificarResposta(id, el) {
     if (!jogoAtivo) return;
     document.querySelectorAll('.opcao-card').forEach(c => c.style.pointerEvents = 'none');
-
     if (id === itemDestaque.id) {
         certos++; somAcerto.play();
         el.style.borderColor = "#8cc63f";
-        el.innerHTML += '<i class="fas fa-check feedback-icon icon-v"></i>'; // Adiciona o V
+        el.innerHTML += '<i class="fas fa-check feedback-icon icon-v"></i>';
     } else {
         erros++; somErro.play();
         el.style.borderColor = "#ff5a5f";
-        el.innerHTML += '<i class="fas fa-times feedback-icon icon-x"></i>'; // Adiciona o X
+        el.innerHTML += '<i class="fas fa-times feedback-icon icon-x"></i>';
         const correto = document.getElementById(`card-${itemDestaque.id}`);
         if(correto) correto.style.borderColor = "#8cc63f";
     }
@@ -171,7 +144,7 @@ function darAjuda() {
     const correto = document.getElementById(`card-${itemDestaque.id}`);
     if (correto) {
         correto.style.borderColor = "var(--primary-color)";
-        correto.animate([{transform:'scale(1)'},{transform:'scale(1.15)'},{transform:'scale(1)'}], {duration:500, iterations:2});
+        correto.animate([{transform:'scale(1)'},{transform:'scale(1.1)'},{transform:'scale(1)'}], {duration:500, iterations:2});
     }
 }
 
