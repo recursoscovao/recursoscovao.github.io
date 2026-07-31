@@ -30,14 +30,13 @@
         footer { padding: 8px; text-align: center; background: white; border-radius: 25px 25px 0 0; }
         .footer-text { color: var(--text-grey); font-size: 0.7rem; font-weight: 700; }
 
-        /* Botão Hamburguer e Menu */
         .hamburger-btn { background: none; border: none; color: var(--primary-color); font-size: 26px; cursor: pointer; transition: 0.2s; }
         .hamburger-btn:hover { transform: scale(1.1); opacity: 0.7; }
         
         .menu-dropdown { position: absolute; top: 80px; left: 15px; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
         .menu-item { display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 15px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 250px; transition: 0.2s; }
         .menu-item:hover { background-color: var(--primary-color); color: white !important; }
-        .menu-item img { width: 32px; height: 32px; flex-shrink: 0; object-fit: contain; } /* Corrige ícones esmagados */
+        .menu-item img { width: 32px; height: 32px; flex-shrink: 0; object-fit: contain; }
     </style>
 </head>
 <body>
@@ -49,7 +48,7 @@
             <div class="title-group">
                 <div id="txt-titulo1">---</div>
                 <div id="txt-titulo2">---</div>
-                <div id="txt-subtitulo-header">---</div> <!-- Título 3 Recuperado -->
+                <div id="txt-subtitulo-header">---</div>
             </div>
         </div>
         <img id="icon-voltar-top" src="" onclick="location.reload()" style="height: 38px; cursor: pointer;">
@@ -78,17 +77,33 @@
 
                 document.getElementById('txt-titulo1').innerText = conteudo.t1;
                 document.getElementById('txt-titulo2').innerText = conteudo.t2;
-                document.getElementById('txt-subtitulo-header').innerText = conteudo.sub; // Carrega Título 3
+                document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
                 document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
                 
-                document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + tema.voltarMobile;
+                const voltarIconPath = config.caminhoIconsMenu + tema.voltarMobile;
+                document.getElementById('icon-voltar-top').src = voltarIconPath;
+
                 const itemAtivo = (config.menuItens || config.menu_itens).find(i => i.id === config.anoAtivo);
                 if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
                 
+                // Montagem do Menu
                 const menuBox = document.getElementById('dropdownMenu');
+                
+                // 1. Adiciona o botão VOLTAR no topo do menu (igual ao header)
+                const aVoltar = document.createElement('a');
+                aVoltar.className = 'menu-item';
+                aVoltar.href = "javascript:location.reload()";
+                aVoltar.innerHTML = `<img src="${voltarIconPath}"> <span>Voltar</span>`;
+                menuBox.appendChild(aVoltar);
+
+                // 2. Adiciona os restantes itens do config
                 (config.menuItens || config.menu_itens).forEach(item => {
-                    const a = document.createElement('a'); a.className = 'menu-item'; a.href = item.link;
-                    a.innerHTML = `<img src="${config.caminhoIconsMenu + item.icon}"> <span>${item.label}</span>`;
+                    const a = document.createElement('a'); 
+                    a.className = 'menu-item'; 
+                    a.href = item.link;
+                    // Se o ícone for "AUTO", usa o ícone de voltar, senão usa o ícone do item
+                    const imgPath = (item.icon === "AUTO") ? voltarIconPath : config.caminhoIconsMenu + item.icon;
+                    a.innerHTML = `<img src="${imgPath}"> <span>${item.label}</span>`;
                     menuBox.appendChild(a);
                 });
 
