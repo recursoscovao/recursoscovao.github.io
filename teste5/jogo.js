@@ -55,16 +55,19 @@ style.innerHTML = `
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
         :root { 
             --grid-cols: 6; 
-            --card-size: 125px; /* Aumentado de 110px para 125px */
-            --dest-size: 160px; /* Reduzi ligeiramente para ganhar espaço vertical */
-        }
-        
-        .destaque-box { 
-            margin-bottom: 5px; /* Reduzido de 15px para 5px */
+            --card-size: 135px; /* Aumentado para ocupar mais espaço lateral e vertical */
+            --dest-size: 160px; 
         }
 
         .shell-body {
-            padding: 5px 15px !important; /* Padding reduzido no topo e fundo */
+            padding-top: 10px !important;    /* Reduz o espaço morto no topo */
+            padding-bottom: 10px !important; /* Reduz o espaço morto no fundo */
+            justify-content: center !important; 
+        }
+
+        .destaque-box { 
+            margin-top: 0px;      /* Move o animal de destaque para mais cima */
+            margin-bottom: 30px;  /* Cria o padding/espaço solicitado entre o destaque e as 12 imagens */
         }
     }
     /* [FIM PC / TABLET LANDSCAPE] */
