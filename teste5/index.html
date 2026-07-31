@@ -86,26 +86,21 @@
                 const itemAtivo = (config.menuItens || config.menu_itens).find(i => i.id === config.anoAtivo);
                 if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
                 
-                // Montagem do Menu
+                // Montagem do Menu baseada APENAS nos teus dados
                 const menuBox = document.getElementById('dropdownMenu');
-                menuBox.innerHTML = ''; // Garante que o menu está limpo
+                menuBox.innerHTML = ''; 
 
-                // 1. Adiciona primeiro os itens do ficheiro de dados
                 (config.menuItens || config.menu_itens).forEach(item => {
                     const a = document.createElement('a'); 
                     a.className = 'menu-item'; 
                     a.href = item.link;
+                    
+                    // Se o ícone for "AUTO", ele usa o ícone de voltar do tema
                     const imgPath = (item.icon === "AUTO") ? voltarIconPath : config.caminhoIconsMenu + item.icon;
+                    
                     a.innerHTML = `<img src="${imgPath}"> <span>${item.label}</span>`;
                     menuBox.appendChild(a);
                 });
-
-                // 2. Adiciona o botão VOLTAR apenas no FIM
-                const aVoltarFim = document.createElement('a');
-                aVoltarFim.className = 'menu-item';
-                aVoltarFim.href = "javascript:location.reload()";
-                aVoltarFim.innerHTML = `<img src="${voltarIconPath}"> <span>Voltar</span>`;
-                menuBox.appendChild(aVoltarFim);
 
                 if(typeof mostrarCapa === "function") mostrarCapa();
             }
