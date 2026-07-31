@@ -2,15 +2,14 @@
 // 1. ESTADO GLOBAL E SONS
 // ============================================================
 let jogoAtivo = false;
-let modoJogo = 'CPU';     // Pode ser 'CPU' ou 'PVP'
-let matchScore = [0, 0];  // [Vitórias J1, Vitórias J2/Pc]
-let turnoAtual = 0;       // 0 para Jogador 1, 1 para Jogador 2/Pc
-let currentGameNum = 1;   // Contador de qual jogo do "Melhor de 5" estamos
-let tabuleiro = [];       // Matriz que guarda o estado das casas (vazio, bloqueado, peça)
-let posBranca = { x: 4, y: 2 }; // Posição atual da peça (e5 por defeito)
-let simuInterval;         // Controla o tempo da simulação na capa
+let modoJogo = 'CPU';     
+let matchScore = [0, 0];  
+let turnoAtual = 0;       
+let currentGameNum = 1;   
+let tabuleiro = [];       
+let posBranca = { x: 4, y: 2 }; 
+let simuInterval;         
 
-// Caminhos dos ficheiros de som
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
@@ -22,19 +21,16 @@ const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
-    /* --- BARRA DE STATUS (TOP) --- */
     .status-container { width: 100%; display: flex; justify-content: space-between; align-items: center; }
     .status-pill { padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 0.9rem; color: white; transition: 0.3s; }
     .score-group { display: flex; gap: 8px; }
     .score-box { padding: 5px 10px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1rem; min-width: 55px; justify-content: center; }
     
-    /* --- CORES DOS JOGADORES (J1 Verde, J2/Pc Vermelho) --- */
     .box-v, .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .box-x, .pill-j2 { background: #ff5a5f !important; box-shadow: 0 3px 0 #d44348; }
     .blinking { animation: blinker 1s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
 
-    /* --- FEEDBACK DE VITÓRIA DE RONDA (OVERLAY) --- */
     #round-feedback {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%;
         background: rgba(255,255,255,0.9); z-index: 1000;
@@ -42,18 +38,15 @@ style.innerHTML = `
         border-radius: 35px; backdrop-filter: blur(4px);
     }
 
-    /* --- BOTÕES DA CAPA --- */
     .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 100%; max-width: 480px; justify-content: center; align-items: center; margin-top: 10px; }
     .btn-capa-small { flex: 1; height: 55px; border-radius: 25px; border: none; color: white; font-weight: 900; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-transform: uppercase; }
     .btn-inform { width: 55px; height: 55px; flex: none; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .btn-inform img { width: 45px; height: 45px; object-fit: contain; }
 
-    /* --- PAINEL DE INSTRUÇÕES --- */
     #instrucoes-panel { position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%; background: white; z-index: 5000; transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1); padding: 40px 25px; overflow-y: auto; }
     #instrucoes-panel.open { bottom: 0; }
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: var(--text-grey); cursor: pointer; font-weight: 900; line-height: 1; }
 
-    /* --- TABULEIRO E CÉLULAS --- */
     .rastros-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #ccc; padding: 4px; border-radius: 8px; width: fit-content; margin: 0 auto; }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; position: relative; border-radius: 4px; color: #bbb; }
     .cell.blocked { background: #444; color: #444; }
@@ -62,7 +55,6 @@ style.innerHTML = `
     .cell.goal { background: #f0f0f0; color: #d54267; border: 2px dashed #bbb; }
     .cell.valid-move { background: #e0f0ff; cursor: pointer; border: 2px solid var(--primary-color); color: transparent; }
 
-    /* --- TAMANHOS POR DISPOSITIVO --- */
     @media screen and (min-width: 1025px) { :root { --cell-size: 60px; } }
     @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 11vw; } }
     @media screen and (max-height: 500px) and (orientation: landscape) { :root { --cell-size: 10vh; } }
@@ -72,31 +64,30 @@ document.head.appendChild(style);
 
 
 // ============================================================
-// 3. CAPA, SIMULAÇÃO E INSTRUÇÕES
+// 3. CAPA, SIMULAÇÃO E INSTRUÇÕES (TEXTO ATUALIZADO)
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
-    
-    // Define o título no cabeçalho
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">${JOGO_CONFIG.nomeDoJogo.toUpperCase()}</h2>`;
     
-    // Cria o painel de instruções e feedback (apenas uma vez)
     if(!document.getElementById('instrucoes-panel')) {
         const panel = document.createElement('div');
         panel.id = 'instrucoes-panel';
         panel.innerHTML = `
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div style="max-width:600px; margin:0 auto; text-align:left;">
-                <h2 style="color:var(--primary-color); text-align:center;">INSTRUÇÕES DO JOGO</h2>
-                <h3>Material</h3>
-                <p>Um tabuleiro quadrado 7 por 7. Uma peça branca e peças pretas. A casa [1] é o objetivo do Jogador 1, a casa [2] é o objetivo do Jogador 2.</p>
+                <h2 style="color:var(--primary-color); text-align:center;">Como Jogar</h2>
                 <h3>Objetivo</h3>
-                <p>Um jogador ganha se a peça branca se deslocar para a sua casa final ou se for capaz de bloquear o adversário, impedindo-o de jogar.</p>
-                <h3>Regras</h3>
-                <p>Cada jogador, alternadamente, desloca a peça branca para um quadrado vazio adjacente (vertical, horizontal ou diagonal). A casa onde se encontrava a peça branca recebe uma peça negra. As casas que recebem peças negras não podem ser ocupadas pela peça branca.</p>
-                <p>O jogo começa com a peça branca na casa <b>e5</b>.</p>
-                <h3>Notas Importantes</h3>
-                <p>Mesmo que seja o adversário a mover a peça para a tua casa final, tu ganhas o jogo. À medida que o tabuleiro fica ocupado, as opções diminuem.</p>
+                <p>Vence o jogador que conseguir levar a <b>peça branca</b> até à sua casa final ou deixar o adversário sem movimentos (bloqueado).</p>
+                <ul>
+                    <li><b>Jogador 1 (Canto Inferior):</b> Deve chegar à casa <b>1</b>.</li>
+                    <li><b>Jogador 2 (Canto Superior):</b> Deve chegar à casa <b>2</b>.</li>
+                </ul>
+                <h3>Regras Principais</h3>
+                <p>1. A peça branca começa no centro (e5).</p>
+                <p>2. Podes mover a peça para qualquer casa vazia ao lado (horizontal, vertical ou diagonal).</p>
+                <p>3. Quando a peça sai de uma casa, essa casa fica <b>bloqueada</b> (fica preta) e ninguém pode voltar a passar por lá.</p>
+                <p>4. O jogo termina mal a peça entre numa casa de vitória ou alguém fique cercado sem saída.</p>
             </div>
         `;
         document.querySelector('.game-shell').appendChild(panel);
@@ -106,7 +97,6 @@ function mostrarCapa() {
         document.querySelector('.game-shell').appendChild(feedback);
     }
 
-    // Desenha o conteúdo da capa (Simulação + Botões)
     const area = document.getElementById('game-content');
     area.innerHTML = `
         <div id="simu-container" style="transform: scale(0.65); margin-top: -30px;"></div>
@@ -189,7 +179,7 @@ function setModo(modo) {
     modoJogo = modo;
     matchScore = [0, 0];
     currentGameNum = 1;
-    turnoAtual = 0; // J1 começa sempre
+    turnoAtual = 0; 
     iniciarJogo();
 }
 
@@ -210,10 +200,10 @@ function atualizarUI() {
     let turnInfoHTML = "";
     if (modoJogo === 'CPU') {
         if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">VEZ DO JOGADOR 1</div>`;
-        else turnInfoHTML = `<div style="flex:1"></div>`; // Esconde a informação na vez do PC
+        else turnInfoHTML = `<div style="flex:1"></div>`; 
     } else {
-        const classPill = turnoAtual === 0 ? "pill-j1" : "pill-j2";
-        const nomeVez = turnoAtual === 0 ? "JOGADOR 1" : "JOGADOR 2";
+        const classPill = (turnoAtual === 0) ? "pill-j1" : "pill-j2";
+        const nomeVez = (turnoAtual === 0) ? "JOGADOR 1" : "JOGADOR 2";
         turnInfoHTML = `<div class="status-pill ${classPill} blinking">VEZ DO ${nomeVez}</div>`;
     }
 
@@ -261,12 +251,10 @@ function moverPeca(nx, ny) {
     posBranca = { x: nx, y: ny };
     tabuleiro[ny][nx] = 2;
 
-    // Verificar Vitórias imediatas
     if (nx === 0 && ny === 6) { finalizarRonda(0); return; }
     if (nx === 6 && ny === 0) { finalizarRonda(1); return; }
     if (getMovimentosPosiveis(nx, ny).length === 0) { finalizarRonda(turnoAtual); return; }
 
-    // Trocar Turno
     turnoAtual = (turnoAtual === 0) ? 1 : 0;
     
     if (modoJogo === 'CPU' && turnoAtual === 1) {
@@ -278,18 +266,13 @@ function moverPeca(nx, ny) {
 function cpuJogar() {
     const moves = getMovimentosPosiveis(posBranca.x, posBranca.y);
     if (moves.length === 0) { finalizarRonda(0); return; }
-    
-    // IA básica: Tenta aproximar-se do seu objetivo g7 (6,0)
     moves.sort((a, b) => Math.hypot(a.x - 6, a.y - 0) - Math.hypot(b.x - 6, b.y - 0));
     const alvo = moves.find(m => m.x === 6 && m.y === 0) || moves[0];
-    
     tabuleiro[posBranca.y][posBranca.x] = 1;
     posBranca = { x: alvo.x, y: alvo.y };
     tabuleiro[alvo.y][alvo.x] = 2;
-    
     if (alvo.x === 6 && alvo.y === 0) { finalizarRonda(1); return; }
     if (getMovimentosPosiveis(alvo.x, alvo.y).length === 0) { finalizarRonda(1); return; }
-    
     turnoAtual = 0;
     atualizarUI();
 }
@@ -315,7 +298,6 @@ function finalizarRonda(vencedorIdx) {
     matchScore[vencedorIdx]++;
     somAcerto.play();
     
-    // Feedback visual da ronda
     const overlay = document.getElementById('round-feedback');
     const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
     const corVencedor = vencedorIdx === 0 ? "#8cc63f" : "#ff5a5f";
@@ -326,13 +308,12 @@ function finalizarRonda(vencedorIdx) {
         <h2 style="color:#666; font-size:1.2rem;">Ganhou a Ronda!</h2>
     `;
 
-    // Verifica se alguém chegou às 3 vitórias
     if (matchScore[0] >= 3 || matchScore[1] >= 3) {
         setTimeout(finalizarMatch, 1500);
     } else {
         setTimeout(() => {
             currentGameNum++;
-            turnoAtual = 0; // J1 Começa sempre
+            turnoAtual = 0; 
             iniciarJogo();
         }, 1500);
     }
@@ -340,7 +321,6 @@ function finalizarRonda(vencedorIdx) {
 
 function finalizarMatch() {
     jogoAtivo = false;
-    // Esconde o feedback da ronda para mostrar os resultados finais
     document.getElementById('round-feedback').style.display = 'none';
 
     const vencedorIdx = (matchScore[0] >= 3) ? 0 : 1;
