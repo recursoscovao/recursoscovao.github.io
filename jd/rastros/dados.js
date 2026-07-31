@@ -61,14 +61,14 @@ const BIBLIOTECA_CONTEUDO = {
 // ==========================================
 const JOGO_CONFIG = {
     nomeDoJogo: "Rastros",
-    descricao: "Pensar no texto a colocar",
+    descricao: "Encontra a peça que corresponde ao rastro apresentado.",
     
     areaAtiva: "jd",   
     anoAtivo: "jd",    
     
     caminhoIconsMenu: "../../icons/", 
     caminhoIconsJogos: "../../icons/",
-    caminhoSons: "../../sons/", // Nova pasta para os sons
+    caminhoSons: "../../sons/", 
 
     sons: {
         acerto: "certo.mp3",
@@ -77,6 +77,8 @@ const JOGO_CONFIG = {
     },
 
     menuItens: [
+        // Adicionado este item para que o código encontre o ícone do cabeçalho
+        { id: "jd", label: "Destaque", icon: "icondestaque.png", link: "#" },
         { id: "home", label: "Início", icon: "home.png", link: "/" },
         { id: "pre", label: "Pré-Escolar", icon: "iconpre.png", link: "/pre" },
         { id: "ano1", label: "1º Ano", icon: "icon1.png", link: "/1" },
@@ -85,31 +87,6 @@ const JOGO_CONFIG = {
         { id: "ano4", label: "4º Ano", icon: "icon4.png", link: "/4" },
         { id: "voltar", label: "Voltar", icon: "AUTO", link: "/" } 
     ],
-
-    instrucoes: {
-        objetivo: "Observa atentamente o animal apresentado no topo do ecrã e encontra a imagem igual entre as várias opções. Clica ou toca no animal correto para avançares para a ronda seguinte.",
-        comoJogar: [
-            "Observa o animal que aparece no topo do ecrã.",
-            "Analisa todas as imagens apresentadas.",
-            "Encontra a imagem exatamente igual ao modelo.",
-            "Clica ou toca no animal correto.",
-            "Se acertares, passas para a próxima ronda.",
-            "Se errares, o jogo mostra a resposta certa antes de avançar.",
-            "Completa as 10 rondas para ver os resultados."
-        ],
-        regras: [
-            "Existe apenas uma resposta correta em cada ronda.",
-            "Observa com atenção antes de responder.",
-            "Não há limite de tempo."
-        ],
-        dicas: "Observa cuidadosamente a forma do animal, as cores e os detalhes (orelhas, patas, asas, cauda, etc.). Alguns animais podem ser muito parecidos.",
-        desenvolvimento: [
-            "Atenção e concentração",
-            "Memória visual",
-            "Capacidade de observação",
-            "Discriminação visual"
-        ]
-    },
 
     relatorios: [
         { min: 9, max: 10, titulo: "És um craque!", img: "taca_1.png" },
@@ -123,24 +100,9 @@ const JOGO_CONFIG = {
 // 4. DADOS DO CONTEÚDO DO JOGO
 // ==========================================
 const DADOS_JOGO = {
-    caminhoImagens: "../img/animaisdomesticos/",
+    caminhoImagens: "../../icons/ic_jd/", 
     itens: [
-        { id: 1, img: "galo.png", nome: "Galo" },
-        { id: 2, img: "galinha.png", nome: "Galinha" },
-        { id: 3, img: "cabra.png", nome: "Cabra" },
-        { id: 4, img: "ovelha.png", nome: "Ovelha" },
-        { id: 5, img: "burro.png", nome: "Burro" },
-        { id: 6, img: "peru.png", nome: "Peru" },
-        { id: 7, img: "porco.png", nome: "Porco" },
-        { id: 8, img: "vaca.png", nome: "Vaca" },
-        { id: 9, img: "pato.png", nome: "Pato" },
-        { id: 10, img: "gato.png", nome: "Gato" },
-        { id: 11, img: "cao.png", nome: "Cão" },
-        { id: 12, img: "cao1.png", nome: "Cão" },
-        { id: 13, img: "gato1.png", nome: "Gato" },
-        { id: 14, img: "boi.png", nome: "Boi" },
-        { id: 15, img: "pintainho.png", nome: "Pintainho" },
-        { id: 16, img: "patinho.png", nome: "Patinho" },
-        { id: 17, img: "cavalo.png", nome: "Cavalo" }
+        { id: 1, img: "pc_peca.png", nome: "Peça" },
+        { id: 2, img: "pc_rastro.png", nome: "Rastro" }
     ]
 };
