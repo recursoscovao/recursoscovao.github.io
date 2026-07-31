@@ -77,9 +77,9 @@ const JOGO_CONFIG = {
     },
 
     menuItens: [
-        { id: "home", label: "Início", icon: "home.png", link: "../" },
-        { id: "pre", label: "Pré-Escolar", icon: "iconpre.png", link: "../pre" },
-        { id: "ano1", label: "1º Ano", icon: "icon1.png", link: "../1" },
+        { id: "home", label: "Início", icon: "home.png", link: "/" },
+        { id: "pre", label: "Pré-Escolar", icon: "iconpre.png", link: "/pre" },
+        { id: "ano1", label: "1º Ano", icon: "icon1.png", link: "/1" },
         { id: "ano2", label: "2º Ano", icon: "icon2.png", link: "../2" },
         { id: "ano3", label: "3º Ano", icon: "icon3.png", link: "../3" },
         { id: "ano4", label: "4º Ano", icon: "icon4.png", link: "../4" },
