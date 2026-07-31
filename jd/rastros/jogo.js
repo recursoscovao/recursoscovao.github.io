@@ -10,7 +10,7 @@ let currentGameNum = 1;
 let tabuleiro = []; 
 let posBranca = { x: 4, y: 2 }; 
 
-const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
+const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "certo.mp3");
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
@@ -58,22 +58,41 @@ style.innerHTML = `
     .cell.valid-move { background: #e0f0ff; cursor: pointer; border: 2px solid var(--primary-color); color: transparent; }
     .cell.valid-move:hover { background: var(--primary-color); }
 
-    @media screen and (min-width: 1025px) { :root { --cell-size: 60px; } }
-    @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 11vw; } }
-    @media screen and (max-height: 500px) and (orientation: landscape) { :root { --cell-size: 10vh; } }
+    /* --- A. PC / TABLET LANDSCAPE --- */
+    @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
+        :root { --cell-size: 60px; }
+    }
+    /* --- B. TELEMÓVEL VERTICAL --- */
+    @media screen and (max-width: 500px) and (orientation: portrait) {
+        :root { --cell-size: 11vw; }
+    }
+    /* --- C. TELEMÓVEL HORIZONTAL --- */
+    @media screen and (max-height: 500px) and (orientation: landscape) {
+        :root { --cell-size: 10vh; }
+    }
 `;
 document.head.appendChild(style);
 
 // ==========================================
 // 3. CAPA E MODOS DE JOGO
 // ==========================================
+function tocarAudioInstrucoes() {
+    somClique.play();
+    const audioInst = new Audio(JOGO_CONFIG.caminhoSons + "instrucoes.mp3");
+    audioInst.play().catch(() => {
+        const synth = window.speechSynthesis;
+        const utter = new SpeechSynthesisUtterance("Olha para o animal em cima e encontra-o em baixo. Clica na lâmpada se precisares de ajuda!");
+        utter.lang = 'pt-PT'; synth.speak(utter);
+    });
+}
+
 function mostrarCapa() {
     if (jogoAtivo) return;
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">${JOGO_CONFIG.nomeDoJogo.toUpperCase()}</h2>`;
     
     document.getElementById('game-content').innerHTML = `
         <div style="display:flex; flex-direction:column; align-items:center; gap:15px; width:100%; max-width:300px;">
-            <img src="${JOGO_CONFIG.caminhoIconsMenu}icondestaque.png" style="height:100px; margin-bottom:10px;">
+            <img src="${DADOS_JOGO.caminhoImagens}rastros.png" style="height:100px; margin-bottom:10px;">
             <button class="btn-play-rect" onclick="setModo('CPU')"><i class="fas fa-robot"></i> VS COMPUTADOR</button>
             <button class="btn-play-rect" style="background:#6c757d;" onclick="setModo('PVP')"><i class="fas fa-users"></i> 2 JOGADORES</button>
             <p style="color:var(--text-grey); font-weight:800; text-align:center; font-size:0.9rem;">${JOGO_CONFIG.descricao}<br>(Melhor de 5 Jogos)</p>
@@ -85,7 +104,7 @@ function setModo(modo) {
     modoJogo = modo;
     matchScore = [0, 0];
     currentGameNum = 1;
-    turnoAtual = 0; // J1 começa sempre
+    turnoAtual = 0; 
     iniciarJogo();
 }
 
@@ -102,19 +121,15 @@ function iniciarJogo() {
 
 function atualizarUI() {
     const p2Label = modoJogo === 'CPU' ? 'COMP' : 'P2';
-    
-    // Lógica da informação da VEZ
     let turnInfoHTML = "";
+
     if (modoJogo === 'CPU') {
-        // Se for computador, só mostra se for a vez do Jogador 1
         if (turnoAtual === 0) {
             turnInfoHTML = `<div class="status-pill blinking">SUA VEZ (J1)</div>`;
         } else {
-            // Espaço vazio para manter o alinhamento do placar
             turnInfoHTML = `<div style="flex:1"></div>`;
         }
     } else {
-        // Se for PVP, mostra sempre a vez de quem joga
         const nomeVez = turnoAtual === 0 ? "JOGADOR 1" : "JOGADOR 2";
         turnInfoHTML = `<div class="status-pill blinking">VEZ DO ${nomeVez}</div>`;
     }
@@ -144,8 +159,6 @@ function renderTabuleiro() {
             
             const dx = Math.abs(x - posBranca.x);
             const dy = Math.abs(y - posBranca.y);
-            
-            // Só permite clicar se for a vez de um humano
             const humanoPodeJogar = (turnoAtual === 0) || (turnoAtual === 1 && modoJogo === 'PVP');
 
             if (humanoPodeJogar && tabuleiro[y][x] === 0 && dx <= 1 && dy <= 1 && !(dx === 0 && dy === 0)) {
@@ -177,7 +190,7 @@ function moverPeca(nx, ny) {
     turnoAtual = turnoAtual === 0 ? 1 : 0;
     
     if (modoJogo === 'CPU' && turnoAtual === 1) {
-        atualizarUI(); // Aqui a pill do J1 vai sumir
+        atualizarUI();
         setTimeout(cpuJogar, 600);
     } else {
         atualizarUI();
@@ -199,7 +212,7 @@ function cpuJogar() {
     if (getMovimentosPosiveis(alvo.x, alvo.y).length === 0) { finalizarRonda(1); return; }
 
     turnoAtual = 0;
-    atualizarUI(); // Aqui a pill do J1 vai reaparecer
+    atualizarUI();
 }
 
 function getMovimentosPosiveis(cx, cy) {
@@ -225,7 +238,7 @@ function finalizarRonda(vencedorIdx) {
     } else {
         setTimeout(() => {
             currentGameNum++;
-            turnoAtual = 0; // JOGADOR 1 COMEÇA SEMPRE
+            turnoAtual = 0; 
             iniciarJogo();
         }, 1500);
     }
