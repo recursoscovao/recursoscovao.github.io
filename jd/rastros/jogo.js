@@ -20,65 +20,40 @@ const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 const style = document.createElement('style');
 style.innerHTML = `
     .status-container { width: 100%; display: flex; justify-content: space-between; align-items: center; }
-    .status-pill { background: #6c757d; color: white; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 1rem; }
+    .status-pill { padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 0.9rem; color: white; transition: 0.3s; }
+    
     .score-group { display: flex; gap: 8px; }
     .score-box { padding: 5px 10px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1rem; min-width: 55px; justify-content: center; }
-    .box-v { background: #8cc63f; box-shadow: 0 3px 0 #6da32f; }
-    .box-x { background: #ff5a5f; box-shadow: 0 3px 0 #d44348; }
-
-    @keyframes blinker { 50% { opacity: 0.2; } }
-    .blinking { animation: blinker 1s linear infinite; background: var(--primary-color) !important; }
-
-    /* LINHA DE BOTÕES DA CAPA */
-    .capa-btn-row { 
-        display: flex; flex-direction: row; gap: 10px; width: 100%; 
-        max-width: 480px; justify-content: center; align-items: center; margin-top: 10px;
-    }
-    .btn-capa-small {
-        flex: 1; height: 55px; border-radius: 25px; border: none;
-        color: white; font-weight: 900; font-size: 0.85rem; cursor: pointer;
-        display: flex; align-items: center; justify-content: center; gap: 8px;
-        box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s;
-    }
-    .btn-capa-small:active { transform: scale(0.95); }
     
-    .btn-inform { 
-        width: 55px; height: 55px; flex: none; background: none; border: none; 
-        cursor: pointer; display: flex; align-items: center; justify-content: center;
+    /* Cores dos Jogadores */
+    .box-v, .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
+    .box-x, .pill-j2 { background: #ff5a5f !important; box-shadow: 0 3px 0 #d44348; }
+
+    @keyframes blinker { 50% { opacity: 0.4; } }
+    .blinking { animation: blinker 1s linear infinite; }
+
+    /* Overlay de Vitória de Ronda */
+    #round-feedback {
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+        background: rgba(255,255,255,0.85); z-index: 1000;
+        display: none; flex-direction: column; align-items: center; justify-content: center;
+        border-radius: 35px; backdrop-filter: blur(4px);
     }
+
+    .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 100%; max-width: 480px; justify-content: center; align-items: center; margin-top: 10px; }
+    .btn-capa-small { flex: 1; height: 55px; border-radius: 25px; border: none; color: white; font-weight: 900; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
+    .btn-inform { width: 55px; height: 55px; flex: none; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .btn-inform img { width: 45px; height: 45px; object-fit: contain; }
 
-    /* PAINEL DE INSTRUÇÕES */
-    #instrucoes-panel {
-        position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%;
-        background: white; z-index: 5000; transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        padding: 40px 25px; overflow-y: auto; box-shadow: 0 -5px 25px rgba(0,0,0,0.1);
-    }
+    #instrucoes-panel { position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%; background: white; z-index: 5000; transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1); padding: 40px 25px; overflow-y: auto; }
     #instrucoes-panel.open { bottom: 0; }
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2rem; color: var(--text-grey); cursor: pointer; font-weight: 900; }
-    
-    #instrucoes-panel h2 { color: var(--primary-color); margin-bottom: 20px; font-size: 1.5rem; text-align: center; }
-    #instrucoes-panel h3 { color: var(--text-grey); font-size: 1.1rem; margin: 15px 0 10px; border-left: 4px solid var(--primary-color); padding-left: 10px; }
-    #instrucoes-panel p, #instrucoes-panel li { color: #555; font-size: 1rem; line-height: 1.5; margin-bottom: 10px; }
 
-    /* TABULEIRO */
-    .rastros-grid {
-        display: grid; grid-template-columns: repeat(7, 1fr);
-        gap: 4px; background: #ccc; padding: 4px; border-radius: 8px;
-        width: fit-content; margin: 0 auto;
-    }
-    .cell {
-        width: var(--cell-size); height: var(--cell-size);
-        background: white; display: flex; align-items: center; justify-content: center;
-        font-weight: 900; font-size: 1.1rem; position: relative; border-radius: 4px; color: #bbb;
-    }
+    .rastros-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #ccc; padding: 4px; border-radius: 8px; width: fit-content; margin: 0 auto; }
+    .cell { width: var(--cell-size); height: var(--cell-size); background: white; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; position: relative; border-radius: 4px; color: #bbb; }
     .cell.blocked { background: #444; color: #444; }
     .cell.white-piece { background: white; z-index: 10; }
-    .cell.white-piece::after {
-        content: ''; width: 80%; height: 80%; background: white;
-        border: 4px solid var(--primary-color); border-radius: 50%;
-        box-shadow: 0 0 10px rgba(0,0,0,0.2);
-    }
+    .cell.white-piece::after { content: ''; width: 80%; height: 80%; background: white; border: 4px solid var(--primary-color); border-radius: 50%; box-shadow: 0 0 10px rgba(0,0,0,0.2); }
     .cell.goal { background: #f0f0f0; color: #d54267; border: 2px dashed #bbb; }
     .cell.valid-move { background: #e0f0ff; cursor: pointer; border: 2px solid var(--primary-color); color: transparent; }
 
@@ -89,7 +64,7 @@ style.innerHTML = `
 document.head.appendChild(style);
 
 // ==========================================
-// 3. CAPA COM SIMULAÇÃO
+// 3. CAPA E INTERFACE
 // ==========================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -102,18 +77,21 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <h2>Como Jogar</h2>
             <h3>Objetivo</h3>
-            <p>Vence o jogador que conseguir levar a <b>peça branca</b> até à sua casa final ou deixar o adversário sem movimentos (bloqueado).</p>
+            <p>Vence o jogador que conseguir levar a <b>peça branca</b> até à sua casa final ou deixar o adversário sem movimentos.</p>
             <ul>
-                <li><b>Jogador 1 (Canto Inferior):</b> Deve chegar à casa <b>1</b>.</li>
-                <li><b>Jogador 2 (Canto Superior):</b> Deve chegar à casa <b>2</b>.</li>
+                <li><b>J1 (Canto Inferior):</b> Deve chegar à casa <b>1</b>.</li>
+                <li><b>J2/PC (Canto Superior):</b> Deve chegar à casa <b>2</b>.</li>
             </ul>
-            <h3>Regras Principais</h3>
+            <h3>Regras</h3>
             <p>1. A peça branca começa no centro (e5).</p>
-            <p>2. Podes mover a peça para qualquer casa vazia ao lado (horizontal, vertical ou diagonal).</p>
-            <p>3. Quando a peça sai de uma casa, essa casa fica <b>bloqueada</b> (fica preta) e ninguém pode voltar a passar por lá.</p>
-            <p>4. O jogo termina mal a peça entre numa casa de vitória ou alguém fique cercado sem saída.</p>
+            <p>2. Move a peça para qualquer casa vazia ao lado (horizontal, vertical ou diagonal).</p>
+            <p>3. A casa que a peça abandona fica bloqueada (preta).</p>
         `;
         document.querySelector('.game-shell').appendChild(panel);
+
+        const feedback = document.createElement('div');
+        feedback.id = 'round-feedback';
+        document.querySelector('.game-shell').appendChild(feedback);
     }
 
     const area = document.getElementById('game-content');
@@ -124,77 +102,19 @@ function mostrarCapa() {
                 <img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png">
             </div>
             <button class="btn-capa-small" style="background:var(--primary-color);" onclick="setModo('CPU')">
-                <i class="fas fa-robot"></i> VS COMP
+                <i class="fas fa-robot"></i> COMPUTADOR
             </button>
             <button class="btn-capa-small" style="background:#6c757d;" onclick="setModo('PVP')">
                 <i class="fas fa-users"></i> 2 JOGADORES
             </button>
         </div>
     `;
-    
     document.getElementById('shell-footer-content').style.display = 'none';
     iniciarSimulacao();
 }
 
-function toggleInstructions() {
-    somClique.play();
-    document.getElementById('instrucoes-panel').classList.toggle('open');
-}
-
-function iniciarSimulacao() {
-    clearInterval(simuInterval);
-    const container = document.getElementById('simu-container');
-    let sTab = Array(7).fill().map(() => Array(7).fill(0));
-    let sPos = { x: 4, y: 2 };
-    sTab[sPos.y][sPos.x] = 2;
-
-    const renderSimu = () => {
-        let html = `<div class="rastros-grid" style="pointer-events:none; opacity:0.7;">`;
-        for (let y = 0; y < 7; y++) {
-            for (let x = 0; x < 7; x++) {
-                let cl = "cell";
-                let num = "";
-                if (x === 0 && y === 6) { cl += " goal"; num = "1"; }
-                if (x === 6 && y === 0) { cl += " goal"; num = "2"; }
-                if (sTab[y][x] === 1) cl += " blocked";
-                if (sTab[y][x] === 2) cl += " white-piece";
-                html += `<div class="${cl}">${num}</div>`;
-            }
-        }
-        container.innerHTML = html + `</div>`;
-    };
-
-    const step = () => {
-        let moves = [];
-        for (let dy = -1; dy <= 1; dy++) {
-            for (let dx = -1; dx <= 1; dx++) {
-                let nx = sPos.x + dx, ny = sPos.y + dy;
-                if (nx >= 0 && nx < 7 && ny >= 0 && ny < 7 && sTab[ny][nx] === 0 && !(dx === 0 && dy === 0)) moves.push({x:nx, y:ny});
-            }
-        }
-        if (moves.length === 0 || Math.random() > 0.92) { 
-            sTab = Array(7).fill().map(() => Array(7).fill(0));
-            sPos = { x: 4, y: 2 };
-            sTab[sPos.y][sPos.x] = 2;
-        } else {
-            let m = moves[Math.floor(Math.random() * moves.length)];
-            sTab[sPos.y][sPos.x] = 1;
-            sPos = m;
-            sTab[sPos.y][sPos.x] = 2;
-        }
-        renderSimu();
-    };
-
-    simuInterval = setInterval(step, 1000);
-    renderSimu();
-}
-
-// ==========================================
-// 4. LÓGICA DO JOGO
-// ==========================================
 function setModo(modo) {
     clearInterval(simuInterval);
-    somClique.play();
     modoJogo = modo;
     matchScore = [0, 0];
     currentGameNum = 1;
@@ -202,35 +122,42 @@ function setModo(modo) {
     iniciarJogo();
 }
 
-function iniciarJogo() {
-    jogoAtivo = true;
-    tabuleiro = Array(7).fill().map(() => Array(7).fill(0));
-    posBranca = { x: 4, y: 2 }; 
-    tabuleiro[posBranca.y][posBranca.x] = 2;
-    atualizarUI();
-}
-
 function atualizarUI() {
-    const p2Label = modoJogo === 'CPU' ? 'COMP' : 'P2';
+    const pcLabel = "PC";
+    const j2Label = "J2";
+    const labelSegundaBox = modoJogo === 'CPU' ? pcLabel : j2Label;
+    
     let turnInfoHTML = "";
-
     if (modoJogo === 'CPU') {
-        if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill blinking">SUA VEZ (J1)</div>`;
+        if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">VEZ DO JOGADOR 1</div>`;
         else turnInfoHTML = `<div style="flex:1"></div>`;
     } else {
+        const classPill = turnoAtual === 0 ? "pill-j1" : "pill-j2";
         const nomeVez = turnoAtual === 0 ? "JOGADOR 1" : "JOGADOR 2";
-        turnInfoHTML = `<div class="status-pill blinking">VEZ DO ${nomeVez}</div>`;
+        turnInfoHTML = `<div class="status-pill ${classPill} blinking">VEZ DO ${nomeVez}</div>`;
     }
 
     document.getElementById('shell-header-content').innerHTML = `
         <div class="status-container">
             ${turnInfoHTML}
             <div class="score-group">
-                <div class="score-box box-v">P1: ${matchScore[0]}</div>
-                <div class="score-box box-x">${p2Label}: ${matchScore[1]}</div>
+                <div class="score-box box-v">J1: ${matchScore[0]}</div>
+                <div class="score-box box-x">${labelSegundaBox}: ${matchScore[1]}</div>
             </div>
         </div>`;
     renderTabuleiro();
+}
+
+// ==========================================
+// 4. LÓGICA DO JOGO
+// ==========================================
+function iniciarJogo() {
+    jogoAtivo = true;
+    tabuleiro = Array(7).fill().map(() => Array(7).fill(0));
+    posBranca = { x: 4, y: 2 }; 
+    tabuleiro[posBranca.y][posBranca.x] = 2;
+    document.getElementById('round-feedback').style.display = 'none';
+    atualizarUI();
 }
 
 function renderTabuleiro() {
@@ -252,9 +179,7 @@ function renderTabuleiro() {
             if (humanoPodeJogar && tabuleiro[y][x] === 0 && dx <= 1 && dy <= 1 && !(dx === 0 && dy === 0)) {
                 classe += " valid-move";
                 html += `<div class="${classe}" onclick="moverPeca(${x},${y})"></div>`;
-            } else {
-                html += `<div class="${classe}">${conteudo}</div>`;
-            }
+            } else { html += `<div class="${classe}">${conteudo}</div>`; }
         }
     }
     html += `</div>`;
@@ -276,9 +201,7 @@ function moverPeca(nx, ny) {
     if (modoJogo === 'CPU' && turnoAtual === 1) {
         atualizarUI();
         setTimeout(cpuJogar, 600);
-    } else {
-        atualizarUI();
-    }
+    } else { atualizarUI(); }
 }
 
 function cpuJogar() {
@@ -310,26 +233,85 @@ function finalizarRonda(vencedorIdx) {
     jogoAtivo = false;
     matchScore[vencedorIdx]++;
     somAcerto.play();
-    if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 1000);
-    else setTimeout(() => { currentGameNum++; turnoAtual = 0; iniciarJogo(); }, 1500);
+    
+    // Feedback visual da ronda
+    const overlay = document.getElementById('round-feedback');
+    const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "PC" : "JOGADOR 2");
+    const corVencedor = vencedorIdx === 0 ? "#8cc63f" : "#ff5a5f";
+    
+    overlay.style.display = 'flex';
+    overlay.innerHTML = `
+        <h1 style="color:${corVencedor}; font-size:2.5rem; font-weight:900; margin-bottom:10px;">${nomeVencedor}</h1>
+        <h2 style="color:#666; font-size:1.2rem;">Ganhou a Ronda!</h2>
+    `;
+
+    if (matchScore[0] >= 3 || matchScore[1] >= 3) {
+        setTimeout(finalizarMatch, 1500);
+    } else {
+        setTimeout(() => {
+            currentGameNum++;
+            turnoAtual = 0; 
+            iniciarJogo();
+        }, 1500);
+    }
 }
 
 function finalizarMatch() {
+    jogoAtivo = false;
     const vencedorIdx = matchScore[0] >= 3 ? 0 : 1;
-    const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "COMPUTADOR" : "JOGADOR 2");
-    const p2Label = modoJogo === 'CPU' ? 'COMP' : 'P2';
+    const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "PC" : "JOGADOR 2");
+    const labelP2 = modoJogo === 'CPU' ? 'PC' : 'J2';
+
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">RESULTADOS FINAIS</h2>`;
     document.getElementById('game-content').innerHTML = `
         <div style="text-align:center;">
             <img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:150px; margin-bottom:10px;">
             <h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase; margin-bottom:20px;">GANHOU O ${nomeVencedor}</h2>
             <div style="display:flex; justify-content:center; gap:20px;">
-                <div class="score-box box-v" style="padding:10px 20px; font-size:1.2rem;">JOGADOR 1: ${matchScore[0]}</div>
-                <div class="score-box box-x" style="padding:10px 20px; font-size:1.2rem;">${p2Label}: ${matchScore[1]}</div>
+                <div class="score-box box-v" style="padding:10px 20px; font-size:1.2rem;">J1: ${matchScore[0]}</div>
+                <div class="score-box box-x" style="padding:10px 20px; font-size:1.2rem;">${labelP2}: ${matchScore[1]}</div>
             </div>
         </div>`;
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
     footer.innerHTML = `<button class="btn-play-rect" style="background:#6c757d; flex:1;" onclick="location.reload()">REPETIR</button>
                         <button class="btn-play-rect" style="flex:1;" onclick="window.history.back()">SAIR</button>`;
+}
+
+// SIMULAÇÃO DA CAPA (Lógica interna simplificada)
+function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
+function iniciarSimulacao() {
+    clearInterval(simuInterval);
+    const container = document.getElementById('simu-container');
+    let sTab = Array(7).fill().map(() => Array(7).fill(0));
+    let sPos = { x: 4, y: 2 };
+    sTab[sPos.y][sPos.x] = 2;
+    const renderSimu = () => {
+        let html = `<div class="rastros-grid" style="pointer-events:none; opacity:0.7;">`;
+        for (let y = 0; y < 7; y++) {
+            for (let x = 0; x < 7; x++) {
+                let cl = "cell", num = "";
+                if (x === 0 && y === 6) { cl += " goal"; num = "1"; }
+                if (x === 6 && y === 0) { cl += " goal"; num = "2"; }
+                if (sTab[y][x] === 1) cl += " blocked";
+                if (sTab[y][x] === 2) cl += " white-piece";
+                html += `<div class="${cl}">${num}</div>`;
+            }
+        }
+        container.innerHTML = html + `</div>`;
+    };
+    const step = () => {
+        let moves = [];
+        for (let dy = -1; dy <= 1; dy++) {
+            for (let dx = -1; dx <= 1; dx++) {
+                let nx = sPos.x + dx, ny = sPos.y + dy;
+                if (nx >= 0 && nx < 7 && ny >= 0 && ny < 7 && sTab[ny][nx] === 0 && !(dx === 0 && dy === 0)) moves.push({x:nx, y:ny});
+            }
+        }
+        if (moves.length === 0 || Math.random() > 0.92) { sTab = Array(7).fill().map(() => Array(7).fill(0)); sPos = { x: 4, y: 2 }; sTab[sPos.y][sPos.x] = 2; }
+        else { let m = moves[Math.floor(Math.random() * moves.length)]; sTab[sPos.y][sPos.x] = 1; sPos = m; sTab[sPos.y][sPos.x] = 2; }
+        renderSimu();
+    };
+    simuInterval = setInterval(step, 1000);
+    renderSimu();
 }
