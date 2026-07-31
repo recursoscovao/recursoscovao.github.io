@@ -11,27 +11,33 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         body, html { height: 100vh; width: 100vw; background-color: var(--bg-color); display: flex; flex-direction: column; overflow: hidden; }
         
-        header { background: white; border-radius: 0 0 35px 35px; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; padding: 0 15px; height: 80px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        header { background: white; border-radius: 0 0 35px 35px; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; padding: 0 15px; height: 85px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
-        #header-icon { height: 50px; object-fit: contain; }
-        .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
-        #txt-titulo1 { color: var(--primary-color); font-weight: 900; font-size: 1.2rem; }
-        #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 1.1rem; }
+        #header-icon { height: 55px; object-fit: contain; flex-shrink: 0; }
         
-        main { flex: 1; display: flex; justify-content: center; padding: 10px; overflow: hidden; }
-        .game-shell { background: white; width: min(1100px, 100%); height: 100%; border-radius: 40px; border: 1.5px solid var(--primary-color); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+        .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
+        #txt-titulo1 { color: var(--primary-color); font-weight: 900; font-size: 1.3rem; }
+        #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 1.1rem; }
+        #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.8; }
 
-        /* ÁREA DO TOPO REDUZIDA */
+        main { flex: 1; display: flex; justify-content: center; padding: 10px; overflow: hidden; }
+        .game-shell { background: white; width: min(1100px, 100%); height: 100%; border-radius: 40px; border: 1.5px solid var(--primary-color); display: flex; flex-direction: column; overflow: hidden; }
+
         .shell-header { padding: 5px 15px; text-align: center; border-bottom: 2px dashed #f5f5f5; min-height: 65px; display: flex; align-items: center; justify-content: center; }
         .shell-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; position: relative; overflow: hidden; }
         .shell-footer { padding: 15px 30px; display: flex; align-items: center; gap: 15px; background: #fafafa; min-height: 90px; }
 
         footer { padding: 8px; text-align: center; background: white; border-radius: 25px 25px 0 0; }
         .footer-text { color: var(--text-grey); font-size: 0.7rem; font-weight: 700; }
-        .hamburger-btn { background: none; border: none; color: var(--primary-color); font-size: 24px; cursor: pointer; }
-        .menu-dropdown { position: absolute; top: 75px; left: 15px; display: none; flex-direction: column; gap: 5px; z-index: 2000; }
-        .menu-item { display: flex; align-items: center; gap: 10px; height: 45px; padding: 0 15px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); min-width: 220px; }
-        .menu-item img { width: 28px; height: 28px; }
+
+        /* Botão Hamburguer e Menu */
+        .hamburger-btn { background: none; border: none; color: var(--primary-color); font-size: 26px; cursor: pointer; transition: 0.2s; }
+        .hamburger-btn:hover { transform: scale(1.1); opacity: 0.7; }
+        
+        .menu-dropdown { position: absolute; top: 80px; left: 15px; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
+        .menu-item { display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 15px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 250px; transition: 0.2s; }
+        .menu-item:hover { background-color: var(--primary-color); color: white !important; }
+        .menu-item img { width: 32px; height: 32px; flex-shrink: 0; object-fit: contain; } /* Corrige ícones esmagados */
     </style>
 </head>
 <body>
@@ -43,12 +49,19 @@
             <div class="title-group">
                 <div id="txt-titulo1">---</div>
                 <div id="txt-titulo2">---</div>
+                <div id="txt-subtitulo-header">---</div> <!-- Título 3 Recuperado -->
             </div>
         </div>
-        <img id="icon-voltar-top" src="" onclick="location.reload()" style="height: 35px; cursor: pointer;">
+        <img id="icon-voltar-top" src="" onclick="location.reload()" style="height: 38px; cursor: pointer;">
     </header>
 
-    <main><div class="game-shell"><div id="shell-header-content" class="shell-header"></div><div id="game-content" class="shell-body"></div><div id="shell-footer-content" class="shell-footer"></div></div></main>
+    <main>
+        <div class="game-shell">
+            <div id="shell-header-content" class="shell-header"></div>
+            <div id="game-content" class="shell-body"></div>
+            <div id="shell-footer-content" class="shell-footer"></div>
+        </div>
+    </main>
 
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
@@ -59,11 +72,15 @@
                 const config = JOGO_CONFIG;
                 const tema = BIBLIOTECA_TEMAS[config.areaAtiva];
                 const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
+
                 document.documentElement.style.setProperty('--primary-color', tema.corPrimaria);
                 document.documentElement.style.setProperty('--bg-color', tema.corPagina);
+
                 document.getElementById('txt-titulo1').innerText = conteudo.t1;
                 document.getElementById('txt-titulo2').innerText = conteudo.t2;
+                document.getElementById('txt-subtitulo-header').innerText = conteudo.sub; // Carrega Título 3
                 document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
+                
                 document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + tema.voltarMobile;
                 const itemAtivo = (config.menuItens || config.menu_itens).find(i => i.id === config.anoAtivo);
                 if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
