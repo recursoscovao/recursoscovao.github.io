@@ -1,5 +1,5 @@
 // ==========================================
-// 1. ESTADO GLOBAL
+// 1. ESTADO GLOBAL E CONFIGURAÇÕES
 // ==========================================
 let jogoAtivo = false;
 let rondaAtual = 0;
@@ -9,138 +9,191 @@ let erros = 0;
 let ajudasUsadas = 0;
 let itemDestaque = null;
 let opcoesRonda = [];
+let simuInterval;
 
+// Prevenção de cache de sons
+const carregarSom = (ficheiro) => new Audio(JOGO_CONFIG.caminhoSons + ficheiro);
+const somAcerto = carregarSom(JOGO_CONFIG.sons.acerto);
+const somErro = carregarSom(JOGO_CONFIG.sons.erro);
+const somClique = carregarSom(JOGO_CONFIG.sons.clique);
+
+// Injeção de CSS específico para os elementos internos do jogo
 const style = document.createElement('style');
 style.innerHTML = `
     .opcao-card {
-        background: white; border: 2.2px solid #e0e0e0; border-radius: 15px; 
-        display: flex; align-items: center; justify-content: center; 
-        cursor: pointer; padding: 5px; transition: transform 0.2s;
+        background: white; 
+        border: 3px solid #f0f0f0; 
+        border-radius: 15px; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        cursor: pointer;
+        padding: 5px;
+        transition: all 0.2s ease;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.05);
     }
+    .opcao-card:hover { transform: translateY(-3px); box-shadow: 0 6px 12px rgba(0,0,0,0.1); }
     .opcao-card img { width: 90%; height: 90%; object-fit: contain; }
-    
+
     #simu-hand {
-        position: absolute; font-size: 2.5rem; z-index: 100;
-        transition: all 0.7s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-        pointer-events: none; display: none;
+        position: absolute;
+        font-size: 3rem;
+        z-index: 100;
+        pointer-events: none;
+        display: none;
+        filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3));
     }
 
     .destaque-box {
-        height: 25vh; min-height: 140px; aspect-ratio: 1/1; padding: 10px; 
-        background: #fdfdfd; border-radius: 25px; border: 3px dashed var(--primary-color); 
-        display: flex; align-items: center; justify-content: center; margin-bottom: 15px;
+        height: 25vh; 
+        aspect-ratio: 1/1; 
+        padding: 15px; 
+        background: #fdfdfd; 
+        border-radius: 25px; 
+        border: 3px dashed var(--primary-color); 
+        display: flex; 
+        align-items: center; 
+        justify-content: center;
+        margin-bottom: 20px;
+        animation: pulse 2s infinite;
     }
 
-    .grid-opcoes {
-        display: grid; grid-template-columns: repeat(5, 1fr); 
-        gap: 10px; width: 100%; max-width: 650px;
-    }
-
-    .capa-container {
-        display: flex; flex-direction: column; align-items: center; 
-        justify-content: center; width: 100%; height: 100%; position: relative;
+    @keyframes pulse {
+        0% { transform: scale(1); }
+        50% { transform: scale(1.02); }
+        100% { transform: scale(1); }
     }
 `;
 document.head.appendChild(style);
 
-// Sons (Certifica-te que os nomes dos ficheiros estão corretos na pasta de sons)
-const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
-const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
-const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
-
 // ==========================================
-// 2. CAPA COM SIMULAÇÃO
+// 2. FUNÇÕES DE INTERFACE (CAPA E SIMULAÇÃO)
 // ==========================================
 
 function mostrarCapa() {
     if (jogoAtivo) return;
     const area = document.getElementById('game-content');
+    
     area.innerHTML = `
-        <div class="capa-container">
-            <div id="simu-hand">👆</div>
-            <div style="display:flex; flex-direction:column; align-items:center; gap:15px; flex: 1; justify-content: center;">
-                <div style="height:18vh; min-height:110px; aspect-ratio:1/1; border:3px dashed var(--primary-color); padding:10px; border-radius:25px; background:white; display:flex; align-items:center; justify-content:center;">
-                    <img id="simu-destaque" src="" style="height:100%; object-fit:contain;">
-                </div>
-                <div style="display:flex; gap:12px;">
-                    <div id="simu-opt-0" class="opcao-card" style="width:75px; height:75px;"><img src=""></div>
-                    <div id="simu-opt-1" class="opcao-card" style="width:75px; height:75px;"><img src=""></div>
-                    <div id="simu-opt-2" class="opcao-card" style="width:75px; height:75px;"><img src=""></div>
-                </div>
+        <div id="simu-hand">👆</div>
+        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; width:100%; height:100%; gap:25px;">
+            <div class="destaque-box" style="height:18vh; animation:none;">
+                <img id="simu-destaque" src="" style="height:100%; object-fit:contain;">
             </div>
-            <p style="font-size: 0.95rem; color: var(--text-grey); font-weight:700; text-align:center; padding:0 10px;">
-                Identifica o animal igual ao modelo em destaque!
+            <div style="display:flex; gap:15px;">
+                <div id="simu-opt-0" class="opcao-card" style="width:80px; height:80px;"><img src=""></div>
+                <div id="simu-opt-1" class="opcao-card" style="width:80px; height:80px;"><img src=""></div>
+                <div id="simu-opt-2" class="opcao-card" style="width:80px; height:80px;"><img src=""></div>
+            </div>
+            <p style="font-size: 1.1rem; color: var(--text-grey); font-weight:800; text-align:center; max-width:400px; line-height:1.4;">
+                ${JOGO_CONFIG.descricao}
             </p>
         </div>
     `;
     correrSimulacao();
 }
 
-let simuInterval;
 function correrSimulacao() {
     clearInterval(simuInterval);
     const hand = document.getElementById('simu-hand');
+    
     const animar = () => {
         const itens = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
         const trio = itens.slice(0, 3);
         const certoIdx = Math.floor(Math.random() * 3);
         const itemCerto = trio[certoIdx];
+
         if(!document.getElementById('simu-destaque')) return;
+
         document.getElementById('simu-destaque').src = DADOS_JOGO.caminhoImagens + itemCerto.img;
         trio.forEach((it, i) => {
             const card = document.getElementById(`simu-opt-${i}`);
             card.querySelector('img').src = DADOS_JOGO.caminhoImagens + it.img;
-            card.style.borderColor = "#e0e0e0";
+            card.style.borderColor = "#f0f0f0";
         });
-        hand.style.display = "block"; hand.style.opacity = "0";
-        hand.style.top = "60%"; hand.style.left = "80%";
+
+        // Posicionamento inicial da mão
+        const container = document.getElementById('game-content').getBoundingClientRect();
+        hand.style.display = "block";
+        hand.style.transition = "none";
+        hand.style.top = "80%"; 
+        hand.style.left = "80%";
+        hand.style.opacity = "0";
+
         setTimeout(() => {
             const target = document.getElementById(`simu-opt-${certoIdx}`);
             const rect = target.getBoundingClientRect();
-            const parent = document.querySelector('.capa-container').getBoundingClientRect();
+            
+            hand.style.transition = "all 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55)";
             hand.style.opacity = "1";
-            hand.style.top = (rect.top - parent.top + 45) + "px";
-            hand.style.left = (rect.left - parent.left + 25) + "px";
+            hand.style.top = (rect.top - container.top + 40) + "px";
+            hand.style.left = (rect.left - container.left + 30) + "px";
+
             setTimeout(() => {
                 target.style.borderColor = "#8cc63f";
                 target.style.transform = "scale(1.1)";
-                setTimeout(() => { target.style.transform = "scale(1)"; hand.style.opacity = "0"; }, 400);
-            }, 800);
-        }, 400);
+                setTimeout(() => { 
+                    if(target) target.style.transform = "scale(1)"; 
+                    hand.style.opacity = "0";
+                }, 400);
+            }, 900);
+        }, 300);
     };
+
     animar();
-    simuInterval = setInterval(animar, 3500);
+    simuInterval = setInterval(animar, 4000);
 }
 
 // ==========================================
-// 3. LÓGICA DO JOGO
+// 3. LÓGICA DO JOGO (GAMEPLAY)
 // ==========================================
 
 function iniciarJogo() {
     clearInterval(simuInterval);
-    jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0;
+    jogoAtivo = true;
+    rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0;
     proximaRonda();
 }
 
 function proximaRonda() {
     if (rondaAtual > totalRondas) { finalizarJogo(); return; }
-    Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
-    const area = document.getElementById('game-content');
-    const todos = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
-    itemDestaque = todos[0];
-    opcoesRonda = todos.slice(0, 10).sort(() => Math.random() - 0.5);
-    if(!opcoesRonda.find(x => x.id === itemDestaque.id)) opcoesRonda[0] = itemDestaque;
-    opcoesRonda.sort(() => Math.random() - 0.5);
 
-    const cardHeight = (window.innerHeight > window.innerWidth) ? "12vh" : "18vh"; 
+    // Atualiza a barra de status no header (Engine do index)
+    Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
+    
+    // Configura a lâmpada como botão de ajuda
+    setTimeout(() => {
+        const lamp = document.querySelector('.lamp-icon');
+        if(lamp) {
+            lamp.style.cursor = "pointer";
+            lamp.title = "Clique para uma ajuda!";
+            lamp.onclick = darAjuda;
+        }
+    }, 50);
+
+    const area = document.getElementById('game-content');
+    
+    // Preparar dados da ronda
+    const todosItens = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
+    itemDestaque = todosItens[0];
+    
+    // Pegar 10 opções aleatórias garantindo que a correta lá esteja
+    let selecao = todosItens.slice(0, 10);
+    if (!selecao.find(i => i.id === itemDestaque.id)) selecao[0] = itemDestaque;
+    opcoesRonda = selecao.sort(() => Math.random() - 0.5);
+
+    const isPortrait = window.innerHeight > window.innerWidth;
+    const gridCols = isPortrait ? 3 : 5;
+    const cardSize = isPortrait ? "18vw" : "110px";
 
     area.innerHTML = `
         <div class="destaque-box">
-            <img src="${DADOS_JOGO.caminhoImagens + itemDestaque.img}" style="height:100%; object-fit:contain;">
+            <img src="${DADOS_JOGO.caminhoImagens + itemDestaque.img}">
         </div>
-        <div class="grid-opcoes">
+        
+        <div style="display:grid; grid-template-columns: repeat(${gridCols}, 1fr); gap:12px; width:100%; max-width:700px; justify-items:center;">
             ${opcoesRonda.map(item => `
-                <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)" style="height:${cardHeight}; min-height:85px;">
+                <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)" style="width:${cardSize}; height:${cardSize};">
                     <img src="${DADOS_JOGO.caminhoImagens + item.img}">
                 </div>
             `).join('')}
@@ -148,53 +201,73 @@ function proximaRonda() {
     `;
 }
 
+function verificarResposta(id, elemento) {
+    if (!jogoAtivo) return;
+    
+    // Bloquear cliques múltiplos
+    const todosCards = document.querySelectorAll('.opcao-card');
+    todosCards.forEach(c => c.style.pointerEvents = 'none');
+
+    if (id === itemDestaque.id) {
+        certos++;
+        somAcerto.play();
+        elemento.style.borderColor = "#8cc63f";
+        elemento.style.background = "#f0fff0";
+        elemento.innerHTML += '<i class="fas fa-check" style="position:absolute; color:#8cc63f; font-size:2rem;"></i>';
+    } else {
+        erros++;
+        somErro.play();
+        elemento.style.borderColor = "#ff5a5f";
+        elemento.style.background = "#fff5f5";
+        elemento.innerHTML += '<i class="fas fa-times" style="position:absolute; color:#ff5a5f; font-size:2rem;"></i>';
+        
+        // Mostrar o correto
+        const cardCorreto = document.getElementById(`card-${itemDestaque.id}`);
+        if(cardCorreto) cardCorreto.style.borderColor = "#8cc63f";
+    }
+
+    setTimeout(() => {
+        rondaAtual++;
+        proximaRonda();
+    }, 1500);
+}
+
 function darAjuda() {
     if (!jogoAtivo) return;
-    ajudasUsadas++; somClique.play();
+    ajudasUsadas++;
+    somClique.play();
+    
     const correto = document.getElementById(`card-${itemDestaque.id}`);
     if (correto) {
-        correto.style.borderColor = "var(--primary-color)";
         correto.animate([
             { transform: 'scale(1)', boxShadow: '0 0 0px var(--primary-color)' },
-            { transform: 'scale(1.15)', boxShadow: '0 0 25px var(--primary-color)' },
+            { transform: 'scale(1.1)', boxShadow: '0 0 20px var(--primary-color)' },
             { transform: 'scale(1)', boxShadow: '0 0 0px var(--primary-color)' }
-        ], { duration: 800, iterations: 2 });
+        ], { duration: 600, iterations: 2 });
+        correto.style.borderColor = "var(--primary-color)";
     }
 }
 
-function verificarResposta(id, el) {
-    if (!jogoAtivo) return;
-    document.querySelectorAll('.opcao-card').forEach(c => c.style.pointerEvents = 'none');
-    if (id === itemDestaque.id) {
-        certos++; somAcerto.play();
-        el.style.borderColor = "#8cc63f";
-        el.style.backgroundColor = "#f0fff0";
-    } else {
-        erros++; somErro.play();
-        el.style.borderColor = "#ff5a5f";
-        el.style.backgroundColor = "#fff5f5";
-        const real = document.getElementById(`card-${itemDestaque.id}`);
-        if(real) real.style.borderColor = "#8cc63f";
-    }
-    setTimeout(() => { rondaAtual++; proximaRonda(); }, 1500);
-}
+// ==========================================
+// 4. FINALIZAÇÃO
+// ==========================================
 
 function finalizarJogo() {
     jogoAtivo = false;
-    const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
-    document.getElementById('shell-header-content').innerHTML = `<h2 style="font-size:1.2rem; color:var(--primary-color); font-weight:900;">RESULTADOS</h2>`;
-    document.getElementById('game-content').innerHTML = `
-        <div style="text-align:center; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:20px 0;">
-            <img src="${JOGO_CONFIG.caminhoIconsMenu + rel.img}" style="height:20vh; min-height:140px; margin-bottom:15px;">
-            <h2 style="color:var(--primary-color); font-size:1.5rem; font-weight:900;">${rel.titulo}</h2>
-            <div style="display:flex; gap:12px; margin-top:15px;">
-                <div class="score-box score-certo" style="background:#8cc63f; padding:8px 20px;">CERTOS: ${certos}</div>
-                <div class="score-box score-erro" style="background:#ff5a5f; padding:8px 20px;">ERROS: ${erros}</div>
-            </div>
-            <p style="margin-top:15px; font-weight:800; color:var(--text-grey);">💡 AJUDAS: ${ajudasUsadas}</p>
-        </div>`;
-    const footer = document.getElementById('shell-footer-content');
-    footer.style.display = 'flex';
-    footer.innerHTML = `<button class="btn-play-rect" style="background:#6c757d" onclick="location.reload()">REPETIR</button>
-                        <button class="btn-play-rect" onclick="window.history.back()">SAIR</button>`;
+    // Usa o motor do index para mostrar os resultados
+    Engine.showResults(certos, erros);
+    
+    // Adicionar info extra de ajudas nos resultados
+    const stats = document.querySelector('.results-stats');
+    if(stats) {
+        const divAjuda = document.createElement('div');
+        divAjuda.style = "margin-top: 20px; font-weight: 800; color: var(--text-grey); font-size: 0.9rem;";
+        divAjuda.innerHTML = `LÂMPADAS DE AJUDA USADAS: ${ajudasUsadas}`;
+        stats.parentElement.appendChild(divAjuda);
+    }
+}
+
+// Re-renderiza a capa se o ecrã rodar para ajustar tamanhos
+function onResizeGame() {
+    if (!jogoAtivo) mostrarCapa();
 }
