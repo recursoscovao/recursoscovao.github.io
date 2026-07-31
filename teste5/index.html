@@ -28,12 +28,13 @@
         .menu-dropdown { position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
         .menu-item { display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 15px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 250px; }
         .menu-item img { width: 32px; height: 32px; object-fit: contain; }
-        
-        /* Classes que o jogo.js irá usar */
+
+        /* Barra de Status Melhorada */
         .status-bar { width: 100%; display: flex; align-items: center; justify-content: space-between; }
-        .status-pill { background: #6c757d; color: white; padding: 6px 18px; border-radius: 20px; font-weight: 900; }
-        .score-box { padding: 6px 15px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; }
-        .score-certo { background: #8cc63f; } .score-erro { background: #ff5a5f; }
+        .status-pill { background: #6c757d; color: white; padding: 6px 18px; border-radius: 20px; font-weight: 900; font-size: 1.2rem; }
+        .score-box { padding: 8px 18px; border-radius: 15px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.3rem; min-width: 70px; justify-content: center; }
+        .score-certo { background: #8cc63f; box-shadow: 0 4px 0 #6da32f; }
+        .score-erro { background: #ff5a5f; box-shadow: 0 4px 0 #d44348; }
     </style>
 </head>
 <body>
@@ -78,8 +79,6 @@
                 const itemAtivo = (config.menuItens || config.menu_itens).find(i => i.id === config.anoAtivo);
                 if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
                 this.renderMenu();
-                
-                // Delega a montagem da capa inicial para o jogo.js
                 if(typeof mostrarCapa === "function") mostrarCapa();
             },
             renderMenu() {
@@ -92,15 +91,17 @@
                     menuBox.appendChild(a);
                 });
             },
-            // Funções utilitárias que o jogo.js pode chamar para manter o padrão visual
             showStatusBar(ronda, total, certos, erros) {
                 const lampPath = JOGO_CONFIG.caminhoIconsMenu + "lampada.png";
                 document.getElementById('shell-header-content').innerHTML = `
                     <div class="status-bar">
-                        <div style="display:flex; align-items:center; gap:10px;"><img src="${lampPath}" class="lamp-icon" style="height:50px; cursor:pointer;" onclick="darAjuda()"> <div class="status-pill">${ronda}/${total}</div></div>
-                        <div style="display:flex; gap:10px;">
-                            <div class="score-box score-certo">${certos}</div>
-                            <div class="score-box score-erro">${erros}</div>
+                        <div style="display:flex; align-items:center; gap:10px;">
+                            <img src="${lampPath}" style="height:55px; cursor:pointer;" onclick="darAjuda()">
+                            <div class="status-pill">${ronda}/${total}</div>
+                        </div>
+                        <div style="display:flex; gap:12px;">
+                            <div class="score-box score-certo"><i class="fas fa-check"></i> ${certos}</div>
+                            <div class="score-box score-erro"><i class="fas fa-times"></i> ${erros}</div>
                         </div>
                     </div>`;
                 document.getElementById('shell-footer-content').style.display = 'none';
@@ -118,11 +119,10 @@
                     </div>`;
                 const footer = document.getElementById('shell-footer-content');
                 footer.style.display = 'flex';
-                footer.innerHTML = `<button onclick="location.reload()" style="flex:1; height:60px; border-radius:30px; border:none; background:#6c757d; color:white; font-weight:900; cursor:pointer;">REPETIR</button>
-                                   <button onclick="window.history.back()" style="flex:1; height:60px; border-radius:30px; border:none; background:var(--primary-color); color:white; font-weight:900; cursor:pointer;">SAIR</button>`;
+                footer.innerHTML = `<button onclick="location.reload()" style="flex:1; height:65px; border-radius:35px; border:none; background:#6c757d; color:white; font-size:1.3rem; font-weight:900; cursor:pointer;"><i class="fas fa-redo"></i> REPETIR</button>
+                                   <button onclick="window.history.back()" style="flex:1; height:65px; border-radius:35px; border:none; background:var(--primary-color); color:white; font-size:1.3rem; font-weight:900; cursor:pointer;">SAIR</button>`;
             }
         };
-
         function toggleMenu(e) { e.stopPropagation(); const m = document.getElementById('dropdownMenu'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; }
         window.onclick = () => { document.getElementById('dropdownMenu').style.display = 'none'; }
         window.onload = () => Engine.init();
