@@ -31,6 +31,10 @@
         .menu-item { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; }
         .menu-item img { flex-shrink: 0; object-fit: contain; }
 
+        /* Hover comum para todos */
+        .menu-item:hover { background-color: var(--primary-color); color: white !important; }
+        .hamburger-btn:hover { transform: scale(1.1); opacity: 0.7; }
+
         /* ============================================================
            2. PC / TABLET LANDSCAPE
            ============================================================ */
@@ -105,13 +109,10 @@
             .menu-item { height: 48px; padding: 0 15px; border-radius: 12px; min-width: 250px; }
             .menu-item img { width: 32px; height: 32px; }
         }
-
-        /* Hover comum para todos */
-        .menu-item:hover { background-color: var(--primary-color); color: white !important; }
-        .hamburger-btn:hover { transform: scale(1.1); opacity: 0.7; }
     </style>
 </head>
 <body>
+
     <header>
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
@@ -144,6 +145,9 @@
                 const tema = BIBLIOTECA_TEMAS[config.areaAtiva];
                 const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
 
+                // Define o título da aba do navegador com o nome do jogo
+                document.title = config.nomeDoJogo;
+
                 document.documentElement.style.setProperty('--primary-color', tema.corPrimaria);
                 document.documentElement.style.setProperty('--bg-color', tema.corPagina);
 
@@ -173,8 +177,17 @@
                 if(typeof mostrarCapa === "function") mostrarCapa();
             }
         };
-        function toggleMenu(e) { e.stopPropagation(); const m = document.getElementById('dropdownMenu'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; }
-        window.onclick = () => { document.getElementById('dropdownMenu').style.display = 'none'; }
+
+        function toggleMenu(e) { 
+            e.stopPropagation(); 
+            const m = document.getElementById('dropdownMenu'); 
+            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; 
+        }
+
+        window.onclick = () => { 
+            document.getElementById('dropdownMenu').style.display = 'none'; 
+        }
+
         window.onload = () => Engine.init();
     </script>
     <script src="jogo.js"></script>
