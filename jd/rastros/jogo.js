@@ -8,7 +8,7 @@ let turnoAtual = 0;
 let currentGameNum = 1;
 let tabuleiro = []; 
 let posBranca = { x: 4, y: 2 }; 
-let simuInterval; // Intervalo da simulação da capa
+let simuInterval; 
 
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
@@ -31,33 +31,35 @@ style.innerHTML = `
 
     /* LINHA DE BOTÕES DA CAPA */
     .capa-btn-row { 
-        display: flex; 
-        flex-direction: row; 
-        gap: 8px; 
-        width: 100%; 
-        max-width: 450px; 
-        justify-content: center; 
-        align-items: center;
-        margin-top: 10px;
+        display: flex; flex-direction: row; gap: 10px; width: 100%; 
+        max-width: 480px; justify-content: center; align-items: center; margin-top: 10px;
     }
     .btn-capa-small {
-        flex: 1; height: 55px; border-radius: 20px; border: none;
-        color: white; font-weight: 900; font-size: 0.9rem; cursor: pointer;
-        display: flex; align-items: center; justify-content: center; gap: 6px;
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-transform: uppercase;
+        flex: 1; height: 55px; border-radius: 25px; border: none;
+        color: white; font-weight: 900; font-size: 0.85rem; cursor: pointer;
+        display: flex; align-items: center; justify-content: center; gap: 8px;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s;
     }
-    .btn-inform { width: 55px; flex: none; background: #fff; border: 2px solid #ddd; }
-    .btn-inform img { width: 30px; height: 30px; }
+    .btn-capa-small:active { transform: scale(0.95); }
+    
+    .btn-inform { 
+        width: 55px; height: 55px; flex: none; background: none; border: none; 
+        cursor: pointer; display: flex; align-items: center; justify-content: center;
+    }
+    .btn-inform img { width: 45px; height: 45px; object-fit: contain; }
 
-    /* PAINEL DE INSTRUÇÕES (OVERLAY) */
+    /* PAINEL DE INSTRUÇÕES */
     #instrucoes-panel {
-        position: absolute; bottom: -100%; left: 0; width: 100%; height: 100%;
-        background: white; z-index: 5000; transition: bottom 0.4s ease;
-        padding: 30px 20px; overflow-y: auto; display: flex; flex-direction: column;
+        position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%;
+        background: white; z-index: 5000; transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        padding: 40px 25px; overflow-y: auto; box-shadow: 0 -5px 25px rgba(0,0,0,0.1);
     }
     #instrucoes-panel.open { bottom: 0; }
-    #instrucoes-panel h3 { color: var(--primary-color); text-transform: uppercase; margin-bottom: 15px; border-bottom: 2px dashed #eee; padding-bottom: 5px; }
-    #instrucoes-panel p, #instrucoes-panel li { color: #666; font-size: 0.95rem; line-height: 1.4; margin-bottom: 8px; text-align: left;}
+    .close-x { position: absolute; top: 15px; right: 20px; font-size: 2rem; color: var(--text-grey); cursor: pointer; font-weight: 900; }
+    
+    #instrucoes-panel h2 { color: var(--primary-color); margin-bottom: 20px; font-size: 1.5rem; text-align: center; }
+    #instrucoes-panel h3 { color: var(--text-grey); font-size: 1.1rem; margin: 15px 0 10px; border-left: 4px solid var(--primary-color); padding-left: 10px; }
+    #instrucoes-panel p, #instrucoes-panel li { color: #555; font-size: 1rem; line-height: 1.5; margin-bottom: 10px; }
 
     /* TABULEIRO */
     .rastros-grid {
@@ -68,7 +70,7 @@ style.innerHTML = `
     .cell {
         width: var(--cell-size); height: var(--cell-size);
         background: white; display: flex; align-items: center; justify-content: center;
-        font-weight: 900; font-size: 1.2rem; position: relative; border-radius: 4px; color: #ddd;
+        font-weight: 900; font-size: 1.1rem; position: relative; border-radius: 4px; color: #bbb;
     }
     .cell.blocked { background: #444; color: #444; }
     .cell.white-piece { background: white; z-index: 10; }
@@ -77,9 +79,8 @@ style.innerHTML = `
         border: 4px solid var(--primary-color); border-radius: 50%;
         box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
-    .cell.goal { background: #f8f8f8; color: #994d4d; border: 2px dashed #ccc; }
+    .cell.goal { background: #f0f0f0; color: #d54267; border: 2px dashed #bbb; }
     .cell.valid-move { background: #e0f0ff; cursor: pointer; border: 2px solid var(--primary-color); color: transparent; }
-    .cell.valid-move:hover { background: var(--primary-color); }
 
     @media screen and (min-width: 1025px) { :root { --cell-size: 60px; } }
     @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 11vw; } }
@@ -94,37 +95,36 @@ function mostrarCapa() {
     if (jogoAtivo) return;
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">${JOGO_CONFIG.nomeDoJogo.toUpperCase()}</h2>`;
     
-    // Criar o painel de instruções se não existir
     if(!document.getElementById('instrucoes-panel')) {
         const panel = document.createElement('div');
         panel.id = 'instrucoes-panel';
         panel.innerHTML = `
-            <div style="max-width:500px; margin: 0 auto;">
-                <h3>Como Jogar Rastros</h3>
-                <p>O Rastros é um jogo de estratégia para dois jogadores num tabuleiro 7x7.</p>
-                <p><b>Objetivo:</b> Ganha quem levar a peça branca à sua casa final (Canto 1 para o J1, Canto 2 para o J2) ou quem conseguir bloquear o adversário.</p>
-                <p><b>Regras:</b></p>
-                <ul>
-                    <li>A peça branca começa em <b>e5</b>.</li>
-                    <li>Cada jogador desloca a peça para um quadrado vazio adjacente (em qualquer direção).</li>
-                    <li>Onde a peça branca estava, fica agora uma <b>peça negra</b> (bloqueada).</li>
-                    <li>Ninguém pode voltar a passar por casas com peças negras.</li>
-                </ul>
-                <button class="btn-play-rect" style="margin-top:20px;" onclick="toggleInstructions()">ENTENDI!</button>
-            </div>
+            <span class="close-x" onclick="toggleInstructions()">&times;</span>
+            <h2>Como Jogar</h2>
+            <h3>Objetivo</h3>
+            <p>Vence o jogador que conseguir levar a <b>peça branca</b> até à sua casa final ou deixar o adversário sem movimentos (bloqueado).</p>
+            <ul>
+                <li><b>Jogador 1 (Canto Inferior):</b> Deve chegar à casa <b>1</b>.</li>
+                <li><b>Jogador 2 (Canto Superior):</b> Deve chegar à casa <b>2</b>.</li>
+            </ul>
+            <h3>Regras Principais</h3>
+            <p>1. A peça branca começa no centro (e5).</p>
+            <p>2. Podes mover a peça para qualquer casa vazia ao lado (horizontal, vertical ou diagonal).</p>
+            <p>3. Quando a peça sai de uma casa, essa casa fica <b>bloqueada</b> (fica preta) e ninguém pode voltar a passar por lá.</p>
+            <p>4. O jogo termina mal a peça entre numa casa de vitória ou alguém fique cercado sem saída.</p>
         `;
         document.querySelector('.game-shell').appendChild(panel);
     }
 
     const area = document.getElementById('game-content');
     area.innerHTML = `
-        <div id="simu-container" style="transform: scale(0.7); margin-top: -30px;"></div>
+        <div id="simu-container" style="transform: scale(0.65); margin-top: -30px;"></div>
         <div class="capa-btn-row">
-            <button class="btn-inform" onclick="toggleInstructions()">
+            <div class="btn-inform" onclick="toggleInstructions()">
                 <img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png">
-            </button>
+            </div>
             <button class="btn-capa-small" style="background:var(--primary-color);" onclick="setModo('CPU')">
-                <i class="fas fa-robot"></i> COMPUTADOR
+                <i class="fas fa-robot"></i> VS COMP
             </button>
             <button class="btn-capa-small" style="background:#6c757d;" onclick="setModo('PVP')">
                 <i class="fas fa-users"></i> 2 JOGADORES
@@ -137,6 +137,7 @@ function mostrarCapa() {
 }
 
 function toggleInstructions() {
+    somClique.play();
     document.getElementById('instrucoes-panel').classList.toggle('open');
 }
 
@@ -148,15 +149,16 @@ function iniciarSimulacao() {
     sTab[sPos.y][sPos.x] = 2;
 
     const renderSimu = () => {
-        let html = `<div class="rastros-grid" style="pointer-events:none; opacity:0.6;">`;
+        let html = `<div class="rastros-grid" style="pointer-events:none; opacity:0.7;">`;
         for (let y = 0; y < 7; y++) {
             for (let x = 0; x < 7; x++) {
                 let cl = "cell";
-                if (x === 0 && y === 6) cl += " goal";
-                if (x === 6 && y === 0) cl += " goal";
+                let num = "";
+                if (x === 0 && y === 6) { cl += " goal"; num = "1"; }
+                if (x === 6 && y === 0) { cl += " goal"; num = "2"; }
                 if (sTab[y][x] === 1) cl += " blocked";
                 if (sTab[y][x] === 2) cl += " white-piece";
-                html += `<div class="${cl}"></div>`;
+                html += `<div class="${cl}">${num}</div>`;
             }
         }
         container.innerHTML = html + `</div>`;
@@ -170,7 +172,7 @@ function iniciarSimulacao() {
                 if (nx >= 0 && nx < 7 && ny >= 0 && ny < 7 && sTab[ny][nx] === 0 && !(dx === 0 && dy === 0)) moves.push({x:nx, y:ny});
             }
         }
-        if (moves.length === 0 || Math.random() > 0.9) { 
+        if (moves.length === 0 || Math.random() > 0.92) { 
             sTab = Array(7).fill().map(() => Array(7).fill(0));
             sPos = { x: 4, y: 2 };
             sTab[sPos.y][sPos.x] = 2;
@@ -192,6 +194,7 @@ function iniciarSimulacao() {
 // ==========================================
 function setModo(modo) {
     clearInterval(simuInterval);
+    somClique.play();
     modoJogo = modo;
     matchScore = [0, 0];
     currentGameNum = 1;
@@ -267,10 +270,7 @@ function moverPeca(nx, ny) {
 
     if (nx === 0 && ny === 6) { finalizarRonda(0); return; }
     if (nx === 6 && ny === 0) { finalizarRonda(1); return; }
-    if (getMovimentosPosiveis(nx, ny).length === 0) {
-        finalizarRonda(turnoAtual); 
-        return;
-    }
+    if (getMovimentosPosiveis(nx, ny).length === 0) { finalizarRonda(turnoAtual); return; }
 
     turnoAtual = turnoAtual === 0 ? 1 : 0;
     if (modoJogo === 'CPU' && turnoAtual === 1) {
@@ -330,6 +330,6 @@ function finalizarMatch() {
         </div>`;
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
-    footer.innerHTML = `<button class="btn-play-rect" style="background:#6c757d" onclick="location.reload()">REPETIR</button>
-                        <button class="btn-play-rect" onclick="window.history.back()">SAIR</button>`;
+    footer.innerHTML = `<button class="btn-play-rect" style="background:#6c757d; flex:1;" onclick="location.reload()">REPETIR</button>
+                        <button class="btn-play-rect" style="flex:1;" onclick="window.history.back()">SAIR</button>`;
 }
