@@ -29,7 +29,7 @@ const BIBLIOTECA_TEMAS = {
 // ==========================================
 const BIBLIOTECA_CONTEUDO = {
     "jd": { 
-        "jd": { t1: "Jogos em", t2: "Destaque", sub: "Recursos Especiais", rodape: "&copy; Pequenos Curiosos" } 
+        "jd": { t1: "Pequenos", t2: "Matemáticos", sub: "Recursos Especiais", rodape: "&copy; Pequenos Matemáticos" } 
     },
     "pre": { 
         "pre": { t1: "Pequenos", t2: "Curiosos", sub: "Atividades | Pré-Escolar", rodape: "&copy; Pequenos Curiosos" } 
