@@ -26,14 +26,8 @@ style.innerHTML = `
     .box-v { background: #8cc63f; box-shadow: 0 3px 0 #6da32f; }
     .box-x { background: #ff5a5f; box-shadow: 0 3px 0 #d44348; }
 
-    /* ANIMAÇÃO A PISCAR */
-    @keyframes blinker {
-        50% { opacity: 0.2; }
-    }
-    .blinking {
-        animation: blinker 1s linear infinite;
-        background: var(--primary-color) !important;
-    }
+    @keyframes blinker { 50% { opacity: 0.2; } }
+    .blinking { animation: blinker 1s linear infinite; background: var(--primary-color) !important; }
 
     .btn-play-rect { 
         width: 100%; height: 60px; border-radius: 30px; background: var(--primary-color); 
@@ -91,7 +85,7 @@ function setModo(modo) {
     modoJogo = modo;
     matchScore = [0, 0];
     currentGameNum = 1;
-    turnoAtual = 0; 
+    turnoAtual = 0; // J1 começa sempre
     iniciarJogo();
 }
 
@@ -107,12 +101,27 @@ function iniciarJogo() {
 }
 
 function atualizarUI() {
-    const nomeVez = turnoAtual === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "COMPUTADOR" : "JOGADOR 2");
     const p2Label = modoJogo === 'CPU' ? 'COMP' : 'P2';
+    
+    // Lógica da informação da VEZ
+    let turnInfoHTML = "";
+    if (modoJogo === 'CPU') {
+        // Se for computador, só mostra se for a vez do Jogador 1
+        if (turnoAtual === 0) {
+            turnInfoHTML = `<div class="status-pill blinking">SUA VEZ (J1)</div>`;
+        } else {
+            // Espaço vazio para manter o alinhamento do placar
+            turnInfoHTML = `<div style="flex:1"></div>`;
+        }
+    } else {
+        // Se for PVP, mostra sempre a vez de quem joga
+        const nomeVez = turnoAtual === 0 ? "JOGADOR 1" : "JOGADOR 2";
+        turnInfoHTML = `<div class="status-pill blinking">VEZ DO ${nomeVez}</div>`;
+    }
 
     document.getElementById('shell-header-content').innerHTML = `
         <div class="status-container">
-            <div class="status-pill blinking">VEZ DO ${nomeVez}</div>
+            ${turnInfoHTML}
             <div class="score-group">
                 <div class="score-box box-v">P1: ${matchScore[0]}</div>
                 <div class="score-box box-x">${p2Label}: ${matchScore[1]}</div>
@@ -158,20 +167,18 @@ function moverPeca(nx, ny) {
     posBranca = { x: nx, y: ny };
     tabuleiro[ny][nx] = 2;
 
-    // Verificar Vitórias
     if (nx === 0 && ny === 6) { finalizarRonda(0); return; }
     if (nx === 6 && ny === 0) { finalizarRonda(1); return; }
     if (getMovimentosPosiveis(nx, ny).length === 0) {
-        finalizarRonda(turnoAtual); // Quem bloqueou ganha
+        finalizarRonda(turnoAtual); 
         return;
     }
 
-    // Trocar Turno
     turnoAtual = turnoAtual === 0 ? 1 : 0;
     
     if (modoJogo === 'CPU' && turnoAtual === 1) {
-        atualizarUI();
-        setTimeout(cpuJogar, 800);
+        atualizarUI(); // Aqui a pill do J1 vai sumir
+        setTimeout(cpuJogar, 600);
     } else {
         atualizarUI();
     }
@@ -192,7 +199,7 @@ function cpuJogar() {
     if (getMovimentosPosiveis(alvo.x, alvo.y).length === 0) { finalizarRonda(1); return; }
 
     turnoAtual = 0;
-    atualizarUI();
+    atualizarUI(); // Aqui a pill do J1 vai reaparecer
 }
 
 function getMovimentosPosiveis(cx, cy) {
@@ -218,7 +225,7 @@ function finalizarRonda(vencedorIdx) {
     } else {
         setTimeout(() => {
             currentGameNum++;
-            turnoAtual = (currentGameNum % 2 !== 0) ? 0 : 1; // Alterna quem começa
+            turnoAtual = 0; // JOGADOR 1 COMEÇA SEMPRE
             iniciarJogo();
         }, 1500);
     }
@@ -232,14 +239,11 @@ function finalizarMatch() {
     const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "COMPUTADOR" : "JOGADOR 2");
     const p2Label = modoJogo === 'CPU' ? 'COMP' : 'P2';
 
-    // Configurar o relatório para usar sempre a taca_1 e o nome dinâmico
     const relFinal = {
         titulo: `GANHOU O ${nomeVencedor}`,
         img: "taca_1.png"
     };
 
-    // Sobrescrevemos o Engine.showResults ou chamamos com os parâmetros
-    // Para mostrar o placar por baixo, vamos injetar o HTML customizado
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">RESULTADOS FINAIS</h2>`;
     
     document.getElementById('game-content').innerHTML = `
@@ -264,5 +268,5 @@ function finalizarMatch() {
 function darAjuda() {
     if (!jogoAtivo) return;
     somClique.play();
-    alert("DICA: Tenta chegar à tua casa de vitória ou bloquear todas as saídas do adversário!");
+    alert("DICA: Tenta bloquear o adversário ou aproximar-te do teu canto de vitória!");
 }
