@@ -49,14 +49,22 @@ style.innerHTML = `
     .feedback-icon { position: absolute; font-size: 3rem; z-index: 10; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3)); pointer-events: none; }
     .icon-v { color: #8cc63f; } .icon-x { color: #ff5a5f; }
 
-    /* ============================================================
+/* ============================================================
        A. PC / TABLET LANDSCAPE
        ============================================================ */
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
         :root { 
             --grid-cols: 6; 
-            --card-size: 110px; 
-            --dest-size: 180px; 
+            --card-size: 125px; /* Aumentado de 110px para 125px */
+            --dest-size: 160px; /* Reduzi ligeiramente para ganhar espaço vertical */
+        }
+        
+        .destaque-box { 
+            margin-bottom: 5px; /* Reduzido de 15px para 5px */
+        }
+
+        .shell-body {
+            padding: 5px 15px !important; /* Padding reduzido no topo e fundo */
         }
     }
     /* [FIM PC / TABLET LANDSCAPE] */
