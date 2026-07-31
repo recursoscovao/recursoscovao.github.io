@@ -136,6 +136,11 @@ const DADOS_JOGO = {
         { id: 9, img: "pato.png", nome: "Pato" },
         { id: 10, img: "gato.png", nome: "Gato" },
         { id: 11, img: "cao.png", nome: "Cão" },
-        { id: 12, img: "cavalo.png", nome: "Cavalo" }
+        { id: 12, img: "cao1.png", nome: "Cão" },
+        { id: 13, img: "gato1.png", nome: "Gato" },
+        { id: 14, img: "boi.png", nome: "Boi" },
+        { id: 15, img: "pintainho.png", nome: "Pintainho" },
+        { id: 16, img: "patinho.png", nome: "Patinho" },
+        { id: 17, img: "cavalo.png", nome: "Cavalo" }
     ]
 };
