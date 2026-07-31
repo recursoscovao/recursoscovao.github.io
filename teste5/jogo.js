@@ -1,5 +1,5 @@
 // ==========================================
-// 1. ESTADO GLOBAL E CONFIGURAÇÃO VISUAL
+// 1. ESTADO GLOBAL
 // ==========================================
 let jogoAtivo = false;
 let rondaAtual = 0;
@@ -22,13 +22,13 @@ style.innerHTML = `
     #simu-hand {
         position: absolute; font-size: 2.5rem; z-index: 100;
         transition: all 0.7s cubic-bezier(0.18, 0.89, 0.32, 1.28);
-        pointer-events: none; display: none; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
+        pointer-events: none; display: none;
     }
 
     .destaque-box {
         height: 25vh; min-height: 140px; aspect-ratio: 1/1; padding: 10px; 
         background: #fdfdfd; border-radius: 25px; border: 3px dashed var(--primary-color); 
-        display: flex; align-items: center; justify-content: center; margin-bottom: 20px;
+        display: flex; align-items: center; justify-content: center; margin-bottom: 15px;
     }
 
     .grid-opcoes {
@@ -43,9 +43,10 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.acerto);
-const somErro = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.erro);
-const somClique = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.clique);
+// Sons (Certifica-te que os nomes dos ficheiros estão corretos na pasta de sons)
+const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
+const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
+const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ==========================================
 // 2. CAPA COM SIMULAÇÃO
@@ -187,8 +188,8 @@ function finalizarJogo() {
             <img src="${JOGO_CONFIG.caminhoIconsMenu + rel.img}" style="height:20vh; min-height:140px; margin-bottom:15px;">
             <h2 style="color:var(--primary-color); font-size:1.5rem; font-weight:900;">${rel.titulo}</h2>
             <div style="display:flex; gap:12px; margin-top:15px;">
-                <div class="score-box score-certo" style="font-size:1.1rem; padding:8px 20px;">CERTOS: ${certos}</div>
-                <div class="score-box score-erro" style="font-size:1.1rem; padding:8px 20px;">ERROS: ${erros}</div>
+                <div class="score-box score-certo" style="background:#8cc63f; padding:8px 20px;">CERTOS: ${certos}</div>
+                <div class="score-box score-erro" style="background:#ff5a5f; padding:8px 20px;">ERROS: ${erros}</div>
             </div>
             <p style="margin-top:15px; font-weight:800; color:var(--text-grey);">💡 AJUDAS: ${ajudasUsadas}</p>
         </div>`;
@@ -197,5 +198,3 @@ function finalizarJogo() {
     footer.innerHTML = `<button class="btn-play-rect" style="background:#6c757d" onclick="location.reload()">REPETIR</button>
                         <button class="btn-play-rect" onclick="window.history.back()">SAIR</button>`;
 }
-
-function onResizeGame() { if (!jogoAtivo) mostrarCapa(); }
