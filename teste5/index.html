@@ -7,34 +7,31 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
-        :root { --primary-color: #5EA2E6; --bg-color: #EAF4FE; --text-grey: #8792a1; --shadow-color: rgba(0, 0, 0, 0.1); }
+        :root { --primary-color: #5EA2E6; --bg-color: #EAF4FE; --text-grey: #8792a1; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         body, html { height: 100vh; width: 100vw; background-color: var(--bg-color); display: flex; flex-direction: column; overflow: hidden; }
-        header { background: white; border-radius: 0 0 35px 35px; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; padding: 0 15px; height: 90px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        
+        header { background: white; border-radius: 0 0 35px 35px; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; padding: 0 15px; height: 80px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
-        #header-icon { height: 60px; object-fit: contain; }
+        #header-icon { height: 50px; object-fit: contain; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
-        #txt-titulo1 { color: var(--primary-color); font-weight: 900; font-size: 1.4rem; }
-        #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 1.2rem; }
-        #txt-subtitulo-header { color: var(--text-grey); font-weight: 600; font-size: 0.65rem; margin-top: 4px; opacity: 0.8; }
-        main { flex: 1; display: flex; justify-content: center; padding: 10px 20px; overflow: hidden; position: relative; }
-        .game-shell { background: white; width: min(1100px, 100%); height: 100%; border-radius: 45px; box-shadow: 0 0 25px 5px var(--shadow-color); border: 1.5px solid var(--primary-color); display: flex; flex-direction: column; overflow: hidden; }
-        .shell-header { padding: 10px; text-align: center; border-bottom: 2px dashed #f5f5f5; min-height: 80px; display: flex; align-items: center; justify-content: center; }
-        .shell-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; position: relative; overflow: hidden; }
-        .shell-footer { padding: 20px 40px; display: flex; align-items: center; gap: 20px; background: #fafafa; min-height: 100px; }
-        footer { padding: 10px; text-align: center; background: white; border-radius: 30px 30px 0 0; flex-shrink: 0; }
-        .footer-text { color: var(--text-grey); font-size: 0.75rem; font-weight: 700; }
-        .hamburger-btn { background: none; border: none; color: var(--primary-color); font-size: 26px; cursor: pointer; }
-        .menu-dropdown { position: absolute; top: 85px; left: 15px; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
-        .menu-item { display: flex; align-items: center; gap: 12px; height: 48px; padding: 0 15px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); min-width: 250px; }
-        .menu-item img { width: 32px; height: 32px; object-fit: contain; }
+        #txt-titulo1 { color: var(--primary-color); font-weight: 900; font-size: 1.2rem; }
+        #txt-titulo2 { color: var(--text-grey); font-weight: 800; font-size: 1.1rem; }
+        
+        main { flex: 1; display: flex; justify-content: center; padding: 10px; overflow: hidden; }
+        .game-shell { background: white; width: min(1100px, 100%); height: 100%; border-radius: 40px; border: 1.5px solid var(--primary-color); display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
 
-        /* Barra de Status Melhorada */
-        .status-bar { width: 100%; display: flex; align-items: center; justify-content: space-between; }
-        .status-pill { background: #6c757d; color: white; padding: 6px 18px; border-radius: 20px; font-weight: 900; font-size: 1.2rem; }
-        .score-box { padding: 8px 18px; border-radius: 15px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.3rem; min-width: 70px; justify-content: center; }
-        .score-certo { background: #8cc63f; box-shadow: 0 4px 0 #6da32f; }
-        .score-erro { background: #ff5a5f; box-shadow: 0 4px 0 #d44348; }
+        /* ÁREA DO TOPO REDUZIDA */
+        .shell-header { padding: 5px 15px; text-align: center; border-bottom: 2px dashed #f5f5f5; min-height: 65px; display: flex; align-items: center; justify-content: center; }
+        .shell-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 15px; position: relative; overflow: hidden; }
+        .shell-footer { padding: 15px 30px; display: flex; align-items: center; gap: 15px; background: #fafafa; min-height: 90px; }
+
+        footer { padding: 8px; text-align: center; background: white; border-radius: 25px 25px 0 0; }
+        .footer-text { color: var(--text-grey); font-size: 0.7rem; font-weight: 700; }
+        .hamburger-btn { background: none; border: none; color: var(--primary-color); font-size: 24px; cursor: pointer; }
+        .menu-dropdown { position: absolute; top: 75px; left: 15px; display: none; flex-direction: column; gap: 5px; z-index: 2000; }
+        .menu-item { display: flex; align-items: center; gap: 10px; height: 45px; padding: 0 15px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; border-radius: 10px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); min-width: 220px; }
+        .menu-item img { width: 28px; height: 28px; }
     </style>
 </head>
 <body>
@@ -46,19 +43,12 @@
             <div class="title-group">
                 <div id="txt-titulo1">---</div>
                 <div id="txt-titulo2">---</div>
-                <div id="txt-subtitulo-header">---</div>
             </div>
         </div>
-        <img id="icon-voltar-top" src="" alt="Voltar" onclick="location.reload()" style="height: 40px; cursor: pointer; justify-self: end;">
+        <img id="icon-voltar-top" src="" onclick="location.reload()" style="height: 35px; cursor: pointer;">
     </header>
 
-    <main>
-        <div class="game-shell">
-            <div class="shell-header" id="shell-header-content"></div> 
-            <div class="shell-body" id="game-content"></div>           
-            <div class="shell-footer" id="shell-footer-content"></div> 
-        </div>
-    </main>
+    <main><div class="game-shell"><div id="shell-header-content" class="shell-header"></div><div id="game-content" class="shell-body"></div><div id="shell-footer-content" class="shell-footer"></div></div></main>
 
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
@@ -73,54 +63,19 @@
                 document.documentElement.style.setProperty('--bg-color', tema.corPagina);
                 document.getElementById('txt-titulo1').innerText = conteudo.t1;
                 document.getElementById('txt-titulo2').innerText = conteudo.t2;
-                document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
                 document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
                 document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + tema.voltarMobile;
                 const itemAtivo = (config.menuItens || config.menu_itens).find(i => i.id === config.anoAtivo);
                 if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
-                this.renderMenu();
-                if(typeof mostrarCapa === "function") mostrarCapa();
-            },
-            renderMenu() {
+                
                 const menuBox = document.getElementById('dropdownMenu');
-                const itens = JOGO_CONFIG.menuItens || JOGO_CONFIG.menu_itens;
-                itens.forEach(item => {
-                    const a = document.createElement('a');
-                    a.className = 'menu-item'; a.href = item.link;
-                    a.innerHTML = `<img src="${JOGO_CONFIG.caminhoIconsMenu + item.icon}"> <span>${item.label}</span>`;
+                (config.menuItens || config.menu_itens).forEach(item => {
+                    const a = document.createElement('a'); a.className = 'menu-item'; a.href = item.link;
+                    a.innerHTML = `<img src="${config.caminhoIconsMenu + item.icon}"> <span>${item.label}</span>`;
                     menuBox.appendChild(a);
                 });
-            },
-            showStatusBar(ronda, total, certos, erros) {
-                const lampPath = JOGO_CONFIG.caminhoIconsMenu + "lampada.png";
-                document.getElementById('shell-header-content').innerHTML = `
-                    <div class="status-bar">
-                        <div style="display:flex; align-items:center; gap:10px;">
-                            <img src="${lampPath}" style="height:55px; cursor:pointer;" onclick="darAjuda()">
-                            <div class="status-pill">${ronda}/${total}</div>
-                        </div>
-                        <div style="display:flex; gap:12px;">
-                            <div class="score-box score-certo"><i class="fas fa-check"></i> ${certos}</div>
-                            <div class="score-box score-erro"><i class="fas fa-times"></i> ${erros}</div>
-                        </div>
-                    </div>`;
-                document.getElementById('shell-footer-content').style.display = 'none';
-            },
-            showResults(certos, erros, rel) {
-                document.getElementById('shell-header-content').innerHTML = `<h2>RESULTADOS</h2>`;
-                document.getElementById('game-content').innerHTML = `
-                    <div style="text-align:center;">
-                        <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height:180px; object-fit:contain;">
-                        <h2 style="color:var(--primary-color); font-weight:900; margin:15px 0;">${rel.titulo}</h2>
-                        <div style="display:flex; justify-content:center; gap:15px;">
-                            <div class="score-box score-certo">CERTOS: ${certos}</div>
-                            <div class="score-box score-erro">ERROS: ${erros}</div>
-                        </div>
-                    </div>`;
-                const footer = document.getElementById('shell-footer-content');
-                footer.style.display = 'flex';
-                footer.innerHTML = `<button onclick="location.reload()" style="flex:1; height:65px; border-radius:35px; border:none; background:#6c757d; color:white; font-size:1.3rem; font-weight:900; cursor:pointer;"><i class="fas fa-redo"></i> REPETIR</button>
-                                   <button onclick="window.history.back()" style="flex:1; height:65px; border-radius:35px; border:none; background:var(--primary-color); color:white; font-size:1.3rem; font-weight:900; cursor:pointer;">SAIR</button>`;
+
+                if(typeof mostrarCapa === "function") mostrarCapa();
             }
         };
         function toggleMenu(e) { e.stopPropagation(); const m = document.getElementById('dropdownMenu'); m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; }
