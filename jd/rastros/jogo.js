@@ -21,33 +21,30 @@ const style = document.createElement('style');
 style.innerHTML = `
     .status-container { width: 100%; display: flex; justify-content: space-between; align-items: center; }
     .status-pill { padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 0.9rem; color: white; transition: 0.3s; }
-    
     .score-group { display: flex; gap: 8px; }
     .score-box { padding: 5px 10px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1rem; min-width: 55px; justify-content: center; }
     
-    /* Cores dos Jogadores */
     .box-v, .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .box-x, .pill-j2 { background: #ff5a5f !important; box-shadow: 0 3px 0 #d44348; }
 
     @keyframes blinker { 50% { opacity: 0.4; } }
     .blinking { animation: blinker 1s linear infinite; }
 
-    /* Overlay de Vitória de Ronda */
     #round-feedback {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(255,255,255,0.85); z-index: 1000;
+        background: rgba(255,255,255,0.9); z-index: 1000;
         display: none; flex-direction: column; align-items: center; justify-content: center;
         border-radius: 35px; backdrop-filter: blur(4px);
     }
 
     .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 100%; max-width: 480px; justify-content: center; align-items: center; margin-top: 10px; }
-    .btn-capa-small { flex: 1; height: 55px; border-radius: 25px; border: none; color: white; font-weight: 900; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
+    .btn-capa-small { flex: 1; height: 55px; border-radius: 25px; border: none; color: white; font-weight: 900; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-transform: uppercase; }
     .btn-inform { width: 55px; height: 55px; flex: none; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .btn-inform img { width: 45px; height: 45px; object-fit: contain; }
 
     #instrucoes-panel { position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%; background: white; z-index: 5000; transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1); padding: 40px 25px; overflow-y: auto; }
     #instrucoes-panel.open { bottom: 0; }
-    .close-x { position: absolute; top: 15px; right: 20px; font-size: 2rem; color: var(--text-grey); cursor: pointer; font-weight: 900; }
+    .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: var(--text-grey); cursor: pointer; font-weight: 900; line-height: 1; }
 
     .rastros-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #ccc; padding: 4px; border-radius: 8px; width: fit-content; margin: 0 auto; }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; display: flex; align-items: center; justify-content: center; font-weight: 900; font-size: 1.1rem; position: relative; border-radius: 4px; color: #bbb; }
@@ -64,7 +61,7 @@ style.innerHTML = `
 document.head.appendChild(style);
 
 // ==========================================
-// 3. CAPA E INTERFACE
+// 3. CAPA E INSTRUÇÕES (REVERTIDAS)
 // ==========================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -75,17 +72,18 @@ function mostrarCapa() {
         panel.id = 'instrucoes-panel';
         panel.innerHTML = `
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
-            <h2>Como Jogar</h2>
-            <h3>Objetivo</h3>
-            <p>Vence o jogador que conseguir levar a <b>peça branca</b> até à sua casa final ou deixar o adversário sem movimentos.</p>
-            <ul>
-                <li><b>J1 (Canto Inferior):</b> Deve chegar à casa <b>1</b>.</li>
-                <li><b>J2/PC (Canto Superior):</b> Deve chegar à casa <b>2</b>.</li>
-            </ul>
-            <h3>Regras</h3>
-            <p>1. A peça branca começa no centro (e5).</p>
-            <p>2. Move a peça para qualquer casa vazia ao lado (horizontal, vertical ou diagonal).</p>
-            <p>3. A casa que a peça abandona fica bloqueada (preta).</p>
+            <div style="max-width:600px; margin:0 auto; text-align:left;">
+                <h2 style="color:var(--primary-color); text-align:center;">INSTRUÇÕES DO JOGO</h2>
+                <h3>Material</h3>
+                <p>Um tabuleiro quadrado 7 por 7. Uma peça branca e peças pretas. A casa [1] é o objetivo do Jogador 1, a casa [2] é o objetivo do Jogador 2.</p>
+                <h3>Objetivo</h3>
+                <p>Um jogador ganha se a peça branca se deslocar para a sua casa final ou se for capaz de bloquear o adversário, impedindo-o de jogar.</p>
+                <h3>Regras</h3>
+                <p>Cada jogador, alternadamente, desloca a peça branca para um quadrado vazio adjacente (vertical, horizontal ou diagonal). A casa onde se encontrava a peça branca recebe uma peça negra. As casas que recebem peças negras não podem ser ocupadas pela peça branca.</p>
+                <p>O jogo começa com a peça branca na casa <b>e5</b>.</p>
+                <h3>Notas Importantes</h3>
+                <p>Mesmo que seja o adversário a mover a peça para a tua casa final, tu ganhas o jogo. À medida que o tabuleiro fica ocupado, as opções diminuem.</p>
+            </div>
         `;
         document.querySelector('.game-shell').appendChild(panel);
 
@@ -122,8 +120,20 @@ function setModo(modo) {
     iniciarJogo();
 }
 
+// ==========================================
+// 4. LÓGICA DO JOGO E TURNOS
+// ==========================================
+function iniciarJogo() {
+    jogoAtivo = true;
+    tabuleiro = Array(7).fill().map(() => Array(7).fill(0));
+    posBranca = { x: 4, y: 2 }; 
+    tabuleiro[posBranca.y][posBranca.x] = 2;
+    document.getElementById('round-feedback').style.display = 'none';
+    atualizarUI();
+}
+
 function atualizarUI() {
-    const pcLabel = "PC";
+    const pcLabel = "Pc";
     const j2Label = "J2";
     const labelSegundaBox = modoJogo === 'CPU' ? pcLabel : j2Label;
     
@@ -146,18 +156,6 @@ function atualizarUI() {
             </div>
         </div>`;
     renderTabuleiro();
-}
-
-// ==========================================
-// 4. LÓGICA DO JOGO
-// ==========================================
-function iniciarJogo() {
-    jogoAtivo = true;
-    tabuleiro = Array(7).fill().map(() => Array(7).fill(0));
-    posBranca = { x: 4, y: 2 }; 
-    tabuleiro[posBranca.y][posBranca.x] = 2;
-    document.getElementById('round-feedback').style.display = 'none';
-    atualizarUI();
 }
 
 function renderTabuleiro() {
@@ -197,7 +195,8 @@ function moverPeca(nx, ny) {
     if (nx === 6 && ny === 0) { finalizarRonda(1); return; }
     if (getMovimentosPosiveis(nx, ny).length === 0) { finalizarRonda(turnoAtual); return; }
 
-    turnoAtual = turnoAtual === 0 ? 1 : 0;
+    turnoAtual = (turnoAtual === 0) ? 1 : 0;
+    
     if (modoJogo === 'CPU' && turnoAtual === 1) {
         atualizarUI();
         setTimeout(cpuJogar, 600);
@@ -234,9 +233,8 @@ function finalizarRonda(vencedorIdx) {
     matchScore[vencedorIdx]++;
     somAcerto.play();
     
-    // Feedback visual da ronda
     const overlay = document.getElementById('round-feedback');
-    const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "PC" : "JOGADOR 2");
+    const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
     const corVencedor = vencedorIdx === 0 ? "#8cc63f" : "#ff5a5f";
     
     overlay.style.display = 'flex';
@@ -250,7 +248,7 @@ function finalizarRonda(vencedorIdx) {
     } else {
         setTimeout(() => {
             currentGameNum++;
-            turnoAtual = 0; 
+            turnoAtual = 0; // J1 Começa sempre
             iniciarJogo();
         }, 1500);
     }
@@ -258,9 +256,12 @@ function finalizarRonda(vencedorIdx) {
 
 function finalizarMatch() {
     jogoAtivo = false;
-    const vencedorIdx = matchScore[0] >= 3 ? 0 : 1;
-    const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "PC" : "JOGADOR 2");
-    const labelP2 = modoJogo === 'CPU' ? 'PC' : 'J2';
+    // IMPORTANTE: Esconder o feedback para ver os resultados
+    document.getElementById('round-feedback').style.display = 'none';
+
+    const vencedorIdx = (matchScore[0] >= 3) ? 0 : 1;
+    const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
+    const labelSegundaBox = modoJogo === 'CPU' ? 'Pc' : 'J2';
 
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">RESULTADOS FINAIS</h2>`;
     document.getElementById('game-content').innerHTML = `
@@ -269,16 +270,17 @@ function finalizarMatch() {
             <h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase; margin-bottom:20px;">GANHOU O ${nomeVencedor}</h2>
             <div style="display:flex; justify-content:center; gap:20px;">
                 <div class="score-box box-v" style="padding:10px 20px; font-size:1.2rem;">J1: ${matchScore[0]}</div>
-                <div class="score-box box-x" style="padding:10px 20px; font-size:1.2rem;">${labelP2}: ${matchScore[1]}</div>
+                <div class="score-box box-x" style="padding:10px 20px; font-size:1.2rem;">${labelSegundaBox}: ${matchScore[1]}</div>
             </div>
         </div>`;
+    
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
     footer.innerHTML = `<button class="btn-play-rect" style="background:#6c757d; flex:1;" onclick="location.reload()">REPETIR</button>
                         <button class="btn-play-rect" style="flex:1;" onclick="window.history.back()">SAIR</button>`;
 }
 
-// SIMULAÇÃO DA CAPA (Lógica interna simplificada)
+// SIMULAÇÃO DA CAPA
 function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
 function iniciarSimulacao() {
     clearInterval(simuInterval);
