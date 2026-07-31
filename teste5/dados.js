@@ -60,7 +60,7 @@ const BIBLIOTECA_CONTEUDO = {
 // 3. CONFIGURAÇÃO DO JOGO ATUAL
 // ==========================================
 const JOGO_CONFIG = {
-    nomeDoJogo: "Encontrar o Par: Animais",
+    nomeDoJogo: "Encontrar o Par",
     descricao: "Identifica o animal igual ao modelo em destaque!",
     
     areaAtiva: "pre",   
