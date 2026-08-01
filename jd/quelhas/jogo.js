@@ -10,7 +10,7 @@ let currentGameNum = 1;
 let tabuleiro = Array(10).fill().map(() => Array(10).fill(0)); 
 let startCell = null;     
 let primeiraJogadaRealizada = false;
-let orientacoes = [0, 1]; // [J1, J2/Pc] -> 0: V, 1: H
+let orientacoes = [0, 1]; // [J1, J2/Pc] -> 0: Vertical, 1: Horizontal
 let simuInterval;         
 
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
@@ -31,42 +31,52 @@ style.innerHTML = `
     .box-v, .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .box-x, .pill-j2 { background: #ff5a5f !important; box-shadow: 0 3px 0 #d44348; }
 
-    /* LAYOUT DO JOGO (INDICADORES LATERAIS) */
-    .game-main-layout { display: flex; align-items: center; justify-content: center; gap: 15px; width: 100%; margin: 10px 0; }
-    
-    .indicator-side { width: 40px; height: 15px; border-radius: 4px; visibility: hidden; }
-    .indicator-side.v-shape { width: 15px; height: 40px; }
-    .indicator-side.active { visibility: visible; animation: blinker 1s linear infinite; }
-    @keyframes blinker { 50% { opacity: 0.2; } }
+    /* INDICADORES DE ORIENTAÇÃO (CÍRCULOS DO PDF) */
+    .orient-wrap { display: flex; gap: 5px; padding: 5px; }
+    .orient-circle { width: 18px; height: 18px; background: #333; border-radius: 50%; opacity: 0.2; }
+    .orient-wrap.active .orient-circle { opacity: 1; animation: blinker 1s linear infinite; }
+    @keyframes blinker { 50% { opacity: 0.3; } }
+
+    /* LAYOUT DO JOGO */
+    .game-layout-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; position: relative; }
+    .top-indicator-row { width: 100%; max-width: 450px; display: flex; justify-content: flex-end; margin-bottom: 5px; }
+    .bottom-indicator-row { width: 100%; max-width: 450px; display: flex; justify-content: flex-start; margin-top: 5px; }
 
     .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); text-align: center; animation: cardPop 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.28); }
     @keyframes cardPop { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-    /* CAPA */
-    .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 480px; justify-content: center; align-items: center; margin-top: 15px; }
+    /* BOTÕES CAPA */
+    .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 480px; justify-content: center; align-items: center; margin-top: 20px; }
     .btn-capa-small { flex: 1; height: 50px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; }
     .btn-inform { width: 50px; height: 50px; cursor: pointer; }
     .btn-inform img { width: 100%; height: 100%; object-fit: contain; }
 
-    #simu-container { height: 280px; display: flex; align-items: center; justify-content: center; width: 100%; margin-bottom: 20px; }
+    #simu-container { height: 320px; display: flex; align-items: center; justify-content: center; width: 100%; margin-top: -30px; }
 
     #instrucoes-panel { position: fixed; top: 100vh; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: top 0.5s ease; padding: 40px 25px; overflow-y: auto; }
     #instrucoes-panel.open { top: 0; }
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.2rem; color: #ff5a5f; cursor: pointer; font-weight: 900; }
 
-    .grid-board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #bbb; padding: 3px; border-radius: 8px; width: fit-content; }
-    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 1px; cursor: pointer; }
-    .cell.occupied { background: #333 !important; }
-    .cell.selected { background: #e8f5e9; border: 2px solid #8cc63f; }
+    .btn-nivel { background: white; padding: 12px 2px; border-radius: 12px; border: 2px solid #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; flex: 1; }
+    .btn-nivel b { font-size: 0.75rem; text-transform: uppercase; }
 
-    @media screen and (min-width: 1025px) { :root { --cell-size: 40px; } }
-    @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 8vw; } }
-    @media screen and (max-height: 500px) and (orientation: landscape) { :root { --cell-size: 6.5vh; } }
+    /* TABULEIRO 10x10 */
+    .grid-board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #bbb; padding: 3px; border-radius: 8px; width: fit-content; margin: 0 auto; }
+    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .cell.occupied::after { content: ''; width: 85%; height: 85%; background: #333; border-radius: 50%; box-shadow: inset 0 -2px 4px rgba(0,0,0,0.5); }
+    .cell.selected { background: #e8f5e9; border: 1px solid #8cc63f; }
+
+    @media screen and (min-width: 1025px) { :root { --cell-size: 42px; } }
+    @media screen and (max-width: 500px) and (orientation: portrait) { 
+        :root { --cell-size: 8.5vw; } 
+        #simu-container { height: 280px; }
+    }
+    @media screen and (max-height: 500px) and (orientation: landscape) { :root { --cell-size: 7vh; } }
 `;
 document.head.appendChild(style);
 
 // ============================================================
-// 3. CAPA E SIMULAÇÃO
+// 3. CAPA, SIMULAÇÃO E INSTRUÇÕES
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -79,7 +89,13 @@ function mostrarCapa() {
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Quelhas</div>
                 <div class="inst-section-title">Objetivo</div>
-                <p class="inst-text">Este é um jogo <b>Misere</b>: quem fizer o último lance <b>PERDE</b> o jogo.</p>
+                <p class="inst-text">Este é um jogo <b>Misere</b>: quem fizer o último lance e ocupar as últimas casas livres <b>PERDE</b> o jogo.</p>
+                <div class="inst-section-title">Regras</div>
+                <ul class="inst-list">
+                    <li><b>Vertical:</b> Clica na primeira e na última casa para colocar um bloco vertical (mínimo 2 casas).</li>
+                    <li><b>Horizontal:</b> Clica na primeira e na última casa para colocar um bloco horizontal (mínimo 2 casas).</li>
+                    <li><b>Troca:</b> Na primeira jogada do J2, este pode decidir trocar de orientação com o J1.</li>
+                </ul>
             </div>`;
         document.body.appendChild(panel);
         const feedback = document.createElement('div');
@@ -88,16 +104,15 @@ function mostrarCapa() {
     }
 
     const area = document.getElementById('game-content');
-    // Carrega tudo ao mesmo tempo em local fixo
     area.innerHTML = `
-        <div id="simu-container"><div id="simu-board" style="transform: scale(0.85);"></div></div>
+        <div id="simu-container"><div id="simu-board"></div></div>
         <div id="capa-menu-principal" style="width:100%; display:flex; flex-direction:column; align-items:center;">
             <div class="capa-btn-row">
                 <div class="btn-inform" onclick="toggleInstructions()"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
                 <button class="btn-capa-small" style="background:var(--primary-color);" onclick="mostrarNiveis('CPU')">COMPUTADOR</button>
                 <button class="btn-capa-small" style="background:#6c757d;" onclick="mostrarNiveis('PVP')">2 JOGADORES</button>
             </div>
-            <div id="nivel-select-container" class="nivel-select-container" style="margin-top:15px;"></div>
+            <div id="nivel-select-container" style="display:none; flex-direction:column; align-items:center; margin-top:15px; width:100%;"></div>
         </div>
     `;
     document.getElementById('shell-footer-content').style.display = 'none';
@@ -109,14 +124,13 @@ function mostrarNiveis(modo) {
     const container = document.getElementById('nivel-select-container');
     container.style.display = 'flex';
     if (modo === 'CPU') {
-        container.innerHTML = `<p style="font-weight:800; color:#888; margin-bottom:5px; font-size:0.8rem;">DIFICULDADE:</p>
-            <div class="nivel-row">
-                <div class="btn-nivel l1" onclick="setModo('CPU', 1)"><b>Nível 1</b></div>
-                <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b></div>
-                <div class="btn-nivel l3" onclick="setModo('CPU', 3)"><b>Nível 3</b></div>
-            </div>`;
+        container.innerHTML = `<div class="nivel-row" style="display:flex; gap:10px; width:90%;">
+            <div class="btn-nivel l1" onclick="setModo('CPU', 1)"><b>Nível 1</b></div>
+            <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b></div>
+            <div class="btn-nivel l3" onclick="setModo('CPU', 3)"><b>Nível 3</b></div>
+        </div>`;
     } else {
-        container.innerHTML = `<div class="nivel-row">
+        container.innerHTML = `<div class="nivel-row" style="display:flex; gap:10px; width:90%;">
             <div class="btn-nivel l1" onclick="setModo('PVP', 1)"><b>Com Dicas</b></div>
             <div class="btn-nivel l2" onclick="setModo('PVP', 2)"><b>Sem Dicas</b></div>
         </div>`;
@@ -160,34 +174,31 @@ function atualizarUI() {
         </div>`;
 
     const area = document.getElementById('game-content');
-    area.innerHTML = "";
+    area.innerHTML = `
+        <div class="game-layout-wrapper">
+            <div class="top-indicator-row">
+                <div class="orient-wrap ${getOrientationPlayer(1) === turnoAtual ? 'active' : ''}">
+                    <div class="orient-circle"></div><div class="orient-circle"></div>
+                    <span style="font-size:0.6rem; font-weight:900; color:#333; margin-left:5px;">HORIZONTAL</span>
+                </div>
+            </div>
+            <div id="grid-mount"></div>
+            <div class="bottom-indicator-row">
+                <div class="orient-wrap ${getOrientationPlayer(0) === turnoAtual ? 'active' : ''}" style="flex-direction:column; align-items:center;">
+                    <div class="orient-circle"></div><div class="orient-circle"></div>
+                    <span style="font-size:0.6rem; font-weight:900; color:#333; margin-top:2px;">VERTICAL</span>
+                </div>
+            </div>
+        </div>
+    `;
 
-    // Contentor Principal (Indicador Esquerdo - Grelha - Indicador Direito)
-    const layout = document.createElement('div');
-    layout.className = "game-main-layout";
-
-    // Indicador Vertical (Esquerda)
-    const pieceV = document.createElement('div');
-    pieceV.className = `indicator-side v-shape ${getOrientationPlayer(0) === turnoAtual ? 'active' : ''}`;
-    pieceV.style.background = "#8cc63f";
-    layout.appendChild(pieceV);
-
-    // Grelha
-    renderTabuleiro(layout);
-
-    // Indicador Horizontal (Direita)
-    const pieceH = document.createElement('div');
-    pieceH.className = `indicator-side ${getOrientationPlayer(1) === turnoAtual ? 'active' : ''}`;
-    pieceH.style.background = "#ff5a5f";
-    layout.appendChild(pieceH);
-
-    area.appendChild(layout);
+    renderTabuleiro(document.getElementById('grid-mount'));
 
     if (primeiraJogadaRealizada && !tabuleiro.flat().includes(2) && modoJogo === 'PVP' && turnoAtual === 1) {
         const btn = document.createElement('button');
         btn.className = "btn-capa-small";
-        btn.style = "background:#f9a825; margin: 5px auto; width: 180px; display:block;";
-        btn.innerText = "TROCAR";
+        btn.style = "background:#f9a825; margin: 15px auto; width: 220px; display:block;";
+        btn.innerText = "TROCAR ORIENTAÇÃO";
         btn.onclick = swapOrientations;
         area.appendChild(btn);
     }
@@ -205,7 +216,7 @@ function renderTabuleiro(container) {
             html += `<div class="${cl}" onclick="handleCellClick(${r},${c})"></div>`;
         }
     }
-    container.innerHTML += html + `</div>`;
+    container.innerHTML = html + `</div>`;
 }
 
 function handleCellClick(r, c) {
@@ -233,7 +244,9 @@ function colocarPeca(r1, c1, r2, c2) {
     primeiraJogadaRealizada = true; somClique.play();
 }
 
-function swapOrientations() { somAcerto.play(); orientacoes = [orientacoes[1], orientacoes[0]]; turnoAtual = 0; atualizarUI(); }
+function swapOrientations() { 
+    somAcerto.play(); orientacoes = [orientacoes[1], orientacoes[0]]; turnoAtual = 0; atualizarUI(); 
+}
 
 function finalizarTurno() {
     if (!temLancesLegais(0) && !temLancesLegais(1)) { finalizarRonda(turnoAtual); return; }
@@ -280,15 +293,11 @@ function finalizarMatch() {
     const vIdx = matchScore[0] >= 3 ? 0 : 1;
     const nomeV = vIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color);">RESULTADOS FINAIS</h2>`;
-    document.getElementById('game-content').innerHTML = `
-        <div style="text-align:center;">
-            <img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:120px;">
-            <h2 style="color:var(--primary-color); text-transform:uppercase;">${nomeV} VENCEU!</h2>
-        </div>`;
+    document.getElementById('game-content').innerHTML = `<div style="text-align:center;"><img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:120px;"><h2 style="color:var(--primary-color); text-transform:uppercase;">${nomeV} VENCEU!</h2></div>`;
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
     footer.innerHTML = `<button class="btn-capa-small" style="background:#6c757d; flex:1;" onclick="location.reload()">REPETIR</button>
-                        <button class="btn-capa-small" style="background:var(--primary-color); flex:1;" onclick="window.history.back()">SAIR</button>`;
+                        <button class="btn-capa-small" style="background:var(--primary-color);" onclick="window.history.back()">SAIR</button>`;
 }
 
 function iniciarSimulacao() {
@@ -303,12 +312,8 @@ function iniciarSimulacao() {
             if(sTurno===1 && c<9 && sTab[r][c]===0 && sTab[r][c+1]===0) leg.push({r,c,r2:r,c2:c+1});
         }
         if (leg.length === 0) { sTab = Array(10).fill().map(() => Array(10).fill(0)); sTurno = 0; }
-        else {
-            let m = leg[Math.floor(Math.random() * leg.length)];
-            sTab[m.r][m.c] = 1; sTab[m.r2][m.c2] = 1;
-            sTurno = (sTurno === 0) ? 1 : 0;
-        }
-        let h = `<div class="grid-board" style="opacity:0.5; pointer-events:none;">`;
+        else { let m = leg[Math.floor(Math.random() * leg.length)]; sTab[m.r][m.c] = 1; sTab[m.r2][m.c2] = 1; sTurno = (sTurno === 0) ? 1 : 0; }
+        let h = `<div class="grid-board" style="opacity:0.4; pointer-events:none; transform:scale(0.8);">`;
         for(let r=0;r<10;r++) for(let c=0;c<10;c++) h+=`<div class="cell ${sTab[r][c]===1?'occupied':''}" style="width:25px; height:25px;"></div>`;
         if(board) board.innerHTML = h + `</div>`;
     }, 600);
