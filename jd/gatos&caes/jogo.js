@@ -4,12 +4,12 @@
 let jogoAtivo = false;
 let modoJogo = 'CPU';     
 let matchScore = [0, 0];  
-let turnoAtual = 0;       // 0: Gatos (J1), 1: Cães (J2/Pc)
+let turnoAtual = 0;       
 let currentGameNum = 1;   
-let tabuleiro = [];       // 0: vazio, 1: Gato, 2: Cão
+let tabuleiro = [];       
 let simuInterval;         
 
-const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "certo.mp3");
+const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
@@ -23,8 +23,8 @@ style.innerHTML = `
     .score-group { display: flex; gap: 8px; }
     .score-box { padding: 5px 10px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1rem; min-width: 55px; justify-content: center; }
     
-    .box-v, .pill-j1 { background: #444 !important; box-shadow: 0 3px 0 #222; } /* Cor Gatos */
-    .box-x, .pill-j2 { background: #f8f9fa !important; color: #444 !important; border: 2px solid #ddd; box-shadow: 0 3px 0 #ccc; } /* Cor Cães */
+    .box-v, .pill-j1 { background: #444 !important; box-shadow: 0 3px 0 #222; }
+    .box-x, .pill-j2 { background: #f8f9fa !important; color: #444 !important; border: 2px solid #ddd; box-shadow: 0 3px 0 #ccc; }
     .blinking { animation: blinker 1s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
 
@@ -54,10 +54,11 @@ style.innerHTML = `
         width: var(--cell-size); height: var(--cell-size); background: white;
         display: flex; align-items: center; justify-content: center;
         position: relative; border-radius: 2px; cursor: default;
+        font-weight: 900; font-size: 1.2rem; color: #ccc; /* Cor do X */
     }
     .cell.central { background: #fff8e1; }
     .cell.legal-hint { background: #e8f5e9; cursor: pointer; border: 1px solid #8cc63f; }
-    .cell img { width: 90%; height: 90%; object-fit: contain; }
+    .cell img { width: 90%; height: 90%; object-fit: contain; z-index: 2; }
 
     @media screen and (min-width: 1025px) { :root { --cell-size: 55px; } }
     @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 10.5vw; } }
@@ -82,7 +83,7 @@ function mostrarCapa() {
                 <p><b>Objetivo:</b> Ganha o jogador que realizar a última jogada possível no tabuleiro.</p>
                 <p><b>Regras:</b></p>
                 <ul>
-                    <li>Gatos (Pretos) começam e o primeiro deve ser na <b>zona central</b>.</li>
+                    <li>Gatos (Pretos) começam e o primeiro deve ser na <b>zona central</b> (marcadas com X).</li>
                     <li>Cães (Brancos) jogam a seguir e o primeiro deve ser <b>fora da zona central</b>.</li>
                     <li><b>Proibição:</b> Não podes colocar um Gato encostado (H/V) a um Cão, nem um Cão encostado a um Gato.</li>
                     <li>O jogo termina quando um jogador não tiver mais espaço livre para as suas peças.</li>
@@ -155,16 +156,9 @@ function isCentral(r, c) { return r >= 3 && r <= 4 && c >= 3 && c <= 4; }
 
 function isLegal(r, c, pType) {
     if (tabuleiro[r][c] !== 0) return false;
-    
-    // Contagem de peças no tabuleiro para regras de início
     let totalPieces = tabuleiro.flat().filter(x => x !== 0).length;
-    
-    // Regra 1: Primeiro Gato na zona central
     if (pType === 1 && totalPieces === 0 && !isCentral(r, c)) return false;
-    // Regra 2: Primeiro Cão fora da zona central
     if (pType === 2 && totalPieces === 1 && isCentral(r, c)) return false;
-
-    // Regra 3: Adjacência H/V
     const dr = [-1, 1, 0, 0], dc = [0, 0, -1, 1];
     const opponent = (pType === 1) ? 2 : 1;
     for (let i = 0; i < 4; i++) {
@@ -180,7 +174,7 @@ function renderTabuleiro() {
     const area = document.getElementById('game-content');
     let html = `<div class="grid-board">`;
     for (let r = 0; r < 8; r++) {
-        for (let c = 0; r < 8, c < 8; c++) {
+        for (let c = 0; c < 8; c++) {
             let cl = "cell";
             if (isCentral(r, c)) cl += " central";
             
@@ -195,7 +189,9 @@ function renderTabuleiro() {
             }
             
             if (tabuleiro[r][c] === 1) html += `<img src="${DADOS_JOGO.caminhoImagens}gato.png">`;
-            if (tabuleiro[r][c] === 2) html += `<img src="${DADOS_JOGO.caminhoImagens}cao.png">`;
+            else if (tabuleiro[r][c] === 2) html += `<img src="${DADOS_JOGO.caminhoImagens}cao.png">`;
+            else if (isCentral(r, c)) html += `X`; // ADICIONADO O X NAS CÉLULAS VAZIAS CENTRAIS
+            
             html += `</div>`;
         }
     }
@@ -207,16 +203,11 @@ function jogar(r, c) {
     const pType = (turnoAtual === 0) ? 1 : 2;
     tabuleiro[r][c] = pType;
     somClique.play();
-
-    // Mudar turno
     turnoAtual = (turnoAtual === 0) ? 1 : 0;
-    
-    // Verificar se o novo jogador tem jogadas
     if (!temJogadas(turnoAtual === 0 ? 1 : 2)) {
-        finalizarRonda(turnoAtual === 0 ? 1 : 0); // O jogador anterior fez a última jogada
+        finalizarRonda(turnoAtual === 0 ? 1 : 0);
         return;
     }
-
     if (modoJogo === 'CPU' && turnoAtual === 1) {
         atualizarUI();
         setTimeout(cpuInteligente, 600);
@@ -242,7 +233,6 @@ function cpuInteligente() {
         }
     }
     if (boas.length === 0) { finalizarRonda(0); return; }
-    // Escolhe uma aleatória das legais
     let move = boas[Math.floor(Math.random() * boas.length)];
     jogar(move.r, move.c);
 }
@@ -254,12 +244,10 @@ function finalizarRonda(vencedorIdx) {
     jogoAtivo = false;
     matchScore[vencedorIdx]++;
     somAcerto.play();
-    
     const overlay = document.getElementById('round-feedback');
     const nomeVencedor = vencedorIdx === 0 ? "GATOS" : (modoJogo === 'CPU' ? "Pc" : "CÃES");
     const corVencedor = vencedorIdx === 0 ? "#444" : "#ff5a5f";
     const imgVencedor = vencedorIdx === 0 ? "gato.png" : "cao.png";
-    
     overlay.style.display = 'flex';
     overlay.innerHTML = `
         <div class="vitoria-card">
@@ -269,9 +257,7 @@ function finalizarRonda(vencedorIdx) {
             <div style="margin-top:15px; padding-top:10px; border-top:2px dashed #eee; font-weight:800;">
                 PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${modoJogo === 'CPU' ? 'Pc' : 'J2'}
             </div>
-        </div>
-    `;
-
+        </div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) {
         setTimeout(finalizarMatch, 2000);
     } else {
@@ -283,7 +269,6 @@ function finalizarMatch() {
     document.getElementById('round-feedback').style.display = 'none';
     const vencedorIdx = (matchScore[0] >= 3) ? 0 : 1;
     const nomeVencedor = vencedorIdx === 0 ? "GATOS" : (modoJogo === 'CPU' ? "Pc" : "CÃES");
-
     document.getElementById('shell-header-content').innerHTML = `<h2>VITÓRIA FINAL</h2>`;
     document.getElementById('game-content').innerHTML = `
         <div style="text-align:center;">
@@ -303,25 +288,23 @@ function iniciarSimulacao() {
     const container = document.getElementById('simu-container');
     let sTab = Array(8).fill().map(() => Array(8).fill(0));
     let sTurno = 0;
-
     const render = () => {
         let h = `<div class="grid-board" style="opacity:0.6; transform:scale(0.9); pointer-events:none;">`;
         for (let r = 0; r < 8; r++) {
             for (let c = 0; c < 8; c++) {
                 h += `<div class="cell ${isCentral(r,c)?'central':''}">`;
                 if(sTab[r][c]===1) h+=`<img src="${DADOS_JOGO.caminhoImagens}gato.png">`;
-                if(sTab[r][c]===2) h+=`<img src="${DADOS_JOGO.caminhoImagens}cao.png">`;
+                else if(sTab[r][c]===2) h+=`<img src="${DADOS_JOGO.caminhoImagens}cao.png">`;
+                else if(isCentral(r,c)) h+= `X`; // TAMBÉM NA SIMULAÇÃO
                 h += `</div>`;
             }
         }
         container.innerHTML = h + `</div>`;
     };
-
     simuInterval = setInterval(() => {
         let p = (sTurno === 0) ? 1 : 2;
         let legal = [];
         for(let r=0; r<8; r++) for(let c=0; c<8; c++) if(isLegalSimulation(r,c,p,sTab)) legal.push({r,c});
-        
         if (legal.length === 0) { sTab = Array(8).fill().map(() => Array(8).fill(0)); sTurno = 0; }
         else {
             let m = legal[Math.floor(Math.random() * legal.length)];
