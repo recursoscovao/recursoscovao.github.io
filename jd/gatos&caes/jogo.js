@@ -41,23 +41,27 @@ style.innerHTML = `
     @keyframes cardPop { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
     .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 100%; max-width: 480px; justify-content: center; align-items: center; margin-top: 10px; }
-    .btn-capa-small { flex: 1; height: 55px; border-radius: 25px; border: none; color: white; font-weight: 900; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
+    
+    /* BOTÕES DA CAPA COM MENOS RAIO (12px) */
+    .btn-capa-small { flex: 1; height: 55px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
     .btn-inform { width: 55px; height: 55px; flex: none; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .btn-inform img { width: 45px; height: 45px; object-fit: contain; }
 
-    /* BOTÕES DE NÍVEL (PREMIUM) */
-    .nivel-select-container { display: none; flex-direction: column; gap: 10px; width: 100%; max-width: 350px; animation: cardPop 0.3s ease; align-items: center; }
+    /* SELETOR DE NÍVEL EM LINHA (LADO A LADO) */
+    .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 100%; max-width: 500px; animation: cardPop 0.3s ease; align-items: center; }
+    .nivel-row { display: flex; flex-direction: row; gap: 8px; width: 100%; justify-content: center; }
+
     .btn-nivel {
-        background: white; padding: 10px; border-radius: 15px; border: 2px solid #eee;
+        background: white; padding: 10px 5px; border-radius: 12px; border: 2px solid #eee;
         display: flex; flex-direction: column; align-items: center; justify-content: center;
-        cursor: pointer; transition: 0.2s; width: 100%;
+        cursor: pointer; transition: 0.2s; flex: 1;
     }
-    .btn-nivel b { font-size: 1rem; font-weight: 900; text-transform: uppercase; }
-    .btn-nivel span { font-size: 0.75rem; font-weight: 700; opacity: 0.8; }
+    .btn-nivel b { font-size: 0.85rem; font-weight: 900; text-transform: uppercase; }
+    .btn-nivel span { font-size: 0.65rem; font-weight: 700; opacity: 0.7; text-align: center; }
     .btn-nivel.l1 { border-color: #8cc63f; color: #8cc63f; }
     .btn-nivel.l2 { border-color: #f9a825; color: #f9a825; }
     .btn-nivel.l3 { border-color: #ff5a5f; color: #ff5a5f; }
-    .btn-nivel:active { transform: scale(0.98); }
+    .btn-nivel:active { transform: scale(0.96); }
 
     #instrucoes-panel { position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%; background: white; z-index: 5000; transition: bottom 0.5s ease; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; }
     #instrucoes-panel.open { bottom: 0; }
@@ -111,7 +115,6 @@ function mostrarCapa() {
     area.innerHTML = `
         <div id="simu-container" style="transform: scale(0.65); margin-top: -30px;"></div>
         
-        <!-- Menu Principal -->
         <div id="capa-menu-principal">
             <div class="capa-btn-row">
                 <div class="btn-inform" onclick="toggleInstructions()"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
@@ -124,7 +127,6 @@ function mostrarCapa() {
             </div>
         </div>
 
-        <!-- Seletor de Níveis (Injetado dinamicamente) -->
         <div id="nivel-select-container" class="nivel-select-container"></div>
     `;
     document.getElementById('shell-footer-content').style.display = 'none';
@@ -140,17 +142,21 @@ function mostrarNiveis(modo) {
     if (modo === 'CPU') {
         container.innerHTML = `
             <p style="font-weight:800; color:#888; margin-bottom:5px;">DESAFIO CONTRA PC:</p>
-            <div class="btn-nivel l1" onclick="setModo('CPU', 1)"><b>Nível 1</b><span>Com Dicas de Jogada</span></div>
-            <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b><span>Sem Dicas (Normal)</span></div>
-            <div class="btn-nivel l3" onclick="setModo('CPU', 3)"><b>Nível 3</b><span>Sem Dicas (Difícil)</span></div>
-            <button class="btn-capa-small" style="background:#aaa; height:40px; margin-top:10px;" onclick="voltarCapa()">VOLTAR</button>
+            <div class="nivel-row">
+                <div class="btn-nivel l1" onclick="setModo('CPU', 1)"><b>Nível 1</b><span>Com Dicas</span></div>
+                <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b><span>Normal</span></div>
+                <div class="btn-nivel l3" onclick="setModo('CPU', 3)"><b>Nível 3</b><span>Difícil</span></div>
+            </div>
+            <button class="btn-capa-small" style="background:#aaa; height:40px; width:150px; margin-top:10px;" onclick="voltarCapa()">VOLTAR</button>
         `;
     } else {
         container.innerHTML = `
             <p style="font-weight:800; color:#888; margin-bottom:5px;">2 JOGADORES (PVP):</p>
-            <div class="btn-nivel l1" onclick="setModo('PVP', 1)"><b>Nível 1</b><span>Com Dicas para ambos</span></div>
-            <div class="btn-nivel l2" onclick="setModo('PVP', 2)"><b>Nível 2</b><span>Sem Dicas (Estratégia pura)</span></div>
-            <button class="btn-capa-small" style="background:#aaa; height:40px; margin-top:10px;" onclick="voltarCapa()">VOLTAR</button>
+            <div class="nivel-row">
+                <div class="btn-nivel l1" onclick="setModo('PVP', 1)"><b>Nível 1</b><span>Com Dicas</span></div>
+                <div class="btn-nivel l2" onclick="setModo('PVP', 2)"><b>Nível 2</b><span>Sem Dicas</span></div>
+            </div>
+            <button class="btn-capa-small" style="background:#aaa; height:40px; width:150px; margin-top:10px;" onclick="voltarCapa()">VOLTAR</button>
         `;
     }
 }
