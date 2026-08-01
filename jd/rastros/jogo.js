@@ -28,6 +28,7 @@ style.innerHTML = `
     .score-group { display: flex; gap: 8px; }
     .score-box { padding: 5px 10px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1rem; min-width: 55px; justify-content: center; }
     
+    /* J1 VERDE */
     .box-v, .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .box-x, .pill-j2 { background: #ff5a5f !important; box-shadow: 0 3px 0 #d44348; }
     
@@ -49,24 +50,25 @@ style.innerHTML = `
 
     #simu-container { height: 260px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: -60px; margin-bottom: 55px; }
 
-    /* PAINEL DE INSTRUÇÕES CORRIGIDO PARA LANDSCAPE */
+    /* --- CORREÇÃO DEFINITIVA PARA AS INSTRUÇÕES --- */
     #instrucoes-panel { 
-        position: absolute; 
+        position: fixed; /* Fixed para garantir que fica fora do ecrã mesmo com scroll */
         top: 0; 
         left: 0; 
-        width: 100%; 
-        height: 100%; 
+        width: 100vw; 
+        height: 100vh; 
         background: white; 
-        z-index: 5000; 
+        z-index: 9999; 
         transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-        transform: translateY(100%); /* Começa totalmente escondido abaixo */
+        transform: translateY(105%); /* Escondido abaixo de tudo */
         padding: 40px 25px; 
         overflow-y: auto; 
-        border-radius: 35px 35px 0 0; 
     }
     #instrucoes-panel.open { 
-        transform: translateY(0); /* Sobe para a posição correta */
+        transform: translateY(0); /* Sobe apenas quando clicado */
     }
+    /* ---------------------------------------------- */
+
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.2rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
     .close-x:hover { transform: scale(1.2); }
 
@@ -114,7 +116,7 @@ function mostrarCapa() {
         panel.innerHTML = `
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
-                <div class="inst-header">Rastros</div>
+                <div class="inst-header">Como Jogar</div>
                 <div class="inst-section-title">Objetivo</div>
                 <p class="inst-text">Vence o jogador que conseguir levar a <b>peça branca</b> até à sua casa final ou deixar o adversário sem movimentos (bloqueado).</p>
                 <ul class="inst-list">
@@ -131,7 +133,7 @@ function mostrarCapa() {
                 <div style="height:40px;"></div>
             </div>
         `;
-        document.querySelector('.game-shell').appendChild(panel);
+        document.body.appendChild(panel); // Anexado ao body para o position: fixed funcionar sempre
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
         document.querySelector('.game-shell').appendChild(feedback);
@@ -162,7 +164,7 @@ function mostrarNiveis(modo) {
         container.innerHTML = `<p style="font-weight:800; color:#888; margin-bottom:5px; font-size:0.8rem;">DESAFIO CONTRA PC:</p>
             <div class="nivel-row">
                 <div class="btn-nivel l1" onclick="setModo('CPU', 1)"><b>Nível 1</b><span>Com Dicas</span></div>
-                <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b><span>Normal</span></div>
+                <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b><span>Sem Dicas</span></div>
                 <div class="btn-nivel l3" onclick="setModo('CPU', 3)"><b>Nível 3</b><span>Difícil</span></div>
             </div>
             <button class="btn-capa-small" style="background:#aaa; height:40px; width:140px; margin-top:10px;" onclick="voltarCapa()">VOLTAR</button>`;
