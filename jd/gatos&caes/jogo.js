@@ -40,32 +40,24 @@ style.innerHTML = `
     .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); text-align: center; animation: cardPop 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.28); }
     @keyframes cardPop { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-    /* BOTÕES DA CAPA */
     .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 100%; max-width: 480px; justify-content: center; align-items: center; margin-top: 10px; }
-    
-    .btn-capa-small { 
-        flex: 1; height: 50px; border-radius: 20px; border: none; color: white; 
-        font-weight: 900; font-size: 0.85rem; cursor: pointer; display: flex; 
-        align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-        text-transform: uppercase; transition: 0.2s; 
-    }
-    
-    .btn-inform { width: 50px; height: 50px; flex: none; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .btn-inform img { width: 42px; height: 45px; object-fit: contain; }
+    .btn-capa-small { flex: 1; height: 55px; border-radius: 25px; border: none; color: white; font-weight: 900; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
+    .btn-inform { width: 55px; height: 55px; flex: none; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .btn-inform img { width: 45px; height: 45px; object-fit: contain; }
 
-    /* BOTÕES DE NÍVEL MELHORADOS */
+    /* BOTÕES DE NÍVEL (PREMIUM) */
+    .nivel-select-container { display: none; flex-direction: column; gap: 10px; width: 100%; max-width: 350px; animation: cardPop 0.3s ease; align-items: center; }
     .btn-nivel {
-        background: white; padding: 8px 5px; border-radius: 15px; border: 2px solid #eee;
+        background: white; padding: 10px; border-radius: 15px; border: 2px solid #eee;
         display: flex; flex-direction: column; align-items: center; justify-content: center;
-        cursor: pointer; transition: 0.2s; flex: 1; min-width: 85px;
+        cursor: pointer; transition: 0.2s; width: 100%;
     }
-    .btn-nivel b { font-size: 0.85rem; font-weight: 900; text-transform: uppercase; }
-    .btn-nivel span { font-size: 0.65rem; font-weight: 700; opacity: 0.8; }
-    
+    .btn-nivel b { font-size: 1rem; font-weight: 900; text-transform: uppercase; }
+    .btn-nivel span { font-size: 0.75rem; font-weight: 700; opacity: 0.8; }
     .btn-nivel.l1 { border-color: #8cc63f; color: #8cc63f; }
     .btn-nivel.l2 { border-color: #f9a825; color: #f9a825; }
     .btn-nivel.l3 { border-color: #ff5a5f; color: #ff5a5f; }
-    .btn-nivel:hover { transform: translateY(-3px); box-shadow: 0 5px 10px rgba(0,0,0,0.1); background: #fafafa; }
+    .btn-nivel:active { transform: scale(0.98); }
 
     #instrucoes-panel { position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%; background: white; z-index: 5000; transition: bottom 0.5s ease; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; }
     #instrucoes-panel.open { bottom: 0; }
@@ -82,11 +74,9 @@ style.innerHTML = `
     @media screen and (max-height: 500px) and (orientation: landscape) { :root { --cell-size: 9vh; } }
 `;
 document.head.appendChild(style);
-// [FIM DA SECÇÃO 2]
-
 
 // ============================================================
-// 3. CAPA, SIMULAÇÃO E INSTRUÇÕES
+// 3. CAPA, SIMULAÇÃO E NÍVEIS
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -98,13 +88,19 @@ function mostrarCapa() {
         panel.innerHTML = `
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div style="max-width:600px; margin:0 auto; text-align:left;">
-                <h2 style="color:var(--primary-color); text-align:center;">COMO JOGAR</h2>
-                <p><b>Objetivo:</b> Ganha o jogador que realizar a última jogada possível no tabuleiro.</p>
+                <h2 style="color:var(--primary-color); text-align:center;">Como Jogar</h2>
+                <h3>Objetivo</h3>
+                <p>Vence o jogador que conseguir levar a <b>peça branca</b> até à sua casa final ou deixar o adversário sem movimentos (bloqueado).</p>
                 <ul>
-                    <li>Gatos (Pretos) começam e o primeiro deve ser na <b>zona central</b> (X).</li>
-                    <li>Cães (Brancos) jogam a seguir e o primeiro deve ser <b>fora da zona central</b>.</li>
-                    <li><b>Proibição:</b> Não podes colocar uma peça ao lado de uma do tipo oposto.</li>
-                </ul>`;
+                    <li><b>Jogador 1 (Canto Inferior):</b> Deve chegar à casa <b>1</b>.</li>
+                    <li><b>Jogador 2 (Canto Superior):</b> Deve chegar à casa <b>2</b>.</li>
+                </ul>
+                <h3>Regras Principais</h3>
+                <p>1. A peça branca começa no centro do tabuleiro (casa <b>e5</b>).</p>
+                <p>2. Podes mover a peça para qualquer casa vazia ao lado (horizontal, vertical ou diagonal).</p>
+                <p>3. Quando a peça sai de uma casa, essa casa fica <b>bloqueada</b> (fica preta) e ninguém pode voltar a passar por lá.</p>
+                <p>4. O jogo termina mal a peça entre numa casa de vitória ou alguém fique cercado sem saída.</p>
+            </div>`;
         document.querySelector('.game-shell').appendChild(panel);
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
@@ -112,40 +108,56 @@ function mostrarCapa() {
     }
 
     const area = document.getElementById('game-content');
-    // CAPA UNIFICADA: Tudo ao mesmo tempo
     area.innerHTML = `
-        <div id="simu-container" style="transform: scale(0.6); margin-top: -45px;"></div>
+        <div id="simu-container" style="transform: scale(0.65); margin-top: -30px;"></div>
         
-        <div style="display:flex; flex-direction:column; align-items:center; width:100%; gap:15px; margin-top:-10px;">
-            <!-- Linha 1: Info e PVP -->
+        <!-- Menu Principal -->
+        <div id="capa-menu-principal">
             <div class="capa-btn-row">
-                <div class="btn-inform" onclick="toggleInstructions()">
-                    <img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png">
-                </div>
-                <button class="btn-capa-small" style="background:#6c757d;" onclick="setModo('PVP', 1)">
+                <div class="btn-inform" onclick="toggleInstructions()"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
+                <button class="btn-capa-small" style="background:var(--primary-color);" onclick="mostrarNiveis('CPU')">
+                    <i class="fas fa-robot"></i> COMPUTADOR
+                </button>
+                <button class="btn-capa-small" style="background:#6c757d;" onclick="mostrarNiveis('PVP')">
                     <i class="fas fa-users"></i> 2 JOGADORES
                 </button>
             </div>
-
-            <!-- Secção Computador -->
-            <div style="width:100%; max-width:400px; text-align:center;">
-                <p style="font-size:0.75rem; font-weight:900; color:#888; text-transform:uppercase; margin-bottom:8px; letter-spacing:1px;">Jogar contra Computador:</p>
-                <div style="display:flex; gap:8px; width:100%;">
-                    <div class="btn-nivel l1" onclick="setModo('CPU', 1)">
-                        <b>Nível 1</b><span>Com Dicas</span>
-                    </div>
-                    <div class="btn-nivel l2" onclick="setModo('CPU', 2)">
-                        <b>Nível 2</b><span>Normal</span>
-                    </div>
-                    <div class="btn-nivel l3" onclick="setModo('CPU', 3)">
-                        <b>Nível 3</b><span>Difícil</span>
-                    </div>
-                </div>
-            </div>
         </div>
+
+        <!-- Seletor de Níveis (Injetado dinamicamente) -->
+        <div id="nivel-select-container" class="nivel-select-container"></div>
     `;
     document.getElementById('shell-footer-content').style.display = 'none';
     iniciarSimulacao();
+}
+
+function mostrarNiveis(modo) {
+    somClique.play();
+    document.getElementById('capa-menu-principal').style.display = 'none';
+    const container = document.getElementById('nivel-select-container');
+    container.style.display = 'flex';
+
+    if (modo === 'CPU') {
+        container.innerHTML = `
+            <p style="font-weight:800; color:#888; margin-bottom:5px;">DESAFIO CONTRA PC:</p>
+            <div class="btn-nivel l1" onclick="setModo('CPU', 1)"><b>Nível 1</b><span>Com Dicas de Jogada</span></div>
+            <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b><span>Sem Dicas (Normal)</span></div>
+            <div class="btn-nivel l3" onclick="setModo('CPU', 3)"><b>Nível 3</b><span>Sem Dicas (Difícil)</span></div>
+            <button class="btn-capa-small" style="background:#aaa; height:40px; margin-top:10px;" onclick="voltarCapa()">VOLTAR</button>
+        `;
+    } else {
+        container.innerHTML = `
+            <p style="font-weight:800; color:#888; margin-bottom:5px;">2 JOGADORES (PVP):</p>
+            <div class="btn-nivel l1" onclick="setModo('PVP', 1)"><b>Nível 1</b><span>Com Dicas para ambos</span></div>
+            <div class="btn-nivel l2" onclick="setModo('PVP', 2)"><b>Nível 2</b><span>Sem Dicas (Estratégia pura)</span></div>
+            <button class="btn-capa-small" style="background:#aaa; height:40px; margin-top:10px;" onclick="voltarCapa()">VOLTAR</button>
+        `;
+    }
+}
+
+function voltarCapa() {
+    document.getElementById('capa-menu-principal').style.display = 'block';
+    document.getElementById('nivel-select-container').style.display = 'none';
 }
 
 function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
@@ -155,9 +167,8 @@ function toggleInstructions() { somClique.play(); document.getElementById('instr
 // ============================================================
 function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
-    modoJogo = modo;
-    nivelJogo = nivel;
-    mostrarDicas = (nivel === 1 || modo === 'PVP');
+    modoJogo = modo; nivelJogo = nivel;
+    mostrarDicas = (nivel === 1);
     matchScore = [0, 0]; currentGameNum = 1; turnoAtual = 0; iniciarJogo();
 }
 
@@ -174,7 +185,7 @@ function atualizarUI() {
     const labelSegundaBox = modoJogo === 'CPU' ? pcLabel : j2Label;
     let turnInfoHTML = "";
     if (modoJogo === 'CPU') {
-        if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">GATOS (Nível ${nivelJogo})</div>`;
+        if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">GATOS (J1)</div>`;
         else turnInfoHTML = `<div style="flex:1"></div>`; 
     } else {
         const classPill = (turnoAtual === 0) ? "pill-j1" : "pill-j2";
@@ -201,12 +212,10 @@ function renderTabuleiro() {
             if (isCentral(r, c)) cl += " central";
             const playerType = (turnoAtual === 0) ? 1 : 2;
             const isHuman = (modoJogo === 'PVP' || turnoAtual === 0);
-            
             if (jogoAtivo && isHuman && isLegal(r, c, playerType, tabuleiro)) {
                 if (mostrarDicas) cl += " legal-hint";
                 html += `<div class="${cl}" onclick="jogar(${r},${c})">`;
             } else { html += `<div class="${cl}">`; }
-            
             if (tabuleiro[r][c] === 1) html += `<img src="${DADOS_JOGO.caminhoImagens}gato.png">`;
             else if (tabuleiro[r][c] === 2) html += `<img src="${DADOS_JOGO.caminhoImagens}cao.png">`;
             else if (isCentral(r, c)) html += `X`; 
@@ -234,20 +243,14 @@ function jogar(r, c) {
 
 function iaControlador() {
     let legalMoves = [];
-    for (let r = 0; r < 8; r++) {
-        for (let c = 0; c < 8; c++) {
-            if (isLegal(r, c, 2, tabuleiro)) legalMoves.push({r, c});
-        }
-    }
+    for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) if (isLegal(r, c, 2, tabuleiro)) legalMoves.push({r, c});
     if (legalMoves.length === 0) { finalizarRonda(0); return; }
-
     let move;
     if (nivelJogo === 1) move = legalMoves[Math.floor(Math.random() * legalMoves.length)];
     else if (nivelJogo === 2) {
         let edges = legalMoves.filter(m => m.r === 0 || m.r === 7 || m.c === 0 || m.c === 7);
         move = edges.length > 0 ? edges[Math.floor(Math.random() * edges.length)] : legalMoves[Math.floor(Math.random() * legalMoves.length)];
-    } 
-    else {
+    } else {
         move = legalMoves.reduce((best, current) => {
             let score = avaliarJogada(current.r, current.c);
             return (score > best.score) ? {r: current.r, c: current.c, score: score} : best;
@@ -265,21 +268,18 @@ function avaliarJogada(r, c) {
 }
 
 function isCentral(r, c) { return r >= 3 && r <= 4 && c >= 3 && c <= 4; }
-
 function isLegal(r, c, pType, tab) {
     if (tab[r][c] !== 0) return false;
     let totalPieces = tab.flat().filter(x => x !== 0).length;
     if (pType === 1 && totalPieces === 0 && !isCentral(r, c)) return false;
     if (pType === 2 && totalPieces === 1 && isCentral(r, c)) return false;
-    const dr = [-1, 1, 0, 0], dc = [0, 0, -1, 1];
-    const opponent = (pType === 1) ? 2 : 1;
+    const dr = [-1, 1, 0, 0], dc = [0, 0, -1, 1], opponent = (pType === 1) ? 2 : 1;
     for (let i = 0; i < 4; i++) {
         let nr = r + dr[i], nc = c + dc[i];
         if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8 && tab[nr][nc] === opponent) return false;
     }
     return true;
 }
-
 function temJogadas(pType, tab) {
     for (let r = 0; r < 8; r++) for (let c = 0; c < 8; c++) if (isLegal(r, c, pType, tab)) return true;
     return false;
@@ -296,14 +296,11 @@ function finalizarRonda(vencedorIdx) {
     const nomeVencedor = vencedorIdx === 0 ? "GATOS" : (modoJogo === 'CPU' ? "Pc" : "CÃES");
     const corVencedor = vencedorIdx === 0 ? "#444" : "#ff5a5f";
     overlay.style.display = 'flex';
-    overlay.innerHTML = `
-        <div class="vitoria-card">
-            <h1 style="color:${corVencedor}; font-size:2rem; font-weight:900; margin:0;">${nomeVencedor}</h1>
-            <p style="color:#666; font-weight:700;">Ganharam a ronda!</p>
-            <div style="margin-top:15px; padding-top:10px; border-top:2px dashed #eee; font-weight:800;">
-                PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${modoJogo === 'CPU' ? 'Pc' : 'J2'}
-            </div>
-        </div>`;
+    overlay.innerHTML = `<div class="vitoria-card">
+        <h1 style="color:${corVencedor}; font-size:2rem; font-weight:900; margin:0;">${nomeVencedor}</h1>
+        <p style="color:#666; font-weight:700;">Ganharam a ronda!</p>
+        <div style="margin-top:15px; padding-top:10px; border-top:2px dashed #eee; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${modoJogo === 'CPU' ? 'Pc' : 'J2'}</div>
+    </div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2000);
     else setTimeout(() => { currentGameNum++; turnoAtual = 0; iniciarJogo(); }, 2000);
 }
@@ -317,12 +314,12 @@ function finalizarMatch() {
         <div style="text-align:center;">
             <img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:120px; margin-bottom:10px;">
             <h2 style="color:var(--primary-color); font-weight:900;">${nomeVencedor} VENCERAM!</h2>
-            <p style="font-weight:800; color:#666;">MODO: ${modoJogo === 'CPU' ? 'Nível ' + nivelJogo : '2 Jogadores'}</p>
+            <p style="font-weight:800; color:#666;">MODO: ${modoJogo === 'CPU' ? 'Pc Nível ' + nivelJogo : '2 Jogadores'}</p>
         </div>`;
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
-    footer.innerHTML = `<button class="btn-capa-small" style="background:#6c757d; flex:1;" onclick="location.reload()">REPETIR</button>
-                        <button class="btn-capa-small" style="background:var(--primary-color); flex:1;" onclick="window.history.back()">SAIR</button>`;
+    footer.innerHTML = `<button class="btn-capa-small" style="background:#6c757d; flex:1;" onclick="location.reload()"><i class="fas fa-redo"></i> REPETIR</button>
+                        <button class="btn-capa-small" style="background:var(--primary-color); flex:1;" onclick="window.history.back()"><i class="fas fa-sign-out-alt"></i> SAIR</button>`;
 }
 
 function iniciarSimulacao() {
