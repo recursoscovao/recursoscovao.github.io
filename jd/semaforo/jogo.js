@@ -60,7 +60,6 @@ style.innerHTML = `
     .btn-nivel.l2 { border-color: #f9a825; color: #f9a825; }
     .btn-nivel.l3 { border-color: #ff5a5f; color: #ff5a5f; }
 
-    /* ESTILO TABULEIRO - TAMANHOS AJUSTADOS PARA CABEREM NOS LIMITES */
     .grid-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: #bbb; padding: 10px; border-radius: 15px; width: fit-content; margin: 0 auto; }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 12px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
     
@@ -69,18 +68,20 @@ style.innerHTML = `
     .piece.yellow { background: #f9a825; }
     .piece.red { background: #ff5a5f; }
 
-    /* DIMINUIÇÃO LIGEIRA DOS TAMANHOS */
+    /* TAMANHOS DO TABULEIRO ADAPTADOS */
     @media screen and (min-width: 1025px) { 
-        :root { --cell-size: 115px; } /* Reduzido de 130px */
+        :root { --cell-size: 115px; } 
     }
     
+    /* Telemóvel Vertical - REDUZIDO para não sair dos limites */
     @media screen and (max-width: 500px) and (orientation: portrait) { 
-        :root { --cell-size: 21vw; } /* Reduzido de 22.5vw */
-        .grid-board { gap: 5px; padding: 5px; }
+        :root { --cell-size: 18vw; } /* Reduzido de 21vw para 18vw */
+        .grid-board { gap: 6px; padding: 6px; border-radius: 10px; }
+        .cell { border-radius: 8px; }
     }
     
     @media screen and (max-height: 500px) and (orientation: landscape) { 
-        :root { --cell-size: 24vh; } /* Reduzido de 26vh */
+        :root { --cell-size: 24vh; } 
         .grid-board { gap: 5px; padding: 5px; }
     }
 
@@ -190,12 +191,13 @@ function atualizarUI() {
     const labelSegundaBox = modoJogo === 'CPU' ? pcLabel : j2Label;
     let turnInfoHTML = "";
 
+    const nomeVez = (turnoAtual === 0) ? "JOGADOR 1" : "JOGADOR 2";
+
     if (modoJogo === 'CPU') {
         if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">VEZ DO JOGADOR 1</div>`;
         else turnInfoHTML = `<div style="flex:1"></div>`; 
     } else {
         const classPill = (turnoAtual === 0) ? "pill-j1" : "pill-j2";
-        const nomeVez = (turnoAtual === 0) ? "JOGADOR 1" : "JOGADOR 2";
         turnInfoHTML = `<div class="status-pill ${classPill} blinking">VEZ DO ${nomeVez}</div>`;
     }
 
@@ -230,7 +232,11 @@ function jogar(r, c) {
     if (!jogoAtivo || tabuleiro[r][c] >= 3) return;
     tabuleiro[r][c]++;
     somClique.play();
-    if (verificarVitoria(tabuleiro)) { finalizarRonda(turnoAtual); return; }
+
+    if (verificarVitoria(tabuleiro)) {
+        finalizarRonda(turnoAtual);
+        return;
+    }
     turnoAtual = (turnoAtual === 0) ? 1 : 0;
     if (modoJogo === 'CPU' && turnoAtual === 1) { atualizarUI(); setTimeout(iaControlador, 600); }
     else { atualizarUI(); }
@@ -290,9 +296,10 @@ function finalizarRonda(vencedorIdx) {
     const overlay = document.getElementById('round-feedback');
     const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
     const corVencedor = vencedorIdx === 0 ? "#8cc63f" : "#ff5a5f";
+    const icone = vencedorIdx === 0 ? "fa-star" : "fa-trophy";
     overlay.style.display = 'flex';
     overlay.innerHTML = `<div class="vitoria-card">
-        <div style="font-size: 3rem; color: ${corVencedor}; margin-bottom: 10px;"><i class="fas fa-star"></i></div>
+        <div style="font-size: 3rem; color: ${corVencedor}; margin-bottom: 10px;"><i class="fas ${icone}"></i></div>
         <h1 style="color:${corVencedor}; font-size:2.2rem; font-weight:900; margin:0; text-transform:uppercase;">${nomeVencedor}</h1>
         <p style="color:#666; font-size:1.1rem; font-weight:700; margin:5px 0 0 0;">Venceu esta ronda!</p>
         <div style="margin-top:15px; padding-top:15px; border-top:2px dashed #eee; color:#aaa; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]}</div>
