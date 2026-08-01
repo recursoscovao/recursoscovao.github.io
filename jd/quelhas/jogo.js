@@ -24,7 +24,6 @@ const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
-    /* STATUS BAR - PADDING REDUZIDO */
     .status-container { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 2px 5px; }
     .status-pill { padding: 4px 12px; border-radius: 20px; font-weight: 900; font-size: 0.85rem; color: white; }
     .score-group { display: flex; gap: 6px; }
@@ -33,12 +32,10 @@ style.innerHTML = `
     .box-v, .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .box-x, .pill-j2 { background: #ff5a5f !important; box-shadow: 0 3px 0 #d44348; }
 
-    /* SIMULAÇÃO DA CAPA - MAIOR E COM MENOS PADDING */
     #simu-container { height: 320px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: -50px; margin-bottom: 20px; }
     #simu-board { transform: scale(0.95); transition: 0.3s; }
 
-    /* PAINEL DE INSTRUÇÕES PREMIUM */
-    #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(105%); visibility: hidden; padding: 40px 25px; overflow-y: auto; }
+    #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(105%); visibility: hidden; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; }
 
@@ -49,18 +46,19 @@ style.innerHTML = `
     .inst-list { list-style: none; padding: 0; }
     .inst-list li { background: #f9f9f9; margin-bottom: 8px; padding: 12px 15px; border-radius: 12px; border-left: 4px solid var(--bg-color); color: #555; font-size: 1rem; line-height: 1.4; }
 
-    /* TABULEIRO E CÉLULAS */
     .grid-board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #bbb; padding: 3px; border-radius: 8px; width: fit-content; margin: 0 auto; transition: transform 0.8s ease-in-out; }
     .grid-board.rotated { transform: rotate(180deg); }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .cell.occupied::after { content: ''; width: 85%; height: 85%; background: #333; border-radius: 50%; box-shadow: inset 0 -2px 4px rgba(0,0,0,0.5); }
     .cell.selected { background: #e8f5e9; border: 1px solid #8cc63f; }
 
-    /* BOTÕES */
     .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 480px; justify-content: center; align-items: center; margin-top: 10px; }
-    .btn-capa-small { flex: 1; height: 50px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; }
+    .btn-capa-small { flex: 1; height: 55px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
     .btn-inform { width: 50px; height: 50px; cursor: pointer; }
     .btn-inform img { width: 100%; height: 100%; object-fit: contain; }
+    
+    .btn-nivel { background: white; padding: 12px 2px; border-radius: 12px; border: 2px solid #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; flex: 1; }
+    .btn-nivel b { font-size: 0.75rem; text-transform: uppercase; }
 
     @media screen and (min-width: 1025px) { :root { --cell-size: 38px; } }
     @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 8.2vw; } }
@@ -69,7 +67,7 @@ style.innerHTML = `
 document.head.appendChild(style);
 
 // ============================================================
-// 3. CAPA, SIMULAÇÃO E INSTRUÇÕES COMPLETAS
+// 3. CAPA, SIMULAÇÃO E INSTRUÇÕES
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -82,23 +80,19 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Instruções Completas</div>
-                
                 <div class="inst-section-title">Material</div>
                 <p>Um tabuleiro quadrado 10 por 10 e 100 peças de uma só cor.</p>
-
                 <div class="inst-section-title">Objetivo (Regra Misere)</div>
                 <p>O Quelhas é um jogo de bloqueio onde <b>PERDE o jogador que realizar a última jogada possível</b>. Deves forçar o teu adversário a ocupar o último espaço livre.</p>
-
                 <div class="inst-section-title">Regras de Jogo</div>
                 <ul class="inst-list">
-                    <li><b>1.</b> Os jogadores (Vertical e Horizontal) alternam colocando blocos de <b>duas ou mais peças</b> ortogonalmente contíguas.</li>
-                    <li><b>2.</b> O jogador <b>Vertical</b> só pode colocar peças em coluna.</li>
-                    <li><b>3.</b> O jogador <b>Horizontal</b> só pode colocar peças em linha.</li>
+                    <li><b>1.</b> Os jogadores alternam colocando blocos de <b>duas ou mais peças</b>.</li>
+                    <li><b>2.</b> O jogador <b>Vertical</b> só coloca peças em coluna.</li>
+                    <li><b>3.</b> O jogador <b>Horizontal</b> só coloca peças em linha.</li>
                     <li><b>4.</b> Começa sempre o jogador Vertical.</li>
                 </ul>
-
                 <div class="inst-section-title">Regra Especial da Troca</div>
-                <p>Na sua primeira jogada, o jogador Horizontal pode optar por aproveitar a jogada inicial do adversário e <b>trocar de orientação</b>. Nesse caso, a jogada já conta como feita e o turno volta ao adversário (que agora será Horizontal).</p>
+                <p>Na sua primeira jogada, o J2 pode optar por <b>trocar de orientação</b>. Nesse caso, o tabuleiro roda 180º e o turno volta ao adversário.</p>
             </div>`;
         document.body.appendChild(panel);
         const feedback = document.createElement('div');
@@ -112,8 +106,12 @@ function mostrarCapa() {
         <div id="capa-menu-principal" style="width:100%; display:flex; flex-direction:column; align-items:center;">
             <div class="capa-btn-row">
                 <div class="btn-inform" onclick="toggleInstructions()"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
-                <button class="btn-capa-small" style="background:var(--primary-color);" onclick="mostrarNiveis('CPU')">COMPUTADOR</button>
-                <button class="btn-capa-small" style="background:#6c757d;" onclick="mostrarNiveis('PVP')">2 JOGADORES</button>
+                <button class="btn-capa-small" style="background:var(--primary-color);" onclick="mostrarNiveis('CPU')">
+                    <i class="fas fa-robot"></i> COMPUTADOR
+                </button>
+                <button class="btn-capa-small" style="background:#6c757d;" onclick="mostrarNiveis('PVP')">
+                    <i class="fas fa-users"></i> 2 JOGADORES
+                </button>
             </div>
             <div id="nivel-select-container" style="display:none; flex-direction:column; align-items:center; margin-top:15px; width:100%;"></div>
         </div>
@@ -144,7 +142,7 @@ function mostrarNiveis(modo) {
 function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
 
 // ============================================================
-// 4. LÓGICA DO JOGO (IGUAL À ANTERIOR)
+// 4. LÓGICA DO JOGO
 // ============================================================
 function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
@@ -298,7 +296,7 @@ function finalizarMatch() {
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
     footer.innerHTML = `<button class="btn-capa-small" style="background:#6c757d; flex:1;" onclick="location.reload()">REPETIR</button>
-                        <button class="btn-capa-small" style="background:var(--primary-color); flex:1;" onclick="window.history.back()">SAIR</button>`;
+                        <button class="btn-capa-small" style="background:var(--primary-color);" onclick="window.history.back()">SAIR</button>`;
 }
 
 function getOrientationPlayer(tipo) { return orientacoes.indexOf(tipo); }
@@ -316,7 +314,7 @@ function iniciarSimulacao() {
         }
         if (leg.length === 0) { sTab = Array(10).fill().map(() => Array(10).fill(0)); sTurno = 0; }
         else { let m = leg[Math.floor(Math.random() * leg.length)]; sTab[m.r][m.c] = 1; sTab[m.r2][m.c2] = 1; sTurno = (sTurno === 0) ? 1 : 0; }
-        let h = `<div class="grid-board" style="opacity:0.4; pointer-events:none;">`;
+        let h = `<div class="grid-board" style="opacity:0.4; pointer-events:none; transform:scale(0.8);">`;
         for(let r=0;r<10;r++) for(let c=0;c<10;c++) h+=`<div class="cell ${sTab[r][c]===1?'occupied':''}" style="width:23px; height:23px;"></div>`;
         if(board) board.innerHTML = h + `</div>`;
     }, 600);
