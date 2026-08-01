@@ -5,10 +5,10 @@ let jogoAtivo = false;
 let modoJogo = 'CPU';     
 let nivelJogo = 1;        
 let mostrarDicas = true;  
-let matchScore = [0, 0];  // [J1, J2/Pc]
-let turnoAtual = 0;       // 0: Jogador 1, 1: Jogador 2/Pc
+let matchScore = [0, 0];  
+let turnoAtual = 0;       
 let currentGameNum = 1;   
-let tabuleiro = Array(3).fill().map(() => Array(4).fill(0)); // 0:vazio, 1:verde, 2:amarelo, 3:vermelho
+let tabuleiro = Array(3).fill().map(() => Array(4).fill(0)); 
 let simuInterval;         
 
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
@@ -60,18 +60,15 @@ style.innerHTML = `
     .btn-nivel.l2 { border-color: #f9a825; color: #f9a825; }
     .btn-nivel.l3 { border-color: #ff5a5f; color: #ff5a5f; }
 
-    /* ESTILO TABULEIRO 4x3 SEMÁFORO */
-    .grid-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; background: #bbb; padding: 6px; border-radius: 12px; width: fit-content; margin: 0 auto; }
-    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 8px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+    /* ESTILO TABULEIRO - TAMANHOS ATUALIZADOS */
+    .grid-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: #bbb; padding: 8px; border-radius: 15px; width: fit-content; margin: 0 auto; }
+    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 10px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
     
-    /* Peças de Semáforo (Círculos) */
-    .piece { width: 80%; height: 80%; border-radius: 50%; box-shadow: inset 0 -4px 6px rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.1); border: 2px solid rgba(255,255,255,0.3); }
+    .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: inset 0 -4px 6px rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.1); border: 2px solid rgba(255,255,255,0.3); }
     .piece.green { background: #8cc63f; }
     .piece.yellow { background: #f9a825; }
     .piece.red { background: #ff5a5f; }
     
-    .cell.legal-hint:hover { background: #f0f0f0; transform: scale(1.02); }
-
     .inst-content { max-width: 600px; margin: 0 auto; text-align: left; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 3px solid var(--bg-color); padding-bottom: 10px; }
     .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 20px 0 10px; display: flex; align-items: center; gap: 10px; }
@@ -80,9 +77,10 @@ style.innerHTML = `
     .inst-list { list-style: none; padding: 0; }
     .inst-list li { background: #f9f9f9; margin-bottom: 8px; padding: 12px 15px; border-radius: 12px; border-left: 4px solid var(--bg-color); color: #555; font-size: 1rem; line-height: 1.4; }
 
-    @media screen and (min-width: 1025px) { :root { --cell-size: 80px; } }
-    @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 18vw; } }
-    @media screen and (max-height: 500px) and (orientation: landscape) { :root { --cell-size: 18vh; } }
+    /* TAMANHOS DO TABULEIRO ADAPTADOS */
+    @media screen and (min-width: 1025px) { :root { --cell-size: 110px; } }
+    @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 21vw; } }
+    @media screen and (max-height: 500px) and (orientation: landscape) { :root { --cell-size: 23vh; } }
 `;
 document.head.appendChild(style);
 
@@ -108,10 +106,8 @@ function mostrarCapa() {
                     <li><b>1.</b> Podes colocar uma peça <b>Verde</b> num quadrado vazio.</li>
                     <li><b>2.</b> Podes substituir uma peça Verde por uma <b>Amarela</b>.</li>
                     <li><b>3.</b> Podes substituir uma peça Amarela por uma <b>Vermelha</b>.</li>
-                    <li>As peças vermelhas são finais e não podem ser alteradas.</li>
+                    <li>As peças vermelhas não podem ser alteradas.</li>
                 </ul>
-                <div class="inst-section-title">Dica</div>
-                <p class="inst-text">Cuidado! Ao mudares a cor de uma peça, podes estar a ajudar o teu adversário a completar a linha de três.</p>
             </div>`;
         document.body.appendChild(panel);
         const feedback = document.createElement('div');
@@ -163,12 +159,11 @@ function toggleInstructions() { somClique.play(); document.getElementById('instr
 
 
 // ============================================================
-// 4. LÓGICA CORE DO JOGO
+// 4. LÓGICA CORE DO JOGO E TURNOS
 // ============================================================
 function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
     modoJogo = modo; nivelJogo = nivel;
-    mostrarDicas = (nivel === 1);
     matchScore = [0, 0]; currentGameNum = 1; turnoAtual = 0; iniciarJogo();
 }
 
@@ -184,14 +179,16 @@ function atualizarUI() {
     const j2Label = "J2";
     const labelSegundaBox = modoJogo === 'CPU' ? pcLabel : j2Label;
     let turnInfoHTML = "";
+
     if (modoJogo === 'CPU') {
-        if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">SUA VEZ (J1)</div>`;
+        if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">VEZ DO JOGADOR 1</div>`;
         else turnInfoHTML = `<div style="flex:1"></div>`; 
     } else {
         const classPill = (turnoAtual === 0) ? "pill-j1" : "pill-j2";
         const nomeVez = (turnoAtual === 0) ? "JOGADOR 1" : "JOGADOR 2";
         turnInfoHTML = `<div class="status-pill ${classPill} blinking">VEZ DO ${nomeVez}</div>`;
     }
+
     document.getElementById('shell-header-content').innerHTML = `
         <div class="status-container">
             ${turnInfoHTML}
@@ -209,7 +206,7 @@ function renderTabuleiro() {
     for (let r = 0; r < 3; r++) {
         for (let c = 0; c < 4; c++) {
             let canClick = (tabuleiro[r][c] < 3) && (modoJogo === 'PVP' || turnoAtual === 0);
-            let cl = "cell" + (canClick ? " legal-hint" : "");
+            let cl = "cell";
             
             html += `<div class="${cl}" onclick="jogar(${r},${c})">`;
             if (tabuleiro[r][c] === 1) html += `<div class="piece green"></div>`;
@@ -223,7 +220,6 @@ function renderTabuleiro() {
 
 function jogar(r, c) {
     if (!jogoAtivo || tabuleiro[r][c] >= 3) return;
-    
     tabuleiro[r][c]++;
     somClique.play();
 
@@ -231,40 +227,27 @@ function jogar(r, c) {
         finalizarRonda(turnoAtual);
         return;
     }
-
     turnoAtual = (turnoAtual === 0) ? 1 : 0;
-    
-    if (modoJogo === 'CPU' && turnoAtual === 1) {
-        atualizarUI();
-        setTimeout(iaControlador, 600);
-    } else {
-        atualizarUI();
-    }
+    if (modoJogo === 'CPU' && turnoAtual === 1) { atualizarUI(); setTimeout(iaControlador, 600); }
+    else { atualizarUI(); }
 }
 
 function iaControlador() {
     let moves = [];
     for(let r=0; r<3; r++) for(let c=0; c<4; c++) if(tabuleiro[r][c] < 3) moves.push({r, c});
-    
     if (moves.length === 0) return;
-
     let move;
-    // Nível 2 e 3 tentam ganhar ou bloquear
     if (nivelJogo >= 2) {
-        // Tenta ganhar logo
         for (let m of moves) {
             let tempTab = tabuleiro.map(row => [...row]);
             tempTab[m.r][m.c]++;
             if (verificarVitoria(tempTab)) { move = m; break; }
         }
     }
-
     if (!move && nivelJogo === 3) {
-        // Evita dar a vitória ao humano
         moves = moves.filter(m => {
             let tempTab = tabuleiro.map(row => [...row]);
             tempTab[m.r][m.c]++;
-            // Simula se o humano ganha na próxima
             let winHumano = false;
             for(let r=0; r<3; r++) for(let c=0; c<4; c++) {
                 if(tempTab[r][c] < 3) {
@@ -277,26 +260,15 @@ function iaControlador() {
         });
         if (moves.length === 0) for(let r=0; r<3; r++) for(let c=0; c<4; c++) if(tabuleiro[r][c] < 3) moves.push({r, c});
     }
-
     if (!move) move = moves[Math.floor(Math.random() * moves.length)];
-    
     tabuleiro[move.r][move.c]++;
-    if (verificarVitoria(tabuleiro)) {
-        finalizarRonda(1);
-    } else {
-        turnoAtual = 0;
-        atualizarUI();
-    }
+    if (verificarVitoria(tabuleiro)) { finalizarRonda(1); } 
+    else { turnoAtual = 0; atualizarUI(); }
 }
 
 function verificarVitoria(tab) {
-    // Horizontal
-    for(let r=0; r<3; r++) for(let c=0; c<2; c++) 
-        if(tab[r][c]!==0 && tab[r][c]===tab[r][c+1] && tab[r][c]===tab[r][c+2]) return true;
-    // Vertical
-    for(let c=0; c<4; c++)
-        if(tab[0][c]!==0 && tab[0][c]===tab[1][c] && tab[0][c]===tab[2][c]) return true;
-    // Diagonal
+    for(let r=0; r<3; r++) for(let c=0; c<2; c++) if(tab[r][c]!==0 && tab[r][c]===tab[r][c+1] && tab[r][c]===tab[r][c+2]) return true;
+    for(let c=0; c<4; c++) if(tab[0][c]!==0 && tab[0][c]===tab[1][c] && tab[0][c]===tab[2][c]) return true;
     for(let c=0; c<2; c++) {
         if(tab[0][c]!==0 && tab[0][c]===tab[1][c+1] && tab[0][c]===tab[2][c+2]) return true;
         if(tab[2][c]!==0 && tab[2][c]===tab[1][c+1] && tab[2][c]===tab[0][c+2]) return true;
@@ -317,9 +289,9 @@ function finalizarRonda(vencedorIdx) {
     overlay.style.display = 'flex';
     overlay.innerHTML = `<div class="vitoria-card">
         <div style="font-size: 3rem; color: ${corVencedor}; margin-bottom: 10px;"><i class="fas fa-star"></i></div>
-        <h1 style="color:${corVencedor}; font-size:2rem; font-weight:900; margin:0; text-transform:uppercase;">${nomeVencedor}</h1>
+        <h1 style="color:${corVencedor}; font-size:2.2rem; font-weight:900; margin:0; text-transform:uppercase;">${nomeVencedor}</h1>
         <p style="color:#666; font-size:1.1rem; font-weight:700; margin:5px 0 0 0;">Venceu esta ronda!</p>
-        <div style="margin-top:15px; padding-top:15px; border-top:2px dashed #eee; color:#aaa; font-weight:800;">PLACAR: ${matchScore[0]} - ${matchScore[1]}</div>
+        <div style="margin-top:15px; padding-top:15px; border-top:2px dashed #eee; color:#aaa; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]}</div>
     </div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2000);
     else setTimeout(() => { currentGameNum++; turnoAtual = 0; iniciarJogo(); }, 2000);
@@ -329,7 +301,10 @@ function finalizarMatch() {
     document.getElementById('round-feedback').style.display = 'none';
     const vencedorIdx = (matchScore[0] >= 3) ? 0 : 1;
     const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
-    document.getElementById('shell-header-content').innerHTML = `<h2>VITÓRIA FINAL</h2>`;
+    
+    // Título de resultados com o mesmo estilo da capa
+    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">RESULTADOS FINAIS</h2>`;
+    
     document.getElementById('game-content').innerHTML = `<div style="text-align:center;">
             <img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:150px; margin-bottom:10px;">
             <h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase; margin-bottom:20px;">GANHOU O ${nomeVencedor}</h2>
