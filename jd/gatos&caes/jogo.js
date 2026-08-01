@@ -64,9 +64,23 @@ style.innerHTML = `
     .btn-nivel.l2 { border-color: #f9a825; color: #f9a825; }
     .btn-nivel.l3 { border-color: #ff5a5f; color: #ff5a5f; }
 
-    #instrucoes-panel { position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%; background: white; z-index: 5000; transition: bottom 0.5s ease; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; }
+    /* PAINEL DE INSTRUÇÕES MELHORADO */
+    #instrucoes-panel { 
+        position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%; 
+        background: white; z-index: 5000; transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+        padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0;
+    }
     #instrucoes-panel.open { bottom: 0; }
-    .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.2rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; }
+    .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.2rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
+    .close-x:hover { transform: scale(1.2); }
+
+    .inst-content { max-width: 600px; margin: 0 auto; text-align: left; }
+    .inst-header { color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 3px solid var(--bg-color); padding-bottom: 10px; }
+    .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 20px 0 10px; display: flex; align-items: center; gap: 10px; }
+    .inst-section-title::before { content: ''; width: 6px; height: 22px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
+    .inst-text { color: #666; font-size: 1.05rem; line-height: 1.6; margin-bottom: 15px; }
+    .inst-list { list-style: none; padding: 0; }
+    .inst-list li { background: #f9f9f9; margin-bottom: 8px; padding: 12px 15px; border-radius: 12px; border-left: 4px solid var(--bg-color); color: #555; font-size: 1rem; line-height: 1.4; }
 
     .grid-board { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; background: #bbb; padding: 3px; border-radius: 8px; width: fit-content; margin: 0 auto; }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; display: flex; align-items: center; justify-content: center; position: relative; border-radius: 2px; cursor: default; font-weight: 900; font-size: 1.2rem; color: #ccc; }
@@ -92,20 +106,28 @@ function mostrarCapa() {
         panel.id = 'instrucoes-panel';
         panel.innerHTML = `
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
-            <div style="max-width:600px; margin:0 auto; text-align:left;">
-                <h2 style="color:var(--primary-color); text-align:center;">Como Jogar</h2>
-                <h3>Objetivo</h3>
-                <p>Vence o jogador que conseguir levar a <b>peça branca</b> até à sua casa final ou deixar o adversário sem movimentos (bloqueado).</p>
-                <ul>
-                    <li><b>Jogador 1 (Canto Inferior):</b> Deve chegar à casa <b>1</b>.</li>
-                    <li><b>Jogador 2 (Canto Superior):</b> Deve chegar à casa <b>2</b>.</li>
+            <div class="inst-content">
+                <div class="inst-header">Gatos & Cães</div>
+                
+                <div class="inst-section-title">Objetivo</div>
+                <p class="inst-text">Vence o jogador que conseguir realizar a <b>última jogada possível</b> no tabuleiro, deixando o adversário sem espaço para colocar as suas peças.</p>
+
+                <div class="inst-section-title">Regras de Início</div>
+                <ul class="inst-list">
+                    <li><b>Gatos (Pretos):</b> Começam o jogo e a sua primeira peça deve ser colocada obrigatoriamente na <b>zona central</b> (marcada com <b>X</b>).</li>
+                    <li><b>Cães (Brancos):</b> Jogam a seguir e a sua primeira peça deve ser colocada <b>fora</b> da zona central.</li>
                 </ul>
-                <h3>Regras Principais</h3>
-                <p>1. A peça branca começa no centro do tabuleiro (casa <b>e5</b>).</p>
-                <p>2. Podes mover a peça para qualquer casa vazia ao lado (horizontal, vertical ou diagonal).</p>
-                <p>3. Quando a peça sai de uma casa, essa casa fica <b>bloqueada</b> (fica preta) e ninguém pode voltar a passar por lá.</p>
-                <p>4. O jogo termina mal a peça entre numa casa de vitória ou alguém fique cercado sem saída.</p>
-            </div>`;
+
+                <div class="inst-section-title">Como Jogar</div>
+                <ul class="inst-list">
+                    <li><b>Proibição:</b> Não podes colocar um Gato ao lado de um Cão (nem na horizontal nem na vertical). O mesmo se aplica aos Cães.</li>
+                    <li><b>Estratégia:</b> Tenta ocupar o tabuleiro de forma a garantir lugares onde só tu possas jogar no futuro.</li>
+                    <li><b>Fim do Jogo:</b> O jogo termina mal um dos jogadores fique bloqueado e não tenha casas livres que respeitem as regras de adjacência.</li>
+                </ul>
+                
+                <div style="height:40px;"></div>
+            </div>
+        `;
         document.querySelector('.game-shell').appendChild(panel);
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
@@ -187,12 +209,10 @@ function atualizarUI() {
     const labelSegundaBox = modoJogo === 'CPU' ? pcLabel : j2Label;
     let turnInfoHTML = "";
 
-    // MODO CPU
     if (modoJogo === 'CPU') {
         if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">VEZ DOS GATOS</div>`;
         else turnInfoHTML = `<div style="flex:1"></div>`; 
     } 
-    // MODO PVP
     else {
         const classPill = (turnoAtual === 0) ? "pill-j1" : "pill-j2";
         const nomeVez = (turnoAtual === 0) ? "GATOS" : "CÃES";
