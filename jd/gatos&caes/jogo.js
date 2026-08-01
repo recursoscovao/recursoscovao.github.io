@@ -1,8 +1,10 @@
 // ============================================================
-// 1. ESTADO GLOBAL E SONS
+// 1. ESTADO GLOBAL, SONS E NÍVEIS
 // ============================================================
 let jogoAtivo = false;
 let modoJogo = 'CPU';     
+let nivelJogo = 1;        // 1, 2 ou 3
+let mostrarDicas = true;  // Controla o destaque verde
 let matchScore = [0, 0];  
 let turnoAtual = 0;       
 let currentGameNum = 1;   
@@ -14,7 +16,7 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ============================================================
-// 2. CONFIGURAÇÃO VISUAL (CSS INJETADO)
+// 2. CONFIGURAÇÃO VISUAL (CSS ADICIONAL PARA NÍVEIS)
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
@@ -41,21 +43,15 @@ style.innerHTML = `
     .btn-inform { width: 55px; height: 55px; flex: none; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .btn-inform img { width: 45px; height: 45px; object-fit: contain; }
 
+    /* Estilo para menu de níveis */
+    .nivel-select-container { display: none; flex-direction: column; gap: 10px; width: 100%; max-width: 300px; animation: cardPop 0.3s ease; }
+
     #instrucoes-panel { position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%; background: white; z-index: 5000; transition: bottom 0.5s ease; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; }
     #instrucoes-panel.open { bottom: 0; }
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.2rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; }
 
-    .grid-board {
-        display: grid; grid-template-columns: repeat(8, 1fr);
-        gap: 2px; background: #bbb; padding: 3px; border-radius: 8px;
-        width: fit-content; margin: 0 auto;
-    }
-    .cell {
-        width: var(--cell-size); height: var(--cell-size); background: white;
-        display: flex; align-items: center; justify-content: center;
-        position: relative; border-radius: 2px; cursor: default;
-        font-weight: 900; font-size: 1.2rem; color: #ccc; /* Cor do X */
-    }
+    .grid-board { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; background: #bbb; padding: 3px; border-radius: 8px; width: fit-content; margin: 0 auto; }
+    .cell { width: var(--cell-size); height: var(--cell-size); background: white; display: flex; align-items: center; justify-content: center; position: relative; border-radius: 2px; cursor: default; font-weight: 900; font-size: 1.2rem; color: #ccc; }
     .cell.central { background: #fff8e1; }
     .cell.legal-hint { background: #e8f5e9; cursor: pointer; border: 1px solid #8cc63f; }
     .cell img { width: 90%; height: 90%; object-fit: contain; z-index: 2; }
@@ -67,7 +63,7 @@ style.innerHTML = `
 document.head.appendChild(style);
 
 // ============================================================
-// 3. CAPA, SIMULAÇÃO E INSTRUÇÕES
+// 3. CAPA E SELEÇÃO DE NÍVEL
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -76,21 +72,16 @@ function mostrarCapa() {
     if(!document.getElementById('instrucoes-panel')) {
         const panel = document.createElement('div');
         panel.id = 'instrucoes-panel';
-        panel.innerHTML = `
-            <span class="close-x" onclick="toggleInstructions()">&times;</span>
-            <div style="max-width:600px; margin:0 auto; text-align:left;">
-                <h2 style="color:var(--primary-color); text-align:center;">COMO JOGAR</h2>
-                <p><b>Objetivo:</b> Ganha o jogador que realizar a última jogada possível no tabuleiro.</p>
-                <p><b>Regras:</b></p>
-                <ul>
-                    <li>Gatos (Pretos) começam e o primeiro deve ser na <b>zona central</b> (marcadas com X).</li>
-                    <li>Cães (Brancos) jogam a seguir e o primeiro deve ser <b>fora da zona central</b>.</li>
-                    <li><b>Proibição:</b> Não podes colocar um Gato encostado (H/V) a um Cão, nem um Cão encostado a um Gato.</li>
-                    <li>O jogo termina quando um jogador não tiver mais espaço livre para as suas peças.</li>
-                </ul>
-            </div>
-        `;
+        panel.innerHTML = `<span class="close-x" onclick="toggleInstructions()">&times;</span><div id="inst-text-area"></div>`;
         document.querySelector('.game-shell').appendChild(panel);
+        document.getElementById('inst-text-area').innerHTML = `
+            <h2 style="color:var(--primary-color); text-align:center;">COMO JOGAR</h2>
+            <p><b>Objetivo:</b> Ganha o jogador que realizar a última jogada possível no tabuleiro.</p>
+            <ul>
+                <li>Gatos (Pretos) começam e o primeiro deve ser na <b>zona central</b> (X).</li>
+                <li>Cães (Brancos) jogam a seguir e o primeiro deve ser <b>fora da zona central</b>.</li>
+                <li><b>Proibição:</b> Não podes colocar uma peça ao lado de uma do tipo oposto.</li>
+            </ul>`;
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
         document.querySelector('.game-shell').appendChild(feedback);
@@ -99,24 +90,54 @@ function mostrarCapa() {
     const area = document.getElementById('game-content');
     area.innerHTML = `
         <div id="simu-container" style="transform: scale(0.65); margin-top: -30px;"></div>
-        <div class="capa-btn-row">
-            <div class="btn-inform" onclick="toggleInstructions()"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
-            <button class="btn-capa-small" style="background:var(--primary-color);" onclick="setModo('CPU')"><i class="fas fa-robot"></i> COMPUTADOR</button>
-            <button class="btn-capa-small" style="background:#6c757d;" onclick="setModo('PVP')"><i class="fas fa-users"></i> 2 JOGADORES</button>
+        
+        <!-- Menu Principal da Capa -->
+        <div id="capa-menu-principal" style="display:flex; flex-direction:column; align-items:center; width:100%;">
+            <div class="capa-btn-row">
+                <div class="btn-inform" onclick="toggleInstructions()"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
+                <button class="btn-capa-small" style="background:var(--primary-color);" onclick="mostrarMenuNiveis()">
+                    <i class="fas fa-robot"></i> COMPUTADOR
+                </button>
+                <button class="btn-capa-small" style="background:#6c757d;" onclick="setModo('PVP', 1)">
+                    <i class="fas fa-users"></i> 2 JOGADORES
+                </button>
+            </div>
+        </div>
+
+        <!-- Sub-menu de Níveis -->
+        <div id="nivel-select-container" class="nivel-select-container">
+            <button class="btn-capa-small" style="background:#8cc63f;" onclick="setModo('CPU', 1)">Nível 1 (Dicas)</button>
+            <button class="btn-capa-small" style="background:#f9a825;" onclick="setModo('CPU', 2)">Nível 2 (Normal)</button>
+            <button class="btn-capa-small" style="background:#ff5a5f;" onclick="setModo('CPU', 3)">Nível 3 (Avançado)</button>
+            <button class="btn-capa-small" style="background:#aaa; height:40px;" onclick="voltarMenuPrincipal()">VOLTAR</button>
         </div>
     `;
     document.getElementById('shell-footer-content').style.display = 'none';
     iniciarSimulacao();
 }
 
+function mostrarMenuNiveis() {
+    document.getElementById('capa-menu-principal').style.display = 'none';
+    document.getElementById('nivel-select-container').style.display = 'flex';
+}
+
+function voltarMenuPrincipal() {
+    document.getElementById('capa-menu-principal').style.display = 'flex';
+    document.getElementById('nivel-select-container').style.display = 'none';
+}
+
 function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
 
 // ============================================================
-// 4. LÓGICA CORE DO JOGO
+// 4. LÓGICA CORE E IA POR NÍVEL
 // ============================================================
-function setModo(modo) {
+function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
-    modoJogo = modo; matchScore = [0, 0]; currentGameNum = 1; turnoAtual = 0; iniciarJogo();
+    modoJogo = modo;
+    nivelJogo = nivel;
+    // Dicas apenas no Nível 1 ou em 2 Jogadores (podes mudar isto se quiseres dicas no PVP também)
+    mostrarDicas = (nivel === 1 || modo === 'PVP');
+    matchScore = [0, 0]; currentGameNum = 1; turnoAtual = 0; iniciarJogo();
 }
 
 function iniciarJogo() {
@@ -130,17 +151,15 @@ function atualizarUI() {
     const pcLabel = "Pc";
     const j2Label = "J2";
     const labelSegundaBox = modoJogo === 'CPU' ? pcLabel : j2Label;
-    
     let turnInfoHTML = "";
     if (modoJogo === 'CPU') {
-        if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">VEZ DOS GATOS (J1)</div>`;
+        if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">GATOS (Nível ${nivelJogo})</div>`;
         else turnInfoHTML = `<div style="flex:1"></div>`; 
     } else {
         const classPill = (turnoAtual === 0) ? "pill-j1" : "pill-j2";
         const nomeVez = (turnoAtual === 0) ? "GATOS" : "CÃES";
         turnInfoHTML = `<div class="status-pill ${classPill} blinking">VEZ DOS ${nomeVez}</div>`;
     }
-
     document.getElementById('shell-header-content').innerHTML = `
         <div class="status-container">
             ${turnInfoHTML}
@@ -152,24 +171,6 @@ function atualizarUI() {
     renderTabuleiro();
 }
 
-function isCentral(r, c) { return r >= 3 && r <= 4 && c >= 3 && c <= 4; }
-
-function isLegal(r, c, pType) {
-    if (tabuleiro[r][c] !== 0) return false;
-    let totalPieces = tabuleiro.flat().filter(x => x !== 0).length;
-    if (pType === 1 && totalPieces === 0 && !isCentral(r, c)) return false;
-    if (pType === 2 && totalPieces === 1 && isCentral(r, c)) return false;
-    const dr = [-1, 1, 0, 0], dc = [0, 0, -1, 1];
-    const opponent = (pType === 1) ? 2 : 1;
-    for (let i = 0; i < 4; i++) {
-        let nr = r + dr[i], nc = c + dc[i];
-        if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8) {
-            if (tabuleiro[nr][nc] === opponent) return false;
-        }
-    }
-    return true;
-}
-
 function renderTabuleiro() {
     const area = document.getElementById('game-content');
     let html = `<div class="grid-board">`;
@@ -177,21 +178,18 @@ function renderTabuleiro() {
         for (let c = 0; c < 8; c++) {
             let cl = "cell";
             if (isCentral(r, c)) cl += " central";
-            
             const playerType = (turnoAtual === 0) ? 1 : 2;
             const isHuman = (modoJogo === 'PVP' || turnoAtual === 0);
             
-            if (jogoAtivo && isHuman && isLegal(r, c, playerType)) {
-                cl += " legal-hint";
+            // Verifica se deve mostrar as dicas verdes (legal-hint)
+            if (jogoAtivo && isHuman && isLegal(r, c, playerType, tabuleiro)) {
+                if (mostrarDicas) cl += " legal-hint";
                 html += `<div class="${cl}" onclick="jogar(${r},${c})">`;
-            } else {
-                html += `<div class="${cl}">`;
-            }
+            } else { html += `<div class="${cl}">`; }
             
             if (tabuleiro[r][c] === 1) html += `<img src="${DADOS_JOGO.caminhoImagens}gato.png">`;
             else if (tabuleiro[r][c] === 2) html += `<img src="${DADOS_JOGO.caminhoImagens}cao.png">`;
-            else if (isCentral(r, c)) html += `X`; // ADICIONADO O X NAS CÉLULAS VAZIAS CENTRAIS
-            
+            else if (isCentral(r, c)) html += `X`; 
             html += `</div>`;
         }
     }
@@ -204,37 +202,84 @@ function jogar(r, c) {
     tabuleiro[r][c] = pType;
     somClique.play();
     turnoAtual = (turnoAtual === 0) ? 1 : 0;
-    if (!temJogadas(turnoAtual === 0 ? 1 : 2)) {
+    if (!temJogadas(turnoAtual === 0 ? 1 : 2, tabuleiro)) {
         finalizarRonda(turnoAtual === 0 ? 1 : 0);
         return;
     }
     if (modoJogo === 'CPU' && turnoAtual === 1) {
         atualizarUI();
-        setTimeout(cpuInteligente, 600);
-    } else {
-        atualizarUI();
-    }
+        setTimeout(iaControlador, 600);
+    } else { atualizarUI(); }
 }
 
-function temJogadas(pType) {
+// Lógica de IA baseada no nível
+function iaControlador() {
+    let legalMoves = [];
     for (let r = 0; r < 8; r++) {
         for (let c = 0; c < 8; c++) {
-            if (isLegal(r, c, pType)) return true;
+            if (isLegal(r, c, 2, tabuleiro)) legalMoves.push({r, c});
+        }
+    }
+    if (legalMoves.length === 0) { finalizarRonda(0); return; }
+
+    let move;
+    if (nivelJogo === 1) {
+        // Nível 1: Totalmente aleatório
+        move = legalMoves[Math.floor(Math.random() * legalMoves.length)];
+    } 
+    else if (nivelJogo === 2) {
+        // Nível 2: Tenta ocupar as bordas (posições defensivas)
+        let edges = legalMoves.filter(m => m.r === 0 || m.r === 7 || m.c === 0 || m.c === 7);
+        move = edges.length > 0 ? edges[Math.floor(Math.random() * edges.length)] : legalMoves[Math.floor(Math.random() * legalMoves.length)];
+    } 
+    else {
+        // Nível 3: Bloqueio Estratégico (Maximiza as próprias jogadas futuras e minimiza as do jogador)
+        move = legalMoves.reduce((best, current) => {
+            let score = avaliarJogada(current.r, current.c);
+            return (score > best.score) ? {r: current.r, c: current.c, score: score} : best;
+        }, {r: legalMoves[0].r, c: legalMoves[0].c, score: -1000});
+    }
+
+    jogar(move.r, move.c);
+}
+
+// Heurística para Nível 3: Conta quantas jogadas o humano perde se a CPU jogar aqui
+function avaliarJogada(r, c) {
+    let tempTab = tabuleiro.map(row => [...row]);
+    tempTab[r][c] = 2; // CPU simula jogada
+    let jogadasHumano = 0;
+    for (let i = 0; i < 8; i++) {
+        for (let j = 0; j < 8; j++) {
+            if (isLegal(i, j, 1, tempTab)) jogadasHumano++;
+        }
+    }
+    // Quanto menos jogadas sobrarem para o humano, melhor para a CPU
+    return -jogadasHumano;
+}
+
+function isCentral(r, c) { return r >= 3 && r <= 4 && c >= 3 && c <= 4; }
+
+function isLegal(r, c, pType, tab) {
+    if (tab[r][c] !== 0) return false;
+    let totalPieces = tab.flat().filter(x => x !== 0).length;
+    if (pType === 1 && totalPieces === 0 && !isCentral(r, c)) return false;
+    if (pType === 2 && totalPieces === 1 && isCentral(r, c)) return false;
+    const dr = [-1, 1, 0, 0], dc = [0, 0, -1, 1];
+    const opponent = (pType === 1) ? 2 : 1;
+    for (let i = 0; i < 4; i++) {
+        let nr = r + dr[i], nc = c + dc[i];
+        if (nr >= 0 && nr < 8 && nc >= 0 && nc < 8 && tab[nr][nc] === opponent) return false;
+    }
+    return true;
+}
+
+function temJogadas(pType, tab) {
+    for (let r = 0; r < 8; r++) {
+        for (let c = 0; c < 8; c++) {
+            if (isLegal(r, c, pType, tab)) return true;
         }
     }
     return false;
-}
-
-function cpuInteligente() {
-    let boas = [];
-    for (let r = 0; r < 8; r++) {
-        for (let c = 0; c < 8; c++) {
-            if (isLegal(r, c, 2)) boas.push({r, c});
-        }
-    }
-    if (boas.length === 0) { finalizarRonda(0); return; }
-    let move = boas[Math.floor(Math.random() * boas.length)];
-    jogar(move.r, move.c);
 }
 
 // ============================================================
@@ -247,22 +292,17 @@ function finalizarRonda(vencedorIdx) {
     const overlay = document.getElementById('round-feedback');
     const nomeVencedor = vencedorIdx === 0 ? "GATOS" : (modoJogo === 'CPU' ? "Pc" : "CÃES");
     const corVencedor = vencedorIdx === 0 ? "#444" : "#ff5a5f";
-    const imgVencedor = vencedorIdx === 0 ? "gato.png" : "cao.png";
     overlay.style.display = 'flex';
     overlay.innerHTML = `
         <div class="vitoria-card">
-            <img src="${DADOS_JOGO.caminhoImagens}${imgVencedor}" style="height:60px; margin-bottom:10px;">
             <h1 style="color:${corVencedor}; font-size:2rem; font-weight:900; margin:0;">${nomeVencedor}</h1>
-            <p style="color:#666; font-weight:700;">Ganharam esta ronda!</p>
+            <p style="color:#666; font-weight:700;">Ganharam a ronda!</p>
             <div style="margin-top:15px; padding-top:10px; border-top:2px dashed #eee; font-weight:800;">
                 PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${modoJogo === 'CPU' ? 'Pc' : 'J2'}
             </div>
         </div>`;
-    if (matchScore[0] >= 3 || matchScore[1] >= 3) {
-        setTimeout(finalizarMatch, 2000);
-    } else {
-        setTimeout(() => { currentGameNum++; turnoAtual = 0; iniciarJogo(); }, 2000);
-    }
+    if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2000);
+    else setTimeout(() => { currentGameNum++; turnoAtual = 0; iniciarJogo(); }, 2000);
 }
 
 function finalizarMatch() {
@@ -273,29 +313,30 @@ function finalizarMatch() {
     document.getElementById('game-content').innerHTML = `
         <div style="text-align:center;">
             <img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:120px; margin-bottom:10px;">
-            <h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">${nomeVencedor} VENCERAM O JOGO!</h2>
-            <p style="font-weight:800; color:#666;">PLACAR FINAL: ${matchScore[0]} - ${matchScore[1]}</p>
+            <h2 style="color:var(--primary-color); font-weight:900;">${nomeVencedor} VENCERAM!</h2>
+            <p style="font-weight:800; color:#666;">MODO: ${modoJogo === 'CPU' ? 'Nível ' + nivelJogo : '2 Jogadores'}</p>
         </div>`;
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
-    footer.innerHTML = `<button class="btn-capa-small" style="background:#6c757d; flex:1;" onclick="location.reload()"><i class="fas fa-redo"></i> REPETIR</button>
-                        <button class="btn-capa-small" style="background:var(--primary-color); flex:1;" onclick="window.history.back()"><i class="fas fa-sign-out-alt"></i> SAIR</button>`;
+    footer.innerHTML = `<button class="btn-capa-small" style="background:#6c757d; flex:1;" onclick="location.reload()">REPETIR</button>
+                        <button class="btn-capa-small" style="background:var(--primary-color); flex:1;" onclick="window.history.back()">SAIR</button>`;
 }
 
-// SIMULAÇÃO NA CAPA
+// SIMULAÇÃO (Mantida igual, apenas atualizada para passar o tabuleiro)
 function iniciarSimulacao() {
     clearInterval(simuInterval);
     const container = document.getElementById('simu-container');
     let sTab = Array(8).fill().map(() => Array(8).fill(0));
     let sTurno = 0;
     const render = () => {
-        let h = `<div class="grid-board" style="opacity:0.6; transform:scale(0.9); pointer-events:none;">`;
+        if(!container) return;
+        let h = `<div class="grid-board" style="opacity:0.6; transform:scale(0.85); pointer-events:none;">`;
         for (let r = 0; r < 8; r++) {
             for (let c = 0; c < 8; c++) {
                 h += `<div class="cell ${isCentral(r,c)?'central':''}">`;
                 if(sTab[r][c]===1) h+=`<img src="${DADOS_JOGO.caminhoImagens}gato.png">`;
                 else if(sTab[r][c]===2) h+=`<img src="${DADOS_JOGO.caminhoImagens}cao.png">`;
-                else if(isCentral(r,c)) h+= `X`; // TAMBÉM NA SIMULAÇÃO
+                else if(isCentral(r,c)) h+= `X`;
                 h += `</div>`;
             }
         }
@@ -304,7 +345,7 @@ function iniciarSimulacao() {
     simuInterval = setInterval(() => {
         let p = (sTurno === 0) ? 1 : 2;
         let legal = [];
-        for(let r=0; r<8; r++) for(let c=0; c<8; c++) if(isLegalSimulation(r,c,p,sTab)) legal.push({r,c});
+        for(let r=0; r<8; r++) for(let c=0; c<8; c++) if(isLegal(r,c,p,sTab)) legal.push({r,c});
         if (legal.length === 0) { sTab = Array(8).fill().map(() => Array(8).fill(0)); sTurno = 0; }
         else {
             let m = legal[Math.floor(Math.random() * legal.length)];
@@ -313,17 +354,4 @@ function iniciarSimulacao() {
         }
         render();
     }, 800);
-}
-
-function isLegalSimulation(r, c, pType, tab) {
-    if (tab[r][c] !== 0) return false;
-    let total = tab.flat().filter(x=>x!==0).length;
-    if(pType===1 && total===0 && !isCentral(r,c)) return false;
-    if(pType===2 && total===1 && isCentral(r,c)) return false;
-    const dr=[-1,1,0,0], dc=[0,0,-1,1], opp=(pType===1)?2:1;
-    for(let i=0; i<4; i++){
-        let nr=r+dr[i], nc=c+dc[i];
-        if(nr>=0 && nr<8 && nc>=0 && nc<8 && tab[nr][nc]===opp) return false;
-    }
-    return true;
 }
