@@ -26,7 +26,7 @@ const JOGO_CONFIG = {
     listaDestaques: [
         { nome: "Rastros", icon: "rastros.png", link: "jd/rastros", estrelas: 4 },
         { nome: "Gatos&cães", icon: "gatos&caes.png", link: "jd/gatos&caes", estrelas: 5 },
-        { nome: "Labirintos", icon: "maze.png", link: "jogos/labirintos.html", estrelas: 4 },
+        { nome: "Dominório", icon: "dominorio.png", link: "jd/dominorio", estrelas: 4 },
         { nome: "Desafios", icon: "trophy.png", link: "jogos/desafios.html", estrelas: 5 },
         { nome: "Aventuras", icon: "rocket.png", link: "jogos/aventuras.html", estrelas: 5 },
         { nome: "Pontuação", icon: "target.png", link: "jogos/pontos.html", estrelas: 5 }
