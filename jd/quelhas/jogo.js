@@ -18,80 +18,72 @@ let simuInterval;
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
-// [FIM DA SECÇÃO 1]
 
 // ============================================================
-// 2. CONFIGURAÇÃO VISUAL (DESIGN PREMIUM)
+// 2. CONFIGURAÇÃO VISUAL (CSS INJETADO)
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
     .status-container { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 2px 5px; }
-    .status-pill { padding: 4px 12px; border-radius: 20px; font-weight: 900; font-size: 0.85rem; color: white; }
-    .score-group { display: flex; gap: 6px; }
-    .score-box { padding: 4px 10px; border-radius: 10px; color: white; font-weight: 900; display: flex; align-items: center; gap: 5px; font-size: 0.9rem; min-width: 50px; justify-content: center; }
+    .status-pill { padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 0.9rem; color: white; transition: 0.3s; }
+    .score-group { display: flex; gap: 8px; }
+    .score-box { padding: 5px 10px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1rem; min-width: 55px; justify-content: center; }
     
     .box-v, .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .box-x, .pill-j2 { background: #ff5a5f !important; box-shadow: 0 3px 0 #d44348; }
-
-    /* INDICADORES DE ORIENTAÇÃO */
-    .orient-wrap { display: flex; gap: 6px; padding: 5px; justify-content: center; width: fit-content; }
-    .orient-circle { width: 22px; height: 22px; background: #333; border-radius: 50%; opacity: 0.15; transition: 0.3s; }
-    .orient-wrap.active .orient-circle { opacity: 1; animation: blinker 1s linear infinite; }
-    @keyframes blinker { 50% { opacity: 0.3; } }
-
-    .game-layout-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 5px; }
-
-    /* TABULEIRO 10x10 COM ROTAÇÃO */
-    .grid-board { 
-        display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; 
-        background: #bbb; padding: 3px; border-radius: 8px; width: fit-content; margin: 0 auto;
-        transition: transform 0.8s ease-in-out; 
-    }
-    .grid-board.rotated { transform: rotate(180deg); }
-
-    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .cell.occupied::after { content: ''; width: 85%; height: 85%; background: #333; border-radius: 50%; box-shadow: inset 0 -2px 4px rgba(0,0,0,0.5); }
-    .cell.selected { background: #e8f5e9; border: 2px solid #8cc63f; }
     
-    /* AJUDA VISUAL (SOMBREADO) */
-    .cell.hint { background: rgba(140, 198, 63, 0.25); position: relative; }
-    .cell.hint::before { content: ''; width: 10px; height: 10px; background: #8cc63f; border-radius: 50%; opacity: 0.5; }
+    .blinking { animation: blinker 1s linear infinite; }
+    @keyframes blinker { 50% { opacity: 0.4; } }
 
-    /* BOTÕES PREMIUM */
-    .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 95%; max-width: 500px; animation: cardPop 0.3s ease; align-items: center; margin-top: 15px; }
-    .nivel-row { display: flex; flex-direction: row; gap: 8px; width: 100%; justify-content: center; }
-    .btn-nivel {
-        background: white; padding: 12px 2px; border-radius: 12px; border: 2px solid #eee;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        cursor: pointer; transition: 0.2s; flex: 1; min-width: 0;
-    }
-    .btn-nivel b { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; }
-    .btn-nivel span { font-size: 0.6rem; font-weight: 700; opacity: 0.7; text-align: center; }
-    .btn-nivel.l1 { border-color: #8cc63f; color: #8cc63f; }
-    .btn-nivel.l2 { border-color: #f9a825; color: #f9a825; }
+    #simu-container { height: 320px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: -40px; margin-bottom: 40px; }
+    #simu-board { transform: scale(1.1); }
 
-    #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(4px); z-index: 1000; display: none; align-items: center; justify-content: center; border-radius: 35px; }
-    .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); text-align: center; animation: cardPop 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.28); }
-    @keyframes cardPop { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
-
-    #simu-container { height: 320px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: -50px; margin-bottom: 20px; }
-
-    #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(105%); visibility: hidden; padding: 40px 25px; overflow-y: auto; }
-    #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
-
-    .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 480px; justify-content: center; align-items: center; margin-top: 10px; }
-    .btn-capa-small { flex: 1; height: 55px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; display: flex; align-items: center; justify-content: center; gap: 8px; }
-    .btn-inform { width: 50px; height: 50px; cursor: pointer; }
+    .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 480px; justify-content: center; align-items: center; }
+    .btn-capa-small { flex: 1; height: 50px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-transform: uppercase; }
+    
+    .btn-inform { width: 50px; height: 50px; cursor: pointer; flex: none; }
     .btn-inform img { width: 100%; height: 100%; object-fit: contain; }
 
-    @media screen and (min-width: 1025px) { :root { --cell-size: 38px; } }
-    @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 8.2vw; } }
-    @media screen and (max-height: 500px) and (orientation: landscape) { :root { --cell-size: 6.2vh; } }
+    /* MENU DE NÍVEIS */
+    .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 95%; max-width: 500px; align-items: center; }
+    .nivel-row { display: flex; flex-direction: row; gap: 10px; width: 100%; justify-content: center; }
+    .btn-nivel { background: white; padding: 12px 2px; border-radius: 12px; border: 2px solid #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; flex: 1; }
+    .btn-nivel b { font-size: 0.8rem; font-weight: 900; text-transform: uppercase; }
+    .btn-nivel span { font-size: 0.65rem; font-weight: 700; opacity: 0.7; }
+    .btn-nivel.l1 { border-color: #8cc63f; color: #8cc63f; }
+    .btn-nivel.l2 { border-color: #f9a825; color: #f9a825; }
+    
+    .btn-voltar-nivel { height: 65px !important; background: #6c757d !important; width: 160px; margin-top: 10px; }
+
+    /* INSTRUÇÕES PREMIUM */
+    #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s ease; transform: translateY(100%); visibility: hidden; padding: 40px 25px; overflow-y: auto; }
+    #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
+    .inst-content { max-width: 600px; margin: 0 auto; text-align: left; }
+    .inst-header { color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 3px solid var(--bg-color); padding-bottom: 10px; }
+    .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 20px 0 10px; display: flex; align-items: center; gap: 10px; }
+    .inst-section-title::before { content: ''; width: 6px; height: 22px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
+    .inst-list { list-style: none; padding: 0; }
+    .inst-list li { background: #f9f9f9; margin-bottom: 8px; padding: 12px 15px; border-radius: 12px; border-left: 4px solid var(--bg-color); color: #555; font-size: 0.95rem; line-height: 1.4; }
+
+    /* TABULEIRO */
+    .grid-board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #bbb; padding: 3px; border-radius: 8px; width: fit-content; margin: 0 auto; transition: transform 0.8s ease; }
+    .grid-board.rotated { transform: rotate(180deg); }
+    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 1px; display: flex; align-items: center; justify-content: center; }
+    .cell.occupied::after { content: ''; width: 85%; height: 85%; background: #333; border-radius: 50%; }
+    .cell.selected { background: #e8f5e9; border: 1px solid #8cc63f; }
+    .cell.hint { background: rgba(140, 198, 63, 0.2); }
+
+    #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(4px); z-index: 1000; display: none; align-items: center; justify-content: center; border-radius: 35px; }
+    .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); text-align: center; }
+
+    @media screen and (min-width: 1025px) { :root { --cell-size: 40px; } }
+    @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 8.5vw; } }
+    @media screen and (max-height: 500px) and (orientation: landscape) { :root { --cell-size: 7vh; } }
 `;
 document.head.appendChild(style);
 
 // ============================================================
-// 3. CAPA, SIMULAÇÃO E INSTRUÇÕES
+// 3. CAPA, SIMULAÇÃO E INSTRUÇÕES COMPLETAS
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -101,17 +93,18 @@ function mostrarCapa() {
         const panel = document.createElement('div');
         panel.id = 'instrucoes-panel';
         panel.innerHTML = `
-            <span class="close-x" onclick="toggleInstructions()" style="position:absolute; top:15px; right:20px; font-size:2.5rem; cursor:pointer;">&times;</span>
+            <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Instruções Quelhas</div>
-                <div class="inst-section-title">Objetivo (Regra Misere)</div>
-                <p>O jogador que realizar a última jogada possível no tabuleiro <b>PERDE</b> o jogo.</p>
-                <div class="inst-section-title">Regras de Jogo</div>
+                <div class="inst-section-title">Material</div>
+                <p>Tabuleiro 10x10 e 100 peças de uma só cor.</p>
+                <div class="inst-section-title">Objetivo (Misere)</div>
+                <p>Vence o jogador que forçar o adversário a realizar a <b>última jogada possível</b>. Quem joga por último, perde.</p>
+                <div class="inst-section-title">Como Jogar</div>
                 <ul class="inst-list">
-                    <li><b>Vertical:</b> Coloca blocos de 2 ou mais peças em coluna.</li>
-                    <li><b>Horizontal:</b> Coloca blocos de 2 ou mais peças em linha.</li>
-                    <li><b>Como Jogar:</b> Clica na primeira casa e depois na última casa do teu bloco.</li>
-                    <li><b>Regra da Troca:</b> Na primeira jogada do J2, este pode decidir trocar de orientação com o J1 (o tabuleiro roda 180º).</li>
+                    <li><b>1.</b> O jogador Vertical coloca blocos em coluna. O Horizontal coloca em linha.</li>
+                    <li><b>2.</b> Cada bloco deve ter <b>duas ou mais quadrículas</b> de comprimento.</li>
+                    <li><b>3.</b> Na primeira jogada do J2, este pode aceitar o lance do J1 e <b>trocar de orientação</b> (o tabuleiro roda 180º).</li>
                 </ul>
             </div>`;
         document.body.appendChild(panel);
@@ -129,8 +122,8 @@ function mostrarCapa() {
                 <button class="btn-capa-small" style="background:var(--primary-color);" onclick="mostrarNiveis('CPU')"><i class="fas fa-robot"></i> COMPUTADOR</button>
                 <button class="btn-capa-small" style="background:#6c757d;" onclick="mostrarNiveis('PVP')"><i class="fas fa-users"></i> 2 JOGADORES</button>
             </div>
-            <div id="nivel-select-container" class="nivel-select-container"></div>
         </div>
+        <div id="nivel-select-container" class="nivel-select-container"></div>
     `;
     document.getElementById('shell-footer-content').style.display = 'none';
     iniciarSimulacao();
@@ -138,20 +131,20 @@ function mostrarCapa() {
 
 function mostrarNiveis(modo) {
     somClique.play();
-    document.getElementById('capa-menu-principal').querySelector('.capa-btn-row').style.display = 'none';
+    document.getElementById('capa-menu-principal').style.display = 'none';
     const container = document.getElementById('nivel-select-container');
     container.style.display = 'flex';
-    
     container.innerHTML = `
         <p style="font-weight:800; color:#888; margin-bottom:5px; font-size:0.8rem;">ESCOLHA O NÍVEL:</p>
         <div class="nivel-row">
-            <div class="btn-nivel l1" onclick="setModo('${modo}', 1)"><b>Nível 1</b><span>Com Ajuda Visual</span></div>
-            <div class="btn-nivel l2" onclick="setModo('${modo}', 2)"><b>Nível 2</b><span>Sem Ajuda (Pro)</span></div>
+            <div class="btn-nivel l1" onclick="setModo('${modo}', 1)"><b>Nível 1</b><span>Com Ajuda</span></div>
+            <div class="btn-nivel l2" onclick="setModo('${modo}', 2)"><b>Nível 2</b><span>Sem Ajuda</span></div>
         </div>
-        <button class="btn-capa-small" style="background:#aaa; height:40px; width:150px; margin-top:10px;" onclick="location.reload()">VOLTAR</button>
+        <button class="btn-capa-small btn-voltar-nivel" onclick="voltarCapa()">VOLTAR</button>
     `;
 }
 
+function voltarCapa() { somClique.play(); document.getElementById('capa-menu-principal').style.display = 'flex'; document.getElementById('nivel-select-container').style.display = 'none'; }
 function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
 
 // ============================================================
@@ -174,16 +167,16 @@ function iniciarJogo() {
 }
 
 function atualizarUI() {
-    const labelBox2 = modoJogo === 'CPU' ? "Pc" : "J2";
+    const pcLabel = modoJogo === 'CPU' ? "Pc" : "J2";
     const nomeVez = (turnoAtual === 0) ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
     const classPill = (turnoAtual === 0) ? "pill-j1" : "pill-j2";
 
     document.getElementById('shell-header-content').innerHTML = `
         <div class="status-container">
-            <div class="status-pill ${classPill} blinking" style="animation: blinker 1s linear infinite;">VEZ DO ${nomeVez}</div>
+            <div class="status-pill ${classPill} blinking">VEZ DO ${nomeVez}</div>
             <div class="score-group">
                 <div class="score-box box-v">J1: ${matchScore[0]}</div>
-                <div class="score-box box-x">${labelBox2}: ${matchScore[1]}</div>
+                <div class="score-box box-x">${pcLabel}: ${matchScore[1]}</div>
             </div>
         </div>`;
 
@@ -207,7 +200,7 @@ function atualizarUI() {
     if (primeiraJogadaRealizada && !tabuleiro.flat().includes(1, tabuleiro.flat().indexOf(1)+1) && turnoAtual === 1 && modoJogo === 'PVP' && !trocouOrientacao) {
         const btn = document.createElement('button');
         btn.className = "btn-capa-small";
-        btn.style = "background:#f9a825; margin: 5px auto; width: 180px; display:block;";
+        btn.style = "background:#f9a825; margin: 10px auto; width: 180px; display:block; height:50px;";
         btn.innerText = "TROCAR";
         btn.onclick = swapOrientations;
         area.appendChild(btn);
@@ -216,21 +209,13 @@ function atualizarUI() {
 
 function renderTabuleiro(container) {
     const orient = orientacoes[turnoAtual];
-
     for (let r = 0; r < 10; r++) {
         for (let c = 0; c < 10; c++) {
             let cell = document.createElement('div');
             cell.className = "cell";
             if (tabuleiro[r][c] === 1) cell.classList.add("occupied");
             if (startCell && startCell.r === r && startCell.c === c) cell.classList.add("selected");
-            
-            // LÓGICA DE DICAS (Nível 1)
-            if (mostrarDicas && startCell && tabuleiro[r][c] === 0) {
-                if (validarPeca(startCell.r, startCell.c, r, c, orient)) {
-                    cell.classList.add("hint");
-                }
-            }
-
+            if (mostrarDicas && startCell && tabuleiro[r][c] === 0 && validarPeca(startCell.r, startCell.c, r, c, orient)) cell.classList.add("hint");
             cell.onclick = () => handleCellClick(r, c);
             container.appendChild(cell);
         }
@@ -249,23 +234,12 @@ function handleCellClick(r, c) {
     }
 }
 
-function swapOrientations() { 
-    somAcerto.play(); 
-    trocouOrientacao = true; 
-    orientacoes = [orientacoes[1], orientacoes[0]]; 
-    turnoAtual = 0; 
-    atualizarUI(); 
-}
+function swapOrientations() { somAcerto.play(); trocouOrientacao = true; orientacoes = [orientacoes[1], orientacoes[0]]; turnoAtual = 0; atualizarUI(); }
 
 function validarPeca(r1, c1, r2, c2, orient) {
     let rs = Math.min(r1, r2), re = Math.max(r1, r2), cs = Math.min(c1, c2), ce = Math.max(c1, c2);
-    if (orient === 0) { // Vertical
-        if (c1 !== c2 || re - rs < 1) return false;
-        for (let i = rs; i <= re; i++) if (tabuleiro[i][c1] !== 0) return false;
-    } else { // Horizontal
-        if (r1 !== r2 || ce - cs < 1) return false;
-        for (let i = cs; i <= ce; i++) if (tabuleiro[r1][i] !== 0) return false;
-    }
+    if (orient === 0) { if (c1 !== c2 || re - rs < 1) return false; for (let i = rs; i <= re; i++) if (tabuleiro[i][c1] !== 0) return false; }
+    else { if (r1 !== r2 || ce - cs < 1) return false; for (let i = cs; i <= ce; i++) if (tabuleiro[r1][i] !== 0) return false; }
     return true;
 }
 
@@ -282,8 +256,8 @@ function finalizarTurno() {
     if (modoJogo === 'CPU' && turnoAtual === 1) setTimeout(iaControlador, 800);
 }
 
-function temLancesLegais(orientIdx) {
-    const o = orientacoes[orientIdx];
+function temLancesLegais(idx) {
+    const o = orientacoes[idx];
     for (let r = 0; r < 10; r++) for (let c = 0; c < 10; c++) if (tabuleiro[r][c] === 0) {
         if (o === 0 && r < 9 && tabuleiro[r+1][c] === 0) return true;
         if (o === 1 && c < 9 && tabuleiro[r][c+1] === 0) return true;
@@ -320,12 +294,13 @@ function finalizarMatch() {
     document.getElementById('round-feedback').style.display = 'none';
     const vIdx = matchScore[0] >= 3 ? 0 : 1;
     const nomeV = vIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
-    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">RESULTADOS FINAIS</h2>`;
+    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color);">RESULTADOS FINAIS</h2>`;
     document.getElementById('game-content').innerHTML = `<div style="text-align:center;"><img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:120px;"><h2 style="color:var(--primary-color); text-transform:uppercase;">${nomeV} VENCEU!</h2></div>`;
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
+    footer.style.gap = "10px";
     footer.innerHTML = `<button class="btn-capa-small" style="background:#6c757d; flex:1;" onclick="location.reload()">REPETIR</button>
-                        <button class="btn-capa-small" style="background:var(--primary-color);" onclick="window.history.back()">SAIR</button>`;
+                        <button class="btn-capa-small" style="background:var(--primary-color); flex:1;" onclick="window.history.back()">SAIR</button>`;
 }
 
 function getOrientationPlayer(tipo) { return orientacoes.indexOf(tipo); }
@@ -343,7 +318,7 @@ function iniciarSimulacao() {
         }
         if (leg.length === 0) { sTab = Array(10).fill().map(() => Array(10).fill(0)); sTurno = 0; }
         else { let m = leg[Math.floor(Math.random() * leg.length)]; sTab[m.r][m.c] = 1; sTab[m.r2][m.c2] = 1; sTurno = (sTurno === 0) ? 1 : 0; }
-        let h = `<div class="grid-board" style="opacity:0.4; pointer-events:none; transform:scale(0.8);">`;
+        let h = `<div class="grid-board" style="opacity:0.4; pointer-events:none;">`;
         for(let r=0;r<10;r++) for(let c=0;c<10;c++) h+=`<div class="cell ${sTab[r][c]===1?'occupied':''}" style="width:23px; height:23px;"></div>`;
         if(board) board.innerHTML = h + `</div>`;
     }, 600);
