@@ -47,8 +47,8 @@ style.innerHTML = `
     .btn-inform { width: 55px; height: 55px; flex: none; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .btn-inform img { width: 45px; height: 45px; object-fit: contain; }
 
-    /* CONTENTOR DA SIMULAÇÃO (AJUSTADO PARA FICAR MAIS ACIMA) */
-    #simu-container { height: 260px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: -60px; margin-bottom: 30px; }
+    /* CONTENTOR DA SIMULAÇÃO (PAGDING/MARGIN AUMENTADO PARA 55px) */
+    #simu-container { height: 260px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: -60px; margin-bottom: 55px; }
 
     .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 95%; max-width: 500px; animation: cardPop 0.3s ease; align-items: center; }
     .nivel-row { display: flex; flex-direction: row; gap: 6px; width: 100%; justify-content: center; }
@@ -64,12 +64,7 @@ style.innerHTML = `
     .btn-nivel.l2 { border-color: #f9a825; color: #f9a825; }
     .btn-nivel.l3 { border-color: #ff5a5f; color: #ff5a5f; }
 
-    /* PAINEL DE INSTRUÇÕES MELHORADO */
-    #instrucoes-panel { 
-        position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%; 
-        background: white; z-index: 5000; transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-        padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0;
-    }
+    #instrucoes-panel { position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%; background: white; z-index: 5000; transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1); padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; }
     #instrucoes-panel.open { bottom: 0; }
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.2rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
     .close-x:hover { transform: scale(1.2); }
@@ -108,23 +103,19 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Gatos & Cães</div>
-                
                 <div class="inst-section-title">Objetivo</div>
                 <p class="inst-text">Vence o jogador que conseguir realizar a <b>última jogada possível</b> no tabuleiro, deixando o adversário sem espaço para colocar as suas peças.</p>
-
                 <div class="inst-section-title">Regras de Início</div>
                 <ul class="inst-list">
                     <li><b>Gatos (Pretos):</b> Começam o jogo e a sua primeira peça deve ser colocada obrigatoriamente na <b>zona central</b> (marcada com <b>X</b>).</li>
                     <li><b>Cães (Brancos):</b> Jogam a seguir e a sua primeira peça deve ser colocada <b>fora</b> da zona central.</li>
                 </ul>
-
                 <div class="inst-section-title">Como Jogar</div>
                 <ul class="inst-list">
                     <li><b>Proibição:</b> Não podes colocar um Gato ao lado de um Cão (nem na horizontal nem na vertical). O mesmo se aplica aos Cães.</li>
                     <li><b>Estratégia:</b> Tenta ocupar o tabuleiro de forma a garantir lugares onde só tu possas jogar no futuro.</li>
                     <li><b>Fim do Jogo:</b> O jogo termina mal um dos jogadores fique bloqueado e não tenha casas livres que respeitem as regras de adjacência.</li>
                 </ul>
-                
                 <div style="height:40px;"></div>
             </div>
         `;
@@ -208,7 +199,6 @@ function atualizarUI() {
     const j2Label = "J2";
     const labelSegundaBox = modoJogo === 'CPU' ? pcLabel : j2Label;
     let turnInfoHTML = "";
-
     if (modoJogo === 'CPU') {
         if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">VEZ DOS GATOS</div>`;
         else turnInfoHTML = `<div style="flex:1"></div>`; 
@@ -218,7 +208,6 @@ function atualizarUI() {
         const nomeVez = (turnoAtual === 0) ? "GATOS" : "CÃES";
         turnInfoHTML = `<div class="status-pill ${classPill} blinking">VEZ DOS ${nomeVez}</div>`;
     }
-
     document.getElementById('shell-header-content').innerHTML = `
         <div class="status-container">
             ${turnInfoHTML}
