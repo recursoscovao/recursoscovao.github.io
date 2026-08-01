@@ -27,8 +27,10 @@ style.innerHTML = `
     .score-group { display: flex; gap: 8px; }
     .score-box { padding: 5px 10px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1rem; min-width: 55px; justify-content: center; }
     
-    .box-v, .pill-j1 { background: #444 !important; box-shadow: 0 3px 0 #222; }
+    /* CORES VOLTARAM AO ORIGINAL (J1 VERDE) */
+    .box-v, .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .box-x, .pill-j2 { background: #ff5a5f !important; box-shadow: 0 3px 0 #d44348; }
+    
     .blinking { animation: blinker 1s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
 
@@ -45,8 +47,8 @@ style.innerHTML = `
     .btn-inform { width: 55px; height: 55px; flex: none; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .btn-inform img { width: 45px; height: 45px; object-fit: contain; }
 
-    /* Contentor da simulação ajustado para não cortar */
-    #simu-container { height: 300px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; }
+    /* CONTENTOR DA SIMULAÇÃO (AJUSTADO PARA FICAR MAIS ACIMA) */
+    #simu-container { height: 260px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: -60px; margin-bottom: 30px; }
 
     .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 95%; max-width: 500px; animation: cardPop 0.3s ease; align-items: center; }
     .nivel-row { display: flex; flex-direction: row; gap: 6px; width: 100%; justify-content: center; }
@@ -184,14 +186,19 @@ function atualizarUI() {
     const j2Label = "J2";
     const labelSegundaBox = modoJogo === 'CPU' ? pcLabel : j2Label;
     let turnInfoHTML = "";
+
+    // MODO CPU
     if (modoJogo === 'CPU') {
-        if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">GATOS (J1)</div>`;
+        if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">VEZ DOS GATOS</div>`;
         else turnInfoHTML = `<div style="flex:1"></div>`; 
-    } else {
+    } 
+    // MODO PVP
+    else {
         const classPill = (turnoAtual === 0) ? "pill-j1" : "pill-j2";
         const nomeVez = (turnoAtual === 0) ? "GATOS" : "CÃES";
         turnInfoHTML = `<div class="status-pill ${classPill} blinking">VEZ DOS ${nomeVez}</div>`;
     }
+
     document.getElementById('shell-header-content').innerHTML = `
         <div class="status-container">
             ${turnInfoHTML}
@@ -294,14 +301,14 @@ function finalizarRonda(vencedorIdx) {
     somAcerto.play();
     const overlay = document.getElementById('round-feedback');
     const nomeVencedor = vencedorIdx === 0 ? "GATOS" : (modoJogo === 'CPU' ? "Pc" : "CÃES");
-    const corVencedor = vencedorIdx === 0 ? "#444" : "#ff5a5f";
+    const corVencedor = vencedorIdx === 0 ? "#8cc63f" : "#ff5a5f";
     const icone = vencedorIdx === 0 ? "fa-star" : "fa-trophy";
     overlay.style.display = 'flex';
     overlay.innerHTML = `<div class="vitoria-card">
         <div style="font-size: 3rem; color: ${corVencedor}; margin-bottom: 10px;"><i class="fas ${icone}"></i></div>
         <h1 style="color:${corVencedor}; font-size:2.2rem; font-weight:900; margin:0; text-transform:uppercase;">${nomeVencedor}</h1>
         <p style="color:#666; font-size:1.1rem; font-weight:700; margin:5px 0 0 0;">Venceu esta ronda!</p>
-        <div style="margin-top:15px; padding-top:15px; border-top:2px dashed #eee; color:#aaa; font-weight:800;">PLACAR: ${matchScore[0]} - ${matchScore[1]}</div>
+        <div style="margin-top:15px; padding-top:15px; border-top:2px dashed #eee; color:#aaa; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]}</div>
     </div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2000);
     else setTimeout(() => { currentGameNum++; turnoAtual = 0; iniciarJogo(); }, 2000);
