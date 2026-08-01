@@ -40,22 +40,14 @@ style.innerHTML = `
     .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); text-align: center; animation: cardPop 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.28); }
     @keyframes cardPop { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-    /* CAPA: BOTÕES E SIMULAÇÃO */
-    .capa-btn-row { display: flex; flex-direction: row; gap: 8px; width: 95%; max-width: 500px; justify-content: center; align-items: center; margin-top: 10px; }
-    
-    .btn-capa-small { 
-        flex: 1; height: 55px; border-radius: 12px; border: none; color: white; 
-        font-weight: 900; font-size: 0.75rem; cursor: pointer; display: flex; 
-        align-items: center; justify-content: center; gap: 5px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); 
-        text-transform: uppercase; transition: 0.2s; white-space: nowrap; padding: 0 10px;
-    }
-    
+    .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 480px; justify-content: center; align-items: center; margin-top: 10px; }
+    .btn-capa-small { flex: 1; height: 55px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; white-space: nowrap; padding: 0 10px; }
     .btn-inform { width: 55px; height: 55px; flex: none; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .btn-inform img { width: 45px; height: 45px; object-fit: contain; }
 
-    #simu-container { height: 260px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: hidden; }
+    /* Contentor da simulação ajustado para não cortar */
+    #simu-container { height: 300px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; }
 
-    /* SELETOR DE NÍVEL EM LINHA */
     .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 95%; max-width: 500px; animation: cardPop 0.3s ease; align-items: center; }
     .nivel-row { display: flex; flex-direction: row; gap: 6px; width: 100%; justify-content: center; }
 
@@ -156,7 +148,6 @@ function mostrarNiveis(modo) {
                 <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b><span>Normal</span></div>
                 <div class="btn-nivel l3" onclick="setModo('CPU', 3)"><b>Nível 3</b><span>Difícil</span></div>
             </div>
-            <button class="btn-capa-small" style="background:#aaa; height:40px; width:140px; margin-top:10px;" onclick="voltarCapa()">VOLTAR</button>
         `;
     } else {
         container.innerHTML = `
@@ -165,14 +156,8 @@ function mostrarNiveis(modo) {
                 <div class="btn-nivel l1" onclick="setModo('PVP', 1)"><b>Nível 1</b><span>Com Dicas</span></div>
                 <div class="btn-nivel l2" onclick="setModo('PVP', 2)"><b>Nível 2</b><span>Sem Dicas</span></div>
             </div>
-            <button class="btn-capa-small" style="background:#aaa; height:40px; width:140px; margin-top:10px;" onclick="voltarCapa()">VOLTAR</button>
         `;
     }
-}
-
-function voltarCapa() {
-    document.getElementById('capa-menu-principal').style.display = 'flex';
-    document.getElementById('nivel-select-container').style.display = 'none';
 }
 
 function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
@@ -314,7 +299,7 @@ function finalizarRonda(vencedorIdx) {
     overlay.style.display = 'flex';
     overlay.innerHTML = `<div class="vitoria-card">
         <div style="font-size: 3rem; color: ${corVencedor}; margin-bottom: 10px;"><i class="fas ${icone}"></i></div>
-        <h1 style="color:${corVencedor}; font-size:2rem; font-weight:900; margin:0; text-transform:uppercase;">${nomeVencedor}</h1>
+        <h1 style="color:${corVencedor}; font-size:2.2rem; font-weight:900; margin:0; text-transform:uppercase;">${nomeVencedor}</h1>
         <p style="color:#666; font-size:1.1rem; font-weight:700; margin:5px 0 0 0;">Venceu esta ronda!</p>
         <div style="margin-top:15px; padding-top:15px; border-top:2px dashed #eee; color:#aaa; font-weight:800;">PLACAR: ${matchScore[0]} - ${matchScore[1]}</div>
     </div>`;
