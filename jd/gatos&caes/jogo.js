@@ -9,6 +9,7 @@ let matchScore = [0, 0];
 let turnoAtual = 0;       
 let currentGameNum = 1;   
 let tabuleiro = [];       
+let posBranca = { x: 4, y: 2 }; 
 let simuInterval;         
 
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
@@ -27,7 +28,6 @@ style.innerHTML = `
     .score-group { display: flex; gap: 8px; }
     .score-box { padding: 5px 10px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1rem; min-width: 55px; justify-content: center; }
     
-    /* CORES VOLTARAM AO ORIGINAL (J1 VERDE) */
     .box-v, .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .box-x, .pill-j2 { background: #ff5a5f !important; box-shadow: 0 3px 0 #d44348; }
     
@@ -47,25 +47,17 @@ style.innerHTML = `
     .btn-inform { width: 55px; height: 55px; flex: none; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .btn-inform img { width: 45px; height: 45px; object-fit: contain; }
 
-    /* CONTENTOR DA SIMULAÇÃO (PAGDING/MARGIN AUMENTADO PARA 55px) */
     #simu-container { height: 260px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: -60px; margin-bottom: 55px; }
 
-    .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 95%; max-width: 500px; animation: cardPop 0.3s ease; align-items: center; }
-    .nivel-row { display: flex; flex-direction: row; gap: 6px; width: 100%; justify-content: center; }
-
-    .btn-nivel {
-        background: white; padding: 12px 2px; border-radius: 12px; border: 2px solid #eee;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        cursor: pointer; transition: 0.2s; flex: 1; min-width: 0;
+    /* CORREÇÃO DO PAINEL DE INSTRUÇÕES */
+    #instrucoes-panel { 
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
+        background: white; z-index: 9999; 
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+        transform: translateY(105%); 
+        padding: 40px 25px; overflow-y: auto; 
     }
-    .btn-nivel b { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; }
-    .btn-nivel span { font-size: 0.6rem; font-weight: 700; opacity: 0.7; text-align: center; }
-    .btn-nivel.l1 { border-color: #8cc63f; color: #8cc63f; }
-    .btn-nivel.l2 { border-color: #f9a825; color: #f9a825; }
-    .btn-nivel.l3 { border-color: #ff5a5f; color: #ff5a5f; }
-
-    #instrucoes-panel { position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%; background: white; z-index: 5000; transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1); padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; }
-    #instrucoes-panel.open { bottom: 0; }
+    #instrucoes-panel.open { transform: translateY(0); }
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.2rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
     .close-x:hover { transform: scale(1.2); }
 
@@ -112,14 +104,14 @@ function mostrarCapa() {
                 </ul>
                 <div class="inst-section-title">Como Jogar</div>
                 <ul class="inst-list">
-                    <li><b>Proibição:</b> Não podes colocar um Gato ao lado de um Cão (nem na horizontal nem na vertical). O mesmo se aplica aos Cães.</li>
+                    <li><b>Proibição:</b> Não podes colocar um Gato ao lado de um Cão (nem na horizontal nem na vertical).</li>
                     <li><b>Estratégia:</b> Tenta ocupar o tabuleiro de forma a garantir lugares onde só tu possas jogar no futuro.</li>
-                    <li><b>Fim do Jogo:</b> O jogo termina mal um dos jogadores fique bloqueado e não tenha casas livres que respeitem as regras de adjacência.</li>
+                    <li><b>Fim do Jogo:</b> O jogo termina mal um dos jogadores fique bloqueado.</li>
                 </ul>
                 <div style="height:40px;"></div>
             </div>
         `;
-        document.querySelector('.game-shell').appendChild(panel);
+        document.body.appendChild(panel);
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
         document.querySelector('.game-shell').appendChild(feedback);
@@ -127,23 +119,15 @@ function mostrarCapa() {
 
     const area = document.getElementById('game-content');
     area.innerHTML = `
-        <div id="simu-container">
-            <div id="simu-board" style="transform: scale(0.65);"></div>
-        </div>
-        
+        <div id="simu-container"><div id="simu-board" style="transform: scale(0.65);"></div></div>
         <div id="capa-menu-principal" style="width:100%; display:flex; justify-content:center;">
             <div class="capa-btn-row">
                 <div class="btn-inform" onclick="toggleInstructions()"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
-                <button class="btn-capa-small" style="background:var(--primary-color);" onclick="mostrarNiveis('CPU')">
-                    <i class="fas fa-robot"></i> COMPUTADOR
-                </button>
-                <button class="btn-capa-small" style="background:#6c757d;" onclick="mostrarNiveis('PVP')">
-                    <i class="fas fa-users"></i> 2 JOGADORES
-                </button>
+                <button class="btn-capa-small" style="background:var(--primary-color);" onclick="mostrarNiveis('CPU')"><i class="fas fa-robot"></i> COMPUTADOR</button>
+                <button class="btn-capa-small" style="background:#6c757d;" onclick="mostrarNiveis('PVP')"><i class="fas fa-users"></i> 2 JOGADORES</button>
             </div>
         </div>
-
-        <div id="nivel-select-container" class="nivel-select-container"></div>
+        <div id="nivel-select-container" class="nivel-select-container" style="display:none; flex-direction:column; gap:12px; width:95%; max-width:500px; align-items:center;"></div>
     `;
     document.getElementById('shell-footer-content').style.display = 'none';
     iniciarSimulacao();
@@ -158,7 +142,7 @@ function mostrarNiveis(modo) {
     if (modo === 'CPU') {
         container.innerHTML = `
             <p style="font-weight:800; color:#888; margin-bottom:5px; font-size:0.8rem;">DESAFIO CONTRA PC:</p>
-            <div class="nivel-row">
+            <div style="display: flex; flex-direction: row; gap: 6px; width: 100%; justify-content: center;">
                 <div class="btn-nivel l1" onclick="setModo('CPU', 1)"><b>Nível 1</b><span>Com Dicas</span></div>
                 <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b><span>Normal</span></div>
                 <div class="btn-nivel l3" onclick="setModo('CPU', 3)"><b>Nível 3</b><span>Difícil</span></div>
@@ -167,7 +151,7 @@ function mostrarNiveis(modo) {
     } else {
         container.innerHTML = `
             <p style="font-weight:800; color:#888; margin-bottom:5px; font-size:0.8rem;">2 JOGADORES (PVP):</p>
-            <div class="nivel-row">
+            <div style="display: flex; flex-direction: row; gap: 6px; width: 100%; justify-content: center;">
                 <div class="btn-nivel l1" onclick="setModo('PVP', 1)"><b>Nível 1</b><span>Com Dicas</span></div>
                 <div class="btn-nivel l2" onclick="setModo('PVP', 2)"><b>Nível 2</b><span>Sem Dicas</span></div>
             </div>
@@ -202,8 +186,7 @@ function atualizarUI() {
     if (modoJogo === 'CPU') {
         if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">VEZ DOS GATOS</div>`;
         else turnInfoHTML = `<div style="flex:1"></div>`; 
-    } 
-    else {
+    } else {
         const classPill = (turnoAtual === 0) ? "pill-j1" : "pill-j2";
         const nomeVez = (turnoAtual === 0) ? "GATOS" : "CÃES";
         turnInfoHTML = `<div class="status-pill ${classPill} blinking">VEZ DOS ${nomeVez}</div>`;
