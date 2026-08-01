@@ -10,6 +10,7 @@ let currentGameNum = 1;
 let tabuleiro = Array(10).fill().map(() => Array(10).fill(0)); 
 let startCell = null;     
 let primeiraJogadaRealizada = false;
+let trocouOrientacao = false; // Estado para a rotação de 180 graus
 let orientacoes = [0, 1]; // [J1, J2/Pc] -> 0: Vertical, 1: Horizontal
 let simuInterval;         
 
@@ -30,7 +31,7 @@ style.innerHTML = `
     .box-v, .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .box-x, .pill-j2 { background: #ff5a5f !important; box-shadow: 0 3px 0 #d44348; }
 
-    /* INDICADORES DE ORIENTAÇÃO (CÍRCULOS) */
+    /* INDICADORES DE ORIENTAÇÃO */
     .orient-wrap { display: flex; gap: 6px; padding: 5px; justify-content: center; width: fit-content; }
     .orient-circle { width: 22px; height: 22px; background: #333; border-radius: 50%; opacity: 0.15; transition: 0.3s; }
     .orient-wrap.active .orient-circle { opacity: 1; animation: blinker 1s linear infinite; }
@@ -38,40 +39,35 @@ style.innerHTML = `
 
     .game-layout-wrapper { display: flex; flex-direction: column; align-items: center; width: 100%; gap: 5px; }
 
+    /* TABULEIRO 10x10 COM SUPORTE A ROTAÇÃO */
+    .grid-board { 
+        display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; 
+        background: #bbb; padding: 3px; border-radius: 8px; width: fit-content; margin: 0 auto;
+        transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55); /* Animação de rodar */
+    }
+    .grid-board.rotated { transform: rotate(180deg); } /* Roda 180 graus */
+
+    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+    .cell.occupied::after { content: ''; width: 85%; height: 85%; background: #333; border-radius: 50%; box-shadow: inset 0 -2px 4px rgba(0,0,0,0.5); }
+    .cell.selected { background: #e8f5e9; border: 1px solid #8cc63f; }
+
     /* PAINÉIS E FEEDBACK */
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(4px); z-index: 1000; display: none; align-items: center; justify-content: center; border-radius: 35px; }
     .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); text-align: center; animation: cardPop 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.28); }
     @keyframes cardPop { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-    /* BOTÕES PREMIUM */
     .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 480px; justify-content: center; align-items: center; margin-top: 15px; }
     .btn-capa-small { flex: 1; height: 50px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.75rem; cursor: pointer; text-transform: uppercase; transition: 0.2s; }
     .btn-inform { width: 50px; height: 50px; cursor: pointer; }
     .btn-inform img { width: 100%; height: 100%; object-fit: contain; }
 
-    .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 95%; max-width: 500px; animation: cardPop 0.3s ease; align-items: center; margin-top: 10px; }
-    .btn-nivel { background: white; padding: 12px 2px; border-radius: 12px; border: 2px solid #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; flex: 1; transition: 0.2s; }
-    .btn-nivel b { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; }
-    .btn-nivel span { font-size: 0.6rem; font-weight: 700; opacity: 0.7; }
-    .btn-nivel.l1 { border-color: #8cc63f; color: #8cc63f; }
-    .btn-nivel.l2 { border-color: #f9a825; color: #f9a825; }
-    .btn-nivel.l3 { border-color: #ff5a5f; color: #ff5a5f; }
-
-    /* INSTRUÇÕES PREMIUM */
     #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(105%); visibility: hidden; padding: 40px 25px; overflow-y: auto; }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
-    .inst-content { max-width: 600px; margin: 0 auto; text-align: left; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 3px solid var(--bg-color); padding-bottom: 10px; }
     .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 20px 0 10px; display: flex; align-items: center; gap: 10px; }
     .inst-section-title::before { content: ''; width: 6px; height: 22px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
     .inst-list { list-style: none; padding: 0; }
     .inst-list li { background: #f9f9f9; margin-bottom: 8px; padding: 12px 15px; border-radius: 12px; border-left: 4px solid var(--bg-color); color: #555; font-size: 1rem; }
-
-    /* TABULEIRO 10x10 (REDUZIDO) */
-    .grid-board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #bbb; padding: 3px; border-radius: 8px; width: fit-content; margin: 0 auto; }
-    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 1px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .cell.occupied::after { content: ''; width: 85%; height: 85%; background: #333; border-radius: 50%; box-shadow: inset 0 -2px 4px rgba(0,0,0,0.5); }
-    .cell.selected { background: #e8f5e9; border: 1px solid #8cc63f; }
 
     @media screen and (min-width: 1025px) { :root { --cell-size: 38px; } }
     @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 8.2vw; } }
@@ -94,13 +90,12 @@ function mostrarCapa() {
             <div class="inst-content">
                 <div class="inst-header">Como Jogar</div>
                 <div class="inst-section-title">Objetivo</div>
-                <p>Este é um jogo <b>Misere</b>: o jogador que realizar a última jogada possível no tabuleiro <b>PERDE</b> o jogo.</p>
-                <div class="inst-section-title">Regras</div>
+                <p>Vence o jogador que forçar o adversário a fazer a última jogada possível no tabuleiro (Misere).</p>
+                <div class="inst-section-title">Como Jogar</div>
                 <ul class="inst-list">
-                    <li><b>Vertical:</b> Deve colocar blocos de 2 ou mais peças em coluna.</li>
-                    <li><b>Horizontal:</b> Deve colocar blocos de 2 ou mais peças em linha.</li>
-                    <li><b>Como Jogar:</b> Clica na primeira casa e depois na última casa do teu bloco.</li>
-                    <li><b>Regra da Troca:</b> Na primeira jogada do J2, este pode decidir trocar de orientação com o adversário.</li>
+                    <li><b>Vertical:</b> Coloca blocos de 2 ou mais na vertical.</li>
+                    <li><b>Horizontal:</b> Coloca blocos de 2 ou mais na horizontal.</li>
+                    <li><b>Regra da Troca:</b> Na primeira jogada do J2, este pode rodar o tabuleiro e trocar de orientação com o J1.</li>
                 </ul>
             </div>`;
         document.body.appendChild(panel);
@@ -132,14 +127,14 @@ function mostrarNiveis(modo) {
     container.style.display = 'flex';
     if (modo === 'CPU') {
         container.innerHTML = `<div class="nivel-row" style="display:flex; gap:10px; width:100%;">
-            <div class="btn-nivel l1" onclick="setModo('CPU', 1)"><b>Nível 1</b><span>Fácil</span></div>
-            <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b><span>Normal</span></div>
-            <div class="btn-nivel l3" onclick="setModo('CPU', 3)"><b>Nível 3</b><span>Difícil</span></div>
+            <div class="btn-nivel l1" onclick="setModo('CPU', 1)"><b>Nível 1</b></div>
+            <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b></div>
+            <div class="btn-nivel l3" onclick="setModo('CPU', 3)"><b>Nível 3</b></div>
         </div>`;
     } else {
         container.innerHTML = `<div class="nivel-row" style="display:flex; gap:10px; width:100%;">
-            <div class="btn-nivel l1" onclick="setModo('PVP', 1)"><b>Nível 1</b><span>Dicas ON</span></div>
-            <div class="btn-nivel l2" onclick="setModo('PVP', 2)"><b>Nível 2</b><span>Dicas OFF</span></div>
+            <div class="btn-nivel l1" onclick="setModo('PVP', 1)"><b>Nível 1</b></div>
+            <div class="btn-nivel l2" onclick="setModo('PVP', 2)"><b>Nível 2</b></div>
         </div>`;
     }
 }
@@ -152,7 +147,8 @@ function toggleInstructions() { somClique.play(); document.getElementById('instr
 function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
     modoJogo = modo; nivelJogo = nivel;
-    matchScore = [0, 0]; currentGameNum = 1; orientacoes = [0, 1]; iniciarJogo();
+    matchScore = [0, 0]; currentGameNum = 1; orientacoes = [0, 1]; trocouOrientacao = false;
+    iniciarJogo();
 }
 
 function iniciarJogo() {
@@ -164,8 +160,7 @@ function iniciarJogo() {
 }
 
 function atualizarUI() {
-    const pcLabel = "Pc";
-    const labelBox2 = modoJogo === 'CPU' ? pcLabel : "J2";
+    const labelBox2 = modoJogo === 'CPU' ? "Pc" : "J2";
     const nomeVez = (turnoAtual === 0) ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
     const classPill = (turnoAtual === 0) ? "pill-j1" : "pill-j2";
 
@@ -185,7 +180,7 @@ function atualizarUI() {
                 <div class="orient-circle" style="background:${orientacoes[1] === 0 ? '#8cc63f' : '#ff5a5f'}"></div>
                 <div class="orient-circle" style="background:${orientacoes[1] === 0 ? '#8cc63f' : '#ff5a5f'}"></div>
             </div>
-            <div id="grid-mount"></div>
+            <div id="grid-mount" class="grid-board ${trocouOrientacao ? 'rotated' : ''}"></div>
             <div id="bottom-indicator" class="orient-wrap ${getOrientationPlayer(orientacoes[0]) === turnoAtual ? 'active' : ''}">
                 <div class="orient-circle" style="background:${orientacoes[0] === 0 ? '#8cc63f' : '#ff5a5f'}"></div>
                 <div class="orient-circle" style="background:${orientacoes[0] === 0 ? '#8cc63f' : '#ff5a5f'}"></div>
@@ -196,7 +191,7 @@ function atualizarUI() {
     renderTabuleiro(document.getElementById('grid-mount'));
 
     // Botão Troca (Apenas na primeira jogada do J2)
-    if (primeiraJogadaRealizada && !tabuleiro.flat().includes(2) && modoJogo === 'PVP' && turnoAtual === 1) {
+    if (primeiraJogadaRealizada && !tabuleiro.flat().includes(2) && turnoAtual === 1 && modoJogo === 'PVP') {
         const btn = document.createElement('button');
         btn.className = "btn-capa-small";
         btn.style = "background:#f9a825; margin: 10px auto; width: 180px; display:block;";
@@ -206,19 +201,17 @@ function atualizarUI() {
     }
 }
 
-function getOrientationPlayer(tipo) { return orientacoes.indexOf(tipo); }
-
 function renderTabuleiro(container) {
-    let html = `<div class="grid-board">`;
     for (let r = 0; r < 10; r++) {
         for (let c = 0; c < 10; c++) {
-            let cl = "cell";
-            if (tabuleiro[r][c] === 1) cl += " occupied";
-            if (startCell && startCell.r === r && startCell.c === c) cl += " selected";
-            html += `<div class="${cl}" onclick="handleCellClick(${r},${c})"></div>`;
+            let cell = document.createElement('div');
+            cell.className = "cell";
+            if (tabuleiro[r][c] === 1) cell.classList.add("occupied");
+            if (startCell && startCell.r === r && startCell.c === c) cell.classList.add("selected");
+            cell.onclick = () => handleCellClick(r, c);
+            container.appendChild(cell);
         }
     }
-    container.innerHTML = html + `</div>`;
 }
 
 function handleCellClick(r, c) {
@@ -233,6 +226,14 @@ function handleCellClick(r, c) {
     }
 }
 
+function swapOrientations() { 
+    somAcerto.play(); 
+    trocouOrientacao = true; // Ativa a classe .rotated no CSS
+    orientacoes = [orientacoes[1], orientacoes[0]]; // Inverte Vertical/Horizontal
+    turnoAtual = 0; // Turno volta para o adversário que agora tem a nova orientação
+    atualizarUI(); 
+}
+
 function validarPeca(r1, c1, r2, c2, orient) {
     let rs = Math.min(r1, r2), re = Math.max(r1, r2), cs = Math.min(c1, c2), ce = Math.max(c1, c2);
     if (orient === 0) { if (c1 !== c2 || re - rs < 1) return false; for (let i = rs; i <= re; i++) if (tabuleiro[i][c1] !== 0) return false; }
@@ -243,14 +244,8 @@ function validarPeca(r1, c1, r2, c2, orient) {
 function colocarPeca(r1, c1, r2, c2) {
     let rs = Math.min(r1, r2), re = Math.max(r1, r2), cs = Math.min(c1, c2), ce = Math.max(c1, c2);
     for (let r = rs; r <= re; r++) for (let c = cs; c <= ce; c++) tabuleiro[r][c] = 1;
-    primeiraJogadaRealizada = true; somClique.play();
-}
-
-function swapOrientations() { 
-    somAcerto.play(); 
-    orientacoes = [orientacoes[1], orientacoes[0]]; 
-    turnoAtual = 0; 
-    atualizarUI(); 
+    primeiraJogadaRealizada = true; 
+    somClique.play();
 }
 
 function finalizarTurno() {
@@ -260,10 +255,11 @@ function finalizarTurno() {
     if (modoJogo === 'CPU' && turnoAtual === 1) setTimeout(iaControlador, 800);
 }
 
-function temLancesLegais(orient) {
+function temLancesLegais(orientIdx) {
+    const o = orientacoes[orientIdx];
     for (let r = 0; r < 10; r++) for (let c = 0; c < 10; c++) if (tabuleiro[r][c] === 0) {
-        if (orient === 0 && r < 9 && tabuleiro[r+1][c] === 0) return true;
-        if (orient === 1 && c < 9 && tabuleiro[r][c+1] === 0) return true;
+        if (o === 0 && r < 9 && tabuleiro[r+1][c] === 0) return true;
+        if (o === 1 && c < 9 && tabuleiro[r][c+1] === 0) return true;
     }
     return false;
 }
@@ -276,7 +272,7 @@ function iaControlador() {
         if (cpuO === 1 && c < 9 && tabuleiro[r][c+1] === 0) moves.push({r1:r, c1:c, r2:r, c2:c+1});
     }
     if (moves.length === 0) return;
-    let m = (nivelJogo === 3) ? moves.sort((a,b)=>Math.random()-0.5)[0] : moves[Math.floor(Math.random()*moves.length)];
+    let m = moves[Math.floor(Math.random() * moves.length)];
     colocarPeca(m.r1, m.c1, m.r2, m.c2);
     finalizarTurno();
 }
@@ -290,7 +286,7 @@ function finalizarRonda(perdedorIdx) {
     overlay.style.display = 'flex';
     overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:#8cc63f;">${nomeV}</h1><p>Ganhou a ronda!</p></div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2000);
-    else setTimeout(() => { currentGameNum++; iniciarJogo(); }, 2000);
+    else setTimeout(() => { currentGameNum++; trocouOrientacao = false; iniciarJogo(); }, 2000);
 }
 
 function finalizarMatch() {
@@ -302,8 +298,10 @@ function finalizarMatch() {
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
     footer.innerHTML = `<button class="btn-capa-small" style="background:#6c757d; flex:1;" onclick="location.reload()">REPETIR</button>
-                        <button class="btn-capa-small" style="background:var(--primary-color); flex:1;" onclick="window.history.back()">SAIR</button>`;
+                        <button class="btn-capa-small" style="background:var(--primary-color);" onclick="window.history.back()">SAIR</button>`;
 }
+
+function getOrientationPlayer(tipo) { return orientacoes.indexOf(tipo); }
 
 function iniciarSimulacao() {
     clearInterval(simuInterval);
