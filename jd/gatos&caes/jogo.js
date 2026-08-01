@@ -49,15 +49,24 @@ style.innerHTML = `
 
     #simu-container { height: 260px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: -60px; margin-bottom: 55px; }
 
-    /* CORREÇÃO DO PAINEL DE INSTRUÇÕES */
+    /* --- CORREÇÃO DEFINITIVA PARA AS INSTRUÇÕES --- */
     #instrucoes-panel { 
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-        background: white; z-index: 9999; 
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-        transform: translateY(105%); 
-        padding: 40px 25px; overflow-y: auto; 
+        position: fixed; 
+        top: 100vh; /* Começa totalmente fora do ecrã (abaixo) */
+        left: 0; 
+        width: 100vw; 
+        height: 100vh; 
+        background: white; 
+        z-index: 10000; 
+        transition: top 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+        padding: 40px 25px; 
+        overflow-y: auto; 
+        border-radius: 35px 35px 0 0;
     }
-    #instrucoes-panel.open { transform: translateY(0); }
+    #instrucoes-panel.open { 
+        top: 0; /* Sobe para cobrir o ecrã */
+    }
+
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.2rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
     .close-x:hover { transform: scale(1.2); }
 
@@ -104,14 +113,14 @@ function mostrarCapa() {
                 </ul>
                 <div class="inst-section-title">Como Jogar</div>
                 <ul class="inst-list">
-                    <li><b>Proibição:</b> Não podes colocar um Gato ao lado de um Cão (nem na horizontal nem na vertical).</li>
+                    <li><b>Proibição:</b> Não podes colocar um Gato ao lado de um Cão (nem na horizontal nem na vertical). O mesmo se aplica aos Cães.</li>
                     <li><b>Estratégia:</b> Tenta ocupar o tabuleiro de forma a garantir lugares onde só tu possas jogar no futuro.</li>
                     <li><b>Fim do Jogo:</b> O jogo termina mal um dos jogadores fique bloqueado.</li>
                 </ul>
                 <div style="height:40px;"></div>
             </div>
         `;
-        document.body.appendChild(panel);
+        document.body.appendChild(panel); // Anexado ao body para garantir independência de altura
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
         document.querySelector('.game-shell').appendChild(feedback);
@@ -138,24 +147,19 @@ function mostrarNiveis(modo) {
     document.getElementById('capa-menu-principal').style.display = 'none';
     const container = document.getElementById('nivel-select-container');
     container.style.display = 'flex';
-
     if (modo === 'CPU') {
-        container.innerHTML = `
-            <p style="font-weight:800; color:#888; margin-bottom:5px; font-size:0.8rem;">DESAFIO CONTRA PC:</p>
+        container.innerHTML = `<p style="font-weight:800; color:#888; margin-bottom:5px; font-size:0.8rem;">DESAFIO CONTRA PC:</p>
             <div style="display: flex; flex-direction: row; gap: 6px; width: 100%; justify-content: center;">
                 <div class="btn-nivel l1" onclick="setModo('CPU', 1)"><b>Nível 1</b><span>Com Dicas</span></div>
                 <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b><span>Normal</span></div>
                 <div class="btn-nivel l3" onclick="setModo('CPU', 3)"><b>Nível 3</b><span>Difícil</span></div>
-            </div>
-        `;
+            </div>`;
     } else {
-        container.innerHTML = `
-            <p style="font-weight:800; color:#888; margin-bottom:5px; font-size:0.8rem;">2 JOGADORES (PVP):</p>
+        container.innerHTML = `<p style="font-weight:800; color:#888; margin-bottom:5px; font-size:0.8rem;">2 JOGADORES (PVP):</p>
             <div style="display: flex; flex-direction: row; gap: 6px; width: 100%; justify-content: center;">
                 <div class="btn-nivel l1" onclick="setModo('PVP', 1)"><b>Nível 1</b><span>Com Dicas</span></div>
                 <div class="btn-nivel l2" onclick="setModo('PVP', 2)"><b>Nível 2</b><span>Sem Dicas</span></div>
-            </div>
-        `;
+            </div>`;
     }
 }
 
