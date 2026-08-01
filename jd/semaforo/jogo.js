@@ -60,15 +60,34 @@ style.innerHTML = `
     .btn-nivel.l2 { border-color: #f9a825; color: #f9a825; }
     .btn-nivel.l3 { border-color: #ff5a5f; color: #ff5a5f; }
 
-    /* ESTILO TABULEIRO - TAMANHOS ATUALIZADOS */
-    .grid-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; background: #bbb; padding: 8px; border-radius: 15px; width: fit-content; margin: 0 auto; }
-    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 10px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
+    /* ESTILO TABULEIRO - CONFIGURAÇÃO DE TAMANHO MÁXIMO */
+    .grid-board { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; background: #bbb; padding: 10px; border-radius: 15px; width: fit-content; margin: 0 auto; }
+    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 12px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; }
     
-    .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: inset 0 -4px 6px rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.1); border: 2px solid rgba(255,255,255,0.3); }
+    .piece { width: 88%; height: 88%; border-radius: 50%; box-shadow: inset 0 -4px 6px rgba(0,0,0,0.2), 0 4px 8px rgba(0,0,0,0.1); border: 2px solid rgba(255,255,255,0.3); }
     .piece.green { background: #8cc63f; }
     .piece.yellow { background: #f9a825; }
     .piece.red { background: #ff5a5f; }
+
+    /* --- TAMANHOS DO TABULEIRO PARA TODOS OS DISPOSITIVOS --- */
     
+    /* PC e Ecrãs Grandes */
+    @media screen and (min-width: 1025px) { 
+        :root { --cell-size: 130px; } 
+    }
+    
+    /* Telemóvel Vertical (Portrait) */
+    @media screen and (max-width: 500px) and (orientation: portrait) { 
+        :root { --cell-size: 22.5vw; } 
+        .grid-board { gap: 6px; padding: 6px; }
+    }
+    
+    /* Telemóvel Horizontal (Landscape) */
+    @media screen and (max-height: 500px) and (orientation: landscape) { 
+        :root { --cell-size: 26vh; } 
+        .grid-board { gap: 6px; padding: 6px; }
+    }
+
     .inst-content { max-width: 600px; margin: 0 auto; text-align: left; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 3px solid var(--bg-color); padding-bottom: 10px; }
     .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 20px 0 10px; display: flex; align-items: center; gap: 10px; }
@@ -76,11 +95,6 @@ style.innerHTML = `
     .inst-text { color: #666; font-size: 1.05rem; line-height: 1.6; margin-bottom: 15px; }
     .inst-list { list-style: none; padding: 0; }
     .inst-list li { background: #f9f9f9; margin-bottom: 8px; padding: 12px 15px; border-radius: 12px; border-left: 4px solid var(--bg-color); color: #555; font-size: 1rem; line-height: 1.4; }
-
-    /* TAMANHOS DO TABULEIRO ADAPTADOS */
-    @media screen and (min-width: 1025px) { :root { --cell-size: 110px; } }
-    @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 21vw; } }
-    @media screen and (max-height: 500px) and (orientation: landscape) { :root { --cell-size: 23vh; } }
 `;
 document.head.appendChild(style);
 
@@ -205,9 +219,7 @@ function renderTabuleiro() {
     let html = `<div class="grid-board">`;
     for (let r = 0; r < 3; r++) {
         for (let c = 0; c < 4; c++) {
-            let canClick = (tabuleiro[r][c] < 3) && (modoJogo === 'PVP' || turnoAtual === 0);
             let cl = "cell";
-            
             html += `<div class="${cl}" onclick="jogar(${r},${c})">`;
             if (tabuleiro[r][c] === 1) html += `<div class="piece green"></div>`;
             if (tabuleiro[r][c] === 2) html += `<div class="piece yellow"></div>`;
@@ -222,11 +234,7 @@ function jogar(r, c) {
     if (!jogoAtivo || tabuleiro[r][c] >= 3) return;
     tabuleiro[r][c]++;
     somClique.play();
-
-    if (verificarVitoria(tabuleiro)) {
-        finalizarRonda(turnoAtual);
-        return;
-    }
+    if (verificarVitoria(tabuleiro)) { finalizarRonda(turnoAtual); return; }
     turnoAtual = (turnoAtual === 0) ? 1 : 0;
     if (modoJogo === 'CPU' && turnoAtual === 1) { atualizarUI(); setTimeout(iaControlador, 600); }
     else { atualizarUI(); }
@@ -286,9 +294,10 @@ function finalizarRonda(vencedorIdx) {
     const overlay = document.getElementById('round-feedback');
     const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
     const corVencedor = vencedorIdx === 0 ? "#8cc63f" : "#ff5a5f";
+    const icone = vencedorIdx === 0 ? "fa-star" : "fa-trophy";
     overlay.style.display = 'flex';
     overlay.innerHTML = `<div class="vitoria-card">
-        <div style="font-size: 3rem; color: ${corVencedor}; margin-bottom: 10px;"><i class="fas fa-star"></i></div>
+        <div style="font-size: 3rem; color: ${corVencedor}; margin-bottom: 10px;"><i class="fas ${icone}"></i></div>
         <h1 style="color:${corVencedor}; font-size:2.2rem; font-weight:900; margin:0; text-transform:uppercase;">${nomeVencedor}</h1>
         <p style="color:#666; font-size:1.1rem; font-weight:700; margin:5px 0 0 0;">Venceu esta ronda!</p>
         <div style="margin-top:15px; padding-top:15px; border-top:2px dashed #eee; color:#aaa; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]}</div>
@@ -301,10 +310,7 @@ function finalizarMatch() {
     document.getElementById('round-feedback').style.display = 'none';
     const vencedorIdx = (matchScore[0] >= 3) ? 0 : 1;
     const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
-    
-    // Título de resultados com o mesmo estilo da capa
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">RESULTADOS FINAIS</h2>`;
-    
     document.getElementById('game-content').innerHTML = `<div style="text-align:center;">
             <img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:150px; margin-bottom:10px;">
             <h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase; margin-bottom:20px;">GANHOU O ${nomeVencedor}</h2>
@@ -326,9 +332,9 @@ function iniciarSimulacao() {
     let sTab = Array(3).fill().map(() => Array(4).fill(0));
     const render = () => {
         if(!board) return;
-        let h = `<div class="grid-board" style="opacity:0.6; pointer-events:none; transform:scale(0.9);">`;
+        let h = `<div class="grid-board" style="opacity:0.6; pointer-events:none; transform:scale(0.85);">`;
         for (let r = 0; r < 3; r++) for (let c = 0; c < 4; c++) {
-            h += `<div class="cell">`;
+            h += `<div class="cell" style="width:70px; height:70px;">`;
             if(sTab[r][c]===1) h+=`<div class="piece green"></div>`;
             if(sTab[r][c]===2) h+=`<div class="piece yellow"></div>`;
             if(sTab[r][c]===3) h+=`<div class="piece red"></div>`;
