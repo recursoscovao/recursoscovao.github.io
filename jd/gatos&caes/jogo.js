@@ -28,6 +28,7 @@ style.innerHTML = `
     .score-group { display: flex; gap: 8px; }
     .score-box { padding: 5px 10px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1rem; min-width: 55px; justify-content: center; }
     
+    /* J1 VERDE */
     .box-v, .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .box-x, .pill-j2 { background: #ff5a5f !important; box-shadow: 0 3px 0 #d44348; }
     
@@ -49,26 +50,44 @@ style.innerHTML = `
 
     #simu-container { height: 260px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: -60px; margin-bottom: 55px; }
 
-    /* --- CORREÇÃO DEFINITIVA PARA AS INSTRUÇÕES --- */
+    /* --- CORREÇÃO PARA AS INSTRUÇÕES (HIDDEN BY DEFAULT) --- */
     #instrucoes-panel { 
         position: fixed; 
-        top: 100vh; /* Começa totalmente fora do ecrã (abaixo) */
+        top: 0; 
         left: 0; 
         width: 100vw; 
         height: 100vh; 
         background: white; 
         z-index: 10000; 
-        transition: top 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+        transform: translateY(100%); 
+        visibility: hidden; /* Garante que não é renderizado nem clicado */
         padding: 40px 25px; 
         overflow-y: auto; 
-        border-radius: 35px 35px 0 0;
+        border-radius: 0; 
     }
     #instrucoes-panel.open { 
-        top: 0; /* Sobe para cobrir o ecrã */
+        transform: translateY(0); 
+        visibility: visible; /* Torna visível apenas ao abrir */
     }
 
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.2rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
     .close-x:hover { transform: scale(1.2); }
+
+    .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 95%; max-width: 500px; animation: cardPop 0.3s ease; align-items: center; }
+    .nivel-row { display: flex; flex-direction: row; gap: 6px; width: 100%; justify-content: center; }
+    .btn-nivel { background: white; padding: 12px 2px; border-radius: 12px; border: 2px solid #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; flex: 1; min-width: 0; }
+    .btn-nivel b { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; }
+    .btn-nivel span { font-size: 0.6rem; font-weight: 700; opacity: 0.7; text-align: center; }
+    .btn-nivel.l1 { border-color: #8cc63f; color: #8cc63f; }
+    .btn-nivel.l2 { border-color: #f9a825; color: #f9a825; }
+    .btn-nivel.l3 { border-color: #ff5a5f; color: #ff5a5f; }
+
+    .grid-board { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; background: #bbb; padding: 3px; border-radius: 8px; width: fit-content; margin: 0 auto; }
+    .cell { width: var(--cell-size); height: var(--cell-size); background: white; display: flex; align-items: center; justify-content: center; position: relative; border-radius: 2px; cursor: default; font-weight: 900; font-size: 1.2rem; color: #ccc; }
+    .cell.central { background: #fff8e1; }
+    .cell.legal-hint { background: #e8f5e9; cursor: pointer; border: 1px solid #8cc63f; }
+    .cell img { width: 90%; height: 90%; object-fit: contain; z-index: 2; }
 
     .inst-content { max-width: 600px; margin: 0 auto; text-align: left; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 3px solid var(--bg-color); padding-bottom: 10px; }
@@ -77,12 +96,6 @@ style.innerHTML = `
     .inst-text { color: #666; font-size: 1.05rem; line-height: 1.6; margin-bottom: 15px; }
     .inst-list { list-style: none; padding: 0; }
     .inst-list li { background: #f9f9f9; margin-bottom: 8px; padding: 12px 15px; border-radius: 12px; border-left: 4px solid var(--bg-color); color: #555; font-size: 1rem; line-height: 1.4; }
-
-    .grid-board { display: grid; grid-template-columns: repeat(8, 1fr); gap: 2px; background: #bbb; padding: 3px; border-radius: 8px; width: fit-content; margin: 0 auto; }
-    .cell { width: var(--cell-size); height: var(--cell-size); background: white; display: flex; align-items: center; justify-content: center; position: relative; border-radius: 2px; cursor: default; font-weight: 900; font-size: 1.2rem; color: #ccc; }
-    .cell.central { background: #fff8e1; }
-    .cell.legal-hint { background: #e8f5e9; cursor: pointer; border: 1px solid #8cc63f; }
-    .cell img { width: 90%; height: 90%; object-fit: contain; z-index: 2; }
 
     @media screen and (min-width: 1025px) { :root { --cell-size: 55px; } }
     @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 10.5vw; } }
@@ -113,14 +126,14 @@ function mostrarCapa() {
                 </ul>
                 <div class="inst-section-title">Como Jogar</div>
                 <ul class="inst-list">
-                    <li><b>Proibição:</b> Não podes colocar um Gato ao lado de um Cão (nem na horizontal nem na vertical). O mesmo se aplica aos Cães.</li>
+                    <li><b>Proibição:</b> Não podes colocar um Gato ao lado de um Cão (nem na horizontal nem na vertical).</li>
                     <li><b>Estratégia:</b> Tenta ocupar o tabuleiro de forma a garantir lugares onde só tu possas jogar no futuro.</li>
                     <li><b>Fim do Jogo:</b> O jogo termina mal um dos jogadores fique bloqueado.</li>
                 </ul>
                 <div style="height:40px;"></div>
             </div>
         `;
-        document.body.appendChild(panel); // Anexado ao body para garantir independência de altura
+        document.body.appendChild(panel);
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
         document.querySelector('.game-shell').appendChild(feedback);
