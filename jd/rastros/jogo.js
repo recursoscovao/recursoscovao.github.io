@@ -3,6 +3,8 @@
 // ============================================================
 let jogoAtivo = false;
 let modoJogo = 'CPU';     
+let nivelJogo = 1;        // 1, 2 ou 3
+let mostrarDicas = true;  // Controla o realce visual das jogadas
 let matchScore = [0, 0];  
 let turnoAtual = 0;       
 let currentGameNum = 1;   
@@ -31,42 +33,36 @@ style.innerHTML = `
     .blinking { animation: blinker 1s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
 
-    /* FEEDBACK DE VITÓRIA DE RONDA */
     #round-feedback {
         position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-        background: rgba(255, 255, 255, 0.7); 
-        backdrop-filter: blur(6px); 
-        z-index: 1000;
-        display: none; align-items: center; justify-content: center;
-        border-radius: 35px;
+        background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(6px); 
+        z-index: 1000; display: none; align-items: center; justify-content: center; border-radius: 35px;
     }
+    .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); text-align: center; animation: cardPop 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.28); }
+    @keyframes cardPop { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
 
-    .vitoria-card {
-        background: white;
-        padding: 30px 40px;
-        border-radius: 30px;
-        box-shadow: 0 15px 35px rgba(0,0,0,0.15);
-        text-align: center;
-        border: 4px solid var(--bg-color);
-        animation: cardPop 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.28);
-    }
-
-    @keyframes cardPop {
-        0% { transform: scale(0.7); opacity: 0; }
-        100% { transform: scale(1); opacity: 1; }
-    }
-
-    .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 100%; max-width: 480px; justify-content: center; align-items: center; margin-top: 10px; }
-    .btn-capa-small { flex: 1; height: 55px; border-radius: 25px; border: none; color: white; font-weight: 900; font-size: 0.85rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
+    .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 480px; justify-content: center; align-items: center; margin-top: 10px; }
+    .btn-capa-small { flex: 1; height: 55px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; white-space: nowrap; padding: 0 10px; }
     .btn-inform { width: 55px; height: 55px; flex: none; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
     .btn-inform img { width: 45px; height: 45px; object-fit: contain; }
 
-    /* PAINEL DE INSTRUÇÕES */
-    #instrucoes-panel { 
-        position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%; 
-        background: white; z-index: 5000; transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-        padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0;
+    #simu-container { height: 260px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: -60px; margin-bottom: 55px; }
+
+    /* BOTÕES DE NÍVEL */
+    .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 95%; max-width: 500px; animation: cardPop 0.3s ease; align-items: center; }
+    .nivel-row { display: flex; flex-direction: row; gap: 6px; width: 100%; justify-content: center; }
+    .btn-nivel {
+        background: white; padding: 12px 2px; border-radius: 12px; border: 2px solid #eee;
+        display: flex; flex-direction: column; align-items: center; justify-content: center;
+        cursor: pointer; transition: 0.2s; flex: 1; min-width: 0;
     }
+    .btn-nivel b { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; }
+    .btn-nivel span { font-size: 0.6rem; font-weight: 700; opacity: 0.7; text-align: center; }
+    .btn-nivel.l1 { border-color: #8cc63f; color: #8cc63f; }
+    .btn-nivel.l2 { border-color: #f9a825; color: #f9a825; }
+    .btn-nivel.l3 { border-color: #ff5a5f; color: #ff5a5f; }
+
+    #instrucoes-panel { position: absolute; bottom: -105%; left: 0; width: 100%; height: 100%; background: white; z-index: 5000; transition: bottom 0.5s ease; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; }
     #instrucoes-panel.open { bottom: 0; }
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.2rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
     .close-x:hover { transform: scale(1.2); }
@@ -92,11 +88,10 @@ style.innerHTML = `
     @media screen and (max-height: 500px) and (orientation: landscape) { :root { --cell-size: 10vh; } }
 `;
 document.head.appendChild(style);
-// [FIM DA SECÇÃO 2]
 
 
 // ============================================================
-// 3. CAPA, SIMULAÇÃO E INSTRUÇÕES
+// 3. CAPA, SIMULAÇÃO E NÍVEIS
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -122,11 +117,8 @@ function mostrarCapa() {
                     <li><b>3.</b> Quando a peça sai de uma casa, essa casa fica <b>bloqueada</b> (fica preta) e ninguém pode voltar a passar por lá.</li>
                     <li><b>4.</b> O jogo termina mal a peça entre numa casa de vitória ou alguém fique cercado sem saída.</li>
                 </ul>
-                <div style="height:40px;"></div>
-            </div>
-        `;
+            </div>`;
         document.querySelector('.game-shell').appendChild(panel);
-
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
         document.querySelector('.game-shell').appendChild(feedback);
@@ -134,77 +126,68 @@ function mostrarCapa() {
 
     const area = document.getElementById('game-content');
     area.innerHTML = `
-        <div id="simu-container" style="transform: scale(0.65); margin-top: -30px;"></div>
-        <div class="capa-btn-row">
-            <div class="btn-inform" onclick="toggleInstructions()">
-                <img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png">
+        <div id="simu-container"><div id="simu-board" style="transform: scale(0.65);"></div></div>
+        <div id="capa-menu-principal" style="width:100%; display:flex; justify-content:center;">
+            <div class="capa-btn-row">
+                <div class="btn-inform" onclick="toggleInstructions()"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
+                <button class="btn-capa-small" style="background:var(--primary-color);" onclick="mostrarNiveis('CPU')">
+                    <i class="fas fa-robot"></i> COMPUTADOR
+                </button>
+                <button class="btn-capa-small" style="background:#6c757d;" onclick="mostrarNiveis('PVP')">
+                    <i class="fas fa-users"></i> 2 JOGADORES
+                </button>
             </div>
-            <button class="btn-capa-small" style="background:var(--primary-color);" onclick="setModo('CPU')">
-                <i class="fas fa-robot"></i> COMPUTADOR
-            </button>
-            <button class="btn-capa-small" style="background:#6c757d;" onclick="setModo('PVP')">
-                <i class="fas fa-users"></i> 2 JOGADORES
-            </button>
         </div>
+        <div id="nivel-select-container" class="nivel-select-container"></div>
     `;
-    
     document.getElementById('shell-footer-content').style.display = 'none';
     iniciarSimulacao();
 }
 
-function toggleInstructions() {
+function mostrarNiveis(modo) {
     somClique.play();
-    document.getElementById('instrucoes-panel').classList.toggle('open');
+    document.getElementById('capa-menu-principal').style.display = 'none';
+    const container = document.getElementById('nivel-select-container');
+    container.style.display = 'flex';
+
+    if (modo === 'CPU') {
+        container.innerHTML = `
+            <p style="font-weight:800; color:#888; margin-bottom:5px; font-size:0.8rem;">DESAFIO CONTRA PC:</p>
+            <div class="nivel-row">
+                <div class="btn-nivel l1" onclick="setModo('CPU', 1)"><b>Nível 1</b><span>Com Dicas</span></div>
+                <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b><span>Sem Dicas</span></div>
+                <div class="btn-nivel l3" onclick="setModo('CPU', 3)"><b>Nível 3</b><span>Difícil</span></div>
+            </div>
+            <button class="btn-capa-small" style="background:#aaa; height:40px; width:140px; margin-top:10px;" onclick="voltarCapa()">VOLTAR</button>
+        `;
+    } else {
+        container.innerHTML = `
+            <p style="font-weight:800; color:#888; margin-bottom:5px; font-size:0.8rem;">2 JOGADORES (PVP):</p>
+            <div class="nivel-row">
+                <div class="btn-nivel l1" onclick="setModo('PVP', 1)"><b>Nível 1</b><span>Com Dicas</span></div>
+                <div class="btn-nivel l2" onclick="setModo('PVP', 2)"><b>Nível 2</b><span>Sem Dicas</span></div>
+            </div>
+            <button class="btn-capa-small" style="background:#aaa; height:40px; width:140px; margin-top:10px;" onclick="voltarCapa()">VOLTAR</button>
+        `;
+    }
 }
 
-function iniciarSimulacao() {
-    clearInterval(simuInterval);
-    const container = document.getElementById('simu-container');
-    let sTab = Array(7).fill().map(() => Array(7).fill(0));
-    let sPos = { x: 4, y: 2 };
-    sTab[sPos.y][sPos.x] = 2;
-    const renderSimu = () => {
-        let html = `<div class="rastros-grid" style="pointer-events:none; opacity:0.7;">`;
-        for (let y = 0; y < 7; y++) {
-            for (let x = 0; x < 7; x++) {
-                let cl = "cell", num = "";
-                if (x === 0 && y === 6) { cl += " goal"; num = "1"; }
-                if (x === 6 && y === 0) { cl += " goal"; num = "2"; }
-                if (sTab[y][x] === 1) cl += " blocked";
-                if (sTab[y][x] === 2) cl += " white-piece";
-                html += `<div class="${cl}">${num}</div>`;
-            }
-        }
-        container.innerHTML = html + `</div>`;
-    };
-    const step = () => {
-        let moves = [];
-        for (let dy = -1; dy <= 1; dy++) {
-            for (let dx = -1; dx <= 1; dx++) {
-                let nx = sPos.x + dx, ny = sPos.y + dy;
-                if (nx >= 0 && nx < 7 && ny >= 0 && ny < 7 && sTab[ny][nx] === 0 && !(dx === 0 && dy === 0)) moves.push({x:nx, y:ny});
-            }
-        }
-        if (moves.length === 0 || Math.random() > 0.92) { sTab = Array(7).fill().map(() => Array(7).fill(0)); sPos = { x: 4, y: 2 }; sTab[sPos.y][sPos.x] = 2; }
-        else { let m = moves[Math.floor(Math.random() * moves.length)]; sTab[sPos.y][sPos.x] = 1; sPos = m; sTab[sPos.y][sPos.x] = 2; }
-        renderSimu();
-    };
-    simuInterval = setInterval(step, 1000);
-    renderSimu();
+function voltarCapa() {
+    document.getElementById('capa-menu-principal').style.display = 'block';
+    document.getElementById('nivel-select-container').style.display = 'none';
 }
-// [FIM DA SECÇÃO 3]
+
+function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
 
 
 // ============================================================
-// 4. LÓGICA CORE DO JOGO (REGRAS E TURNOS)
+// 4. LÓGICA CORE DO JOGO E IA
 // ============================================================
-function setModo(modo) {
-    clearInterval(simuInterval);
-    modoJogo = modo;
-    matchScore = [0, 0];
-    currentGameNum = 1;
-    turnoAtual = 0; 
-    iniciarJogo();
+function setModo(modo, nivel) {
+    clearInterval(simuInterval); somClique.play();
+    modoJogo = modo; nivelJogo = nivel;
+    mostrarDicas = (nivel === 1);
+    matchScore = [0, 0]; currentGameNum = 1; turnoAtual = 0; iniciarJogo();
 }
 
 function iniciarJogo() {
@@ -221,6 +204,7 @@ function atualizarUI() {
     const j2Label = "J2";
     const labelSegundaBox = modoJogo === 'CPU' ? pcLabel : j2Label;
     let turnInfoHTML = "";
+
     if (modoJogo === 'CPU') {
         if (turnoAtual === 0) turnInfoHTML = `<div class="status-pill pill-j1 blinking">VEZ DO JOGADOR 1</div>`;
         else turnInfoHTML = `<div style="flex:1"></div>`; 
@@ -229,6 +213,7 @@ function atualizarUI() {
         const nomeVez = (turnoAtual === 0) ? "JOGADOR 1" : "JOGADOR 2";
         turnInfoHTML = `<div class="status-pill ${classPill} blinking">VEZ DO ${nomeVez}</div>`;
     }
+
     document.getElementById('shell-header-content').innerHTML = `
         <div class="status-container">
             ${turnInfoHTML}
@@ -250,10 +235,12 @@ function renderTabuleiro() {
             if (x === 6 && y === 0) { classe += " goal"; conteudo = "2"; }
             if (tabuleiro[y][x] === 1) classe += " blocked";
             if (tabuleiro[y][x] === 2) classe += " white-piece";
+            
             const dx = Math.abs(x - posBranca.x), dy = Math.abs(y - posBranca.y);
             const humanoPodeJogar = (turnoAtual === 0) || (turnoAtual === 1 && modoJogo === 'PVP');
+
             if (humanoPodeJogar && tabuleiro[y][x] === 0 && dx <= 1 && dy <= 1 && !(dx === 0 && dy === 0)) {
-                classe += " valid-move";
+                if (mostrarDicas) classe += " valid-move";
                 html += `<div class="${classe}" onclick="moverPeca(${x},${y})"></div>`;
             } else { html += `<div class="${classe}">${conteudo}</div>`; }
         }
@@ -268,25 +255,48 @@ function moverPeca(nx, ny) {
     tabuleiro[posBranca.y][posBranca.x] = 1;
     posBranca = { x: nx, y: ny };
     tabuleiro[ny][nx] = 2;
+
     if (nx === 0 && ny === 6) { finalizarRonda(0); return; }
     if (nx === 6 && ny === 0) { finalizarRonda(1); return; }
     if (getMovimentosPosiveis(nx, ny).length === 0) { finalizarRonda(turnoAtual); return; }
+
     turnoAtual = (turnoAtual === 0) ? 1 : 0;
-    if (modoJogo === 'CPU' && turnoAtual === 1) { atualizarUI(); setTimeout(cpuJogar, 600); }
+    if (modoJogo === 'CPU' && turnoAtual === 1) { atualizarUI(); setTimeout(cpuControlador, 600); }
     else { atualizarUI(); }
 }
 
-function cpuJogar() {
-    const moves = getMovimentosPosiveis(posBranca.x, posBranca.y);
+function cpuControlador() {
+    let moves = getMovimentosPosiveis(posBranca.x, posBranca.y);
     if (moves.length === 0) { finalizarRonda(0); return; }
-    moves.sort((a, b) => Math.hypot(a.x - 6, a.y - 0) - Math.hypot(b.x - 6, b.y - 0));
-    const alvo = moves.find(m => m.x === 6 && m.y === 0) || moves[0];
-    tabuleiro[posBranca.y][posBranca.x] = 1;
-    posBranca = { x: alvo.x, y: alvo.y };
-    tabuleiro[alvo.y][alvo.x] = 2;
-    if (alvo.x === 6 && alvo.y === 0) { finalizarRonda(1); return; }
-    if (getMovimentosPosiveis(alvo.x, alvo.y).length === 0) { finalizarRonda(1); return; }
-    turnoAtual = 0; atualizarUI();
+
+    let move;
+    if (nivelJogo === 3) {
+        // Nível 3: Estratégico (Minimiza as opções do jogador)
+        move = moves.reduce((best, curr) => {
+            let score = avaliarFuturo(curr.x, curr.y);
+            return (score > best.score) ? {m: curr, score: score} : best;
+        }, {m: moves[0], score: -100}).m;
+    } else {
+        // Nível 1 e 2: Greedy (Tenta chegar ao seu objetivo g7)
+        moves.sort((a, b) => Math.hypot(a.x - 6, a.y - 0) - Math.hypot(b.x - 6, b.y - 0));
+        move = moves.find(m => m.x === 6 && m.y === 0) || moves[0];
+    }
+
+    moverPeca(move.x, move.y);
+}
+
+function avaliarFuturo(nx, ny) {
+    // Simula quantas jogadas o J1 teria após este movimento
+    let tempTab = tabuleiro.map(row => [...row]);
+    tempTab[posBranca.y][posBranca.x] = 1;
+    let jogadasJ1 = 0;
+    for (let dy = -1; dy <= 1; dy++) {
+        for (let dx = -1; dx <= 1; dx++) {
+            let tx = nx + dx, ty = ny + dy;
+            if (tx >= 0 && tx < 7 && ty >= 0 && ty < 7 && tempTab[ty][tx] === 0 && !(dx === 0 && dy === 0)) jogadasJ1++;
+        }
+    }
+    return -jogadasJ1; // Quanto menos jogadas para o J1, melhor para a CPU
 }
 
 function getMovimentosPosiveis(cx, cy) {
@@ -299,11 +309,10 @@ function getMovimentosPosiveis(cx, cy) {
     }
     return possiveis;
 }
-// [FIM DA SECÇÃO 4]
 
 
 // ============================================================
-// 5. FINALIZAÇÃO (RONDA E MATCH)
+// 5. FINALIZAÇÃO
 // ============================================================
 function finalizarRonda(vencedorIdx) {
     jogoAtivo = false;
@@ -312,44 +321,61 @@ function finalizarRonda(vencedorIdx) {
     const overlay = document.getElementById('round-feedback');
     const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
     const corVencedor = vencedorIdx === 0 ? "#8cc63f" : "#ff5a5f";
-    const icone = vencedorIdx === 0 ? "fa-star" : "fa-trophy";
     overlay.style.display = 'flex';
-    overlay.innerHTML = `
-        <div class="vitoria-card">
-            <div style="font-size: 3rem; color: ${corVencedor}; margin-bottom: 10px;"><i class="fas ${icone}"></i></div>
-            <h1 style="color:${corVencedor}; font-size:2.2rem; font-weight:900; margin:0; text-transform:uppercase;">${nomeVencedor}</h1>
-            <p style="color:#666; font-size:1.1rem; font-weight:700; margin:5px 0 0 0;">Venceu esta ronda!</p>
-            <div style="margin-top:15px; padding-top:15px; border-top:2px dashed #eee; color:#aaa; font-weight:800;">PLACAR: ${matchScore[0]} - ${matchScore[1]}</div>
-        </div>`;
+    overlay.innerHTML = `<div class="vitoria-card">
+        <div style="font-size: 3rem; color: ${corVencedor}; margin-bottom: 10px;"><i class="fas fa-star"></i></div>
+        <h1 style="color:${corVencedor}; font-size:2.2rem; font-weight:900; margin:0; text-transform:uppercase;">${nomeVencedor}</h1>
+        <p style="color:#666; font-size:1.1rem; font-weight:700; margin:5px 0 0 0;">Venceu esta ronda!</p>
+        <div style="margin-top:15px; padding-top:15px; border-top:2px dashed #eee; color:#aaa; font-weight:800;">PLACAR: ${matchScore[0]} - ${matchScore[1]}</div>
+    </div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2000);
     else setTimeout(() => { currentGameNum++; turnoAtual = 0; iniciarJogo(); }, 2000);
 }
 
 function finalizarMatch() {
-    jogoAtivo = false;
     document.getElementById('round-feedback').style.display = 'none';
     const vencedorIdx = (matchScore[0] >= 3) ? 0 : 1;
     const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
-    const labelSegundaBox = modoJogo === 'CPU' ? 'Pc' : 'J2';
-    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">RESULTADOS FINAIS</h2>`;
+    document.getElementById('shell-header-content').innerHTML = `<h2>RESULTADOS FINAIS</h2>`;
     document.getElementById('game-content').innerHTML = `
         <div style="text-align:center;">
             <img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:150px; margin-bottom:10px;">
             <h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase; margin-bottom:20px;">GANHOU O ${nomeVencedor}</h2>
             <div style="display:flex; justify-content:center; gap:20px;">
                 <div class="score-box box-v" style="padding:10px 20px; font-size:1.2rem;">J1: ${matchScore[0]}</div>
-                <div class="score-box box-x" style="padding:10px 20px; font-size:1.2rem;">${labelSegundaBox}: ${matchScore[1]}</div>
+                <div class="score-box box-x" style="padding:10px 20px; font-size:1.2rem;">${modoJogo === 'CPU' ? 'Pc' : 'J2'}: ${matchScore[1]}</div>
             </div>
         </div>`;
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
-    footer.style.gap = "10px"; // Mesma gap da capa
-    footer.innerHTML = `
-        <button class="btn-capa-small" style="background:#6c757d;" onclick="location.reload()">
-            <i class="fas fa-redo"></i> REPETIR
-        </button>
-        <button class="btn-capa-small" style="background:var(--primary-color);" onclick="window.history.back()">
-            <i class="fas fa-sign-out-alt"></i> SAIR
-        </button>`;
+    footer.innerHTML = `<button class="btn-capa-small" style="background:#6c757d; flex:1;" onclick="location.reload()">REPETIR</button>
+                        <button class="btn-capa-small" style="background:var(--primary-color); flex:1;" onclick="window.history.back()">SAIR</button>`;
 }
-// [FIM DA SECÇÃO 5]
+
+function iniciarSimulacao() {
+    clearInterval(simuInterval);
+    const board = document.getElementById('simu-board');
+    let sTab = Array(7).fill().map(() => Array(7).fill(0));
+    let sPos = { x: 4, y: 2 };
+    sTab[sPos.y][sPos.x] = 2;
+    const render = () => {
+        if(!board) return;
+        let h = `<div class="rastros-grid" style="opacity:0.6; pointer-events:none;">`;
+        for (let y = 0; y < 7; y++) {
+            for (let x = 0; x < 7; x++) {
+                h += `<div class="cell ${x===0&&y===6?'goal':(x===6&&y===0?'goal':'')} ${sTab[y][x]===1?'blocked':(sTab[y][x]===2?'white-piece':'')}"></div>`;
+            }
+        }
+        board.innerHTML = h + `</div>`;
+    };
+    simuInterval = setInterval(() => {
+        let moves = [];
+        for (let dy=-1; dy<=1; dy++) for (let dx=-1; dx<=1; dx++) {
+            let nx=sPos.x+dx, ny=sPos.y+dy;
+            if(nx>=0 && nx<7 && ny>=0 && ny<7 && sTab[ny][nx]===0 && !(dx===0&&dy===0)) moves.push({x:nx, y:ny});
+        }
+        if (moves.length === 0 || Math.random() > 0.92) { sTab=Array(7).fill().map(()=>Array(7).fill(0)); sPos={x:4,y:2}; sTab[sPos.y][sPos.x]=2; }
+        else { let m=moves[Math.floor(Math.random()*moves.length)]; sTab[sPos.y][sPos.x]=1; sPos=m; sTab[sPos.y][sPos.x]=2; }
+        render();
+    }, 800);
+}
