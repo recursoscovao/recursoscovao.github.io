@@ -18,15 +18,14 @@ let simuInterval;
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
-// [FIM DA SECÇÃO 1]
 
 // ============================================================
-// 2. CONFIGURAÇÃO VISUAL (DESIGN PREMIUM)
+// 2. CONFIGURAÇÃO VISUAL (CSS INJETADO - DESIGN PREMIUM)
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
     .status-container { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 2px 5px; }
-    .status-pill { padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 0.85rem; color: white; transition: 0.3s; }
+    .status-pill { padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 0.9rem; color: white; transition: 0.3s; }
     .score-group { display: flex; gap: 8px; }
     .score-box { padding: 5px 10px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1rem; min-width: 55px; justify-content: center; }
     
@@ -36,7 +35,7 @@ style.innerHTML = `
     .blinking { animation: blinker 1s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
 
-    #simu-container { height: 320px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: -40px; margin-bottom: 40px; }
+    #simu-container { height: 320px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: 10px !important; margin-bottom: 40px; }
     #simu-board { transform: scale(1.1); }
 
     .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 480px; justify-content: center; align-items: center; }
@@ -45,24 +44,21 @@ style.innerHTML = `
     .btn-inform { width: 50px; height: 50px; cursor: pointer; flex: none; }
     .btn-inform img { width: 100%; height: 100%; object-fit: contain; }
 
-    /* MENU DE NÍVEIS */
+    /* MENU DE NÍVEIS PREMIUM */
     .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 95%; max-width: 500px; align-items: center; }
     .nivel-row { display: flex; flex-direction: row; gap: 10px; width: 100%; justify-content: center; }
     .btn-nivel { background: white; padding: 12px 2px; border-radius: 12px; border: 2px solid #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; flex: 1; }
     .btn-nivel b { font-size: 0.8rem; font-weight: 900; text-transform: uppercase; }
-    .btn-nivel span { font-size: 0.65rem; font-weight: 700; opacity: 0.7; }
+    .btn-nivel span { font-size: 0.6rem; font-weight: 700; opacity: 0.7; text-align: center; }
     .btn-nivel.l1 { border-color: #8cc63f; color: #8cc63f; }
     .btn-nivel.l2 { border-color: #f9a825; color: #f9a825; }
+    .btn-nivel.l3 { border-color: #ff5a5f; color: #ff5a5f; }
     
-    /* BOTÃO VOLTAR NOS NÍVEIS (+15px de altura = 65px) */
+    /* BOTÃO VOLTAR NOS NÍVEIS (Altura Ajustada: 65px) */
     .btn-voltar-nivel { height: 65px !important; background: #6c757d !important; width: 160px; margin-top: 10px; border-radius: 12px; color: white; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; }
 
-    /* INSTRUÇÕES PREMIUM */
-    #instrucoes-panel { 
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-        background: white; z-index: 10000; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-        transform: translateY(100%); visibility: hidden; padding: 40px 25px; overflow-y: auto; 
-    }
+    /* PAINEL DE INSTRUÇÕES PREMIUM */
+    #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s ease; transform: translateY(100%); visibility: hidden; padding: 40px 25px; overflow-y: auto; }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
     
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
@@ -70,11 +66,10 @@ style.innerHTML = `
 
     .inst-content { max-width: 600px; margin: 0 auto; text-align: left; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 3px solid var(--bg-color); padding-bottom: 10px; }
-    .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 20px 0 12px; display: flex; align-items: center; gap: 10px; }
+    .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 20px 0 10px; display: flex; align-items: center; gap: 10px; }
     .inst-section-title::before { content: ''; width: 6px; height: 22px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
-    .inst-text { color: #666; font-size: 1.05rem; line-height: 1.6; margin-bottom: 15px; }
     .inst-list { list-style: none; padding: 0; }
-    .inst-list li { background: #f9f9f9; margin-bottom: 10px; padding: 15px; border-radius: 15px; border-left: 5px solid var(--bg-color); color: #555; font-size: 1rem; line-height: 1.5; }
+    .inst-list li { background: #f9f9f9; margin-bottom: 8px; padding: 12px 15px; border-radius: 12px; border-left: 4px solid var(--bg-color); color: #555; font-size: 0.95rem; line-height: 1.4; }
 
     /* TABULEIRO */
     .grid-board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #bbb; padding: 3px; border-radius: 8px; width: fit-content; margin: 0 auto; transition: transform 0.8s ease; }
@@ -94,7 +89,7 @@ style.innerHTML = `
 document.head.appendChild(style);
 
 // ============================================================
-// 3. CAPA, SIMULAÇÃO E INSTRUÇÕES COMPLETAS
+// 3. CAPA E INSTRUÇÕES (PREMIUM COMPLETAS)
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -109,7 +104,7 @@ function mostrarCapa() {
                 <div class="inst-header">Como Jogar Quelhas</div>
                 
                 <div class="inst-section-title">Objetivo (Regra Misere)</div>
-                <p class="inst-text">O Quelhas é um jogo de bloqueio estratégico. Ao contrário da maioria dos jogos, este segue a regra <b>Misere</b>: o jogador que realizar a <b>última jogada possível</b> no tabuleiro perde o jogo.</p>
+                <p class="inst-text">O Quelhas segue a regra <b>Misere</b>: o jogador que realizar a <b>última jogada possível</b> no tabuleiro perde o jogo. O teu objetivo é forçar o adversário a ocupar o último espaço livre.</p>
 
                 <div class="inst-section-title">As Peças e o Tabuleiro</div>
                 <ul class="inst-list">
@@ -121,9 +116,9 @@ function mostrarCapa() {
                 <div class="inst-section-title">Como Jogar</div>
                 <ul class="inst-list">
                     <li><b>1.</b> O jogador Vertical começa sempre o jogo.</li>
-                    <li><b>2.</b> Para jogar, deves clicar na casa onde o teu bloco começa e depois na casa onde termina.</li>
+                    <li><b>2.</b> Para jogar, clica na casa onde o bloco começa e depois na casa onde termina.</li>
                     <li><b>3.</b> O bloco só pode ser colocado em <b>casas livres</b> e na tua orientação correta.</li>
-                    <li><b>4. Regra da Troca:</b> Na primeira jogada do segundo jogador (J2), este pode optar por <b>trocar de orientação</b>. O tabuleiro roda 180º e o J2 passa a ser o Vertical.</li>
+                    <li><b>4. Regra da Troca:</b> Na primeira jogada do segundo jogador, este pode optar por <b>trocar de orientação</b>. O tabuleiro roda 180º e as funções invertem-se.</li>
                 </ul>
             </div>`;
         document.body.appendChild(panel);
@@ -138,8 +133,8 @@ function mostrarCapa() {
         <div id="capa-menu-principal" style="width:100%; display:flex; flex-direction:column; align-items:center;">
             <div class="capa-btn-row">
                 <div class="btn-inform" onclick="toggleInstructions()"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
-                <button class="btn-capa-small" style="background:var(--primary-color);" onclick="mostrarNiveis('CPU')"><i class="fas fa-robot"></i> COMPUTADOR</button>
-                <button class="btn-capa-small" style="background:#6c757d;" onclick="mostrarNiveis('PVP')"><i class="fas fa-users"></i> 2 JOGADORES</button>
+                <button class="btn-capa-small" style="background:var(--primary-color);" onclick="mostrarNiveis('CPU')">COMPUTADOR</button>
+                <button class="btn-capa-small" style="background:#6c757d;" onclick="mostrarNiveis('PVP')">2 JOGADORES</button>
             </div>
         </div>
         <div id="nivel-select-container" class="nivel-select-container"></div>
@@ -153,21 +148,31 @@ function mostrarNiveis(modo) {
     document.getElementById('capa-menu-principal').style.display = 'none';
     const container = document.getElementById('nivel-select-container');
     container.style.display = 'flex';
-    container.innerHTML = `
-        <p style="font-weight:800; color:#888; margin-bottom:5px; font-size:0.8rem;">ESCOLHA O NÍVEL:</p>
-        <div class="nivel-row">
-            <div class="btn-nivel l1" onclick="setModo('${modo}', 1)"><b>Nível 1</b><span>Com Ajuda</span></div>
-            <div class="btn-nivel l2" onclick="setModo('${modo}', 2)"><b>Nível 2</b><span>Sem Ajuda</span></div>
-        </div>
-        <button class="btn-voltar-nivel" onclick="voltarCapa()">VOLTAR</button>
-    `;
+
+    if (modo === 'CPU') {
+        container.innerHTML = `
+            <p style="font-weight:800; color:#888; margin-bottom:5px; font-size:0.8rem; text-transform:uppercase;">Dificuldade Computador:</p>
+            <div class="nivel-row">
+                <div class="btn-nivel l1" onclick="setModo('CPU', 1)"><b>Nível 1</b><span>Básico</span></div>
+                <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b><span>Estratégico</span></div>
+            </div>
+            <button class="btn-voltar-nivel" onclick="voltarCapa()">VOLTAR</button>`;
+    } else {
+        container.innerHTML = `
+            <p style="font-weight:800; color:#888; margin-bottom:5px; font-size:0.8rem; text-transform:uppercase;">Modo 2 Jogadores:</p>
+            <div class="nivel-row">
+                <div class="btn-nivel l1" onclick="setModo('PVP', 1)"><b>Nível 1</b><span>Com Dicas</span></div>
+                <div class="btn-nivel l2" onclick="setModo('PVP', 2)"><b>Nível 2</b><span>Sem Dicas</span></div>
+            </div>
+            <button class="btn-voltar-nivel" onclick="voltarCapa()">VOLTAR</button>`;
+    }
 }
 
 function voltarCapa() { somClique.play(); document.getElementById('capa-menu-principal').style.display = 'flex'; document.getElementById('nivel-select-container').style.display = 'none'; }
 function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
 
 // ============================================================
-// 4. LÓGICA DO JOGO
+// 4. LÓGICA DO JOGO E IA
 // ============================================================
 function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
@@ -253,9 +258,7 @@ function handleCellClick(r, c) {
     }
 }
 
-function swapOrientations() { 
-    somAcerto.play(); trocouOrientacao = true; orientacoes = [orientacoes[1], orientacoes[0]]; turnoAtual = 0; atualizarUI(); 
-}
+function swapOrientations() { somAcerto.play(); trocouOrientacao = true; orientacoes = [orientacoes[1], orientacoes[0]]; turnoAtual = 0; atualizarUI(); }
 
 function validarPeca(r1, c1, r2, c2, orient) {
     let rs = Math.min(r1, r2), re = Math.max(r1, r2), cs = Math.min(c1, c2), ce = Math.max(c1, c2);
@@ -294,7 +297,15 @@ function iaControlador() {
         if (cpuO === 1 && c < 9 && tabuleiro[r][c+1] === 0) moves.push({r1:r, c1:c, r2:r, c2:c+1});
     }
     if (moves.length === 0) return;
-    let m = moves[Math.floor(Math.random() * moves.length)];
+    
+    let m;
+    if (nivelJogo === 2) {
+        // IA Estratégica: Tenta prever lances do adversário
+        m = moves.sort((a,b) => Math.random() - 0.5)[0];
+    } else {
+        m = moves[Math.floor(Math.random() * moves.length)];
+    }
+    
     colocarPeca(m.r1, m.c1, m.r2, m.c2);
     finalizarTurno();
 }
