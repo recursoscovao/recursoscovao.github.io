@@ -24,11 +24,11 @@ const JOGO_CONFIG = {
     // JOGOS EM DESTAQUE (A caixa branca de baixo)
     // Podes adicionar quantos quiseres aqui.
     listaDestaques: [
-        { nome: "Rastros", icon: "rastros.png", link: "jd/rastros", estrelas: 4 },
+        { nome: "Rastros", icon: "rastros.png", link: "jd/rastros", estrelas: 5 },
         { nome: "Gatos&cães", icon: "gatos&caes.png", link: "jd/gatos&caes", estrelas: 5 },
-        { nome: "Dominório", icon: "dominorio.png", link: "jd/dominorio", estrelas: 4 },
+        { nome: "Dominório", icon: "dominorio.png", link: "jd/dominorio", estrelas: 5 },
         { nome: "Semáforo", icon: "semaforo.png", link: "jd/semaforo", estrelas: 5 },
-        { nome: "Aventuras", icon: "rocket.png", link: "jogos/aventuras.html", estrelas: 5 },
+        { nome: "Quelhas", icon: "quelhas.png", link: "jd/quelhas", estrelas: 5 },
         { nome: "Pontuação", icon: "target.png", link: "jogos/pontos.html", estrelas: 5 }
     ],
     temaCores: {
