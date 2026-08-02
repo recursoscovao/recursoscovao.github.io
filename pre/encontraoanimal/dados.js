@@ -67,7 +67,7 @@ const JOGO_CONFIG = {
     anoAtivo: "pre",    
     
     caminhoIconsMenu: "../../icons/", 
-    caminhoIconsJogos: "../../icons/",
+    caminhoIconsJogos: "../../icons/ic_jogos_pre",
     caminhoSons: "../../sons/", // Nova pasta para os sons
 
     sons: {
