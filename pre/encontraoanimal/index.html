@@ -319,7 +319,15 @@
                     <button onclick="window.history.back()" style="flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer;">SAIR</button>`;
             }
         };
-
+       function voltarPagina() {
+    if (window.history.length > 1) {
+        window.history.back();
+    } else {
+        // Se não existir histórico, sobe um nível na pasta
+        const url = new URL(".", window.location.href);
+        window.location.href = url.href;
+    }
+}
         function toggleMenu(e) { 
             e.stopPropagation(); 
             const m = document.getElementById('dropdownMenu'); 
