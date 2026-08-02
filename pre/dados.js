@@ -57,8 +57,8 @@ const JOGO_CONFIG = {
             tituloFase: "CLICAR E IDENTIFICAR",
             corEtiqueta: "#E91E63", 
             jogos: [
-                { nome: "Encontra o Animal", desc: "Encontra o animal igual.", icon: "encontraoanimal.png", link: "encontraoanimal/", cor: "#C2185B" },
-                { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
+                { nome: "Encontra o Animal Doméstico", desc: "Encontra o animal igual.", icon: "encontraoanimal.png", link: "encontraoanimal/", cor: "#C2185B" },
+                { nome: "Encontra o Animal Selvagem", desc: "Encontra o animal igual", icon: "encontraoanimal_1.png", link: "encontraoanimal_1/", cor: "#D32F2F" },
                 { nome: "Toupeira das Letras", desc: "Bata nas toupeiras corretas.", icon: "rato.png", link: "toupeira/", cor: "#E64A19" },
                 { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
                 { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
