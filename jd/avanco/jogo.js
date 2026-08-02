@@ -35,7 +35,9 @@ style.innerHTML = `
 
     /* Ajuste Capa: Simulação mais acima e mais padding */
     #simu-container { height: 320px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: -60px !important; margin-bottom: 50px !important; }
-    #simu-board { transform: scale(1.1); }
+    
+    /* ESCALA DA ANIMAÇÃO AJUSTADA PARA 0.95 */
+    #simu-board { transform: scale(0.95); transition: 0.3s; }
 
     .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 480px; justify-content: center; align-items: center; }
     .btn-capa-small { flex: 1; height: 50px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-transform: uppercase; }
@@ -46,13 +48,14 @@ style.innerHTML = `
     .nivel-row { display: flex; flex-direction: row; gap: 10px; width: 100%; justify-content: center; }
     .btn-nivel { background: white; padding: 12px 2px; border-radius: 12px; border: 2px solid #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; flex: 1; }
     .btn-nivel b { font-size: 0.8rem; font-weight: 900; text-transform: uppercase; }
-    .btn-nivel span { font-size: 0.65rem; font-weight: 700; opacity: 0.7; }
+    .btn-nivel span { font-size: 0.65rem; font-weight: 700; opacity: 0.7; text-align: center; line-height: 1.1; }
     .btn-nivel.l1 { border-color: #8cc63f; color: #8cc63f; }
     .btn-nivel.l2 { border-color: #ff5a5f; color: #ff5a5f; }
     
     /* Botão Voltar: 65px de altura */
     .btn-voltar-nivel { height: 65px !important; background: #6c757d !important; width: 160px; margin-top: 10px; border-radius: 12px; color: white; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; }
 
+    /* INSTRUÇÕES PREMIUM */
     #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s ease; transform: translateY(100%); visibility: hidden; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
@@ -83,7 +86,7 @@ style.innerHTML = `
 document.head.appendChild(style);
 
 // ============================================================
-// 3. CAPA E INSTRUÇÕES
+// 3. CAPA E INSTRUÇÕES (COMPLETAS)
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -95,15 +98,29 @@ function mostrarCapa() {
         panel.innerHTML = `
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
-                <div class="inst-header">Como Jogar Avanço</div>
+                <div class="inst-header">Instruções: Avanço</div>
+                
                 <div class="inst-section-title">Objetivo</div>
-                <p class="inst-text">Ser o primeiro a infiltrar uma das suas peças na <b>linha de fundo do adversário</b> (a 1ª linha para as Brancas e a 7ª linha para as Pretas).</p>
-                <div class="inst-section-title">Como Jogar</div>
+                <p class="inst-text">O Avanço é uma corrida estratégica. Vence o jogador que conseguir chegar com qualquer uma das suas peças à <b>primeira linha do adversário</b> (a Linha 1 para as Brancas e a Linha 7 para as Negras).</p>
+
+                <div class="inst-section-title">Regras de Movimento</div>
                 <ul class="inst-list">
-                    <li><b>Movimento:</b> Podes mover uma casa em frente (se estiver vazia) ou uma casa na diagonal (se estiver vazia ou com peça adversária).</li>
-                    <li><b>Captura:</b> Só capturas na <b>diagonal</b>. Move a tua peça para o lugar da peça adversária para a remover.</li>
-                    <li><b>Início:</b> As Brancas começam sempre o jogo.</li>
+                    <li><b>Sentido:</b> As peças movem-se sempre em direção ao campo adversário (as Brancas "sobem" e as Negras "descem").</li>
+                    <li><b>Em frente (Vertical):</b> Podes mover uma peça para a casa imediatamente à frente se esta estiver <b>vazia</b>.</li>
+                    <li><b>Diagonais:</b> Podes mover uma peça para uma das duas casas diagonais à frente se estas estiverem <b>vazias</b> ou ocupadas por uma <b>peça adversária</b>.</li>
                 </ul>
+
+                <div class="inst-section-title">Capturas</div>
+                <ul class="inst-list">
+                    <li><b>Como capturar:</b> As capturas são feitas movendo a tua peça para a casa ocupada por um adversário, mas <b>apenas na diagonal</b>.</li>
+                    <li><b>Remoção:</b> A peça capturada é removida permanentemente do tabuleiro.</li>
+                    <li><b>Importante:</b> Não podes capturar uma peça que esteja diretamente à tua frente (na vertical).</li>
+                </ul>
+
+                <div class="inst-section-title">Notas de Jogo</div>
+                <p class="inst-text">As peças são obrigadas a mover-se sempre para a frente. O jogo termina rapidamente e <b>nunca há empates</b>, pois a peça mais avançada terá sempre um movimento possível.</p>
+                
+                <div style="height:40px;"></div>
             </div>`;
         document.body.appendChild(panel);
         const feedback = document.createElement('div');
@@ -252,8 +269,9 @@ function finalizarRonda(vencedorIdx) {
     jogoAtivo = false; matchScore[vencedorIdx]++; somAcerto.play();
     const overlay = document.getElementById('round-feedback');
     const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
+    const corVencedor = vencedorIdx === 0 ? "#8cc63f" : "#444";
     overlay.style.display = 'flex';
-    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:#8cc63f; font-size:2.2rem; font-weight:900;">${nomeVencedor}</h1><p>Ganhou a ronda!</p><div style="margin-top:15px; border-top:2px dashed #eee; padding-top:10px; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]}</div></div>`;
+    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:#8cc63f; font-size:2.2rem; font-weight:900;">${nomeVencedor}</h1><p>Ganhou a ronda!</p><div style="margin-top:15px; border-top:2px dashed #eee; padding-top:10px; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} Pc</div></div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2000);
     else setTimeout(() => { currentGameNum++; iniciarJogo(); }, 2000);
 }
@@ -263,7 +281,7 @@ function finalizarMatch() {
     const vencedorIdx = matchScore[0] >= 3 ? 0 : 1;
     const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
     document.getElementById('shell-header-content').innerHTML = `<h2>RESULTADOS FINAIS</h2>`;
-    document.getElementById('game-content').innerHTML = `<div style="text-align:center;"><img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:150px;"><h2 style="color:var(--primary-color); text-transform:uppercase;">GANHOU O ${nomeV}</h2></div>`;
+    document.getElementById('game-content').innerHTML = `<div style="text-align:center;"><img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:120px;"><h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase; margin-bottom:20px;">GANHOU O ${nomeV}</h2></div>`;
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex"; footer.style.gap = "10px";
     footer.innerHTML = `<button class="btn-capa-small" style="background:#6c757d; flex:1;" onclick="location.reload()">REPETIR</button><button class="btn-capa-small" style="background:var(--primary-color); flex:1;" onclick="window.history.back()">SAIR</button>`;
