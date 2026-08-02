@@ -141,12 +141,11 @@ const DADOS_JOGO = {
         { id: 14, img: "melancia.png", nome: "Melancia" },
         { id: 15, img: "ananas.png", nome: "Ananás" },
         { id: 16, img: "kiwi.png", nome: "Kiwi" },
-        { id: 17, img: "uvas1.png", nome: "Uvas" },
+        { id: 17, img: "uvas.png", nome: "Uvas" },
         { id: 18, img: "papaia.png", nome: "Papaia" },
-        { id: 19, img: "uvas2.png", nome: "Uvas" },
-        { id: 20, img: "banana.png", nome: "Banana" },
-        { id: 21, img: "maca.png", nome: "Maçã" },
-        { id: 22, img: "laranja.png", nome: "Laranja" },
-        { id: 23, img: "pera.png", nome: "Pêra" }
+        { id: 19, img: "banana.png", nome: "Banana" },
+        { id: 20, img: "maca.png", nome: "Maçã" },
+        { id: 21, img: "laranja.png", nome: "Laranja" },
+        { id: 22, img: "pera.png", nome: "Pêra" }
     ]
 };
