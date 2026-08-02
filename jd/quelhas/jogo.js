@@ -103,25 +103,34 @@ function mostrarCapa() {
     if(!document.getElementById('instrucoes-panel')) {
         const panel = document.createElement('div');
         panel.id = 'instrucoes-panel';
-        panel.innerHTML = `
+panel.innerHTML = `
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Quelhas</div>
+                
                 <div class="inst-section-title">Objetivo (Regra Misere)</div>
-                <p class="inst-text">Vence o jogador que conseguir levar a <b>peça branca</b> até à sua casa final ou deixar o adversário sem movimentos (bloqueado). Mas atenção: o jogador que realizar a <b>última jogada possível perde o jogo</b>.</p>
-                <div class="inst-section-title">Regras de Início</div>
+                <p class="inst-text">Ao contrário da maioria dos jogos, no Quelhas <b>PERDE o jogador que realizar a última jogada possível</b> no tabuleiro. Deves jogar de forma a forçar o teu adversário a ocupar o último espaço livre.</p>
+
+                <div class="inst-section-title">As Peças e o Tabuleiro</div>
                 <ul class="inst-list">
-                    <li><b>Gatos (Pretos):</b> Começam o jogo e a sua primeira peça deve ser colocada na <b>zona central</b>.</li>
-                    <li><b>Cães (Brancos):</b> Jogam a seguir e a sua primeira peça deve ser colocada <b>fora</b> da zona central.</li>
+                    <li><b>Tabuleiro:</b> Um quadrado de 10x10 casas.</li>
+                    <li><b>Peças:</b> São usadas 100 peças de uma só cor para preencher os blocos.</li>
+                    <li><b>Jogadores:</b> O jogador <b>Vertical</b> só coloca peças em coluna. O jogador <b>Horizontal</b> só coloca peças em linha.</li>
                 </ul>
-                <div class="inst-section-title">Como Jogar</div>
+
+                <div class="inst-section-title">Regras de Jogo</div>
                 <ul class="inst-list">
-                    <li><b>Proibição:</b> Não podes colocar um Gato ao lado de um Cão (nem na horizontal nem na vertical).</li>
-                    <li><b>Estratégia:</b> Tenta ocupar o tabuleiro de forma a garantir lugares onde só tu possas jogar no futuro.</li>
-                    <li><b>Fim do Jogo:</b> O jogo termina mal um dos jogadores fique bloqueado.</li>
+                    <li><b>1.</b> Os jogadores alternam colocando, em casas livres, <b>duas ou mais peças</b> ortogonalmente contíguas (seguidas).</li>
+                    <li><b>2.</b> Começa sempre o jogador <b>Vertical</b>.</li>
+                    <li><b>3. Regra da Troca:</b> Na sua primeira jogada, o jogador Horizontal pode optar por aceitar a jogada do adversário e <b>trocar de orientação</b>. Nesse caso, a sua jogada já está feita e o turno volta ao adversário (que passa a ser o Horizontal).</li>
                 </ul>
+
+                <div class="inst-section-title">Exemplo de Estratégia</div>
+                <p class="inst-text">Podes colocar blocos de 2, 3, 4 ou mais peças de uma só vez, desde que estejam livres e na tua orientação. Planeia bem para não seres tu a fechar o tabuleiro!</p>
+                
                 <div style="height:40px;"></div>
-            </div>`;
+            </div>
+        `;
         document.body.appendChild(panel);
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
