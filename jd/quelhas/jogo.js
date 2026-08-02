@@ -11,9 +11,9 @@ let currentGameNum = 1;
 let tabuleiro = Array(10).fill().map(() => Array(10).fill(0)); 
 let startCell = null;     
 let primeiraJogadaRealizada = false;
+let j2JaJogou = false; 
 let trocouOrientacao = false; 
-let j2JaJogou = false;
-let orientacoes = [0, 1]; 
+let orientacoes = [0, 1]; // [J1, J2/Pc] -> 0: Vertical, 1: Horizontal
 let simuInterval;         
 
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
@@ -28,7 +28,10 @@ const style = document.createElement('style');
 style.innerHTML = `
     .status-container { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 2px 5px; }
     
+    /* Barra de Status Discreta */
     .status-pill { padding: 4px 15px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; color: white; display: flex; align-items: center; gap: 12px; }
+    
+    /* Indicadores de direção na barra de status */
     .status-dots { display: flex; gap: 4px; }
     .status-dots.v-dir { flex-direction: column; }
     .status-dots.h-dir { flex-direction: row; }
@@ -42,6 +45,7 @@ style.innerHTML = `
     
     @keyframes blinker { 50% { opacity: 0.2; } }
 
+    /* Ajuste Padding Animação: 10px da barra de status */
     #simu-container { height: 320px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: 10px !important; margin-bottom: 40px; }
     #simu-board { transform: scale(1.1); }
 
@@ -61,28 +65,27 @@ style.innerHTML = `
     
     .btn-voltar-nivel { height: 65px !important; background: #6c757d !important; width: 160px; margin-top: 15px; border-radius: 12px; color: white; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; }
 
-    /* INSTRUÇÕES PREMIUM */
-    #instrucoes-panel { 
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; 
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(105%); 
-        visibility: hidden; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; 
-    }
+    #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s ease; transform: translateY(100%); visibility: hidden; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
     .close-x:hover { transform: scale(1.2); }
+
     .inst-content { max-width: 600px; margin: 0 auto; text-align: left; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 3px solid var(--bg-color); padding-bottom: 10px; }
-    .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 25px 0 12px; display: flex; align-items: center; gap: 10px; }
+    .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 20px 0 12px; display: flex; align-items: center; gap: 10px; }
     .inst-section-title::before { content: ''; width: 6px; height: 22px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
-    .inst-text { color: #666; font-size: 1.05rem; line-height: 1.6; margin-bottom: 15px; }
     .inst-list { list-style: none; padding: 0; }
-    .inst-list li { background: #f9f9f9; margin-bottom: 10px; padding: 15px; border-radius: 15px; border-left: 5px solid var(--bg-color); color: #555; font-size: 0.95rem; line-height: 1.5; }
+    .inst-list li { background: #f9f9f9; margin-bottom: 10px; padding: 15px; border-radius: 15px; border-left: 5px solid var(--bg-color); color: #555; font-size: 0.95rem; line-height: 1.4; }
 
-    .grid-board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #bbb; padding: 3px; border-radius: 8px; width: fit-content; margin: 0 auto; transition: transform 0.8s ease; }
+    /* TABULEIRO COM ROTAÇÃO */
+    .grid-board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #bbb; padding: 3px; border-radius: 8px; width: fit-content; margin: 0 auto; transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
     .grid-board.rotated { transform: rotate(180deg); }
+    
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 1px; display: flex; align-items: center; justify-content: center; position: relative; }
     .cell.occupied::after { content: ''; width: 85%; height: 85%; background: #333; border-radius: 50%; }
-    .cell.selected { background: #e8f5e9; border: 1px solid #8cc63f; }
+    .cell.selected { background: #e8f5e9; border: 2px solid #8cc63f; }
+
+    /* BOLINHAS CINZENTAS DE AJUDA */
     .cell.hint::after { content: ''; width: 8px; height: 8px; background: #bbb; border-radius: 50%; opacity: 0.8; }
 
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: center; justify-content: center; border-radius: 35px; }
@@ -110,18 +113,18 @@ function mostrarCapa() {
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Quelhas</div>
                 <div class="inst-section-title">Objetivo (Regra Misere)</div>
-                <p class="inst-text">O Quelhas é um jogo estratégico. Ao contrário da maioria, aqui <b>PERDE o jogador que realizar a última jogada possível</b>. Força o adversário a ocupar o último espaço livre!</p>
+                <p class="inst-text">O Quelhas é um jogo de bloqueio estratégico. Ao contrário da maioria dos jogos, este segue a regra <b>Misere</b>: o jogador que realizar a <b>última jogada possível</b> no tabuleiro perde o jogo. O teu objetivo é forçar o adversário a ocupar o último espaço livre.</p>
                 <div class="inst-section-title">As Peças e o Tabuleiro</div>
                 <ul class="inst-list">
-                    <li><b>Tabuleiro:</b> 10x10 casas.</li>
-                    <li><b>Jogadores:</b> Vertical (colunas) e Horizontal (linhas).</li>
-                    <li><b>Blocos:</b> Deves colocar blocos de <b>duas ou mais peças</b> seguidas.</li>
+                    <li><b>Tabuleiro:</b> Um quadrado de 10x10 casas.</li>
+                    <li><b>Jogadores:</b> Um joga na <b>Vertical</b> (colunas) e outro na <b>Horizontal</b> (linhas).</li>
+                    <li><b>Peças:</b> Devem ser colocados blocos de <b>duas ou mais peças</b> seguidas na orientação do jogador.</li>
                 </ul>
                 <div class="inst-section-title">Como Jogar</div>
                 <ul class="inst-list">
-                    <li><b>1.</b> O jogador Vertical começa sempre.</li>
-                    <li><b>2.</b> Clica na casa onde o bloco começa e depois na casa onde termina.</li>
-                    <li><b>3. Regra da Troca:</b> Na primeira jogada do J2, este pode decidir <b>trocar de orientação</b>. O tabuleiro roda 180º e as funções invertem-se.</li>
+                    <li><b>1.</b> O jogador Vertical começa sempre o jogo.</li>
+                    <li><b>2.</b> Para jogar, clica na casa onde o teu bloco começa e depois na casa onde termina.</li>
+                    <li><b>3. Regra da Troca:</b> Na primeira jogada do segundo jogador (J2), este pode optar por <b>trocar de orientação</b>. O tabuleiro roda 180º e o J2 assume a Vertical.</li>
                 </ul>
             </div>`;
         document.body.appendChild(panel);
@@ -214,7 +217,7 @@ function atualizarUI() {
 
     if (primeiraJogadaRealizada && !j2JaJogou && turnoAtual === 1) {
         const btn = document.createElement('button');
-        btn.className = "btn-capa-small"; btn.style = "background:#f9a825; margin: 15px auto; width: 180px; display:block; height:50px;";
+        btn.className = "btn-capa-small"; btn.style = "background:#f9a825; margin: 15px auto; width: 180px; display:block; height:50px; box-shadow: 0 4px 10px rgba(0,0,0,0.2);";
         btn.innerText = "TROCAR ORIENTAÇÃO"; btn.onclick = swapOrientations; area.appendChild(btn);
     }
 }
@@ -266,10 +269,19 @@ function colocarPeca(r1, c1, r2, c2) {
 }
 
 function finalizarTurno() {
-    if (!temLancesLegaisParaAlguem(tabuleiro)) { finalizarRonda(turnoAtual); return; }
-    turnoAtual = (turnoAtual === 0) ? 1 : 0;
-    atualizarUI();
+    const proximoJogador = (turnoAtual === 0) ? 1 : 0;
+    const orientProximo = orientacoes[proximoJogador];
+    if (!temLancesLegais(orientProximo)) { finalizarRonda(turnoAtual); return; }
+    turnoAtual = proximoJogador; atualizarUI();
     if (modoJogo === 'CPU' && turnoAtual === 1) setTimeout(iaControlador, 800);
+}
+
+function temLancesLegais(o) {
+    for (let r = 0; r < 10; r++) for (let c = 0; c < 10; c++) if (tabuleiro[r][c] === 0) {
+        if (o === 0 && r < 9 && tabuleiro[r+1][c] === 0) return true;
+        if (o === 1 && c < 9 && tabuleiro[r][c+1] === 0) return true;
+    }
+    return false;
 }
 
 function iaControlador() {
@@ -279,7 +291,7 @@ function iaControlador() {
         if (cpuO === 0 && r<9 && tabuleiro[r+1][c] === 0) moves.push({r1:r, c1:c, r2:r+1, c2:c});
         if (cpuO === 1 && c<9 && tabuleiro[r][c+1] === 0) moves.push({r1:r, c1:c, r2:r, c2:c+1});
     }
-    if (moves.length === 0) return;
+    if (moves.length === 0) { finalizarRonda(0); return; }
     let m;
     if (nivelJogo === 1) {
         let boas = moves.filter(mv => {
@@ -323,12 +335,13 @@ function finalizarRonda(perdedorIdx) {
     const overlay = document.getElementById('round-feedback');
     const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
     const corV = vencedorIdx === 0 ? "#8cc63f" : "#ff5a5f";
+    const labelBox2 = modoJogo === 'CPU' ? 'Pc' : 'J2';
     overlay.style.display = 'flex';
     overlay.innerHTML = `<div class="vitoria-card">
         <div style="font-size: 3rem; color: ${corV}; margin-bottom: 10px;"><i class="fas fa-star"></i></div>
-        <h1 style="color:${corV}; font-size:2.2rem; font-weight:900; margin:0; text-transform:uppercase;">${nomeV}</h1>
+        <h1 style="color:${corV}; font-size:2rem; font-weight:900; margin:0; text-transform:uppercase;">${nomeV}</h1>
         <p style="color:#666; font-size:1.1rem; font-weight:700; margin:5px 0 0 0;">Venceu esta ronda!</p>
-        <div style="margin-top:15px; padding-top:15px; border-top:2px dashed #eee; color:#aaa; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} Pc</div>
+        <div style="margin-top:15px; padding-top:15px; border-top:2px dashed #eee; color:#aaa; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${labelBox2}</div>
     </div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2500);
     else setTimeout(() => { currentGameNum++; trocouOrientacao = false; iniciarJogo(); }, 2500);
@@ -336,10 +349,11 @@ function finalizarRonda(perdedorIdx) {
 
 function finalizarMatch() {
     document.getElementById('round-feedback').style.display = 'none';
-    const vencedorIdx = (matchScore[0] >= 3) ? 0 : 1;
-    const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
+    const vIdx = (matchScore[0] >= 3) ? 0 : 1;
+    const nomeV = vIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
+    const lb2 = modoJogo === 'CPU' ? 'Pc' : 'J2';
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">RESULTADOS FINAIS</h2>`;
-    document.getElementById('game-content').innerHTML = `<div style="text-align:center;"><img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:150px; margin-bottom:10px;"><h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase; margin-bottom:20px;">GANHOU O ${nomeVencedor}</h2><div style="display:flex; justify-content:center; gap:20px;"><div class="score-box box-v" style="padding:10px 20px; font-size:1.2rem;">J1: ${matchScore[0]}</div><div class="score-box box-x" style="padding:10px 20px; font-size:1.2rem;">${modoJogo === 'CPU' ? 'Pc' : 'J2'}: ${matchScore[1]}</div></div></div>`;
+    document.getElementById('game-content').innerHTML = `<div style="text-align:center;"><img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:150px; margin-bottom:10px;"><h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase; margin-bottom:20px;">GANHOU O ${nomeV}</h2><div style="display:flex; justify-content:center; gap:20px;"><div class="score-box box-v" style="padding:10px 20px; font-size:1.2rem;">J1: ${matchScore[0]}</div><div class="score-box box-x" style="padding:10px 20px; font-size:1.2rem;">${lb2}: ${matchScore[1]}</div></div></div>`;
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex"; footer.style.gap = "10px";
     footer.innerHTML = `<button class="btn-capa-small" style="background:#6c757d; flex:1;" onclick="location.reload()"><i class="fas fa-redo"></i> REPETIR</button><button class="btn-capa-small" style="background:var(--primary-color); flex:1;" onclick="window.history.back()">SAIR</button>`;
