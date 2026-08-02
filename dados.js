@@ -29,7 +29,7 @@ const JOGO_CONFIG = {
         { nome: "Dominório", icon: "dominorio.png", link: "jd/dominorio", estrelas: 5 },
         { nome: "Semáforo", icon: "semaforo.png", link: "jd/semaforo", estrelas: 5 },
         { nome: "Quelhas", icon: "quelhas.png", link: "jd/quelhas", estrelas: 5 },
-        { nome: "Pontuação", icon: "target.png", link: "jogos/pontos.html", estrelas: 5 }
+        { nome: "Avanço", icon: "avanco.png", link: "jd/avanco.html", estrelas: 5 }
     ],
     temaCores: {
         rosa: { fundo: "#F48FB1" },
