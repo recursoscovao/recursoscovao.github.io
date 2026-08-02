@@ -36,65 +36,61 @@ style.innerHTML = `
     .blinking { animation: blinker 1s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
 
-    /* Ajuste Padding Animação: 10px da barra de status */
+    /* Ajuste: 10px de padding da barra de status */
     #simu-container { height: 320px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: 10px !important; margin-bottom: 40px; }
     #simu-board { transform: scale(1.1); }
 
-    .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 480px; justify-content: center; align-items: center; margin-top: 10px; }
-    .btn-capa-small { flex: 1; height: 50px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; white-space: nowrap; padding: 0 10px; }
-    .btn-inform { width: 55px; height: 55px; flex: none; background: none; border: none; cursor: pointer; display: flex; align-items: center; justify-content: center; }
-    .btn-inform img { width: 45px; height: 45px; object-fit: contain; }
+    .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 480px; justify-content: center; align-items: center; }
+    .btn-capa-small { flex: 1; height: 50px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-transform: uppercase; }
+    
+    .btn-inform { width: 50px; height: 50px; cursor: pointer; flex: none; }
+    .btn-inform img { width: 100%; height: 100%; object-fit: contain; }
 
     /* MENU DE NÍVEIS PREMIUM */
-    .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 95%; max-width: 500px; animation: cardPop 0.3s ease; align-items: center; }
-    .nivel-row { display: flex; flex-direction: row; gap: 6px; width: 100%; justify-content: center; }
-
-    .btn-nivel {
-        background: white; padding: 12px 2px; border-radius: 12px; border: 2px solid #eee;
-        display: flex; flex-direction: column; align-items: center; justify-content: center;
-        cursor: pointer; transition: 0.2s; flex: 1; min-width: 0;
-    }
-    .btn-nivel b { font-size: 0.75rem; font-weight: 900; text-transform: uppercase; }
-    .btn-nivel span { font-size: 0.55rem; font-weight: 700; opacity: 0.7; text-align: center; line-height: 1.1; margin-top: 4px; }
+    .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 95%; max-width: 500px; align-items: center; }
+    .nivel-row { display: flex; flex-direction: row; gap: 10px; width: 100%; justify-content: center; }
+    .btn-nivel { background: white; padding: 12px 2px; border-radius: 12px; border: 2px solid #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; flex: 1; }
+    .btn-nivel b { font-size: 0.8rem; font-weight: 900; text-transform: uppercase; }
+    .btn-nivel span { font-size: 0.6rem; font-weight: 700; opacity: 0.7; text-align: center; line-height: 1.1; margin-top: 4px; }
     .btn-nivel.l1 { border-color: #8cc63f; color: #8cc63f; }
     .btn-nivel.l2 { border-color: #ff5a5f; color: #ff5a5f; }
-
-    /* Botão Voltar: 60px de altura */
-    .btn-voltar-nivel { height: 60px !important; background: #6c757d !important; width: 150px; margin-top: 15px; border-radius: 12px; color: white; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; }
+    
+    /* Botão Voltar: 65px de altura */
+    .btn-voltar-nivel { height: 65px !important; background: #6c757d !important; width: 150px; margin-top: 15px; border-radius: 12px; color: white; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; }
 
     /* PAINEL DE INSTRUÇÕES PREMIUM */
-    #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(105%); visibility: hidden; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; }
+    #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s ease; transform: translateY(100%); visibility: hidden; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
-    .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.2rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
+    .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
     .close-x:hover { transform: scale(1.2); }
 
     .inst-content { max-width: 600px; margin: 0 auto; text-align: left; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 3px solid var(--bg-color); padding-bottom: 10px; }
-    .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 20px 0 10px; display: flex; align-items: center; gap: 10px; }
+    .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 20px 0 12px; display: flex; align-items: center; gap: 10px; }
     .inst-section-title::before { content: ''; width: 6px; height: 22px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
     .inst-list { list-style: none; padding: 0; }
-    .inst-list li { background: #f9f9f9; margin-bottom: 8px; padding: 12px 15px; border-radius: 12px; border-left: 4px solid var(--bg-color); color: #555; font-size: 1rem; line-height: 1.4; }
+    .inst-list li { background: #f9f9f9; margin-bottom: 10px; padding: 15px; border-radius: 15px; border-left: 5px solid var(--bg-color); color: #555; font-size: 0.95rem; line-height: 1.4; }
 
+    /* TABULEIRO */
     .grid-board { display: grid; grid-template-columns: repeat(10, 1fr); gap: 2px; background: #bbb; padding: 3px; border-radius: 8px; width: fit-content; margin: 0 auto; transition: transform 0.8s ease; }
     .grid-board.rotated { transform: rotate(180deg); }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 1px; display: flex; align-items: center; justify-content: center; }
     .cell.occupied::after { content: ''; width: 85%; height: 85%; background: #333; border-radius: 50%; }
-    .cell.selected { background: #e8f5e9; border: 1px solid #8cc63f; }
+    .cell.selected { background: #e8f5e9; border: 2px solid #8cc63f; }
     .cell.hint { background: rgba(140, 198, 63, 0.25); position: relative; }
     .cell.hint::before { content: ''; width: 8px; height: 8px; background: #8cc63f; border-radius: 50%; opacity: 0.5; }
 
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.7); backdrop-filter: blur(6px); z-index: 1000; display: none; align-items: center; justify-content: center; border-radius: 35px; }
-    .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); text-align: center; border: 4px solid var(--bg-color); animation: cardPop 0.4s cubic-bezier(0.17, 0.89, 0.32, 1.28); }
-    @keyframes cardPop { 0% { transform: scale(0.7); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+    .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); text-align: center; }
 
-    @media screen and (min-width: 1025px) { :root { --cell-size: 38px; } }
-    @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 8.2vw; } }
-    @media screen and (max-height: 500px) and (orientation: landscape) { :root { --cell-size: 6.2vh; } }
+    @media screen and (min-width: 1025px) { :root { --cell-size: 40px; } }
+    @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 8.5vw; } }
+    @media screen and (max-height: 500px) and (orientation: landscape) { :root { --cell-size: 7vh; } }
 `;
 document.head.appendChild(style);
 
 // ============================================================
-// 3. CAPA, SIMULAÇÃO E INSTRUÇÕES
+// 3. CAPA, SIMULAÇÃO E INSTRUÇÕES COMPLETAS
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -103,34 +99,29 @@ function mostrarCapa() {
     if(!document.getElementById('instrucoes-panel')) {
         const panel = document.createElement('div');
         panel.id = 'instrucoes-panel';
-panel.innerHTML = `
+        panel.innerHTML = `
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Quelhas</div>
                 
                 <div class="inst-section-title">Objetivo (Regra Misere)</div>
-                <p class="inst-text">Ao contrário da maioria dos jogos, no Quelhas <b>PERDE o jogador que realizar a última jogada possível</b> no tabuleiro. Deves jogar de forma a forçar o teu adversário a ocupar o último espaço livre.</p>
+                <p class="inst-text">O Quelhas é um jogo de bloqueio estratégico. Ao contrário da maioria dos jogos, este segue a regra <b>Misere</b>: o jogador que realizar a <b>última jogada possível</b> no tabuleiro perde o jogo. O teu objetivo é forçar o adversário a ocupar o último espaço livre.</p>
 
                 <div class="inst-section-title">As Peças e o Tabuleiro</div>
                 <ul class="inst-list">
                     <li><b>Tabuleiro:</b> Um quadrado de 10x10 casas.</li>
-                    <li><b>Peças:</b> São usadas 100 peças de uma só cor para preencher os blocos.</li>
-                    <li><b>Jogadores:</b> O jogador <b>Vertical</b> só coloca peças em coluna. O jogador <b>Horizontal</b> só coloca peças em linha.</li>
+                    <li><b>Jogadores:</b> Um joga na <b>Vertical</b> (colunas) e outro na <b>Horizontal</b> (linhas).</li>
+                    <li><b>Peças:</b> Devem ser colocados blocos de <b>duas ou mais peças</b> seguidas na orientação do jogador.</li>
                 </ul>
 
-                <div class="inst-section-title">Regras de Jogo</div>
+                <div class="inst-section-title">Como Jogar</div>
                 <ul class="inst-list">
-                    <li><b>1.</b> Os jogadores alternam colocando, em casas livres, <b>duas ou mais peças</b> ortogonalmente contíguas (seguidas).</li>
-                    <li><b>2.</b> Começa sempre o jogador <b>Vertical</b>.</li>
-                    <li><b>3. Regra da Troca:</b> Na sua primeira jogada, o jogador Horizontal pode optar por aceitar a jogada do adversário e <b>trocar de orientação</b>. Nesse caso, a sua jogada já está feita e o turno volta ao adversário (que passa a ser o Horizontal).</li>
+                    <li><b>1.</b> O jogador Vertical começa sempre o jogo.</li>
+                    <li><b>2.</b> Para jogar, clica na casa onde o bloco começa e depois na casa onde termina.</li>
+                    <li><b>3.</b> O bloco só pode ser colocado em <b>casas livres</b> e na tua orientação correta.</li>
+                    <li><b>4. Regra da Troca:</b> Na primeira jogada do segundo jogador (J2), este pode optar por <b>trocar de orientação</b> com o J1. O tabuleiro roda 180º e o J2 assume a Vertical.</li>
                 </ul>
-
-                <div class="inst-section-title">Exemplo de Estratégia</div>
-                <p class="inst-text">Podes colocar blocos de 2, 3, 4 ou mais peças de uma só vez, desde que estejam livres e na tua orientação. Planeia bem para não seres tu a fechar o tabuleiro!</p>
-                
-                <div style="height:40px;"></div>
-            </div>
-        `;
+            </div>`;
         document.body.appendChild(panel);
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
@@ -139,8 +130,8 @@ panel.innerHTML = `
 
     const area = document.getElementById('game-content');
     area.innerHTML = `
-        <div id="simu-container"><div id="simu-board" style="transform: scale(0.65);"></div></div>
-        <div id="capa-menu-principal" style="width:100%; display:flex; justify-content:center;">
+        <div id="simu-container"><div id="simu-board"></div></div>
+        <div id="capa-menu-principal" style="width:100%; display:flex; flex-direction:column; align-items:center;">
             <div class="capa-btn-row">
                 <div class="btn-inform" onclick="toggleInstructions()"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
                 <button class="btn-capa-small" style="background:var(--primary-color);" onclick="mostrarNiveis('CPU')"><i class="fas fa-robot"></i> COMPUTADOR</button>
@@ -158,20 +149,21 @@ function mostrarNiveis(modo) {
     document.getElementById('capa-menu-principal').style.display = 'none';
     const container = document.getElementById('nivel-select-container');
     container.style.display = 'flex';
+
     if (modo === 'CPU') {
         container.innerHTML = `
-            <p style="font-weight:800; color:#888; margin-bottom:10px; font-size:0.8rem; text-transform:uppercase;">Dificuldade Computador:</p>
+            <p style="font-weight:800; color:#888; margin-bottom:10px; font-size:0.8rem; text-transform:uppercase;">Jogar com o computador:</p>
             <div class="nivel-row">
-                <div class="btn-nivel l1" onclick="setModo('CPU', 1)"><b>Nível 1</b><span style="font-size:0.55rem; line-height:1.1;">Analisa jogada atual<br>Evita erros óbvios</span></div>
-                <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b><span style="font-size:0.55rem; line-height:1.1;">Previsão estratégica<br>Controlo de paridade</span></div>
+                <div class="btn-nivel l1" onclick="setModo('CPU', 1)"><b>Nível 1</b><span>Fácil</span></div>
+                <div class="btn-nivel l2" onclick="setModo('CPU', 2)"><b>Nível 2</b><span>Difícil</span></div>
             </div>
             <button class="btn-capa-small btn-voltar-nivel" onclick="voltarCapa()">VOLTAR</button>`;
     } else {
         container.innerHTML = `
             <p style="font-weight:800; color:#888; margin-bottom:10px; font-size:0.8rem; text-transform:uppercase;">Modo 2 Jogadores:</p>
             <div class="nivel-row">
-                <div class="btn-nivel l1" onclick="setModo('PVP', 1)"><b>Nível 1</b><span style="font-size:0.55rem;">Com ajuda visual</span></div>
-                <div class="btn-nivel l2" onclick="setModo('PVP', 2)"><b>Nível 2</b><span style="font-size:0.55rem;">Sem ajuda visual</span></div>
+                <div class="btn-nivel l1" onclick="setModo('PVP', 1)"><b>Nível 1</b><span>Fácil</span></div>
+                <div class="btn-nivel l2" onclick="setModo('PVP', 2)"><b>Nível 2</b><span>Difícil</span></div>
             </div>
             <button class="btn-capa-small btn-voltar-nivel" onclick="voltarCapa()">VOLTAR</button>`;
     }
@@ -181,7 +173,7 @@ function voltarCapa() { somClique.play(); document.getElementById('capa-menu-pri
 function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
 
 // ============================================================
-// 4. LÓGICA CORE DO JOGO E IA
+// 4. LÓGICA DO JOGO E IA
 // ============================================================
 function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
@@ -325,7 +317,7 @@ function finalizarRonda(perdedorIdx) {
     overlay.style.display = 'flex';
     overlay.innerHTML = `<div class="vitoria-card">
         <div style="font-size: 3rem; color: ${corV}; margin-bottom: 10px;"><i class="fas fa-star"></i></div>
-        <h1 style="color:${corV}; font-size:2rem; font-weight:900; margin:0; text-transform:uppercase;">${nomeV}</h1>
+        <h1 style="color:${corV}; font-size:2.2rem; font-weight:900; margin:0; text-transform:uppercase;">${nomeV}</h1>
         <p style="color:#666; font-size:1.1rem; font-weight:700; margin:5px 0 0 0;">Venceu esta ronda!</p>
         <div style="margin-top:15px; padding-top:15px; border-top:2px dashed #eee; color:#aaa; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} Pc</div>
     </div>`;
