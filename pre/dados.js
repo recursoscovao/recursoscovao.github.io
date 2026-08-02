@@ -39,7 +39,7 @@ const JOGO_CONFIG = {
     areaAtiva: "pre", 
     anoAtivo: "pre",      
     caminhoIconsMenu: "../icons/", 
-    caminhoIconsJogos: "icons/ic_jogos_pre",
+    caminhoIconsJogos: "../icons/ic_jogos_pre",
     iconesMenu: {
         home: "home.png", pre: "iconpre.png", ano1: "icon1.png", 
         ano2: "icon2.png", ano3: "icon3.png", ano4: "icon4.png", voltar: "voltar.png"
@@ -57,7 +57,7 @@ const JOGO_CONFIG = {
             tituloFase: "SONS, LETRAS E FORMAS BÁSICAS",
             corEtiqueta: "#E91E63", 
             jogos: [
-                { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
+                { nome: "Encontra o Animal", desc: "Encontra o animal igual.", icon: "encontraoanimal.png", link: "encontraoanimal/", cor: "#C2185B" },
                 { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
                 { nome: "Toupeira das Letras", desc: "Bata nas toupeiras corretas.", icon: "rato.png", link: "toupeira/", cor: "#E64A19" },
                 { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
@@ -66,7 +66,7 @@ const JOGO_CONFIG = {
             ]
         },
         {
-            tituloFase: "DESCOBERTAS E SEQUÊNCIAS",
+            tituloFase: "CLICAR E IDENTIFICAR",
             corEtiqueta: "#FF9800",
             jogos: [
                 { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
