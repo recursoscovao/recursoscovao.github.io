@@ -54,7 +54,7 @@ const JOGO_CONFIG = {
     },
       listaFases: [
         {
-            tituloFase: "SONS, LETRAS E FORMAS BÁSICAS",
+            tituloFase: "CLICAR E IDENTIFICAR",
             corEtiqueta: "#E91E63", 
             jogos: [
                 { nome: "Encontra o Animal", desc: "Encontra o animal igual.", icon: "encontraoanimal.png", link: "encontraoanimal/", cor: "#C2185B" },
@@ -66,7 +66,7 @@ const JOGO_CONFIG = {
             ]
         },
         {
-            tituloFase: "CLICAR E IDENTIFICAR",
+            tituloFase: "SONS, LETRAS E FORMAS BÁSICAS",
             corEtiqueta: "#FF9800",
             jogos: [
                 { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
