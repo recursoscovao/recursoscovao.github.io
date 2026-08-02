@@ -123,7 +123,7 @@ const JOGO_CONFIG = {
 // 4. DADOS DO CONTEÚDO DO JOGO
 // ==========================================
 const DADOS_JOGO = {
-    caminhoImagens: "../../img/frutas/",
+    caminhoImagens: "../../img/frutos/",
     itens: [
         { id: 1, img: "morango.png", nome: "Morango" },
         { id: 2, img: "mirtilo.png", nome: "Mirtilo" },
