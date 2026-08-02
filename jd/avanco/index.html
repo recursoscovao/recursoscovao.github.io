@@ -1,1 +1,340 @@
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title id="page-title">Jogo</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================================
+           1. CONFIGURAÇÕES GLOBAIS (CORES E BASE)
+           ============================================================ */
+        :root { --primary-color: #5EA2E6; --bg-color: #EAF4FE; --text-grey: #8792a1; }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
+        body, html { height: 100vh; width: 100vw; background-color: var(--bg-color); display: flex; flex-direction: column; overflow: hidden; }
+        
+        header { background: white; border-radius: 0 0 35px 35px; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; padding: 0 15px; height: 90px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
+        .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
+        
+        main { flex: 1; display: flex; justify-content: center; overflow: hidden; }
+        .game-shell { background: white; width: min(1100px, 100%); height: 100%; border: 1.5px solid var(--primary-color); display: flex; flex-direction: column; overflow: hidden; }
 
+        .shell-header { text-align: center; border-bottom: 2px dashed #f5f5f5; display: flex; align-items: center; justify-content: center; }
+        .shell-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; overflow: hidden; }
+        .shell-footer { display: flex; align-items: center; background: #fafafa; }
+
+        footer { text-align: center; background: white; flex-shrink: 0; }
+        .hamburger-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; transition: 0.2s; }
+        .menu-dropdown { position: absolute; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
+        .menu-item { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; }
+        .menu-item img { flex-shrink: 0; object-fit: contain; }
+
+        /* Hover comum para todos */
+        .menu-item:hover { background-color: var(--primary-color); color: white !important; }
+        .hamburger-btn:hover { transform: scale(1.1); opacity: 0.7; }
+        
+        /* [FIM DA SECÇÃO 1 - CONFIGURAÇÕES GLOBAIS] */
+
+        /* ============================================================
+           2. PC / TABLET LANDSCAPE
+           ============================================================ */
+   @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
+            header { height: 85px; }
+            #header-icon { height: 55px; }
+            #txt-titulo1 { font-size: 1.3rem; font-weight: 900; color: var(--primary-color); }
+            #txt-titulo2 { font-size: 1.1rem; font-weight: 800; color: var(--text-grey); }
+            #txt-subtitulo-header { 
+                font-size: 0.65rem; 
+                font-weight: 600; 
+                margin-top: 4px; 
+                opacity: 0.8; 
+                color: var(--text-grey); /* Linha adicionada para ficar cinza */
+            }
+            
+            main { padding: 10px; }
+            .game-shell { border-radius: 40px; }
+            .shell-header { min-height: 65px; padding: 5px 15px; }
+            .shell-body { padding: 15px; }
+            .shell-footer { min-height: 90px; padding: 15px 30px; gap: 15px; }
+            
+            footer { padding: 8px; border-radius: 25px 25px 0 0; }
+            .footer-text { font-size: 0.7rem; font-weight: 700; color: var(--text-grey); }
+            
+            .hamburger-btn { font-size: 26px; }
+            .menu-dropdown { top: 80px; left: 15px; }
+            .menu-item { height: 48px; padding: 0 15px; border-radius: 12px; min-width: 250px; }
+            .menu-item img { width: 32px; height: 32px; }
+        }
+        /* [FIM DA SECÇÃO 2 - PC / TABLET LANDSCAPE] */
+
+   /* ============================================================
+           3. TELEMÓVEL VERTICAL (PORTRAIT)
+           ============================================================ */
+        @media screen and (max-width: 500px) and (orientation: portrait) {
+            /* Ativar o scroll vertical nesta orientação */
+            body, html { 
+                overflow-y: auto !important; 
+                height: auto !important; 
+                display: block !important; 
+            }
+
+            header { 
+                height: 85px; 
+            }
+            #header-icon { 
+                height: 55px; 
+            }
+            #txt-titulo1 { font-size: 1.3rem; font-weight: 900; color: var(--primary-color); }
+            #txt-titulo2 { font-size: 1.1rem; font-weight: 800; color: var(--text-grey); }
+            #txt-subtitulo-header { 
+                display: flex;
+                font-size: 0.65rem; 
+                font-weight: 600; 
+                margin-top: 4px; 
+                opacity: 0.8; 
+                color: var(--text-grey);
+            }
+            
+            main { 
+                padding: 10px; 
+                height: auto; 
+                overflow: visible; 
+                display: block;
+            }
+
+            .game-shell { 
+                border-radius: 40px; 
+                height: auto; 
+                min-height: 520px; /* Garante uma altura mínima para o jogo não encolher */
+                margin-bottom: 20px;
+                display: flex;
+            }
+
+            .shell-header { 
+                min-height: 65px; 
+                padding: 5px 15px; 
+            }
+            .shell-body { 
+                padding: 15px; 
+                min-height: 350px;
+                overflow: visible;
+            }
+            .shell-footer { 
+                min-height: 90px; 
+                padding: 15px 30px; 
+                gap: 15px; 
+            }
+            
+            footer { 
+                padding: 15px; 
+                border-radius: 25px 25px 0 0; 
+                position: relative;
+            }
+            .footer-text { font-size: 0.7rem; font-weight: 700; color: var(--text-grey); }
+            
+            .hamburger-btn { font-size: 26px; }
+            .menu-dropdown { top: 80px; left: 15px; }
+            .menu-item { height: 48px; padding: 0 15px; border-radius: 12px; min-width: 250px; }
+            .menu-item img { width: 32px; height: 32px; }
+        }
+        /* [FIM DA SECÇÃO 3 - TELEMÓVEL VERTICAL COM SCROLL] */
+
+/* ============================================================
+           4. TELEMÓVEL HORIZONTAL (LANDSCAPE)
+           ============================================================ */
+        @media screen and (max-height: 500px) and (orientation: landscape) {
+            /* Ativar o scroll vertical apenas nesta orientação */
+            body, html { 
+                overflow-y: auto !important; 
+                height: auto !important; 
+                display: block !important; 
+            }
+
+            header { 
+                height: 75px; /* Ligeiramente maior para caberem os 3 títulos */
+            }
+            #header-icon { 
+                height: 45px; 
+            }
+            
+            /* Configuração dos 3 títulos */
+            #txt-titulo1 { font-size: 1.1rem; color: var(--primary-color); font-weight: 900; }
+            #txt-titulo2 { font-size: 0.9rem; color: var(--text-grey); font-weight: 800; }
+            #txt-subtitulo-header { 
+                display: flex; /* Garante que aparece */
+                font-size: 0.6rem; 
+                color: var(--text-grey); 
+                font-weight: 600; 
+                margin-top: 2px;
+                opacity: 0.8;
+            }
+            
+            main { 
+                padding: 5px; 
+                height: auto; 
+                overflow: visible; 
+                display: block;
+            }
+
+            .game-shell { 
+                border-radius: 20px; 
+                height: auto; 
+                min-height: 420px; 
+                margin-bottom: 20px; 
+                display: flex;
+            }
+
+            .shell-header { 
+                min-height: 55px; 
+                padding: 5px 15px; 
+            }
+            .shell-body { 
+                padding: 10px; 
+                min-height: 250px; 
+                overflow: visible;
+            }
+            .shell-footer { 
+                min-height: 80px; 
+                padding: 10px 25px; 
+                gap: 10px; 
+            }
+            
+            footer { 
+                padding: 10px; 
+                border-radius: 25px 25px 0 0; 
+                position: relative; 
+            }
+            
+            .hamburger-btn { font-size: 22px; }
+            .menu-dropdown { top: 75px; left: 10px; }
+            .menu-item { height: 42px; padding: 0 15px; border-radius: 10px; min-width: 200px; }
+            .menu-item img { width: 26px; height: 26px; }
+        }
+        /* [FIM DA SECÇÃO 4 - TELEMÓVEL HORIZONTAL COM 3 TÍTULOS E SCROLL] */
+    </style>
+</head>
+<body>
+
+    <header>
+        <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
+        <div id="dropdownMenu" class="menu-dropdown"></div>
+        <div class="header-center">
+            <img id="header-icon" src="" alt="">
+            <div class="title-group">
+                <div id="txt-titulo1">---</div>
+                <div id="txt-titulo2">---</div>
+                <div id="txt-subtitulo-header">---</div>
+            </div>
+        </div>
+        <img id="icon-voltar-top" src="" onclick="location.href='../../'" style="height: 38px; cursor: pointer;">
+    </header>
+
+    <main>
+        <div class="game-shell">
+            <div id="shell-header-content" class="shell-header"></div>
+            <div id="game-content" class="shell-body"></div>
+            <div id="shell-footer-content" class="shell-footer"></div>
+        </div>
+    </main>
+
+    <footer><span class="footer-text" id="txt-rodape"></span></footer>
+
+    <script src="dados.js"></script>
+    <script>
+        const Engine = {
+            init() {
+                const config = JOGO_CONFIG;
+                const tema = BIBLIOTECA_TEMAS[config.areaAtiva];
+                const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
+
+                // Define o título da aba do navegador com o nome do jogo
+                document.title = config.nomeDoJogo;
+
+                document.documentElement.style.setProperty('--primary-color', tema.corPrimaria);
+                document.documentElement.style.setProperty('--bg-color', tema.corPagina);
+
+                document.getElementById('txt-titulo1').innerText = conteudo.t1;
+                document.getElementById('txt-titulo2').innerText = conteudo.t2;
+                document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
+                document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
+                
+                const voltarIconPath = config.caminhoIconsMenu + tema.voltarMobile;
+                document.getElementById('icon-voltar-top').src = voltarIconPath;
+
+                const itemAtivo = (config.menuItens || config.menu_itens).find(i => i.id === config.anoAtivo);
+                if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
+                
+                const menuBox = document.getElementById('dropdownMenu');
+                menuBox.innerHTML = ''; 
+
+                (config.menuItens || config.menu_itens).forEach(item => {
+                    // FILTRO: Não adiciona o item "Destaque" ou o id "jd" ao menu lateral
+                    if (item.label === "Destaque" || item.id === "jd") return;
+
+                    const a = document.createElement('a'); 
+                    a.className = 'menu-item'; 
+                    a.href = item.link;
+                    const imgPath = (item.icon === "AUTO") ? voltarIconPath : config.caminhoIconsMenu + item.icon;
+                    a.innerHTML = `<img src="${imgPath}"> <span>${item.label}</span>`;
+                    menuBox.appendChild(a);
+                });
+
+                if(typeof mostrarCapa === "function") mostrarCapa();
+            },
+
+            // FUNÇÃO PARA MOSTRAR A BARRA DE STATUS DURANTE O JOGO
+            showStatusBar(ronda, total, certos, erros) {
+                const lampPath = JOGO_CONFIG.caminhoIconsMenu + "lampada.png";
+                document.getElementById('shell-header-content').innerHTML = `
+                    <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <img src="${lampPath}" style="height:45px; cursor:pointer;" onclick="darAjuda()">
+                            <div style="background: #6c757d; color: white; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 1.1rem;">${ronda}/${total}</div>
+                        </div>
+                        <div style="display: flex; gap: 10px;">
+                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; min-width: 60px; justify-content: center; background: #8cc63f; box-shadow: 0 3px 0 #6da32f;"><i class="fas fa-check"></i> ${certos}</div>
+                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; min-width: 60px; justify-content: center; background: #ff5a5f; box-shadow: 0 3px 0 #d44348;"><i class="fas fa-times"></i> ${erros}</div>
+                        </div>
+                    </div>`;
+                document.getElementById('shell-footer-content').style.display = 'none';
+            },
+
+            // FUNÇÃO PARA MOSTRAR OS RESULTADOS COM AS AJUDAS E COR DO TÍTULO
+            showResults(certos, erros, ajudas, rel) {
+                document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">RESULTADOS</h2>`;
+                document.getElementById('game-content').innerHTML = `
+                    <div style="text-align:center;">
+                        <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height:150px; object-fit:contain;">
+                        <h2 style="color:var(--primary-color); margin:10px 0; font-weight:900; text-transform:uppercase;">${rel.titulo}</h2>
+                        <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
+                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #8cc63f;">CERTOS: ${certos}</div>
+                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #ff5a5f;">ERROS: ${erros}</div>
+                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #5EA2E6;">AJUDAS: ${ajudas}</div>
+                        </div>
+                    </div>`;
+                
+                const footer = document.getElementById('shell-footer-content');
+                footer.style.display = "flex";
+                footer.innerHTML = `
+                    <button onclick="location.reload()" style="flex: 1; height: 65px; border-radius: 35px; background: #6c757d; color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer;">REPETIR</button>
+                    <button onclick="window.history.back()" style="flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer;">SAIR</button>`;
+            }
+        };
+
+        function toggleMenu(e) { 
+            e.stopPropagation(); 
+            const m = document.getElementById('dropdownMenu'); 
+            m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; 
+        }
+
+        window.onclick = () => { 
+            document.getElementById('dropdownMenu').style.display = 'none'; 
+        }
+
+        window.onload = () => Engine.init();
+    </script>
+    <script src="jogo.js"></script>
+</body>
+</html>
