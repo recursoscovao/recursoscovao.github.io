@@ -228,7 +228,7 @@
                 <div id="txt-subtitulo-header">---</div>
             </div>
         </div>
-        <img id="icon-voltar-top" src="" onclick="location.reload()" style="height: 38px; cursor: pointer;">
+        <img id="icon-voltar-top" src="" onclick="voltarPagina()" style="height: 38px; cursor: pointer;">
     </header>
 
     <main>
@@ -319,13 +319,11 @@
                     <button onclick="window.history.back()" style="flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer;">SAIR</button>`;
             }
         };
-       function voltarPagina() {
-    if (window.history.length > 1) {
-        window.history.back();
+        function voltarPagina() {
+    if (history.length > 1) {
+        history.back();
     } else {
-        // Se não existir histórico, sobe um nível na pasta
-        const url = new URL(".", window.location.href);
-        window.location.href = url.href;
+        window.location.href = "../";
     }
 }
         function toggleMenu(e) { 
