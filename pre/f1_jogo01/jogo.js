@@ -2,7 +2,7 @@
 // 1. ESTADO GLOBAL E SONS
 // ==========================================
 let jogoAtivo = false;
-let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0, ajudasUsadas = 0; // Adicionado ajudasUsadas
+let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0, ajudasUsadas = 0; 
 let itemDestaque = null, opcoesRonda = [], simuInterval;
 
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
@@ -49,52 +49,17 @@ style.innerHTML = `
     .feedback-icon { position: absolute; font-size: 3rem; z-index: 10; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3)); pointer-events: none; }
     .icon-v { color: #8cc63f; } .icon-x { color: #ff5a5f; }
 
-/* ============================================================
-       A. PC / TABLET LANDSCAPE
-       ============================================================ */
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
-        :root { 
-            --grid-cols: 6; 
-            --card-size: 135px; 
-            --dest-size: 160px; 
-        }
-
-        .shell-body {
-            padding-top: 10px !important;    
-            padding-bottom: 10px !important; 
-            justify-content: center !important; 
-        }
-
-        .destaque-box { 
-            margin-top: 0px;      
-            margin-bottom: 30px;  
-        }
+        :root { --grid-cols: 6; --card-size: 135px; --dest-size: 160px; }
+        .shell-body { padding-top: 10px !important; padding-bottom: 10px !important; justify-content: center !important; }
+        .destaque-box { margin-top: 0px; margin-bottom: 30px; }
     }
-    /* [FIM PC / TABLET LANDSCAPE] */
-
-    /* ============================================================
-       B. TELEMÓVEL VERTICAL (PORTRAIT)
-       ============================================================ */
     @media screen and (max-width: 500px) and (orientation: portrait) {
-        :root { 
-            --grid-cols: 3; 
-            --card-size: 90px; 
-            --dest-size: 150px; 
-        }
+        :root { --grid-cols: 3; --card-size: 90px; --dest-size: 150px; }
     }
-    /* [FIM TELEMÓVEL VERTICAL] */
-
-    /* ============================================================
-       C. TELEMÓVEL HORIZONTAL (LANDSCAPE)
-       ============================================================ */
     @media screen and (max-height: 500px) and (orientation: landscape) {
-        :root { 
-            --grid-cols: 6; 
-            --card-size: 75px; 
-            --dest-size: 120px; 
-        }
+        :root { --grid-cols: 6; --card-size: 75px; --dest-size: 120px; }
     }
-    /* [FIM TELEMÓVEL HORIZONTAL] */
 `;
 document.head.appendChild(style);
 
@@ -103,7 +68,8 @@ document.head.appendChild(style);
 // ==========================================
 function tocarAudioInstrucoes() {
     somClique.play();
-    const audioInst = new Audio(JOGO_CONFIG.caminhoSons + "instrucoes.mp3");
+    // Alterado para buscar o som definido nos DADOS_JOGO
+    const audioInst = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes);
     audioInst.play().catch(() => {
         const synth = window.speechSynthesis;
         const utter = new SpeechSynthesisUtterance("Olha para o animal em cima e encontra-o em baixo. Clica na lâmpada se precisares de ajuda!");
@@ -176,26 +142,19 @@ function iniciarJogo() {
     rondaAtual = 1; 
     certos = 0; 
     erros = 0; 
-    ajudasUsadas = 0; // Reset das ajudas
+    ajudasUsadas = 0; 
     proximaRonda(); 
 }
 
 function proximaRonda() {
     if (rondaAtual > totalRondas) { finalizarJogo(); return; }
-    
-    // Chama a função do Engine no index.html para mostrar o status
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
-
     const area = document.getElementById('game-content');
-    
     const todos = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
     itemDestaque = todos[0];
-    
     let selecao = todos.slice(0, 12);
     if (!selecao.find(i => i.id === itemDestaque.id)) selecao[0] = itemDestaque;
-    
     opcoesRonda = selecao.sort(() => Math.random() - 0.5);
-
     area.innerHTML = `
         <div class="destaque-box"><img src="${DADOS_JOGO.caminhoImagens + itemDestaque.img}"></div>
         <div style="display:grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap:8px; width:fit-content;">
@@ -209,7 +168,6 @@ function proximaRonda() {
 function verificarResposta(id, el) {
     if (!jogoAtivo) return;
     document.querySelectorAll('.opcao-card').forEach(c => c.style.pointerEvents = 'none');
-
     if (id === itemDestaque.id) {
         certos++; somAcerto.play();
         el.style.borderColor = "#8cc63f";
@@ -226,7 +184,7 @@ function verificarResposta(id, el) {
 
 function darAjuda() {
     if (!jogoAtivo) return;
-    ajudasUsadas++; // Conta a ajuda utilizada
+    ajudasUsadas++; 
     somClique.play();
     const correto = document.getElementById(`card-${itemDestaque.id}`);
     if (correto) {
@@ -238,7 +196,5 @@ function darAjuda() {
 function finalizarJogo() {
     jogoAtivo = false;
     const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
-    
-    // Agora chama a função do Engine no index.html passando as ajudas
     Engine.showResults(certos, erros, ajudasUsadas, rel);
 }
