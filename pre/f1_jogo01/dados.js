@@ -68,7 +68,7 @@ const JOGO_CONFIG = {
     
     caminhoIconsMenu: "../../icons/", 
     caminhoIconsJogos: "../../icons/ic_jogos_pre",
-    caminhoSons: "../../sons/", // Nova pasta para os sons
+    caminhoSons: "../../sons/", 
 
     sons: {
         acerto: "certo.mp3",
@@ -77,13 +77,13 @@ const JOGO_CONFIG = {
     },
 
     menuItens: [
-        { id: "home", label: "Início", icon: "home.png", link: "/" },
-        { id: "pre", label: "Pré-Escolar", icon: "iconpre.png", link: "/pre" },
-        { id: "ano1", label: "1º Ano", icon: "icon1.png", link: "/1" },
-        { id: "ano2", label: "2º Ano", icon: "icon2.png", link: "/2" },
-        { id: "ano3", label: "3º Ano", icon: "icon3.png", link: "/3" },
-        { id: "ano4", label: "4º Ano", icon: "icon4.png", link: "/4" },
-        { id: "voltar", label: "Voltar", icon: "AUTO", link: "javascript:history.back()" } 
+        { id: "home",   label: "Início",       icon: "home.png",    link: "/" },
+        { id: "pre",    label: "Pré-Escolar",  icon: "iconpre.png", link: "/pre" },
+        { id: "ano1",   label: "1º Ano",       icon: "icon1.png",   link: "/1" },
+        { id: "ano2",   label: "2º Ano",       icon: "icon2.png",   link: "/2" },
+        { id: "ano3",   label: "3º Ano",       icon: "icon3.png",   link: "/3" },
+        { id: "ano4",   label: "4º Ano",       icon: "icon4.png",   link: "/4" },
+        { id: "voltar", label: "Voltar",       icon: "AUTO",        link: "javascript:history.back()" } 
     ],
 
     instrucoes: {
@@ -112,10 +112,10 @@ const JOGO_CONFIG = {
     },
 
     relatorios: [
-        { min: 9, max: 10, titulo: "És um craque!", img: "taca_1.png" },
-        { min: 7, max: 8, titulo: "Muito bem!", img: "taca_2.png" },
-        { min: 5, max: 6, titulo: "Estás quase lá!", img: "taca_3.png" },
-        { min: 0, max: 4, titulo: "Continua a tentar!", img: "taca_4.png" }
+        { min: 9, max: 10, titulo: "És um craque!",      img: "taca_1.png" },
+        { min: 7, max: 8,  titulo: "Muito bem!",        img: "taca_2.png" },
+        { min: 5, max: 6,  titulo: "Estás quase lá!",   img: "taca_3.png" },
+        { min: 0, max: 4,  titulo: "Continua a tentar!", img: "taca_4.png" }
     ]
 };
 
@@ -124,24 +124,24 @@ const JOGO_CONFIG = {
 // ==========================================
 const DADOS_JOGO = {
     caminhoImagens: "../../img/animaisselvagens/",
-    somInstrucoes: "sonspre/f1jogo01.mp3", // Alterado para buscar f1jogo02.mp3
+    somInstrucoes: "sonspre/f1jogo01.mp3", 
     itens: [
-  { id: 1, img: "galo.png", nome: "Galo" },
-        { id: 2, img: "galinha.png", nome: "Galinha" },
-        { id: 3, img: "cabra.png", nome: "Cabra" },
-        { id: 4, img: "ovelha.png", nome: "Ovelha" },
-        { id: 5, img: "burro.png", nome: "Burro" },
-        { id: 6, img: "peru.png", nome: "Peru" },
-        { id: 7, img: "porco.png", nome: "Porco" },
-        { id: 8, img: "vaca.png", nome: "Vaca" },
-        { id: 9, img: "pato.png", nome: "Pato" },
-        { id: 10, img: "gato.png", nome: "Gato" },
-        { id: 11, img: "cao.png", nome: "Cão" },
-        { id: 12, img: "cao1.png", nome: "Cão" },
-        { id: 13, img: "gato1.png", nome: "Gato" },
-        { id: 14, img: "boi.png", nome: "Boi" },
+        { id: 1,  img: "galo.png",      nome: "Galo" },
+        { id: 2,  img: "galinha.png",   nome: "Galinha" },
+        { id: 3,  img: "cabra.png",     nome: "Cabra" },
+        { id: 4,  img: "ovelha.png",    nome: "Ovelha" },
+        { id: 5,  img: "burro.png",     nome: "Burro" },
+        { id: 6,  img: "peru.png",      nome: "Peru" },
+        { id: 7,  img: "porco.png",     nome: "Porco" },
+        { id: 8,  img: "vaca.png",      nome: "Vaca" },
+        { id: 9,  img: "pato.png",      nome: "Pato" },
+        { id: 10, img: "gato.png",      nome: "Gato" },
+        { id: 11, img: "cao.png",       nome: "Cão" },
+        { id: 12, img: "cao1.png",      nome: "Cão" },
+        { id: 13, img: "gato1.png",     nome: "Gato" },
+        { id: 14, img: "boi.png",       nome: "Boi" },
         { id: 15, img: "pintainho.png", nome: "Pintainho" },
-        { id: 16, img: "patinho.png", nome: "Patinho" },
-        { id: 17, img: "cavalo.png", nome: "Cavalo" }
+        { id: 16, img: "patinho.png",   nome: "Patinho" },
+        { id: 17, img: "cavalo.png",    nome: "Cavalo" }
     ]
 };
