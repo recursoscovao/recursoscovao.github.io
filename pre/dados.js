@@ -62,6 +62,7 @@ const JOGO_CONFIG = {
                 { nome: "Sombras Mágicas", desc: "Qual é a sombra correta.", icon: "sombrasmagicas.png", link: "pre03/", cor: "#E64A19" },
                 { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
                 { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
+                { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
                 { nome: "Toupeira das Letras", desc: "Bata nas toupeiras corretas.", icon: "rato.png", link: "toupeira/", cor: "#E64A19" }
             ]
         },
