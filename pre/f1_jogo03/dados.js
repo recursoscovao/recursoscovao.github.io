@@ -60,8 +60,8 @@ const BIBLIOTECA_CONTEUDO = {
 // 3. CONFIGURAÇÃO DO JOGO ATUAL
 // ==========================================
 const JOGO_CONFIG = {
-    nomeDoJogo: "Encontrar o Animal",
-    descricao: "Identifica o animal igual ao modelo em destaque!",
+    nomeDoJogo: "Sombras Mágicas",
+    descricao: "Identifica a imagem que corresponde à sombra!",
     
     areaAtiva: "pre",   
     anoAtivo: "pre",    
@@ -123,47 +123,30 @@ const JOGO_CONFIG = {
 // 4. DADOS DO CONTEÚDO DO JOGO
 // ==========================================
 const DADOS_JOGO = {
-    caminhoImagens: "../../img/animaisselvagens/",
-    somInstrucoes: "sonspre/f1jogo02.mp3", // Alterado para buscar f1jogo02.mp3
+    caminhoImagens: "../../img/frutos/",
+    somInstrucoes: "sonspre/f1jogo03.mp3", // Alterado para buscar f1jogo02.mp3
     itens: [
- { id: 1, img: "formiga.png", nome: "Formiga" },
-    { id: 2, img: "tartaruga.png", nome: "Tartaruga" },
-    { id: 3, img: "morcego.png", nome: "Morcego" },
-    { id: 4, img: "hiena.png", nome: "Hiena" },
-    { id: 5, img: "panda.png", nome: "Panda" },
-    { id: 6, img: "urso.png", nome: "Urso" },
-    { id: 7, img: "rinoceronte.png", nome: "Rinoceronte" },
-    { id: 8, img: "elefante.png", nome: "Elefante" },
-    { id: 9, img: "leao.png", nome: "Leão" },
-    { id: 10, img: "coala.png", nome: "Coala" },
-    { id: 11, img: "tubarao.png", nome: "Tubarão" },
-    { id: 12, img: "tucano.png", nome: "Tucano" },
-    { id: 13, img: "baleia.png", nome: "Baleia" },
-    { id: 14, img: "caracol.png", nome: "Caracol" },
-    { id: 15, img: "girafa.png", nome: "Girafa" },
-    { id: 16, img: "lobo.png", nome: "Lobo" },
-    { id: 17, img: "avestruz.png", nome: "Avestruz" },
-    { id: 18, img: "tigre.png", nome: "Tigre" },
-    { id: 19, img: "rato.png", nome: "Rato" },
-    { id: 20, img: "pombo.png", nome: "Pombo" },
-    { id: 21, img: "canguru.png", nome: "Canguru" },
-    { id: 22, img: "texugo.png", nome: "Texugo" },
-    { id: 23, img: "foca.png", nome: "Foca" },
-    { id: 24, img: "peixe.png", nome: "Peixe" },
-    { id: 25, img: "polvo.png", nome: "Polvo" },
-    { id: 26, img: "aranha.png", nome: "Aranha" },
-    { id: 27, img: "borboleta.png", nome: "Borboleta" },
-    { id: 28, img: "raposa.png", nome: "Raposa" },
-    { id: 29, img: "abutre.png", nome: "Abutre" },
-    { id: 30, img: "zebra.png", nome: "Zebra" },
-    { id: 31, img: "aguia.png", nome: "Águia" },
-    { id: 32, img: "macaco.png", nome: "Macaco" },
-    { id: 33, img: "hipopotamo.png", nome: "Hipopótamo" },
-    { id: 34, img: "gorila.png", nome: "Gorila" },
-    { id: 35, img: "crocodilo.png", nome: "Crocodilo" },
-    { id: 36, img: "raia.png", nome: "Raia" },
-    { id: 37, img: "papagaio.png", nome: "Papagaio" },
-    { id: 38, img: "caranguejo.png", nome: "Caranguejo" },
-    { id: 39, img: "abelha.png", nome: "Abelha" }
+         { id: 1, img: "morango.png", nome: "Morango" },
+        { id: 2, img: "mirtilo.png", nome: "Mirtilo" },
+        { id: 3, img: "pessego.png", nome: "Pêssego" },
+        { id: 4, img: "amora.png", nome: "Amora" },
+        { id: 5, img: "melao.png", nome: "Melão" },
+        { id: 6, img: "maracuja.png", nome: "Maracujá" },
+        { id: 7, img: "limao.png", nome: "Limão" },
+        { id: 8, img: "goiaba.png", nome: "Goiaba" },
+        { id: 9, img: "figo.png", nome: "Figo" },
+        { id: 10, img: "diospiro.png", nome: "Dióspiro" },
+        { id: 11, img: "castanha.png", nome: "Castanha" },
+        { id: 12, img: "roma.png", nome: "Romã" },
+        { id: 13, img: "cereja.png", nome: "Cereja" },
+        { id: 14, img: "melancia.png", nome: "Melancia" },
+        { id: 15, img: "ananas.png", nome: "Ananás" },
+        { id: 16, img: "kiwi.png", nome: "Kiwi" },
+        { id: 17, img: "uvas.png", nome: "Uvas" },
+        { id: 18, img: "papaia.png", nome: "Papaia" },
+        { id: 19, img: "banana.png", nome: "Banana" },
+        { id: 20, img: "maca.png", nome: "Maçã" },
+        { id: 21, img: "laranja.png", nome: "Laranja" },
+        { id: 22, img: "pera.png", nome: "Pêra" }
     ]
 };
