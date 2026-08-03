@@ -123,7 +123,7 @@ const JOGO_CONFIG = {
 // 4. DADOS DO CONTEÚDO DO JOGO
 // ==========================================
 const DADOS_JOGO = {
-    caminhoImagens: "../../img/animaisselvagens/",
+    caminhoImagens: "../../img/animaisdomesticos/",
     somInstrucoes: "sonspre/f1jogo01.mp3", 
     itens: [
         { id: 1,  img: "galo.png",      nome: "Galo" },
