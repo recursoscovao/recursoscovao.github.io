@@ -57,9 +57,9 @@ const JOGO_CONFIG = {
             tituloFase: "CLICAR E IDENTIFICAR",
             corEtiqueta: "#E91E63", 
             jogos: [
-                { nome: "Encontra o Animal", desc: "Encontra o animal Doméstico.", icon: "encontraoanimal.png", link: "f1_jogo01/", cor: "#C2185B" },
-                { nome: "Encontra o Animal", desc: "Encontra o animal Selvagem", icon: "encontraoanimal1.png", link: "f1_jogo02/", cor: "#D32F2F" },
-                { nome: "Sombras Mágicas", desc: "Qual é a sombra correta.", icon: "sombrasmagicas.png", link: "f1_jogo03/", cor: "#E64A19" },
+                { nome: "Encontra o Animal", desc: "Encontra o animal Doméstico.", icon: "f1_jogo01.png", link: "f1_jogo01/", cor: "#C2185B" },
+                { nome: "Encontra o Animal", desc: "Encontra o animal Selvagem", icon: "f1_jogo02.png", link: "f1_jogo02/", cor: "#D32F2F" },
+                { nome: "Sombras Mágicas", desc: "Qual é a sombra correta.", icon: "f1_jogo03.png", link: "f1_jogo03/", cor: "#E64A19" },
                 { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
                 { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
                 { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
