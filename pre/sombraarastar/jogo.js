@@ -3,18 +3,28 @@
 // ==========================================
 let jogoAtivo = false;
 let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0, ajudasUsadas = 0;
-let itensNaRonda = [], encaixados = 0;
+let itensNaRonda = [], encaixadosNaRonda = 0;
 
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ==========================================
-// 2. CSS INJETADO (Estilos de Arrastar)
+// 2. CSS INJETADO (Rigoroso com a Estética)
 // ==========================================
 const style = document.createElement('style');
 style.innerHTML = `
-    .game-board { display: flex; flex-direction: column; align-items: center; gap: 40px; width: 100%; padding: 20px; }
+    .btn-play-rect { 
+        flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); 
+        color: white; border: none; font-size: 1.5rem; font-weight: 900; 
+        text-transform: uppercase; cursor: pointer; display: flex; 
+        align-items: center; justify-content: center; gap: 15px; 
+        box-shadow: 0 5px 0 var(--dark-color); transition: 0.1s;
+    }
+    .btn-play-rect:active { transform: translateY(3px); box-shadow: 0 2px 0 var(--dark-color); }
+    .btn-audio-circle { width: 65px; height: 65px; cursor: pointer; flex-shrink: 0; }
+
+    .game-board { display: flex; flex-direction: column; align-items: center; gap: 30px; width: 100%; }
     
     .drag-container, .drop-container { 
         display: flex; justify-content: center; gap: 15px; width: 100%; flex-wrap: wrap; 
@@ -24,95 +34,78 @@ style.innerHTML = `
         width: 100px; height: 100px; background: white; border-radius: 15px;
         box-shadow: 0 4px 8px rgba(0,0,0,0.1); cursor: grab;
         display: flex; align-items: center; justify-content: center;
-        touch-action: none; z-index: 10; transition: transform 0.2s;
+        touch-action: none; transition: transform 0.2s, border 0.3s;
+        border: 3px solid transparent;
     }
-    .drag-item:active { cursor: grabbing; transform: scale(1.1); }
     .drag-item img { max-width: 80%; max-height: 80%; pointer-events: none; }
 
     .drop-slot {
         width: 110px; height: 110px; border: 3px dashed #ccc; border-radius: 20px;
         display: flex; align-items: center; justify-content: center;
-        background: rgba(255,255,255,0.5); position: relative;
+        background: rgba(255,255,255,0.4); transition: all 0.3s;
     }
-    .drop-slot img { max-width: 75%; max-height: 75%; filter: brightness(0); opacity: 0.3; }
+    .drop-slot img { max-width: 75%; max-height: 75%; filter: brightness(0); opacity: 0.25; pointer-events: none; }
     
-    /* Quando o item é encaixado corretamente */
-    .slot-filled { border: 3px solid #8cc63f; background: #f0fff0; }
-    .slot-filled img { filter: none !important; opacity: 1 !important; transition: 0.5s; }
+    .slot-filled { border: 3px solid #8cc63f !important; background: #f0fff0 !important; }
+    .slot-filled img { filter: none !important; opacity: 1 !important; }
 
-    .dragging { opacity: 0.5; }
-    
-    @media (max-width: 600px) {
-        .drag-item, .drop-slot { width: 80px; height: 80px; }
+    .help-pulse { 
+        border: 4px solid var(--primary-color) !important; 
+        animation: pulseHelp 0.6s infinite alternate; 
     }
+    @keyframes pulseHelp { from { transform: scale(1); } to { transform: scale(1.1); } }
 `;
 document.head.appendChild(style);
 
 // ==========================================
-// 3. LOGICA DE INÍCIO E SIMULAÇÃO
+// 3. LÓGICA DE CAPA E RONDAS
 // ==========================================
 function mostrarCapa() {
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">${JOGO_CONFIG.nomeDoJogo}</h2>`;
     document.getElementById('game-content').innerHTML = `
-        <div style="text-align:center; padding: 20px;">
-            <div style="display:flex; justify-content:center; gap:10px; margin-bottom:20px;">
+        <div style="display:flex; flex-direction:column; align-items:center; gap:20px;">
+            <div style="display:flex; gap:15px;">
                 <div class="drag-item"><img src="${DADOS_JOGO.caminhoImagens}bola.png"></div>
-                <div style="font-size:2rem; align-self:center;">➡️</div>
                 <div class="drop-slot"><img src="${DADOS_JOGO.caminhoImagens}bola.png"></div>
             </div>
-            <p style="color:var(--text-grey); font-weight:800;">${JOGO_CONFIG.descricao}</p>
+            <p style="color:var(--text-grey); font-weight:800; text-align:center;">${JOGO_CONFIG.descricao}</p>
         </div>`;
-    
+
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
-    footer.innerHTML = `<button class="btn-play-rect" onclick="iniciarJogo()"><i class="fas fa-play"></i> JOGAR</button>`;
+    footer.innerHTML = `
+        <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="btn-audio-circle" onclick="somClique.play()">
+        <button class="btn-play-rect" onclick="iniciarJogo()"><i class="fas fa-play"></i> JOGAR</button>`;
 }
 
 function iniciarJogo() {
-    jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0;
+    jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0;
     proximaRonda();
 }
 
-// ==========================================
-// 4. LÓGICA DAS RONDAS
-// ==========================================
 function proximaRonda() {
     if (rondaAtual > totalRondas) { finalizarJogo(); return; }
-    encaixados = 0;
+    encaixadosNaRonda = 0;
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
 
-    // Selecionar 4 itens aleatórios
     itensNaRonda = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5).slice(0, 4);
-    
-    // Ordem aleatória para os itens de arrastar e para as sombras
     const itensDrag = [...itensNaRonda].sort(() => Math.random() - 0.5);
     const itensDrop = [...itensNaRonda].sort(() => Math.random() - 0.5);
 
-    const area = document.getElementById('game-content');
-    area.innerHTML = `
+    document.getElementById('game-content').innerHTML = `
         <div class="game-board">
-            <div class="drag-container" id="origin">
-                ${itensDrag.map(item => `
-                    <div class="drag-item" draggable="true" id="drag-${item.id}" ondragstart="drag(event)">
-                        <img src="${DADOS_JOGO.caminhoImagens + item.img}">
-                    </div>
-                `).join('')}
+            <div class="drag-container">
+                ${itensDrag.map(it => `<div class="drag-item" draggable="true" id="drag-${it.id}" ondragstart="drag(event)"><img src="${DADOS_JOGO.caminhoImagens + it.img}"></div>`).join('')}
             </div>
-            
-            <hr style="width:80%; border:1px solid #eee; margin:0;">
-
+            <div style="width:90%; height:2px; background:#eee;"></div>
             <div class="drop-container">
-                ${itensDrop.map(item => `
-                    <div class="drop-slot" id="slot-${item.id}" ondrop="drop(event)" ondragover="allowDrop(event)">
-                        <img src="${DADOS_JOGO.caminhoImagens + item.img}">
-                    </div>
-                `).join('')}
+                ${itensDrop.map(it => `<div class="drop-slot" id="slot-${it.id}" ondrop="drop(event)" ondragover="allowDrop(event)"><img src="${DADOS_JOGO.caminhoImagens + it.img}"></div>`).join('')}
             </div>
         </div>`;
 }
 
 // ==========================================
-// 5. FUNÇÕES DE DRAG & DROP
+// 4. DRAG & DROP E AJUDA
 // ==========================================
 function allowDrop(ev) { ev.preventDefault(); }
 
@@ -123,48 +116,54 @@ function drag(ev) {
 
 function drop(ev) {
     ev.preventDefault();
-    const dragId = ev.dataTransfer.getData("text"); // Ex: drag-15
-    const slotId = ev.currentTarget.id; // Ex: slot-15
+    const dragId = ev.dataTransfer.getData("text");
+    const slotId = ev.currentTarget.id;
     
-    const realIdDrag = dragId.split('-')[1];
-    const realIdSlot = slotId.split('-')[1];
+    const idDrag = dragId.replace('drag-', '');
+    const idSlot = slotId.replace('slot-', '');
 
-    if (realIdDrag === realIdSlot) {
-        // ACERTO
-        const dragEl = document.getElementById(dragId);
-        const slotEl = document.getElementById(slotId);
-        
+    if (idDrag === idSlot) {
         somAcerto.play();
-        dragEl.style.visibility = "hidden"; // Esconde o original
-        slotEl.classList.add('slot-filled');
+        document.getElementById(dragId).style.visibility = "hidden";
+        const slot = document.getElementById(slotId);
+        slot.classList.add('slot-filled');
+        encaixadosNaRonda++;
         
-        encaixados++;
-        if (encaixados === 4) {
-            certos++; // Ganha 1 ponto por ronda completa
-            setTimeout(() => {
-                rondaAtual++;
-                proximaRonda();
-            }, 1000);
+        if (encaixadosNaRonda === 4) {
+            certos++;
+            setTimeout(() => { rondaAtual++; proximaRonda(); }, 1200);
         }
     } else {
-        // ERRO
+        erros++; // Conta erro imediatamente
         somErro.play();
-        const slotEl = document.getElementById(slotId);
-        slotEl.style.borderColor = "#ff5a5f";
-        setTimeout(() => slotEl.style.borderColor = "#ccc", 500);
+        Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
+        const slot = document.getElementById(slotId);
+        slot.style.borderColor = "#ff5a5f";
+        setTimeout(() => { if(!slot.classList.contains('slot-filled')) slot.style.borderColor = "#ccc"; }, 600);
     }
 }
 
 function darAjuda() {
     if (!jogoAtivo) return;
     ajudasUsadas++;
-    // Encontrar um item que ainda não foi encaixado
-    const drags = document.querySelectorAll('.drag-item[style*="visibility: visible"], .drag-item:not([style*="visibility"])');
-    if (drags.length > 0) {
-        const id = drags[0].id.split('-')[1];
-        const slot = document.getElementById('slot-' + id);
-        slot.style.boxShadow = "0 0 15px var(--primary-color)";
-        setTimeout(() => slot.style.boxShadow = "none", 2000);
+    somClique.play();
+
+    // Encontra um item que ainda está visível (não encaixado)
+    const itensRestantes = Array.from(document.querySelectorAll('.drag-item')).filter(el => el.style.visibility !== 'hidden');
+    
+    if (itensRestantes.length > 0) {
+        const itemAjuda = itensRestantes[0];
+        const id = itemAjuda.id.replace('drag-', '');
+        const slotAjuda = document.getElementById('slot-' + id);
+
+        // Destaca o Objeto E a Sombra simultaneamente
+        itemAjuda.classList.add('help-pulse');
+        slotAjuda.classList.add('help-pulse');
+
+        setTimeout(() => {
+            itemAjuda.classList.remove('help-pulse');
+            slotAjuda.classList.remove('help-pulse');
+        }, 2500);
     }
 }
 
