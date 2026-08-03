@@ -191,8 +191,9 @@
 
             // JOGOS COM SOMBRA DINÂMICA
             const mainContent = document.getElementById('mainContent');
-            let numGlobal = 1;
+            
             config.listaFases.forEach(fase => {
+                let numGlobal = 1;
                 const wrapper = document.createElement('div');
                 wrapper.className = 'fase-wrapper';
                 const faseHeader = document.createElement('div');
