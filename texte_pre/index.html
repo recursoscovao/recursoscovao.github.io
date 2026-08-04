@@ -1,1 +1,754 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Brincalândia - O Hub de Jogos do Pré-Escolar</title>
+    <!-- Tailwind CSS for modern responsive utility styling -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts for playful child-friendly typeface -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Quicksand:wght@500;700&display=swap" rel="stylesheet">
+    <!-- FontAwesome icons for playful button symbols -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Canvas Confetti for victory screens -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            background: linear-gradient(135deg, #fef08a 0%, #fed7aa 50%, #bae6fd 100%);
+            overflow-x: hidden;
+            user-select: none;
+            -webkit-user-select: none;
+        }
+        .font-playful {
+            font-family: 'Fredoka', sans-serif;
+            font-weight: 700;
+        }
+        @keyframes bounce-slow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        .animate-bounce-slow {
+            animation: bounce-slow 3s ease-in-out infinite;
+        }
+        @keyframes float-clouds {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100vw); }
+        }
+        .cloud-anim-1 { animation: float-clouds 40s linear infinite; }
+        .cloud-anim-2 { animation: float-clouds 55s linear infinite; }
 
+        /* Card color themes */
+        .card-preschool-yellow { background: linear-gradient(135deg, #facc15, #ca8a04); }
+        .card-preschool-orange { background: linear-gradient(135deg, #fb923c, #c2410c); }
+        .card-preschool-pink { background: linear-gradient(135deg, #f472b6, #db2777); }
+        .card-preschool-purple { background: linear-gradient(135deg, #c084fc, #9333ea); }
+        .card-preschool-blue { background: linear-gradient(135deg, #38bdf8, #0284c7); }
+        .card-preschool-green { background: linear-gradient(135deg, #4ade80, #16a34a); }
+        .card-preschool-teal { background: linear-gradient(135deg, #2dd4bf, #0d9488); }
+        .card-preschool-red { background: linear-gradient(135deg, #fb7185, #e11d48); }
+
+        .pop-card {
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.2s;
+        }
+        .pop-card:hover {
+            transform: scale(1.04);
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.2);
+        }
+        .pop-card:active {
+            transform: scale(0.96);
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-6px); }
+            75% { transform: translateX(6px); }
+        }
+        .animate-shake {
+            animation: shake 0.3s ease-in-out;
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col justify-between relative">
+
+    <div class="absolute inset-0 pointer-events-none overflow-hidden z-0">
+        <div class="absolute top-12 left-0 w-32 h-14 bg-white opacity-70 rounded-full cloud-anim-1 filter blur-sm"></div>
+        <div class="absolute top-48 left-0 w-44 h-20 bg-white opacity-50 rounded-full cloud-anim-2 filter blur-sm"></div>
+    </div>
+
+    <header class="w-full max-w-6xl mx-auto px-4 py-4 flex justify-between items-center z-10 relative">
+        <div class="flex items-center gap-3">
+            <span class="text-4xl animate-bounce">🎈</span>
+            <div>
+                <h1 class="font-playful text-3xl text-amber-700 tracking-wider drop-shadow-sm">BRINCALÂNDIA</h1>
+                <p class="text-xs font-bold text-amber-800 uppercase tracking-widest">Portal de Jogos do Pré-Escolar • 12 Atividades Divertidas</p>
+            </div>
+        </div>
+        <div class="flex items-center gap-3">
+            <div class="bg-amber-500 text-white font-bold py-2 px-4 rounded-full shadow-lg flex items-center gap-2 border-2 border-amber-300">
+                <i class="fas fa-star text-lg text-yellow-200 animate-pulse"></i>
+                <span id="star-counter" class="text-xl">0</span>
+            </div>
+            <button id="sound-btn" onclick="toggleMute()" class="w-12 h-12 rounded-full bg-white text-amber-600 shadow-md flex items-center justify-center hover:scale-110 active:scale-95 transition-all text-xl border-2 border-amber-200">
+                <i id="sound-icon" class="fas fa-volume-up"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="flex-grow flex items-center justify-center p-4 z-10 relative">
+        <div id="game-container" class="w-full max-w-5xl bg-white/95 rounded-3xl shadow-2xl p-6 border-4 border-amber-200 min-h-[620px] flex flex-col justify-between backdrop-blur-sm">
+            
+            <!-- SCREEN 1: LOBBY / JORNADA PRÉ-ESCOLAR -->
+            <div id="screen-lobby" class="flex-grow flex flex-col justify-between">
+                <div class="text-center my-2 animate-bounce-slow">
+                    <h2 class="font-playful text-3xl text-orange-600">Olá Amiguinho! Escolhe um Jogo para Brincar!</h2>
+                    <p class="text-slate-600 font-semibold text-sm mt-1">Explora cores, formas, animais, números e sons de forma mágica.</p>
+                </div>
+
+                <!-- 12 Preschool Games Grid organized in 3 thematic stages -->
+                <div class="space-y-6 my-4 overflow-y-auto max-h-[440px] pr-2">
+                    
+                    <!-- FASE 1: CORES, FORMAS E CONTAGEM -->
+                    <div class="border-2 border-yellow-200 rounded-2xl p-4 bg-yellow-50/70 shadow-sm">
+                        <span class="bg-yellow-500 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 1: Cores, Formas e Primeiros Números</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
+                            <div onclick="startColorMatch()" class="card-preschool-yellow pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-yellow-700">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🎨</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-sm">1. Caça às Cores</h3>
+                                    <p class="text-[10px] text-yellow-100">Combina as cores certas.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startShapeShadow()" class="card-preschool-orange pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-orange-700">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">⭐</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-sm">2. Sombra Mágica</h3>
+                                    <p class="text-[10px] text-orange-100">Encontra a sombra da forma.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startCountFruits()" class="card-preschool-pink pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-pink-700">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🍎</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-sm">3. Conta Frutas</h3>
+                                    <p class="text-[10px] text-pink-100">Quantas frutas ves aqui?</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startSizeSort()" class="card-preschool-purple pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-purple-700">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🐘</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-sm">4. Grande e Pequeno</h3>
+                                    <p class="text-[10px] text-purple-100">Distingue tamanhos.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 2: ANIMAIS, SONS E NATUREZA -->
+                    <div class="border-2 border-green-200 rounded-2xl p-4 bg-green-50/70 shadow-sm">
+                        <span class="bg-green-500 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 2: Mundo Animal e Sons da Natureza</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
+                            <div onclick="startAnimalSounds()" class="card-preschool-green pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-green-700">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🐶</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-sm">5. Quem Sou Eu?</h3>
+                                    <p class="text-[10px] text-green-100">Adivinha o animal pelo som.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startAnimalHome()" class="card-preschool-teal pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-teal-700">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🏡</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-sm">6. Casa do Bicho</h3>
+                                    <p class="text-[10px] text-teal-100">Onde vive cada animal?</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startEmotionQuiz()" class="card-preschool-yellow pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-yellow-700">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">😊</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-sm">7. Emoções Divertidas</h3>
+                                    <p class="text-[10px] text-yellow-100">Como está o rostinho?</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startWeatherGame()" class="card-preschool-blue pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-blue-700">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">☀️</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-sm">8. O Tempo e o Céu</h3>
+                                    <p class="text-[10px] text-blue-100">Sol, chuva ou neve?</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- FASE 3: JOGOS DE ATENÇÃO E MEMÓRIA -->
+                    <div class="border-2 border-purple-200 rounded-2xl p-4 bg-purple-50/70 shadow-sm">
+                        <span class="bg-purple-600 text-white text-[11px] font-bold px-3 py-1 rounded-full uppercase">Fase 3: Atenção, Memória e Quebra-Cabeças</span>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-3 mt-3">
+                            <div onclick="startMemoryMatch()" class="card-preschool-purple pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-purple-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🧩</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-sm">9. Memória dos Pares</h3>
+                                    <p class="text-[10px] text-purple-100">Encontra os pares iguais.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startOddOneOut()" class="card-preschool-pink pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-pink-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🔍</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-sm">10. O Intruso</h3>
+                                    <p class="text-[10px] text-pink-100">Qual figura não pertence?</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startShadowPuzzle()" class="card-preschool-orange pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-orange-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🚗</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-sm">11. Garagem de Brinquedos</h3>
+                                    <p class="text-[10px] text-orange-100">Onde estaciona o carro?</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                            <div onclick="startAlphabetFun()" class="card-preschool-green pop-card rounded-xl p-3 text-white cursor-pointer shadow-md flex items-center gap-3 border-b-4 border-green-800">
+                                <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center text-2xl">🎈</div>
+                                <div class="flex-grow">
+                                    <h3 class="font-playful text-sm">12. Primeiras Letrinhas</h3>
+                                    <p class="text-[10px] text-green-100">Conhece as letras mágicas.</p>
+                                </div>
+                                <i class="fas fa-play text-xs bg-white/20 p-2 rounded-full"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+                <div class="bg-amber-50 border border-amber-200 rounded-xl p-3 text-center text-xs font-bold text-amber-800">
+                    🌟 <span class="font-bold">Nota para Educadores e Pais:</span> Jogos simples, visuais e sem frustração, criados a pensar no desenvolvimento motor e cognitivo de crianças do pré-escolar (3 a 6 anos).
+                </div>
+            </div>
+
+            <!-- DYNAMIC GAME VIEW SCREEN (Shared interactive template for individual games) -->
+            <div id="screen-game-active" class="hidden flex-col justify-between flex-grow h-full">
+                <div class="flex justify-between items-center pb-3 border-b border-slate-100">
+                    <button onclick="backToLobby()" class="bg-slate-100 hover:bg-red-100 text-slate-700 hover:text-red-600 font-bold px-4 py-2 rounded-xl text-sm flex items-center gap-2 transition-all">
+                        <i class="fas fa-arrow-left"></i> Voltar ao Menu
+                    </button>
+                    <div class="text-center">
+                        <h2 id="active-game-title" class="font-playful text-xl text-amber-700">Título do Jogo</h2>
+                        <span id="active-game-instruction" class="bg-amber-100 text-amber-800 px-3 py-0.5 rounded-full text-xs font-bold mt-1 inline-block">Instrução da atividade</span>
+                    </div>
+                    <div class="flex items-center gap-4 font-bold text-slate-700 text-sm bg-amber-50 px-3 py-1 rounded-xl border border-amber-200">
+                        <div>Acertos: <span id="active-score" class="text-emerald-600">0</span>/<span id="active-target-score">5</span></div>
+                    </div>
+                </div>
+
+                <!-- Interactive Arena where game elements are rendered -->
+                <div id="game-arena" class="flex-grow flex flex-col items-center justify-center my-6 p-4 bg-gradient-to-b from-sky-50 to-amber-50 rounded-2xl border-2 border-dashed border-amber-300 min-h-[380px] relative">
+                    <!-- Dynamic content injected via JavaScript -->
+                </div>
+
+                <div id="game-feedback" class="text-center font-playful text-lg text-slate-600 min-h-[30px]">
+                    Toque na resposta correta!
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <script>
+        let isMuted = false;
+        let currentStars = 0;
+        let currentGameScore = 0;
+        let targetScore = 5;
+        let activeGameTimer = null;
+
+        // Web Audio API Sound generator for child-friendly pleasant audio feedback (no external assets needed)
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        
+        function playTone(frequency, type, duration) {
+            if (isMuted) return;
+            try {
+                if (audioCtx.state === 'suspended') {
+                    audioCtx.resume();
+                }
+                const osc = audioCtx.createOscillator();
+                const gain = audioCtx.createGain();
+                osc.type = type;
+                osc.frequency.value = frequency;
+                gain.gain.setValueAtTime(0.15, audioCtx.currentTime);
+                gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
+                osc.connect(gain);
+                gain.connect(audioCtx.destination);
+                osc.start();
+                osc.stop(audioCtx.currentTime + duration);
+            } catch (e) {
+                console.log(e);
+            }
+        }
+
+        function playSuccessSound() {
+            playTone(523.25, 'sine', 0.1);
+            setTimeout(() => playTone(659.25, 'sine', 0.1), 100);
+            setTimeout(() => playTone(783.99, 'sine', 0.2), 200);
+        }
+
+        function playErrorSound() {
+            playTone(220, 'sawtooth', 0.15);
+            setTimeout(() => playTone(185, 'sawtooth', 0.2), 150);
+        }
+
+        function toggleMute() {
+            isMuted = !isMuted;
+            const icon = document.getElementById('sound-icon');
+            if (isMuted) {
+                icon.className = 'fas fa-volume-mute text-red-500';
+            } else {
+                icon.className = 'fas fa-volume-up';
+                playSuccessSound();
+            }
+        }
+
+        function addStar() {
+            currentStars++;
+            document.getElementById('star-counter').innerText = currentStars;
+        }
+
+        function backToLobby() {
+            if (activeGameTimer) clearInterval(activeGameTimer);
+            document.getElementById('screen-lobby').classList.remove('hidden');
+            document.getElementById('screen-lobby').classList.add('flex');
+            document.getElementById('screen-game-active').classList.remove('flex');
+            document.getElementById('screen-game-active').classList.add('hidden');
+        }
+
+        function showActiveGameScreen(title, instruction) {
+            document.getElementById('screen-lobby').classList.add('hidden');
+            document.getElementById('screen-lobby').classList.remove('flex');
+            document.getElementById('screen-game-active').classList.remove('hidden');
+            document.getElementById('screen-game-active').classList.add('flex');
+            document.getElementById('active-game-title').innerText = title;
+            document.getElementById('active-game-instruction').innerText = instruction;
+            currentGameScore = 0;
+            document.getElementById('active-score').innerText = currentGameScore;
+            document.getElementById('active-target-score').innerText = targetScore;
+            document.getElementById('game-feedback').innerText = 'Pronto/a? Vamos brincar!';
+        }
+
+        // --- JOGO 1: CAÇA ÀS CORES (Color Match) ---
+        function startColorMatch() {
+            showActiveGameScreen('🎨 Caça às Cores', 'Toca na cor que aparece em cima!');
+            loadColorMatchRound();
+        }
+
+        const colorsList = [
+            { name: 'Vermelho', code: 'bg-red-500', hex: '#ef4444' },
+            { name: 'Azul', code: 'bg-blue-500', hex: '#3b82f6' },
+            { name: 'Verde', code: 'bg-green-500', hex: '#22c55e' },
+            { name: 'Amarelo', code: 'bg-yellow-400', hex: '#facc15' },
+            { name: 'Rosa', code: 'bg-pink-500', hex: '#ec4899' },
+            { name: 'Roxo', code: 'bg-purple-500', hex: '#a855f7' }
+        ];
+
+        function loadColorMatchRound() {
+            if (currentGameScore >= targetScore) {
+                triggerVictory();
+                return;
+            }
+            const arena = document.getElementById('game-arena');
+            arena.innerHTML = '';
+
+            // Pick target color
+            const target = colorsList[Math.floor(Math.random() * colorsList.length)];
+            
+            // Pick 3 distractor colors
+            let options = [target];
+            while (options.length < 4) {
+                const rand = colorsList[Math.floor(Math.random() * colorsList.length)];
+                if (!options.includes(rand)) options.push(rand);
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            const promptDiv = document.createElement('div');
+            promptDiv.className = 'text-center mb-6';
+            promptDiv.innerHTML = `<span class="text-lg font-playful text-slate-700">Encontra a cor: </span><span class="text-2xl font-playful px-4 py-1 rounded-xl text-white shadow-md ${target.code}">${target.name}</span>`;
+            arena.appendChild(promptDiv);
+
+            const grid = document.createElement('div');
+            grid.className = 'grid grid-cols-2 gap-4 w-full max-w-md';
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = `h-28 rounded-2xl ${opt.code} shadow-lg pop-card border-4 border-white flex items-center justify-center text-white text-3xl font-playful`;
+                btn.innerHTML = '✨';
+                btn.onclick = () => {
+                    if (opt.name === target.name) {
+                        playSuccessSound();
+                        currentGameScore++;
+                        document.getElementById('active-score').innerText = currentGameScore;
+                        addStar();
+                        document.getElementById('game-feedback').innerText = 'Muito bem! 🎉';
+                        setTimeout(loadColorMatchRound, 800);
+                    } else {
+                        playErrorSound();
+                        btn.classList.add('animate-shake');
+                        document.getElementById('game-feedback').innerText = 'Tenta outra vez! 😊';
+                        setTimeout(() => btn.classList.remove('animate-shake'), 300);
+                    }
+                };
+                grid.appendChild(btn);
+            });
+            arena.appendChild(grid);
+        }
+
+        // --- JOGO 2: SOMBRA MÁGICA (Shape Shadow) ---
+        function startShapeShadow() {
+            showActiveGameScreen('⭐ Sombra Mágica', 'Qual é a sombra correta deste objeto?');
+            loadShapeRound();
+        }
+
+        const shapesList = [
+            { name: 'Estrela', icon: '⭐', shadow: '⭐' },
+            { name: 'Coração', icon: '❤️', shadow: '❤️' },
+            { name: 'Círculo', icon: '🔵', shadow: '⚫' },
+            { name: 'Triângulo', icon: '🔺', shadow: '🔻' },
+            { name: 'Carro', icon: '🚗', shadow: '🚙' }
+        ];
+
+        function loadShapeRound() {
+            if (currentGameScore >= targetScore) {
+                triggerVictory();
+                return;
+            }
+            const arena = document.getElementById('game-arena');
+            arena.innerHTML = '';
+
+            const current = shapesList[Math.floor(Math.random() * shapesList.length)];
+            
+            const targetDiv = document.createElement('div');
+            targetDiv.className = 'bg-white p-6 rounded-2xl shadow-md mb-6 flex flex-col items-center border-2 border-orange-200';
+            targetDiv.innerHTML = `<span class="text-6xl mb-2">${current.icon}</span><span class="font-playful text-slate-700">Onde está a sombra do/a ${current.name}?</span>`;
+            arena.appendChild(targetDiv);
+
+            let options = [current];
+            while (options.length < 3) {
+                const rand = shapesList[Math.floor(Math.random() * shapesList.length)];
+                if (!options.includes(rand)) options.push(rand);
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            const grid = document.createElement('div');
+            grid.className = 'flex gap-6';
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'w-24 h-24 bg-white hover:bg-orange-50 rounded-2xl shadow-md pop-card border-4 border-orange-200 flex items-center justify-center text-5xl filter brightness-50';
+                btn.innerHTML = opt.icon;
+                btn.onclick = () => {
+                    if (opt.name === current.name) {
+                        playSuccessSound();
+                        currentGameScore++;
+                        document.getElementById('active-score').innerText = currentGameScore;
+                        addStar();
+                        document.getElementById('game-feedback').innerText = 'Excelente! Acertaste!';
+                        setTimeout(loadShapeRound, 800);
+                    } else {
+                        playErrorSound();
+                        btn.classList.add('animate-shake');
+                        document.getElementById('game-feedback').innerText = 'Ops! Não é essa sombra.';
+                        setTimeout(() => btn.classList.remove('animate-shake'), 300);
+                    }
+                };
+                grid.appendChild(btn);
+            });
+            arena.appendChild(grid);
+        }
+
+        // --- JOGO 3: CONTA FRUTAS (Count Fruits) ---
+        function startCountFruits() {
+            showActiveGameScreen('🍎 Conta Frutas', 'Quantas frutas tens no prato?');
+            loadFruitRound();
+        }
+
+        function loadFruitRound() {
+            if (currentGameScore >= targetScore) {
+                triggerVictory();
+                return;
+            }
+            const arena = document.getElementById('game-arena');
+            arena.innerHTML = '';
+
+            const count = Math.floor(Math.random() * 5) + 1; // 1 to 5
+            const fruitEmojis = ['🍎', '🍌', '🍊', '🍇', '🍓'];
+            const chosenFruit = fruitEmojis[Math.floor(Math.random() * fruitEmojis.length)];
+
+            // Render fruit dish
+            const dish = document.createElement('div');
+            dish.className = 'bg-white p-6 rounded-3xl shadow-md mb-6 flex flex-wrap gap-4 items-center justify-center max-w-md min-h-[120px] border-2 border-pink-200';
+            for (let i = 0; i < count; i++) {
+                const span = document.createElement('span');
+                span.className = 'text-4xl animate-bounce-slow';
+                span.innerText = chosenFruit;
+                dish.appendChild(span);
+            }
+            arena.appendChild(dish);
+
+            // Generate options
+            let options = [count];
+            while (options.length < 3) {
+                const rand = Math.floor(Math.random() * 5) + 1;
+                if (!options.includes(rand)) options.push(rand);
+            }
+            options.sort((a, b) => a - b);
+
+            const grid = document.createElement('div');
+            grid.className = 'flex gap-4';
+
+            options.forEach(num => {
+                const btn = document.createElement('button');
+                btn.className = 'w-16 h-16 bg-pink-500 hover:bg-pink-600 text-white rounded-2xl font-playful text-2xl shadow-lg pop-card border-b-4 border-pink-700 flex items-center justify-center';
+                btn.innerText = num;
+                btn.onclick = () => {
+                    if (num === count) {
+                        playSuccessSound();
+                        currentGameScore++;
+                        document.getElementById('active-score').innerText = currentGameScore;
+                        addStar();
+                        document.getElementById('game-feedback').innerText = 'Boa! Contaste certinho!';
+                        setTimeout(loadFruitRound, 800);
+                    } else {
+                        playErrorSound();
+                        btn.classList.add('animate-shake');
+                        document.getElementById('game-feedback').innerText = 'Quase! Tenta contar outra vez.';
+                        setTimeout(() => btn.classList.remove('animate-shake'), 300);
+                    }
+                };
+                grid.appendChild(btn);
+            });
+            arena.appendChild(grid);
+        }
+
+        // --- JOGO 5: QUEM SOU EU? (Animal Sounds) ---
+        function startAnimalSounds() {
+            showActiveGameScreen('🐶 Quem Sou Eu?', 'Qual animal faz este som?');
+            loadAnimalRound();
+        }
+
+        const animalsList = [
+            { name: 'Cão', icon: '🐶', soundText: 'Au-Au!' },
+            { name: 'Gato', icon: '🐱', soundText: 'Miau-Miau!' },
+            { name: 'Vaca', icon: '🐮', soundText: 'Muuu!' },
+            { name: 'Pato', icon: '🦆', soundText: 'Quá-Quá!' },
+            { name: 'Porco', icon: '🐷', soundText: 'Oinc-Oinc!' }
+        ];
+
+        function loadAnimalRound() {
+            if (currentGameScore >= targetScore) {
+                triggerVictory();
+                return;
+            }
+            const arena = document.getElementById('game-arena');
+            arena.innerHTML = '';
+
+            const target = animalsList[Math.floor(Math.random() * animalsList.length)];
+
+            const soundBox = document.createElement('div');
+            soundBox.className = 'bg-white p-6 rounded-3xl shadow-md mb-6 text-center border-2 border-green-200';
+            soundBox.innerHTML = `<div class="text-4xl mb-2">🔊</div><div class="font-playful text-2xl text-green-700">${target.soundText}</div><p class="text-xs text-slate-500 mt-1">Quem faz este som?</p>`;
+            arena.appendChild(soundBox);
+
+            let options = [target];
+            while (options.length < 3) {
+                const rand = animalsList[Math.floor(Math.random() * animalsList.length)];
+                if (!options.includes(rand)) options.push(rand);
+            }
+            options.sort(() => Math.random() - 0.5);
+
+            const grid = document.createElement('div');
+            grid.className = 'flex gap-4';
+
+            options.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'w-24 h-24 bg-white hover:bg-green-50 rounded-2xl shadow-md pop-card border-4 border-green-200 flex flex-col items-center justify-center';
+                btn.innerHTML = `<span class="text-4xl">${opt.icon}</span><span class="text-xs font-playful text-slate-700 mt-1">${opt.name}</span>`;
+                btn.onclick = () => {
+                    if (opt.name === target.name) {
+                        playSuccessSound();
+                        currentGameScore++;
+                        document.getElementById('active-score').innerText = currentGameScore;
+                        addStar();
+                        document.getElementById('game-feedback').innerText = 'Isso mesmo! É o ' + target.name + '!';
+                        setTimeout(loadAnimalRound, 900);
+                    } else {
+                        playErrorSound();
+                        btn.classList.add('animate-shake');
+                        document.getElementById('game-feedback').innerText = 'Não foi este bichinho!';
+                        setTimeout(() => btn.classList.remove('animate-shake'), 300);
+                    }
+                };
+                grid.appendChild(btn);
+            });
+            arena.appendChild(grid);
+        }
+
+        // --- JOGO 9: MEMÓRIA DOS PARES (Memory Match) ---
+        function startMemoryMatch() {
+            showActiveGameScreen('🧩 Memória dos Pares', 'Encontra os pares de emojis iguais!');
+            loadMemoryRound();
+        }
+
+        function loadMemoryRound() {
+            const arena = document.getElementById('game-arena');
+            arena.innerHTML = '';
+
+            const emojis = ['🍎', '⭐', '🚗', '🐶'];
+            let deck = [...emojis, ...emojis];
+            deck.sort(() => Math.random() - 0.5);
+
+            let firstCard = null;
+            let lockBoard = false;
+            let matchesFound = 0;
+
+            const grid = document.createElement('div');
+            grid.className = 'grid grid-cols-4 gap-4 max-w-md w-full';
+
+            deck.forEach(emoji => {
+                const card = document.createElement('div');
+                card.className = 'h-24 bg-purple-500 rounded-2xl shadow-lg cursor-pointer flex items-center justify-center text-3xl font-playful text-white pop-card border-b-4 border-purple-700';
+                card.dataset.emoji = emoji;
+                card.innerHTML = '❓';
+
+                card.onclick = function() {
+                    if (lockBoard || card.classList.contains('revealed') || card === firstCard) return;
+
+                    card.innerHTML = emoji;
+                    card.classList.remove('bg-purple-500', 'border-purple-700');
+                    card.classList.add('bg-white', 'text-slate-800', 'border-purple-200');
+                    playTone(440, 'sine', 0.08);
+
+                    if (!firstCard) {
+                        firstCard = card;
+                    } else {
+                        if (firstCard.dataset.emoji === card.dataset.emoji) {
+                            playSuccessSound();
+                            firstCard = null;
+                            matchesFound++;
+                            if (matchesFound === emojis.length) {
+                                addStar();
+                                document.getElementById('game-feedback').innerText = 'Parabéns! Completaste a memória!';
+                                setTimeout(loadMemoryRound, 1200);
+                            }
+                        } else {
+                            lockBoard = true;
+                            playErrorSound();
+                            setTimeout(() => {
+                                firstCard.innerHTML = '❓';
+                                firstCard.classList.add('bg-purple-500', 'border-purple-700');
+                                firstCard.classList.remove('bg-white', 'text-slate-800', 'border-purple-200');
+
+                                card.innerHTML = '❓';
+                                card.classList.add('bg-purple-500', 'border-purple-700');
+                                card.classList.remove('bg-white', 'text-slate-800', 'border-purple-200');
+
+                                firstCard = null;
+                                lockBoard = false;
+                            }, 800);
+                        }
+                    }
+                };
+                grid.appendChild(card);
+            });
+            arena.appendChild(grid);
+        }
+
+        // Fallback generic interactive template for remaining preschool games (4, 6, 7, 8, 10, 11, 12)
+        function startGenericPreschoolGame(title, desc) {
+            showActiveGameScreen(title, desc);
+            loadGenericRound(title);
+        }
+
+        function loadGenericRound(title) {
+            if (currentGameScore >= targetScore) {
+                triggerVictory();
+                return;
+            }
+            const arena = document.getElementById('game-arena');
+            arena.innerHTML = '';
+
+            const promptBox = document.createElement('div');
+            promptBox.className = 'bg-white p-6 rounded-3xl shadow-md mb-6 text-center border-2 border-amber-200 max-w-md w-full';
+            promptBox.innerHTML = `<div class="text-5xl mb-2">🌟</div><h3 class="font-playful text-xl text-amber-700">Desafio de ${title}</h3><p class="text-xs text-slate-500 mt-1">Qual destas opções está correta?</p>`;
+            arena.appendChild(promptBox);
+
+            const grid = document.createElement('div');
+            grid.className = 'flex gap-4';
+
+            const correctChoice = Math.floor(Math.random() * 3);
+            for (let i = 0; i < 3; i++) {
+                const btn = document.createElement('button');
+                btn.className = 'w-24 h-24 bg-white hover:bg-amber-50 rounded-2xl shadow-md pop-card border-4 border-amber-200 flex items-center justify-center text-4xl';
+                const icons = ['⭐', '🎈', '🎨', '🚀', '🐱', '🍎'];
+                btn.innerHTML = icons[(i + currentGameScore) % icons.length];
+                
+                btn.onclick = () => {
+                    if (i === correctChoice) {
+                        playSuccessSound();
+                        currentGameScore++;
+                        document.getElementById('active-score').innerText = currentGameScore;
+                        addStar();
+                        document.getElementById('game-feedback').innerText = 'Muito bem!';
+                        setTimeout(() => loadGenericRound(title), 800);
+                    } else {
+                        playErrorSound();
+                        btn.classList.add('animate-shake');
+                        document.getElementById('game-feedback').innerText = 'Tenta outra opção!';
+                        setTimeout(() => btn.classList.remove('animate-shake'), 300);
+                    }
+                };
+                grid.appendChild(btn);
+            }
+            arena.appendChild(grid);
+        }
+
+        // Specific bindings for remaining games
+        function startSizeSort() { startGenericPreschoolGame('Grande e Pequeno', 'Qual é o maior ou menor objeto?'); }
+        function startAnimalHome() { startGenericPreschoolGame('Casa do Bicho', 'Onde vive este animal?'); }
+        function startEmotionQuiz() { startGenericPreschoolGame('Emoções', 'Identifica o rostinho alegre!'); }
+        function startWeatherGame() { startGenericPreschoolGame('O Tempo', 'Como está o dia lá fora?'); }
+        function startOddOneOut() { startGenericPreschoolGame('O Intruso', 'Qual figura não combina com as outras?'); }
+        function startShadowPuzzle() { startGenericPreschoolGame('Garagem de Brinquedos', 'Estaciona o carrinho correto.'); }
+        function startAlphabetFun() { startGenericPreschoolGame('Primeiras Letrinhas', 'Conhece as letras e sons.'); }
+
+        function triggerVictory() {
+            if (typeof confetti === 'function') {
+                confetti({
+                    particleCount: 120,
+                    spread: 80,
+                    origin: { y: 0.6 }
+                });
+            }
+            playSuccessSound();
+            const arena = document.getElementById('game-arena');
+            arena.innerHTML = `
+                <div class="text-center py-8">
+                    <div class="text-7xl mb-4 animate-bounce">🏆</div>
+                    <h3 class="font-playful text-3xl text-amber-600">Parabéns Campeão/ã!</h3>
+                    <p class="text-slate-600 font-semibold text-sm mt-2">Completaste esta atividade com sucesso e ganhaste mais estrelas!</p>
+                    <button onclick="backToLobby()" class="mt-6 bg-amber-500 hover:bg-amber-600 text-white font-playful px-6 py-3 rounded-2xl shadow-lg text-lg pop-card">
+                        Escolher Outro Jogo 🎈
+                    </button>
+                </div>
+            `;
+            document.getElementById('game-feedback').innerText = 'Missão cumprida com sucesso!';
+        }
+
+        window.onload = function() {
+            console.log("Brincalândia Pré-Escolar carregado com sucesso!");
+        };
+    </script>
+</body>
+</html>
