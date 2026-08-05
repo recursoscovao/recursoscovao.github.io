@@ -6,17 +6,16 @@ let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0, ajudasUsadas = 0;
 let itemDestaque = null, opcoesRonda = [], simuInterval;
 let audioAnimalAtual = null;
 
-const somAcerto = new Audio(JOGO_CONFIG.caminhoSonsSistema + JOGO_CONFIG.sons.acerto);
-const somErro = new Audio(JOGO_CONFIG.caminhoSonsSistema + JOGO_CONFIG.sons.erro);
-const somClique = new Audio(JOGO_CONFIG.caminhoSonsSistema + JOGO_CONFIG.sons.clique);
+const somAcerto = new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.acerto);
+const somErro = new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.erro);
+const somClique = new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.clique);
 
-// Função rigorosa para obter o caminho da imagem
 const getCaminhoImagem = (item) => {
     return item.pasta === "domesticos" ? DADOS_JOGO.caminhoDomesticos : DADOS_JOGO.caminhoSelvagens;
 };
 
 // ==========================================
-// 2. CONFIGURAÇÃO VISUAL
+// 2. CONFIGURAÇÃO VISUAL (CSS INJETADO)
 // ==========================================
 const style = document.createElement('style');
 style.innerHTML = `
@@ -72,33 +71,22 @@ document.head.appendChild(style);
 // 3. LÓGICA DE ÁUDIO
 // ==========================================
 function pararAudios() {
-    if (audioAnimalAtual) {
-        audioAnimalAtual.pause();
-        audioAnimalAtual.currentTime = 0;
-    }
+    if (audioAnimalAtual) { audioAnimalAtual.pause(); audioAnimalAtual.currentTime = 0; }
 }
 
 function tocarSomAnimal() {
     if (!itemDestaque) return;
     pararAudios();
-    
-    // Caminho rigoroso: JOGO_CONFIG.caminhoSonsAnimais + itemDestaque.som
-    const somUrl = JOGO_CONFIG.caminhoSonsAnimais + itemDestaque.som;
-    audioAnimalAtual = new Audio(somUrl);
-    
-    audioAnimalAtual.play().catch(e => {
-        console.error("Erro ao reproduzir som do animal:", somUrl);
-    });
+    const url = DADOS_JOGO.caminhoSonsAnimais + itemDestaque.som;
+    audioAnimalAtual = new Audio(url);
+    audioAnimalAtual.play().catch(e => console.error("Falha ao carregar animal som:", url));
 }
 
 function tocarAudioInstrucoes() {
     somClique.play();
-    const audioInst = new Audio(JOGO_CONFIG.caminhoSonsSistema + DADOS_JOGO.somInstrucoes);
-    audioInst.play().catch(() => {
-        const synth = window.speechSynthesis;
-        const utter = new SpeechSynthesisUtterance(JOGO_CONFIG.descricao);
-        utter.lang = 'pt-PT'; synth.speak(utter);
-    });
+    const urlInst = JOGO_CONFIG.caminhoSonsBase + DADOS_JOGO.somInstrucoes;
+    const a = new Audio(urlInst);
+    a.play().catch(e => console.error("Falha ao carregar instrução:", urlInst));
 }
 
 function mostrarCapa() {
@@ -135,7 +123,6 @@ function correrSimulacao() {
     const animar = () => {
         const itens = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5).slice(0,3);
         const certoIdx = Math.floor(Math.random() * 3);
-        
         itens.forEach((it, i) => { 
             const card = document.getElementById(`simu-opt-${i}`);
             if(card) {
@@ -143,21 +130,17 @@ function correrSimulacao() {
                 card.style.borderColor = "#f0f0f0";
             }
         });
-
         const container = document.getElementById('game-content').getBoundingClientRect();
         hand.style.display = "block"; hand.style.opacity = "0";
-        
         setTimeout(() => {
             const box = document.getElementById('simu-box').getBoundingClientRect();
             hand.style.transition = "all 0.6s ease-in-out"; hand.style.opacity = "1";
             hand.style.top = (box.top - container.top + 40) + "px"; hand.style.left = (box.left - container.left + 40) + "px";
-            
             setTimeout(() => {
                 const target = document.getElementById(`simu-opt-${certoIdx}`).getBoundingClientRect();
                 hand.style.top = (target.top - container.top + 20) + "px"; hand.style.left = (target.left - container.left + 20) + "px";
                 setTimeout(() => { 
-                    const opt = document.getElementById(`simu-opt-${certoIdx}`);
-                    if(opt) opt.style.borderColor = "#8cc63f";
+                    if(document.getElementById(`simu-opt-${certoIdx}`)) document.getElementById(`simu-opt-${certoIdx}`).style.borderColor = "#8cc63f";
                     setTimeout(() => { hand.style.opacity = "0"; }, 500);
                 }, 700);
             }, 1000);
@@ -171,18 +154,15 @@ function correrSimulacao() {
 // ==========================================
 function iniciarJogo() { 
     clearInterval(simuInterval); 
-    jogoAtivo = true; 
-    rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0; 
+    jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0; 
     proximaRonda(); 
 }
 
 function proximaRonda() {
     if (rondaAtual > totalRondas) { finalizarJogo(); return; }
     pararAudios();
-    
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
     const area = document.getElementById('game-content');
-    
     const todos = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
     itemDestaque = todos[0];
     opcoesRonda = todos.slice(0, 3).sort(() => Math.random() - 0.5);
@@ -199,7 +179,6 @@ function proximaRonda() {
                     <img src="${getCaminhoImagem(item) + item.img}">
                 </div>`).join('')}
         </div>`;
-
     setTimeout(tocarSomAnimal, 600);
 }
 
@@ -207,7 +186,6 @@ function verificarResposta(id, el) {
     if (!jogoAtivo) return;
     document.querySelectorAll('.opcao-card').forEach(c => c.style.pointerEvents = 'none');
     pararAudios();
-
     if (id === itemDestaque.id) {
         certos++; somAcerto.play();
         el.style.borderColor = "#8cc63f";
@@ -224,8 +202,7 @@ function verificarResposta(id, el) {
 
 function darAjuda() {
     if (!jogoAtivo) return;
-    ajudasUsadas++; 
-    somClique.play();
+    ajudasUsadas++; somClique.play();
     const correto = document.getElementById(`card-${itemDestaque.id}`);
     if (correto) {
         correto.style.borderColor = "var(--primary-color)";
@@ -234,8 +211,7 @@ function darAjuda() {
 }
 
 function finalizarJogo() {
-    jogoAtivo = false;
-    pararAudios();
+    jogoAtivo = false; pararAudios();
     const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
     Engine.showResults(certos, erros, ajudasUsadas, rel);
 }
