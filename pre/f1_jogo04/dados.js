@@ -92,7 +92,7 @@ const DADOS_JOGO = {
     caminhoDomesticos: "../../img/animaisdomesticos/",
     caminhoSelvagens: "../../img/animaisselvagens/",
     caminhoSonsAnimais: "../../sons/sonsanimais/", // Corrigido para plural conforme imagem
-    somInstrucoes: "sonspre/f1jogo04.mp3", 
+    somInstrucoes: "sonspre/f1_jogo04.mp3", 
     
     itens: [
         { id: 1,  img: "boi.png", som: "vaca.mp3", pasta: "domesticos" },
