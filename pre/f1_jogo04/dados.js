@@ -25,16 +25,34 @@ const BIBLIOTECA_TEMAS = {
 };
 
 // ==========================================
-// 2. BIBLIOTECA DE CONTEÚDO
+// 2. BIBLIOTECA DE CONTEÚDO (Completa)
 // ==========================================
 const BIBLIOTECA_CONTEUDO = {
+    "jd": { 
+        "jd": { t1: "Jogos em", t2: "Destaque", sub: "Recursos Especiais", rodape: "&copy; Pequenos Curiosos" } 
+    },
     "pre": { 
-        "pre": { 
-            t1: "Quem", 
-            t2: "Sou Eu?", 
-            sub: "Atividades | Pré-Escolar", 
-            rodape: "&copy; Pequenos Curiosos" 
-        } 
+        "pre": { t1: "Quem", t2: "Sou Eu?", sub: "Atividades | Pré-Escolar", rodape: "&copy; Pequenos Curiosos" } 
+    },
+    "ano1": { 
+        "portugues": { t1: "Pequenos", t2: "Leitores", sub: "1º Ano | Português", rodape: "&copy; Pequenos Leitores" },
+        "matematica": { t1: "Pequenos", t2: "Matemáticos", sub: "1º Ano | Matemática", rodape: "&copy; Pequenos Matemáticos" },
+        "estudo": { t1: "Pequenos", t2: "Exploradores", sub: "1º Ano | Estudo do Meio", rodape: "&copy; Pequenos Exploradores" }
+    },
+    "ano2": { 
+        "portugues": { t1: "Jovens", t2: "Leitores", sub: "2º Ano | Português", rodape: "&copy; Jovens Leitores" },
+        "matematica": { t1: "Jovens", t2: "Matemáticos", sub: "2º Ano | Matemática", rodape: "&copy; Jovens Matemáticos" },
+        "estudo": { t1: "Jovens", t2: "Exploradores", sub: "2º Ano | Estudo do Meio", rodape: "&copy; Jovens Exploradores" }
+    },
+    "ano3": { 
+        "portugues": { t1: "Exploradores", t2: "Leitores", sub: "3º Ano | Português", rodape: "&copy; Exploradores" },
+        "matematica": { t1: "Exploradores", t2: "Cálculos", sub: "3º Ano | Matemática", rodape: "&copy; Exploradores" },
+        "estudo": { t1: "Exploradores", t2: "do Mundo", sub: "3º Ano | Estudo do Meio", rodape: "&copy; Exploradores" }
+    },
+    "ano4": { 
+        "portugues": { t1: "Mestres", t2: "da Língua", sub: "4º Ano | Português", rodape: "&copy; Mestres Curiosos" },
+        "matematica": { t1: "Mestres", t2: "do Cálculo", sub: "4º Ano | Matemática", rodape: "&copy; Mestres Curiosos" },
+        "estudo": { t1: "Mestres", t2: "do Mundo", sub: "4º Ano | Estudo do Meio", rodape: "&copy; Mestres Curiosos" }
     }
 };
 
