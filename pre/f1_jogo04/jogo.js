@@ -15,7 +15,7 @@ const getCaminhoImagem = (item) => {
 };
 
 // ==========================================
-// 2. CONFIGURAÇÃO VISUAL (CSS INJETADO)
+// 2. CONFIGURAÇÃO VISUAL
 // ==========================================
 const style = document.createElement('style');
 style.innerHTML = `
@@ -25,43 +25,17 @@ style.innerHTML = `
     .score-box { padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; min-width: 60px; justify-content: center; }
     .box-v { background: #8cc63f; box-shadow: 0 3px 0 #6da32f; }
     .box-x { background: #ff5a5f; box-shadow: 0 3px 0 #d44348; }
-
-    .btn-play-rect { 
-        flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); 
-        color: white; border: none; font-size: 1.5rem; font-weight: 900; 
-        text-transform: uppercase; cursor: pointer; display: flex; 
-        align-items: center; justify-content: center; gap: 15px; 
-        box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.2s;
-    }
+    .btn-play-rect { flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.2s; }
     .btn-audio-circle { width: 65px; height: 65px; cursor: pointer; flex-shrink: 0; }
-
-    .destaque-box {
-        width: var(--dest-size); height: var(--dest-size); background: #fff; border-radius: 30px; 
-        border: 3.5px dashed var(--primary-color); display: flex; flex-direction: column; 
-        align-items: center; justify-content: center; cursor: pointer; margin: 0 auto 10px;
-        transition: transform 0.2s;
-    }
-    .destaque-box:active { transform: scale(0.95); }
+    .destaque-box { width: var(--dest-size); height: var(--dest-size); background: #fff; border-radius: 30px; border: 3.5px dashed var(--primary-color); display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; margin: 0 auto 10px; }
     .destaque-box img { width: 50%; margin-bottom: 5px; pointer-events: none; }
     .texto-quem-sou { color: var(--primary-color); font-weight: 900; font-size: 1rem; text-transform: uppercase; }
-
-    .frase-intermedia { 
-        color: var(--text-grey); font-weight: 700; margin-bottom: 20px; text-align: center; font-size: 1.1rem; 
-    }
-
+    .frase-intermedia { color: var(--text-grey); font-weight: 700; margin-bottom: 20px; text-align: center; font-size: 1.1rem; }
     .opcoes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: fit-content; margin: 0 auto; }
-    
-    .opcao-card {
-        background: white; border: 3px solid #f0f0f0; border-radius: 20px; 
-        width: var(--card-size); height: var(--card-size);
-        display: flex; align-items: center; justify-content: center; 
-        cursor: pointer; position: relative; transition: 0.2s;
-    }
+    .opcao-card { background: white; border: 3px solid #f0f0f0; border-radius: 20px; width: var(--card-size); height: var(--card-size); display: flex; align-items: center; justify-content: center; cursor: pointer; position: relative; transition: 0.2s; }
     .opcao-card img { width: 75%; height: 75%; object-fit: contain; }
-    
     .feedback-icon { position: absolute; font-size: 3rem; z-index: 10; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3)); pointer-events: none; }
     .icon-v { color: #8cc63f; } .icon-x { color: #ff5a5f; }
-
     :root { --card-size: 100px; --dest-size: 150px; }
     @media screen and (min-width: 1025px) { :root { --card-size: 140px; --dest-size: 180px; } }
 `;
@@ -79,20 +53,21 @@ function tocarSomAnimal() {
     pararAudios();
     const url = DADOS_JOGO.caminhoSonsAnimais + itemDestaque.som;
     audioAnimalAtual = new Audio(url);
-    audioAnimalAtual.play().catch(e => console.error("Falha ao carregar animal som:", url));
+    audioAnimalAtual.play().catch(e => console.error("Erro Som Animal:", url));
 }
 
 function tocarAudioInstrucoes() {
     somClique.play();
     const urlInst = JOGO_CONFIG.caminhoSonsBase + DADOS_JOGO.somInstrucoes;
-    const a = new Audio(urlInst);
-    a.play().catch(e => console.error("Falha ao carregar instrução:", urlInst));
+    new Audio(urlInst).play().catch(e => console.error("Erro Instrução:", urlInst));
 }
 
+// ==========================================
+// 4. LÓGICA DE JOGO
+// ==========================================
 function mostrarCapa() {
     if (jogoAtivo) return;
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">${JOGO_CONFIG.nomeDoJogo}</h2>`;
-    
     document.getElementById('game-content').innerHTML = `
         <div id="simu-hand" style="position:absolute; font-size:3rem; z-index:100; pointer-events:none; display:none;">👆</div>
         <div style="display:flex; flex-direction:column; align-items:center;">
@@ -105,55 +80,15 @@ function mostrarCapa() {
                 <div class="opcao-card" style="width:70px; height:70px;" id="simu-opt-1"><img src=""></div>
                 <div class="opcao-card" style="width:70px; height:70px;" id="simu-opt-2"><img src=""></div>
             </div>
-            <p style="color:var(--text-grey); font-weight:800; text-align:center; margin-top:15px; font-size:0.9rem;">${JOGO_CONFIG.descricao}</p>
         </div>`;
-
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
     footer.innerHTML = `
         <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="btn-audio-circle" onclick="tocarAudioInstrucoes()">
         <button class="btn-play-rect" onclick="iniciarJogo()"><i class="fas fa-play"></i> JOGAR</button>`;
-    
-    correrSimulacao();
 }
 
-function correrSimulacao() {
-    clearInterval(simuInterval);
-    const hand = document.getElementById('simu-hand');
-    const animar = () => {
-        const itens = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5).slice(0,3);
-        const certoIdx = Math.floor(Math.random() * 3);
-        itens.forEach((it, i) => { 
-            const card = document.getElementById(`simu-opt-${i}`);
-            if(card) {
-                card.querySelector('img').src = getCaminhoImagem(it) + it.img;
-                card.style.borderColor = "#f0f0f0";
-            }
-        });
-        const container = document.getElementById('game-content').getBoundingClientRect();
-        hand.style.display = "block"; hand.style.opacity = "0";
-        setTimeout(() => {
-            const box = document.getElementById('simu-box').getBoundingClientRect();
-            hand.style.transition = "all 0.6s ease-in-out"; hand.style.opacity = "1";
-            hand.style.top = (box.top - container.top + 40) + "px"; hand.style.left = (box.left - container.left + 40) + "px";
-            setTimeout(() => {
-                const target = document.getElementById(`simu-opt-${certoIdx}`).getBoundingClientRect();
-                hand.style.top = (target.top - container.top + 20) + "px"; hand.style.left = (target.left - container.left + 20) + "px";
-                setTimeout(() => { 
-                    if(document.getElementById(`simu-opt-${certoIdx}`)) document.getElementById(`simu-opt-${certoIdx}`).style.borderColor = "#8cc63f";
-                    setTimeout(() => { hand.style.opacity = "0"; }, 500);
-                }, 700);
-            }, 1000);
-        }, 200);
-    };
-    animar(); simuInterval = setInterval(animar, 4000);
-}
-
-// ==========================================
-// 4. LÓGICA DE JOGO
-// ==========================================
 function iniciarJogo() { 
-    clearInterval(simuInterval); 
     jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0; 
     proximaRonda(); 
 }
@@ -179,7 +114,7 @@ function proximaRonda() {
                     <img src="${getCaminhoImagem(item) + item.img}">
                 </div>`).join('')}
         </div>`;
-    setTimeout(tocarSomAnimal, 600);
+    setTimeout(tocarSomAnimal, 800);
 }
 
 function verificarResposta(id, el) {
