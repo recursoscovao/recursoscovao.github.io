@@ -1,95 +1,159 @@
 // ==========================================
-// 1. ESTADO GLOBAL
+// 1. ESTADO GLOBAL E SONS
 // ==========================================
 let jogoAtivo = false;
-let rondaAtual = 1, totalRondas = 3, certos = 0, erros = 0;
+let rondaAtual = 0, totalRondas = 3, certos = 0, erros = 0; 
 let selecionadoOrigem = null;
 let paresConcluidos = 0;
 let itensDestaRonda = [];
+let simuInterval;
+
+const somAcerto = new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.acerto);
+const somErro = new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.erro);
+const somClique = new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.clique);
 
 // ==========================================
-// 2. CSS INJETADO
+// 2. CONFIGURAÇÃO VISUAL (CSS INJETADO)
 // ==========================================
 const style = document.createElement('style');
 style.innerHTML = `
-    #game-content { position: relative; width: 100%; max-width: 600px; margin: 0 auto; display: flex; justify-content: space-between; padding: 20px; box-sizing: border-box; }
-    .coluna { display: flex; flex-direction: column; gap: 20px; z-index: 10; }
-    
+    /* BOTÕES E HEADER/FOOTER */
+    .status-container { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .status-pill { background: #6c757d; color: white; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 1.1rem; }
+    .score-group { display: flex; gap: 10px; }
+    .score-box { padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; min-width: 60px; justify-content: center; }
+    .box-v { background: #8cc63f; box-shadow: 0 3px 0 #6da32f; }
+    .box-x { background: #ff5a5f; box-shadow: 0 3px 0 #d44348; }
+
+    .btn-play-rect { 
+        flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); 
+        color: white; border: none; font-size: 1.5rem; font-weight: 900; 
+        text-transform: uppercase; cursor: pointer; display: flex; 
+        align-items: center; justify-content: center; gap: 15px; 
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.2s;
+    }
+    .btn-audio-circle { width: 65px; height: 65px; cursor: pointer; flex-shrink: 0; }
+
+    /* LAYOUT DO JOGO DE LIGAR */
+    #game-content { 
+        position: relative; width: 100%; max-width: 500px; margin: 0 auto; 
+        display: flex; justify-content: space-between; padding: 10px; box-sizing: border-box; 
+    }
+    .coluna { display: flex; flex-direction: column; gap: 15px; z-index: 10; }
     .item-container { display: flex; align-items: center; gap: 10px; position: relative; }
     .col-direita { flex-direction: row-reverse; }
 
-    .card-img { width: 70px; height: 70px; background: white; border: 3px solid #f0f0f0; border-radius: 15px; display: flex; align-items: center; justify-content: center; padding: 5px; }
-    .card-img img { max-width: 90%; max-height: 90%; object-fit: contain; }
-    .sombra img { filter: brightness(0); }
+    .card-img { 
+        width: var(--card-size); height: var(--card-size); background: white; 
+        border: 3px solid #f0f0f0; border-radius: 15px; display: flex; 
+        align-items: center; justify-content: center; padding: 5px; 
+    }
+    .card-img img { max-width: 80%; max-height: 80%; object-fit: contain; }
+    .sombra-img { filter: brightness(0); opacity: 1; } /* Garante que a sombra é preta e visível */
 
     .ponto { 
-        width: 18px; height: 18px; background: #6c757d; border-radius: 50%; border: 3px solid #fff; 
+        width: 20px; height: 20px; background: #6c757d; border-radius: 50%; border: 3px solid #fff; 
         box-shadow: 0 2px 4px rgba(0,0,0,0.2); cursor: pointer; transition: 0.2s;
     }
-    .ponto:hover { transform: scale(1.3); background: var(--primary-color); }
-    .ponto.ativo { background: var(--primary-color); box-shadow: 0 0 10px var(--primary-color); }
+    .ponto.ativo { background: var(--primary-color); transform: scale(1.2); box-shadow: 0 0 10px var(--primary-color); }
     .ponto.conectado { background: #8cc63f; cursor: default; }
 
-    /* SVG para as linhas */
     #svg-linhas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
-    .linha-matching { stroke: #8cc63f; stroke-width: 4; stroke-linecap: round; transition: opacity 0.5s; }
+    .linha-matching { stroke: #8cc63f; stroke-width: 5; stroke-linecap: round; opacity: 0.8; }
 
-    @media screen and (min-width: 768px) {
-        .card-img { width: 90px; height: 90px; }
-        .ponto { width: 22px; height: 22px; }
-    }
+    :root { --card-size: 80px; }
+    @media screen and (min-width: 768px) { :root { --card-size: 100px; } }
+
+    /* SIMULAÇÃO */
+    #simu-hand { position: absolute; font-size: 3rem; z-index: 100; pointer-events: none; transition: all 0.8s ease-in-out; }
 `;
 document.head.appendChild(style);
 
 // ==========================================
-// 3. LÓGICA DE JOGO
+// 3. LÓGICA DE CAPA E SIMULAÇÃO
 // ==========================================
+function tocarAudioInstrucoes() {
+    somClique.play();
+    new Audio(JOGO_CONFIG.caminhoSonsBase + DADOS_JOGO.somInstrucoes).play();
+}
+
 function mostrarCapa() {
+    if (jogoAtivo) return;
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">${JOGO_CONFIG.nomeDoJogo}</h2>`;
-    document.getElementById('game-content').innerHTML = `<div style="text-align:center; width:100%;"><p>${JOGO_CONFIG.descricao}</p><img src="${DADOS_JOGO.caminhoImagens}morango.png" style="width:100px; filter:grayscale(1); opacity:0.5;"></div>`;
     
+    document.getElementById('game-content').innerHTML = `
+        <div id="simu-hand" style="display:none;">👆</div>
+        <svg id="svg-linhas"></svg>
+        <div class="coluna">
+            <div class="item-container"><div class="card-img"><img src="${DADOS_JOGO.caminhoImagens}morango.png"></div><div class="ponto" id="simu-p1"></div></div>
+        </div>
+        <div class="coluna">
+            <div class="item-container col-direita"><div class="card-img sombra-img"><img src="${DADOS_JOGO.caminhoImagens}morango.png"></div><div class="ponto" id="simu-p2"></div></div>
+        </div>`;
+
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
     footer.innerHTML = `
         <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="btn-audio-circle" onclick="tocarAudioInstrucoes()">
         <button class="btn-play-rect" onclick="iniciarJogo()"><i class="fas fa-play"></i> JOGAR</button>`;
+    
+    correrSimulacao();
 }
 
-function tocarAudioInstrucoes() {
-    new Audio(JOGO_CONFIG.caminhoSonsBase + DADOS_JOGO.somInstrucoes).play();
+function correrSimulacao() {
+    clearInterval(simuInterval);
+    const hand = document.getElementById('simu-hand');
+    const animar = () => {
+        const p1 = document.getElementById('simu-p1').getBoundingClientRect();
+        const p2 = document.getElementById('simu-p2').getBoundingClientRect();
+        const container = document.getElementById('game-content').getBoundingClientRect();
+
+        hand.style.display = "block";
+        hand.style.top = (p1.top - container.top) + "px";
+        hand.style.left = (p1.left - container.left) + "px";
+        hand.style.opacity = "1";
+
+        setTimeout(() => {
+            hand.style.top = (p2.top - container.top) + "px";
+            hand.style.left = (p2.left - container.left) + "px";
+            setTimeout(() => { hand.style.opacity = "0"; }, 800);
+        }, 1000);
+    };
+    animar(); simuInterval = setInterval(animar, 4000);
 }
 
+// ==========================================
+// 4. LÓGICA DE JOGO
+// ==========================================
 function iniciarJogo() {
+    clearInterval(simuInterval);
     jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0;
     proximaRonda();
 }
 
 function proximaRonda() {
     if (rondaAtual > totalRondas) { finalizarJogo(); return; }
-    
-    paresConcluidos = 0;
-    selecionadoOrigem = null;
+    paresConcluidos = 0; selecionadoOrigem = null;
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
     
-    // Escolher 4 frutos aleatórios para esta ronda
     itensDestaRonda = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5).slice(0, 4);
-    const itensEsquerda = [...itensDestaRonda].sort(() => Math.random() - 0.5);
-    const itensDireita = [...itensDestaRonda].sort(() => Math.random() - 0.5);
+    const itensEsq = [...itensDestaRonda].sort(() => Math.random() - 0.5);
+    const itensDir = [...itensDestaRonda].sort(() => Math.random() - 0.5);
 
     const area = document.getElementById('game-content');
     area.innerHTML = `
         <svg id="svg-linhas"></svg>
         <div class="coluna">
-            ${itensEsquerda.map(it => `
-                <div class="item-container col-esquerda">
+            ${itensEsq.map(it => `
+                <div class="item-container">
                     <div class="card-img"><img src="${DADOS_JOGO.caminhoImagens + it.img}"></div>
                     <div class="ponto" id="origem-${it.id}" onclick="selecionarPonto('origem', ${it.id}, this)"></div>
                 </div>`).join('')}
         </div>
         <div class="coluna">
-            ${itensDireita.map(it => `
+            ${itensDir.map(it => `
                 <div class="item-container col-direita">
-                    <div class="card-img sombra"><img src="${DADOS_JOGO.caminhoImagens + it.img}"></div>
+                    <div class="card-img sombra-img"><img src="${DADOS_JOGO.caminhoImagens + it.img}"></div>
                     <div class="ponto" id="destino-${it.id}" onclick="selecionarPonto('destino', ${it.id}, this)"></div>
                 </div>`).join('')}
         </div>`;
@@ -97,43 +161,30 @@ function proximaRonda() {
 
 function selecionarPonto(tipo, id, el) {
     if (!jogoAtivo || el.classList.contains('conectado')) return;
+    somClique.play();
 
     if (tipo === 'origem') {
-        document.querySelectorAll('.col-esquerda .ponto').forEach(p => p.classList.remove('ativo'));
+        document.querySelectorAll('.coluna .ponto').forEach(p => p.classList.remove('ativo'));
         el.classList.add('ativo');
         selecionadoOrigem = { id: id, el: el };
-        new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.clique).play();
     } else {
         if (!selecionadoOrigem) return;
-
         if (id === selecionadoOrigem.id) {
-            // ACERTO
-            certos++;
-            paresConcluidos++;
-            new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.acerto).play();
-            
-            const pontoOrigem = selecionadoOrigem.el;
-            const pontoDestino = el;
-            
-            pontoOrigem.classList.remove('ativo');
-            pontoOrigem.classList.add('conectado');
-            pontoDestino.classList.add('conectado');
-            
-            desenharLinha(pontoOrigem, pontoDestino);
+            certos++; paresConcluidos++;
+            somAcerto.play();
+            selecionadoOrigem.el.classList.replace('ativo', 'conectado');
+            el.classList.add('conectado');
+            desenharLinha(selecionadoOrigem.el, el);
             selecionadoOrigem = null;
-            Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
-
             if (paresConcluidos === 4) {
                 setTimeout(() => { rondaAtual++; proximaRonda(); }, 1500);
             }
         } else {
-            // ERRO
-            erros++;
-            new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.erro).play();
+            erros++; somErro.play();
             selecionadoOrigem.el.classList.remove('ativo');
             selecionadoOrigem = null;
-            Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
         }
+        Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
     }
 }
 
@@ -149,10 +200,8 @@ function desenharLinha(el1, el2) {
     const y2 = b2.top - rect.top + b2.height / 2;
 
     const linha = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    linha.setAttribute("x1", x1);
-    linha.setAttribute("y1", y1);
-    linha.setAttribute("x2", x2);
-    linha.setAttribute("y2", y2);
+    linha.setAttribute("x1", x1); linha.setAttribute("y1", y1);
+    linha.setAttribute("x2", x2); linha.setAttribute("y2", y2);
     linha.setAttribute("class", "linha-matching");
     svg.appendChild(linha);
 }
