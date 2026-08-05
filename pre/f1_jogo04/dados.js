@@ -25,11 +25,34 @@ const BIBLIOTECA_TEMAS = {
 };
 
 // ==========================================
-// 2. BIBLIOTECA DE CONTEÚDO
+// 2. BIBLIOTECA DE CONTEÚDO (Textos Automáticos)
 // ==========================================
 const BIBLIOTECA_CONTEUDO = {
+    "jd": { 
+        "jd": { t1: "Jogos em", t2: "Destaque", sub: "Recursos Especiais", rodape: "&copy; Recursos Covão" } 
+    },
     "pre": { 
         "pre": { t1: "Pequenos", t2: "Curiosos", sub: "Atividades | Pré-Escolar", rodape: "&copy; Recursos Covão" } 
+    },
+    "ano1": { 
+        "portugues": { t1: "Pequenos", t2: "Leitores", sub: "1º Ano | Português", rodape: "&copy; Pequenos Leitores" },
+        "matematica": { t1: "Pequenos", t2: "Matemáticos", sub: "1º Ano | Matemática", rodape: "&copy; Pequenos Matemáticos" },
+        "estudo": { t1: "Pequenos", t2: "Exploradores", sub: "1º Ano | Estudo do Meio", rodape: "&copy; Pequenos Exploradores" }
+    },
+    "ano2": { 
+        "portugues": { t1: "Jovens", t2: "Leitores", sub: "2º Ano | Português", rodape: "&copy; Jovens Leitores" },
+        "matematica": { t1: "Jovens", t2: "Matemáticos", sub: "2º Ano | Matemática", rodape: "&copy; Jovens Matemáticos" },
+        "estudo": { t1: "Jovens", t2: "Exploradores", sub: "2º Ano | Estudo do Meio", rodape: "&copy; Jovens Exploradores" }
+    },
+    "ano3": { 
+        "portugues": { t1: "Exploradores", t2: "Leitores", sub: "3º Ano | Português", rodape: "&copy; Exploradores" },
+        "matematica": { t1: "Exploradores", t2: "Cálculos", sub: "3º Ano | Matemática", rodape: "&copy; Exploradores" },
+        "estudo": { t1: "Exploradores", t2: "do Mundo", sub: "3º Ano | Estudo do Meio", rodape: "&copy; Exploradores" }
+    },
+    "ano4": { 
+        "portugues": { t1: "Mestres", t2: "da Língua", sub: "4º Ano | Português", rodape: "&copy; Mestres Curiosos" },
+        "matematica": { t1: "Mestres", t2: "do Cálculo", sub: "4º Ano | Matemática", rodape: "&copy; Mestres Curiosos" },
+        "estudo": { t1: "Mestres", t2: "do Mundo", sub: "4º Ano | Estudo do Meio", rodape: "&copy; Mestres Curiosos" }
     }
 };
 
@@ -37,10 +60,10 @@ const BIBLIOTECA_CONTEUDO = {
 // 3. CONFIGURAÇÃO DO JOGO ATUAL
 // ==========================================
 const JOGO_CONFIG = {
-    nomeDoJogo: "Quem sou eu?",
+    nomeDoJogo: "Sons dos Animais",
     descricao: "Ouve o som e descobre qual é o animal!",
     textoDestaque: "Quem sou eu?",
-    fraseIntermedia: "Clica no animal que ouviste::",
+    fraseIntermedia: "Clica no animal que faz este som:",
 
     areaAtiva: "pre",   
     anoAtivo: "pre",    
@@ -48,7 +71,7 @@ const JOGO_CONFIG = {
     caminhoIconsMenu: "../../icons/", 
     caminhoIconsJogos: "../../icons/ic_jogos_pre/",
     caminhoSonsSistema: "../../sons/", 
-    caminhoSonsAnimais: "../../sons/somanimais/", // Corrigido para a pasta exata da imagem
+    caminhoSonsAnimais: "../../sons/somanimais/", // Pasta exata do print
 
     sons: {
         acerto: "certo.mp3",
@@ -92,10 +115,10 @@ const JOGO_CONFIG = {
 const DADOS_JOGO = {
     caminhoDomesticos: "../../img/animaisdomesticos/",
     caminhoSelvagens: "../../img/animaisselvagens/",
-    somInstrucoes: "sonspre/f1jogo04.mp3", // Atualizado conforme solicitado
+    somInstrucoes: "sonspre/f1jogo04.mp3", 
     
     itens: [
-        // DOMÉSTICOS (Mapeado rigorosamente com base nas tuas imagens)
+        // DOMÉSTICOS
         { id: 1,  img: "boi.png",       som: "vaca.mp3",      nome: "Boi",        pasta: "domesticos" },
         { id: 2,  img: "burro.png",     som: "burro.mp3",     nome: "Burro",      pasta: "domesticos" },
         { id: 3,  img: "cabra.png",     som: "cabra.mp3",     nome: "Cabra",      pasta: "domesticos" },
@@ -115,7 +138,7 @@ const DADOS_JOGO = {
         { id: 17, img: "porco.png",     som: "porco.mp3",     nome: "Porco",      pasta: "domesticos" },
         { id: 18, img: "vaca.png",      som: "vaca.mp3",      nome: "Vaca",       pasta: "domesticos" },
 
-        // SELVAGENS (Mapeado rigorosamente com base nas tuas imagens)
+        // SELVAGENS
         { id: 19, img: "abelha.png",      som: "abelha.mp3",      nome: "Abelha",      pasta: "selvagens" },
         { id: 20, img: "abutre.png",      som: "abutre.mp3",      nome: "Abutre",      pasta: "selvagens" },
         { id: 21, img: "aguia.png",       som: "aguia.mp3",       nome: "Águia",       pasta: "selvagens" },
