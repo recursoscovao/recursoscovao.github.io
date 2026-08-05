@@ -2,10 +2,11 @@
 // 1. ESTADO GLOBAL E SONS
 // ==========================================
 let jogoAtivo = false;
-let rondaAtual = 0, totalRondas = 3, certos = 0, erros = 0, ajudasUsadas = 0; 
+let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0, ajudasUsadas = 0; 
 let selecionadoOrigem = null;
 let paresConcluidos = 0;
 let itensDestaRonda = [];
+let simuInterval;
 
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.acerto);
 const somErro = new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.erro);
@@ -16,7 +17,7 @@ const somClique = new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.cliqu
 // ==========================================
 const style = document.createElement('style');
 style.innerHTML = `
-    /* ESTRUTURA GERAL */
+    /* ESTRUTURA DE STATUS E UI */
     .status-container { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; }
     .status-pill { background: #6c757d; color: white; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 1.1rem; }
     .score-group { display: flex; gap: 10px; }
@@ -41,8 +42,9 @@ style.innerHTML = `
         display: flex;
         justify-content: space-between;
         align-items: center;
-        min-height: 400px;
+        min-height: 420px;
         padding: 10px;
+        box-sizing: border-box;
     }
 
     .coluna {
@@ -57,12 +59,12 @@ style.innerHTML = `
         display: flex;
         align-items: center;
         width: 100%;
+        height: var(--card-size);
     }
 
-    /* ESQUERDA: [IMAGEM] [PONTO] */
-    .esq { justify-content: flex-end; gap: 10px; }
-    /* DIREITA: [PONTO] [SOMBRA] */
-    .dir { justify-content: flex-start; gap: 10px; flex-direction: row-reverse; }
+    /* ESQUERDA: [IMAGEM] [PONTO] | DIREITA: [PONTO] [SOMBRA] */
+    .esq { justify-content: flex-end; gap: 12px; }
+    .dir { justify-content: flex-start; gap: 12px; flex-direction: row-reverse; }
 
     .card-img {
         width: var(--card-size);
@@ -75,7 +77,7 @@ style.innerHTML = `
         justify-content: center;
         box-shadow: 0 4px 10px rgba(0,0,0,0.05);
     }
-    .card-img img { max-width: 80%; max-height: 80%; object-fit: contain; }
+    .card-img img { max-width: 80%; max-height: 80%; object-fit: contain; pointer-events: none; }
     .sombra-img img { filter: brightness(0) contrast(100%); }
 
     .ponto {
@@ -93,20 +95,14 @@ style.innerHTML = `
     .ponto.conectado { background: #8cc63f; cursor: default; }
 
     /* SVG DAS LINHAS */
-    #svg-linhas {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        pointer-events: none;
-        z-index: 5;
-    }
-    .linha-matching {
-        stroke: #8cc63f;
-        stroke-width: 6;
-        stroke-linecap: round;
-        opacity: 0.8;
+    #svg-linhas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 5; }
+    .linha-matching { stroke: #8cc63f; stroke-width: 6; stroke-linecap: round; opacity: 0.8; }
+
+    /* ANIMAÇÃO DA MÃO */
+    #simu-hand { 
+        position: absolute; font-size: 3.5rem; z-index: 100; 
+        pointer-events: none; transition: all 0.8s ease-in-out; 
+        filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.2));
     }
 
     :root { --card-size: 80px; }
@@ -115,7 +111,7 @@ style.innerHTML = `
 document.head.appendChild(style);
 
 // ==========================================
-// 3. CAPA E INSTRUÇÕES
+// 3. CAPA E SIMULAÇÃO (ANIMAÇÃO)
 // ==========================================
 function tocarAudioInstrucoes() {
     somClique.play();
@@ -127,28 +123,54 @@ function mostrarCapa() {
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">${JOGO_CONFIG.nomeDoJogo}</h2>`;
     
     document.getElementById('game-content').innerHTML = `
-        <div class="game-stage">
+        <div id="simu-hand" style="display:none;">👆</div>
+        <div class="game-stage" id="stage-capa">
             <svg id="svg-linhas"></svg>
             <div class="coluna">
-                <div class="item-matching esq"><div class="card-img"><img src="${DADOS_JOGO.caminhoImagens}morango.png"></div><div class="ponto"></div></div>
+                <div class="item-matching esq"><div class="card-img"><img src="${DADOS_JOGO.caminhoImagens}morango.png"></div><div class="ponto" id="p-simu-1"></div></div>
             </div>
             <div class="coluna">
-                <div class="item-matching dir"><div class="card-img sombra-img"><img src="${DADOS_JOGO.caminhoImagens}morango.png"></div><div class="ponto"></div></div>
+                <div class="item-matching dir"><div class="card-img sombra-img"><img src="${DADOS_JOGO.caminhoImagens}morango.png"></div><div class="ponto" id="p-simu-2"></div></div>
             </div>
         </div>
-        <p style="text-align:center; color:var(--text-grey); font-weight:800; margin-top:15px;">${JOGO_CONFIG.descricao}</p>`;
+        <p style="text-align:center; color:var(--text-grey); font-weight:800; margin-top:10px;">${JOGO_CONFIG.descricao}</p>`;
 
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
     footer.innerHTML = `
         <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="btn-audio-circle" onclick="tocarAudioInstrucoes()">
         <button class="btn-play-rect" onclick="iniciarJogo()"><i class="fas fa-play"></i> JOGAR</button>`;
+    
+    correrSimulacao();
+}
+
+function correrSimulacao() {
+    clearInterval(simuInterval);
+    const hand = document.getElementById('simu-hand');
+    const animar = () => {
+        const p1 = document.getElementById('p-simu-1').getBoundingClientRect();
+        const p2 = document.getElementById('p-simu-2').getBoundingClientRect();
+        const stage = document.getElementById('stage-capa').getBoundingClientRect();
+
+        hand.style.display = "block";
+        hand.style.top = (p1.top - stage.top + 10) + "px";
+        hand.style.left = (p1.left - stage.left + 10) + "px";
+        hand.style.opacity = "1";
+
+        setTimeout(() => {
+            hand.style.top = (p2.top - stage.top + 10) + "px";
+            hand.style.left = (p2.left - stage.left + 10) + "px";
+            setTimeout(() => { hand.style.opacity = "0"; }, 800);
+        }, 1200);
+    };
+    animar(); simuInterval = setInterval(animar, 4000);
 }
 
 // ==========================================
-// 4. LÓGICA DE JOGO
+// 4. LÓGICA DE JOGO (10 RONDAS)
 // ==========================================
 function iniciarJogo() {
+    clearInterval(simuInterval);
     jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0;
     proximaRonda();
 }
@@ -158,6 +180,7 @@ function proximaRonda() {
     paresConcluidos = 0; selecionadoOrigem = null;
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
     
+    // Selecionar 4 itens aleatórios
     itensDestaRonda = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5).slice(0, 4);
     const itensEsq = [...itensDestaRonda].sort(() => Math.random() - 0.5);
     const itensDir = [...itensDestaRonda].sort(() => Math.random() - 0.5);
@@ -204,8 +227,7 @@ function selecionarPonto(tipo, id, el) {
                 setTimeout(() => { rondaAtual++; proximaRonda(); }, 1500);
             }
         } else {
-            erros++;
-            somErro.play();
+            erros++; somErro.play();
             selecionadoOrigem.el.classList.remove('ativo');
             selecionadoOrigem = null;
         }
