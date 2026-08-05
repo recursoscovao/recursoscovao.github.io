@@ -1,5 +1,5 @@
 // ==========================================
-// 4. LÓGICA DO JOGO
+// 1. ESTADO GLOBAL E CONTROLO DE ÁUDIO
 // ==========================================
 let jogoAtivo = false;
 let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0;
@@ -7,51 +7,120 @@ let itemDestaque = null;
 let audioInstrucao = null;
 let audioAnimal = null;
 
-// Sons de sistema
+// Sons de Sistema (Caminhos baseados na tua estrutura)
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSonsSistema + JOGO_CONFIG.sons.acerto);
 const somErro = new Audio(JOGO_CONFIG.caminhoSonsSistema + JOGO_CONFIG.sons.erro);
 const somClique = new Audio(JOGO_CONFIG.caminhoSonsSistema + JOGO_CONFIG.sons.clique);
 
-function tocarAudioInstrucoes() {
-    // Se já estiver a tocar, não faz nada (evita repetição)
-    if (audioInstrucao && !audioInstrucao.paused) return;
+// ==========================================
+// 2. APLICAÇÃO DINÂMICA DE TEMAS (Cores e Textos)
+// ==========================================
+function aplicarTema() {
+    const tema = BIBLIOTECA_TEMAS[JOGO_CONFIG.areaAtiva];
+    const conteudo = BIBLIOTECA_CONTEUDO[JOGO_CONFIG.anoAtivo][JOGO_CONFIG.areaAtiva];
 
-    audioInstrucao = new Audio("../../sons/" + DADOS_JOGO.somInstrucoes);
-    audioInstrucao.play().catch(e => console.log("Erro ao tocar instrução"));
+    // Injetar Cores no CSS
+    const root = document.documentElement;
+    root.style.setProperty('--primary-color', tema.corPrimaria);
+    root.style.setProperty('--dark-color', tema.corEscura);
+    root.style.setProperty('--bg-color', tema.corPagina);
+    root.style.setProperty('--text-color', tema.corTexto);
+
+    // Aplicar Fundo ao Body
+    document.body.style.backgroundColor = tema.corPagina;
+
+    // Atualizar Cabeçalho e Rodapé (se existirem os IDs no teu HTML)
+    const header = document.getElementById('shell-header-content');
+    if (header) {
+        header.innerHTML = `<h2 style="color:${tema.corPrimaria}; font-weight:900; text-transform:uppercase; margin:0;">${conteudo.t1} ${conteudo.t2}</h2>`;
+    }
 }
 
-function pararAudioInstrucao() {
-    if (audioInstrucao) {
-        audioInstrucao.pause();
-        audioInstrucao.currentTime = 0;
+// ==========================================
+// 3. ESTILOS CORRIGIDOS (CSS)
+// ==========================================
+const style = document.createElement('style');
+style.innerHTML = `
+    :root { --card-size: 110px; --dest-size: 150px; }
+    
+    #game-content { 
+        display: flex; flex-direction: column; align-items: center; 
+        justify-content: center; width: 100%; min-height: 300px; 
     }
+
+    .destaque-box {
+        width: var(--dest-size); height: var(--dest-size); 
+        background: #fff; border-radius: 30px; 
+        border: 4px solid var(--primary-color); 
+        display: flex; align-items: center; justify-content: center;
+        margin-bottom: 20px; cursor: pointer; position: relative;
+        box-shadow: 0 6px 0 rgba(0,0,0,0.05); transition: 0.2s;
+    }
+    .destaque-box:active { transform: translateY(3px); }
+    .destaque-box img { width: 60%; height: 60%; object-fit: contain; }
+
+    .grid-opcoes {
+        display: grid; grid-template-columns: repeat(3, 1fr); 
+        gap: 15px; width: fit-content;
+    }
+
+    .opcao-card {
+        background: white; border: 3px solid #e0e0e0; border-radius: 20px; 
+        width: var(--card-size); height: var(--card-size);
+        display: flex; align-items: center; justify-content: center; 
+        cursor: pointer; position: relative; transition: 0.2s;
+        box-shadow: 0 4px 0 #ddd;
+    }
+    .opcao-card:hover { border-color: var(--primary-color); }
+    .opcao-card img { width: 80%; height: 80%; object-fit: contain; }
+    
+    .feedback-icon { position: absolute; font-size: 3rem; z-index: 10; pointer-events: none; }
+    .icon-v { color: #8cc63f; } .icon-x { color: #ff5a5f; }
+
+    .btn-audio-circle { width: 65px; height: 65px; cursor: pointer; }
+    .btn-play-rect { 
+        flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); 
+        color: white; border: none; font-size: 1.5rem; font-weight: 900; 
+        cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px;
+    }
+
+    @media screen and (min-width: 1025px) {
+        :root { --card-size: 150px; --dest-size: 180px; }
+    }
+`;
+document.head.appendChild(style);
+
+// ==========================================
+// 4. LÓGICA DE SOM E CAPA
+// ==========================================
+function tocarAudioInstrucoes() {
+    if (audioInstrucao && !audioInstrucao.paused) return; // Não repete se estiver a tocar
+    somClique.play();
+    audioInstrucao = new Audio(JOGO_CONFIG.caminhoSonsSistema + DADOS_JOGO.somInstrucoes);
+    audioInstrucao.play();
+}
+
+function pararSons() {
+    if (audioInstrucao) { audioInstrucao.pause(); audioInstrucao.currentTime = 0; }
+    if (audioAnimal) { audioAnimal.pause(); audioAnimal.currentTime = 0; }
 }
 
 function tocarSomAnimal() {
     if (!itemDestaque) return;
-    
-    // Para o som anterior se ainda estiver a tocar
-    if (audioAnimal) {
-        audioAnimal.pause();
-        audioAnimal.currentTime = 0;
-    }
-    
+    if (audioAnimal) { audioAnimal.pause(); audioAnimal.currentTime = 0; }
     audioAnimal = new Audio(JOGO_CONFIG.caminhoSons + itemDestaque.som);
-    audioAnimal.play().catch(e => console.log("Erro ao tocar som do animal"));
+    audioAnimal.play();
 }
 
 function mostrarCapa() {
-    document.getElementById('shell-header-content').innerHTML = `
-        <h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">${JOGO_CONFIG.nomeDoJogo}</h2>`;
-    
-    document.getElementById('game-content').innerHTML = `
-        <div style="display:flex; flex-direction:column; align-items:center; justify-content:center; height:100%;">
-            <div class="destaque-box" style="cursor:default; border-style:solid;">
-                <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" style="filter:none; width:60%;">
-            </div>
-            <h3 style="color:var(--primary-color); font-weight:800;">Quem sou eu?</h3>
-            <p style="color:var(--text-grey); font-weight:600;">Ouve o som e escolhe o animal certo.</p>
-        </div>`;
+    aplicarTema();
+    const area = document.getElementById('game-content');
+    area.innerHTML = `
+        <div class="destaque-box" style="cursor:default;">
+            <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png">
+        </div>
+        <p style="color:var(--text-color); font-weight:800; text-align:center;">${JOGO_CONFIG.descricao}</p>
+    `;
 
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
@@ -60,75 +129,74 @@ function mostrarCapa() {
         <button class="btn-play-rect" onclick="iniciarJogo()"><i class="fas fa-play"></i> JOGAR</button>`;
 }
 
+// ==========================================
+// 5. MECÂNICA DO JOGO
+// ==========================================
 function iniciarJogo() { 
-    pararAudioInstrucao(); // Para o som das instruções ao clicar em Jogar
+    pararSons();
     somClique.play();
     jogoAtivo = true; 
-    rondaAtual = 1; 
-    certos = 0; 
-    erros = 0; 
+    rondaAtual = 1; certos = 0; erros = 0; 
     proximaRonda(); 
 }
 
 function proximaRonda() {
     if (rondaAtual > totalRondas) { finalizarJogo(); return; }
     
-    // Seleção aleatória
-    const listaBaralhada = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
-    itemDestaque = listaBaralhada[0];
-    
-    let opcoes = listaBaralhada.slice(0, 3).sort(() => Math.random() - 0.5);
+    // Engine do sistema (StatusBar)
+    if (typeof Engine !== 'undefined') Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
 
-    Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
-    
+    // Baralhar e selecionar 3 animais
+    const todos = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
+    itemDestaque = todos[0];
+    const opcoesRonda = todos.slice(0, 3).sort(() => Math.random() - 0.5);
+
     const area = document.getElementById('game-content');
     area.innerHTML = `
-        <div class="destaque-box" onclick="tocarSomAnimal()" style="cursor:pointer;">
-            <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" style="filter:none; width:50%;" id="icon-som-principal">
-            <div style="position:absolute; bottom: -20px; font-weight:900; color:var(--primary-color); font-size:0.8rem;">CLICA PARA OUVIR</div>
+        <div class="destaque-box" onclick="tocarSomAnimal()">
+            <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png">
+            <small style="position:absolute; bottom:10px; color:var(--primary-color); font-weight:bold;">OUVIR</small>
         </div>
-        <div style="display:grid; grid-template-columns: repeat(3, 1fr); gap:15px; width:fit-content; margin-top:20px;">
-            ${opcoes.map(item => `
+        <div class="grid-opcoes">
+            ${opcoesRonda.map(item => `
                 <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)">
                     <img src="../../img/${item.pasta}/${item.img}">
                 </div>`).join('')}
         </div>`;
 
-    // Tocar o som automaticamente ao iniciar a ronda
-    setTimeout(tocarSomAnimal, 500);
+    // Tocar som do animal automaticamente (com pequeno atraso para o browser permitir)
+    setTimeout(tocarSomAnimal, 600);
 }
 
 function verificarResposta(id, el) {
     if (!jogoAtivo) return;
-    
-    // Desativa cliques
     document.querySelectorAll('.opcao-card').forEach(c => c.style.pointerEvents = 'none');
-    document.getElementById('icon-som-principal').parentElement.style.pointerEvents = 'none';
 
     if (id === itemDestaque.id) {
         certos++; somAcerto.play();
         el.style.borderColor = "#8cc63f";
+        el.style.boxShadow = "0 4px 0 #6da32f";
         el.innerHTML += '<i class="fas fa-check feedback-icon icon-v"></i>';
     } else {
         erros++; somErro.play();
         el.style.borderColor = "#ff5a5f";
+        el.style.boxShadow = "0 4px 0 #d44348";
         el.innerHTML += '<i class="fas fa-times feedback-icon icon-x"></i>';
         const correto = document.getElementById(`card-${itemDestaque.id}`);
-        if(correto) correto.style.borderColor = "#8cc63f";
+        if(correto) {
+            correto.style.borderColor = "#8cc63f";
+            correto.style.boxShadow = "0 4px 0 #6da32f";
+        }
     }
-
-    setTimeout(() => { 
-        rondaAtual++; 
-        proximaRonda(); 
-    }, 1800);
+    setTimeout(() => { rondaAtual++; proximaRonda(); }, 1500);
 }
 
 function finalizarJogo() {
     jogoAtivo = false;
-    if (audioAnimal) audioAnimal.pause();
+    pararSons();
     const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
-    Engine.showResults(certos, erros, 0, rel);
+    if (typeof Engine !== 'undefined') Engine.showResults(certos, erros, 0, rel);
 }
 
-// Inicialização
+// Inicializar ao carregar
 window.onload = mostrarCapa;
