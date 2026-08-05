@@ -43,16 +43,6 @@ const BIBLIOTECA_CONTEUDO = {
         "portugues": { t1: "Jovens", t2: "Leitores", sub: "2º Ano | Português", rodape: "&copy; Jovens Leitores" },
         "matematica": { t1: "Jovens", t2: "Matemáticos", sub: "2º Ano | Matemática", rodape: "&copy; Jovens Matemáticos" },
         "estudo": { t1: "Jovens", t2: "Exploradores", sub: "2º Ano | Estudo do Meio", rodape: "&copy; Jovens Exploradores" }
-    },
-    "ano3": { 
-        "portugues": { t1: "Exploradores", t2: "Leitores", sub: "3º Ano | Português", rodape: "&copy; Exploradores" },
-        "matematica": { t1: "Exploradores", t2: "Cálculos", sub: "3º Ano | Matemática", rodape: "&copy; Exploradores" },
-        "estudo": { t1: "Exploradores", t2: "do Mundo", sub: "3º Ano | Estudo do Meio", rodape: "&copy; Exploradores" }
-    },
-    "ano4": { 
-        "portugues": { t1: "Mestres", t2: "da Língua", sub: "4º Ano | Português", rodape: "&copy; Mestres Curiosos" },
-        "matematica": { t1: "Mestres", t2: "do Cálculo", sub: "4º Ano | Matemática", rodape: "&copy; Mestres Curiosos" },
-        "estudo": { t1: "Mestres", t2: "do Mundo", sub: "4º Ano | Estudo do Meio", rodape: "&copy; Mestres Curiosos" }
     }
 };
 
@@ -60,15 +50,18 @@ const BIBLIOTECA_CONTEUDO = {
 // 3. CONFIGURAÇÃO DO JOGO ATUAL
 // ==========================================
 const JOGO_CONFIG = {
-    nomeDoJogo: "Sombras Mágicas",
-    descricao: "Identifica a imagem que corresponde à sombra!",
-    
+    nomeDoJogo: "Quem emite este som?",
+    descricao: "Ouve o som com atenção e clica no animal correto!",
+    textoDestaque: "Quem sou eu?",
+    fraseIntermedia: "Clica no animal que faz este som:",
+
     areaAtiva: "pre",   
     anoAtivo: "pre",    
     
     caminhoIconsMenu: "../../icons/", 
-    caminhoIconsJogos: "../../icons/ic_jogos_pre",
-    caminhoSons: "../../sons/", // Nova pasta para os sons
+    caminhoIconsJogos: "../../icons/ic_jogos_pre/",
+    caminhoSonsSistema: "../../sons/", // Sons de acerto/erro/clique
+    caminhoSonsAnimais: "../../sons/som_animais/", // Pasta dos sons dos animais
 
     sons: {
         acerto: "certo.mp3",
@@ -79,43 +72,36 @@ const JOGO_CONFIG = {
     menuItens: [
         { id: "home", label: "Início", icon: "home.png", link: "/" },
         { id: "pre", label: "Pré-Escolar", icon: "iconpre.png", link: "/pre" },
-        { id: "ano1", label: "1º Ano", icon: "icon1.png", link: "/1" },
-        { id: "ano2", label: "2º Ano", icon: "icon2.png", link: "/2" },
-        { id: "ano3", label: "3º Ano", icon: "icon3.png", link: "/3" },
-        { id: "ano4", label: "4º Ano", icon: "icon4.png", link: "/4" },
         { id: "voltar", label: "Voltar", icon: "AUTO", link: "javascript:history.back()" } 
     ],
 
     instrucoes: {
-        objetivo: "Observa atentamente o animal apresentado no topo do ecrã e encontra a imagem igual entre as várias opções. Clica ou toca no animal correto para avançares para a ronda seguinte.",
+        objetivo: "Ouvir o som reproduzido e identificar o animal correspondente entre as opções apresentadas.",
         comoJogar: [
-            "Observa o animal que aparece no topo do ecrã.",
-            "Analisa todas as imagens apresentadas.",
-            "Encontra a imagem exatamente igual ao modelo.",
-            "Clica ou toca no animal correto.",
-            "Se acertares, passas para a próxima ronda.",
-            "Se errares, o jogo mostra a resposta certa antes de avançar.",
-            "Completa as 10 rondas para ver os resultados."
+            "Clica no botão de som no topo para ouvires o animal.",
+            "Observa as três imagens de animais em baixo.",
+            "Clica no animal que achas que faz aquele som.",
+            "Se acertares, passas para o próximo desafio.",
+            "Completa as 10 rondas para veres o teu resultado final."
         ],
         regras: [
-            "Existe apenas uma resposta correta em cada ronda.",
-            "Observa com atenção antes de responder.",
-            "Não há limite de tempo."
+            "Apenas uma imagem está correta.",
+            "Podes ouvir o som as vezes que quiseres antes de responder."
         ],
-        dicas: "Observa cuidadosamente a forma do animal, as cores e os detalhes (orelhas, patas, asas, cauda, etc.). Alguns animais podem ser muito parecidos.",
+        dicas: "Presta atenção aos detalhes do som: é um rugido, um pio, um latido ou um relincho?",
         desenvolvimento: [
-            "Atenção e concentração",
-            "Memória visual",
-            "Capacidade de observação",
-            "Discriminação visual"
+            "Discriminação auditiva",
+            "Identificação de seres vivos",
+            "Raciocínio lógico",
+            "Atenção e concentração"
         ]
     },
 
     relatorios: [
-        { min: 9, max: 10, titulo: "És um craque!", img: "taca_1.png" },
+        { min: 9, max: 10, titulo: "És um mestre dos sons!", img: "taca_1.png" },
         { min: 7, max: 8, titulo: "Muito bem!", img: "taca_2.png" },
         { min: 5, max: 6, titulo: "Estás quase lá!", img: "taca_3.png" },
-        { min: 0, max: 4, titulo: "Continua a tentar!", img: "taca_4.png" }
+        { min: 0, max: 4, titulo: "Continua a praticar!", img: "taca_4.png" }
     ]
 };
 
@@ -123,30 +109,38 @@ const JOGO_CONFIG = {
 // 4. DADOS DO CONTEÚDO DO JOGO
 // ==========================================
 const DADOS_JOGO = {
-    caminhoImagens: "../../img/frutos/",
-    somInstrucoes: "sonspre/f1jogo03.mp3", // Alterado para buscar f1jogo02.mp3
+    caminhoDomesticos: "../../img/animaisdomesticos/",
+    caminhoSelvagens: "../../img/animaisselvagens/",
+    somInstrucoes: "sonspre/instrucoes_sons.mp3", 
+    
+    // Lista de animais mapeada com base nas tuas imagens e sons
     itens: [
-         { id: 1, img: "morango.png", nome: "Morango" },
-        { id: 2, img: "mirtilo.png", nome: "Mirtilo" },
-        { id: 3, img: "pessego.png", nome: "Pêssego" },
-        { id: 4, img: "amora.png", nome: "Amora" },
-        { id: 5, img: "melao.png", nome: "Melão" },
-        { id: 6, img: "maracuja.png", nome: "Maracujá" },
-        { id: 7, img: "limao.png", nome: "Limão" },
-        { id: 8, img: "goiaba.png", nome: "Goiaba" },
-        { id: 9, img: "figo.png", nome: "Figo" },
-        { id: 10, img: "diospiro.png", nome: "Dióspiro" },
-        { id: 11, img: "castanha.png", nome: "Castanha" },
-        { id: 12, img: "roma.png", nome: "Romã" },
-        { id: 13, img: "cereja.png", nome: "Cereja" },
-        { id: 14, img: "melancia.png", nome: "Melancia" },
-        { id: 15, img: "ananas.png", nome: "Ananás" },
-        { id: 16, img: "kiwi.png", nome: "Kiwi" },
-        { id: 17, img: "uvas.png", nome: "Uvas" },
-        { id: 18, img: "papaia.png", nome: "Papaia" },
-        { id: 19, img: "banana.png", nome: "Banana" },
-        { id: 20, img: "maca.png", nome: "Maçã" },
-        { id: 21, img: "laranja.png", nome: "Laranja" },
-        { id: 22, img: "pera.png", nome: "Pêra" }
+        // Domésticos
+        { id: 1,  img: "boi.png",      som: "boi.mp3",      nome: "Boi",      pasta: "domesticos" },
+        { id: 2,  img: "burro.png",    som: "burro.mp3",    nome: "Burro",    pasta: "domesticos" },
+        { id: 3,  img: "cabra.png",    som: "cabra.mp3",    nome: "Cabra",    pasta: "domesticos" },
+        { id: 4,  img: "cao.png",      som: "cao.mp3",      nome: "Cão",      pasta: "domesticos" },
+        { id: 5,  img: "cavalo.png",   som: "cavalo.mp3",   nome: "Cavalo",   pasta: "domesticos" },
+        { id: 6,  img: "galinha.png",  som: "galinha.mp3",  nome: "Galinha",  pasta: "domesticos" },
+        { id: 7,  img: "galo.png",     som: "galo.mp3",     nome: "Galo",     pasta: "domesticos" },
+        { id: 8,  img: "gato.png",     som: "gato.mp3",     nome: "Gato",     pasta: "domesticos" },
+        { id: 9,  img: "ovelha.png",   som: "ovelha.mp3",   nome: "Ovelha",   pasta: "domesticos" },
+        { id: 10, img: "porco.png",    som: "porco.mp3",    nome: "Porco",    pasta: "domesticos" },
+        { id: 11, img: "vaca.png",     som: "vaca.mp3",     nome: "Vaca",     pasta: "domesticos" },
+        { id: 12, img: "pato.png",     som: "pato.mp3",     nome: "Pato",     pasta: "domesticos" },
+
+        // Selvagens
+        { id: 13, img: "abelha.png",    som: "abelha.mp3",    nome: "Abelha",    pasta: "selvagens" },
+        { id: 14, img: "elefante.png",  som: "elefante.mp3",  nome: "Elefante",  pasta: "selvagens" },
+        { id: 15, img: "leao.png",      som: "leao.mp3",      nome: "Leão",      pasta: "selvagens" },
+        { id: 16, img: "lobo.png",      som: "lobo.mp3",      nome: "Lobo",      pasta: "selvagens" },
+        { id: 17, img: "macaco.png",    som: "macaco.mp3",    nome: "Macaco",    pasta: "selvagens" },
+        { id: 18, img: "papagaio.png",  som: "papagaio.mp3",  nome: "Papagaio",  pasta: "selvagens" },
+        { id: 19, img: "tigre.png",     som: "tigre.mp3",     nome: "Tigre",     pasta: "selvagens" },
+        { id: 20, img: "urso.png",      som: "urso.mp3",      nome: "Urso",      pasta: "selvagens" },
+        { id: 21, img: "zebra.png",     som: "zebra.mp3",     nome: "Zebra",     pasta: "selvagens" },
+        { id: 22, img: "hiena.png",     som: "hiena.mp3",     nome: "Hiena",     pasta: "selvagens" },
+        { id: 23, img: "hipopotamo.png",som: "hipopotamo.mp3",nome: "Hipopótamo",pasta: "selvagens" },
+        { id: 24, img: "serpente.png",  som: "serpente.mp3",  nome: "Serpente",  pasta: "selvagens" }
     ]
 };
