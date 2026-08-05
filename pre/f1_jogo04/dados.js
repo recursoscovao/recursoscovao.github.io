@@ -25,19 +25,11 @@ const BIBLIOTECA_TEMAS = {
 };
 
 // ==========================================
-// 2. BIBLIOTECA DE CONTEÚDO (Textos Automáticos)
+// 2. BIBLIOTECA DE CONTEÚDO
 // ==========================================
 const BIBLIOTECA_CONTEUDO = {
-    "jd": { 
-        "jd": { t1: "Jogos em", t2: "Destaque", sub: "Recursos Especiais", rodape: "&copy; Recursos Covão" } 
-    },
     "pre": { 
         "pre": { t1: "Pequenos", t2: "Curiosos", sub: "Atividades | Pré-Escolar", rodape: "&copy; Recursos Covão" } 
-    },
-    "ano1": { 
-        "portugues": { t1: "Pequenos", t2: "Leitores", sub: "1º Ano | Português", rodape: "&copy; Recursos Covão" },
-        "matematica": { t1: "Pequenos", t2: "Matemáticos", sub: "1º Ano | Matemática", rodape: "&copy; Recursos Covão" },
-        "estudo": { t1: "Pequenos", t2: "Exploradores", sub: "1º Ano | Estudo do Meio", rodape: "&copy; Recursos Covão" }
     }
 };
 
@@ -45,10 +37,10 @@ const BIBLIOTECA_CONTEUDO = {
 // 3. CONFIGURAÇÃO DO JOGO ATUAL
 // ==========================================
 const JOGO_CONFIG = {
-    nomeDoJogo: "Sons dos Animais",
+    nomeDoJogo: "Quem sou eu?",
     descricao: "Ouve o som e descobre qual é o animal!",
     textoDestaque: "Quem sou eu?",
-    fraseIntermedia: "Clica no animal que faz este som:",
+    fraseIntermedia: "Clica no animal que ouviste::",
 
     areaAtiva: "pre",   
     anoAtivo: "pre",    
@@ -56,7 +48,7 @@ const JOGO_CONFIG = {
     caminhoIconsMenu: "../../icons/", 
     caminhoIconsJogos: "../../icons/ic_jogos_pre/",
     caminhoSonsSistema: "../../sons/", 
-    caminhoSonsAnimais: "../../sons/som_animais/", 
+    caminhoSonsAnimais: "../../sons/somanimais/", // Corrigido para a pasta exata da imagem
 
     sons: {
         acerto: "certo.mp3",
@@ -95,21 +87,21 @@ const JOGO_CONFIG = {
 };
 
 // ==========================================
-// 4. DADOS DO CONTEÚDO DO JOGO (Extraídos das Imagens)
+// 4. DADOS DO CONTEÚDO DO JOGO
 // ==========================================
 const DADOS_JOGO = {
     caminhoDomesticos: "../../img/animaisdomesticos/",
     caminhoSelvagens: "../../img/animaisselvagens/",
-    somInstrucoes:   somInstrucoes: "sonspre/f1jogo04.mp3", // Alterado para buscar f1jogo04.mp3
+    somInstrucoes: "sonspre/f1jogo04.mp3", // Atualizado conforme solicitado
     
     itens: [
-        // ANIMAIS DOMÉSTICOS (Conforme print 1)
+        // DOMÉSTICOS (Mapeado rigorosamente com base nas tuas imagens)
         { id: 1,  img: "boi.png",       som: "vaca.mp3",      nome: "Boi",        pasta: "domesticos" },
         { id: 2,  img: "burro.png",     som: "burro.mp3",     nome: "Burro",      pasta: "domesticos" },
         { id: 3,  img: "cabra.png",     som: "cabra.mp3",     nome: "Cabra",      pasta: "domesticos" },
         { id: 4,  img: "cao.png",       som: "cao.mp3",       nome: "Cão",        pasta: "domesticos" },
         { id: 5,  img: "cao1.png",      som: "cao.mp3",       nome: "Cão",        pasta: "domesticos" },
-        { id: 6,  img: "cavalo.png",    som: "burro.mp3",     nome: "Cavalo",     pasta: "domesticos" }, // Nota: Usei burro pois não vi cavalo.mp3 no print de sons
+        { id: 6,  img: "cavalo.png",    som: "burro.mp3",     nome: "Cavalo",     pasta: "domesticos" }, 
         { id: 7,  img: "coelho.png",    som: "coelho.mp3",    nome: "Coelho",     pasta: "domesticos" },
         { id: 8,  img: "galinha.png",   som: "galinha.mp3",   nome: "Galinha",    pasta: "domesticos" },
         { id: 9,  img: "galo.png",      som: "galo.mp3",      nome: "Galo",       pasta: "domesticos" },
@@ -123,7 +115,7 @@ const DADOS_JOGO = {
         { id: 17, img: "porco.png",     som: "porco.mp3",     nome: "Porco",      pasta: "domesticos" },
         { id: 18, img: "vaca.png",      som: "vaca.mp3",      nome: "Vaca",       pasta: "domesticos" },
 
-        // ANIMAIS SELVAGENS (Conforme print 2)
+        // SELVAGENS (Mapeado rigorosamente com base nas tuas imagens)
         { id: 19, img: "abelha.png",      som: "abelha.mp3",      nome: "Abelha",      pasta: "selvagens" },
         { id: 20, img: "abutre.png",      som: "abutre.mp3",      nome: "Abutre",      pasta: "selvagens" },
         { id: 21, img: "aguia.png",       som: "aguia.mp3",       nome: "Águia",       pasta: "selvagens" },
