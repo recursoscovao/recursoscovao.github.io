@@ -6,10 +6,7 @@ let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0, ajudasUsadas = 0;
 let itemDestaque = null, opcoesRonda = [], simuInterval;
 let audioAnimalAtual = null;
 
-const somAcerto = new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.acerto);
-const somErro = new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.erro);
-const somClique = new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.clique);
-
+// Função rigorosa para obter o caminho da imagem
 const getCaminhoImagem = (item) => {
     return item.pasta === "domesticos" ? DADOS_JOGO.caminhoDomesticos : DADOS_JOGO.caminhoSelvagens;
 };
@@ -57,19 +54,17 @@ function tocarSomAnimal() {
 }
 
 function tocarAudioInstrucoes() {
-    somClique.play();
+    new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.clique).play();
     const urlInst = JOGO_CONFIG.caminhoSonsBase + DADOS_JOGO.somInstrucoes;
-    const somInst = new Audio(urlInst);
-    somInst.play().catch(e => console.error("Erro ao tocar instruções:", urlInst));
+    new Audio(urlInst).play().catch(e => console.error("Erro Instrução:", urlInst));
 }
 
 // ==========================================
-// 4. LÓGICA DE CAPA E SIMULAÇÃO
+// 4. LÓGICA DE INTERFACE
 // ==========================================
 function mostrarCapa() {
     if (jogoAtivo) return;
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">${JOGO_CONFIG.nomeDoJogo}</h2>`;
-    
     document.getElementById('game-content').innerHTML = `
         <div id="simu-hand" style="position:absolute; font-size:3rem; z-index:100; pointer-events:none; display:none;">👆</div>
         <div style="display:flex; flex-direction:column; align-items:center;">
@@ -99,34 +94,12 @@ function correrSimulacao() {
     const hand = document.getElementById('simu-hand');
     const animar = () => {
         const itensSimu = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5).slice(0, 3);
-        const certoIdx = Math.floor(Math.random() * 3);
-        
         itensSimu.forEach((it, i) => {
             const imgEl = document.querySelector(`#simu-opt-${i} img`);
-            if (imgEl) {
-                imgEl.src = getCaminhoImagem(it) + it.img;
-                imgEl.parentElement.style.borderColor = "#f0f0f0";
-            }
+            if (imgEl) imgEl.src = getCaminhoImagem(it) + it.img;
         });
-
-        const container = document.getElementById('game-content').getBoundingClientRect();
-        hand.style.display = "block"; hand.style.opacity = "0"; hand.style.top = "80%"; hand.style.left = "80%";
-        
-        setTimeout(() => {
-            const box = document.getElementById('simu-box').getBoundingClientRect();
-            hand.style.transition = "all 0.6s ease-in-out"; hand.style.opacity = "1";
-            hand.style.top = (box.top - container.top + 40) + "px"; hand.style.left = (box.left - container.left + 40) + "px";
-            
-            setTimeout(() => {
-                const target = document.getElementById(`simu-opt-${certoIdx}`).getBoundingClientRect();
-                hand.style.top = (target.top - container.top + 20) + "px"; hand.style.left = (target.left - container.left + 20) + "px";
-                setTimeout(() => { 
-                    const opt = document.getElementById(`simu-opt-${certoIdx}`);
-                    if(opt) opt.style.borderColor = "#8cc63f";
-                    setTimeout(() => { hand.style.opacity = "0"; }, 500);
-                }, 700);
-            }, 1000);
-        }, 200);
+        hand.style.display = "block"; hand.style.opacity = "0";
+        setTimeout(() => { hand.style.opacity = "1"; }, 500);
     };
     animar(); simuInterval = setInterval(animar, 4000);
 }
@@ -168,12 +141,15 @@ function verificarResposta(id, el) {
     if (!jogoAtivo) return;
     document.querySelectorAll('.opcao-card').forEach(c => c.style.pointerEvents = 'none');
     pararAudios();
+
     if (id === itemDestaque.id) {
-        certos++; somAcerto.play();
+        certos++;
+        new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.acerto).play();
         el.style.borderColor = "#8cc63f";
         el.innerHTML += '<i class="fas fa-check feedback-icon icon-v"></i>';
     } else {
-        erros++; somErro.play();
+        erros++;
+        new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.erro).play();
         el.style.borderColor = "#ff5a5f";
         el.innerHTML += '<i class="fas fa-times feedback-icon icon-x"></i>';
         const correto = document.getElementById(`card-${itemDestaque.id}`);
@@ -184,7 +160,8 @@ function verificarResposta(id, el) {
 
 function darAjuda() {
     if (!jogoAtivo) return;
-    ajudasUsadas++; somClique.play();
+    ajudasUsadas++; 
+    new Audio(JOGO_CONFIG.caminhoSonsBase + JOGO_CONFIG.sons.clique).play();
     const correto = document.getElementById(`card-${itemDestaque.id}`);
     if (correto) {
         correto.style.borderColor = "var(--primary-color)";
