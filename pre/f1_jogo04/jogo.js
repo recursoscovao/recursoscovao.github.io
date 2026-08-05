@@ -10,13 +10,13 @@ const somAcerto = new Audio(JOGO_CONFIG.caminhoSonsSistema + JOGO_CONFIG.sons.ac
 const somErro = new Audio(JOGO_CONFIG.caminhoSonsSistema + JOGO_CONFIG.sons.erro);
 const somClique = new Audio(JOGO_CONFIG.caminhoSonsSistema + JOGO_CONFIG.sons.clique);
 
-// Função auxiliar para obter o caminho correto da imagem baseada na pasta definida nos dados
+// Função rigorosa para obter o caminho da imagem
 const getCaminhoImagem = (item) => {
     return item.pasta === "domesticos" ? DADOS_JOGO.caminhoDomesticos : DADOS_JOGO.caminhoSelvagens;
 };
 
 // ==========================================
-// 2. CONFIGURAÇÃO VISUAL (CSS INJETADO)
+// 2. CONFIGURAÇÃO VISUAL
 // ==========================================
 const style = document.createElement('style');
 style.innerHTML = `
@@ -36,22 +36,21 @@ style.innerHTML = `
     }
     .btn-audio-circle { width: 65px; height: 65px; cursor: pointer; flex-shrink: 0; }
 
-    /* CAIXA DE SOM (DESTAQUE) */
     .destaque-box {
         width: var(--dest-size); height: var(--dest-size); background: #fff; border-radius: 30px; 
         border: 3.5px dashed var(--primary-color); display: flex; flex-direction: column; 
-        align-items: center; justify-content: center; cursor: pointer; margin-bottom: 10px;
+        align-items: center; justify-content: center; cursor: pointer; margin: 0 auto 10px;
         transition: transform 0.2s;
     }
     .destaque-box:active { transform: scale(0.95); }
-    .destaque-box img { width: 50%; margin-bottom: 5px; }
+    .destaque-box img { width: 50%; margin-bottom: 5px; pointer-events: none; }
     .texto-quem-sou { color: var(--primary-color); font-weight: 900; font-size: 1rem; text-transform: uppercase; }
 
     .frase-intermedia { 
         color: var(--text-grey); font-weight: 700; margin-bottom: 20px; text-align: center; font-size: 1.1rem; 
     }
 
-    .opcoes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: fit-content; }
+    .opcoes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: fit-content; margin: 0 auto; }
     
     .opcao-card {
         background: white; border: 3px solid #f0f0f0; border-radius: 20px; 
@@ -64,19 +63,13 @@ style.innerHTML = `
     .feedback-icon { position: absolute; font-size: 3rem; z-index: 10; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3)); pointer-events: none; }
     .icon-v { color: #8cc63f; } .icon-x { color: #ff5a5f; }
 
-    :root { 
-        --card-size: 100px; 
-        --dest-size: 150px; 
-    }
-
-    @media screen and (min-width: 1025px) {
-        :root { --card-size: 140px; --dest-size: 180px; }
-    }
+    :root { --card-size: 100px; --dest-size: 150px; }
+    @media screen and (min-width: 1025px) { :root { --card-size: 140px; --dest-size: 180px; } }
 `;
 document.head.appendChild(style);
 
 // ==========================================
-// 3. LÓGICA DE ÁUDIO, CAPA E SIMULAÇÃO
+// 3. LÓGICA DE ÁUDIO
 // ==========================================
 function pararAudios() {
     if (audioAnimalAtual) {
@@ -88,9 +81,14 @@ function pararAudios() {
 function tocarSomAnimal() {
     if (!itemDestaque) return;
     pararAudios();
-    somClique.play();
-    audioAnimalAtual = new Audio(JOGO_CONFIG.caminhoSonsAnimais + itemDestaque.som);
-    audioAnimalAtual.play().catch(e => console.log("Erro ao tocar som:", e));
+    
+    // Caminho rigoroso: JOGO_CONFIG.caminhoSonsAnimais + itemDestaque.som
+    const somUrl = JOGO_CONFIG.caminhoSonsAnimais + itemDestaque.som;
+    audioAnimalAtual = new Audio(somUrl);
+    
+    audioAnimalAtual.play().catch(e => {
+        console.error("Erro ao reproduzir som do animal:", somUrl);
+    });
 }
 
 function tocarAudioInstrucoes() {
@@ -147,7 +145,7 @@ function correrSimulacao() {
         });
 
         const container = document.getElementById('game-content').getBoundingClientRect();
-        hand.style.display = "block"; hand.style.opacity = "0"; hand.style.top = "50%"; hand.style.left = "50%";
+        hand.style.display = "block"; hand.style.opacity = "0";
         
         setTimeout(() => {
             const box = document.getElementById('simu-box').getBoundingClientRect();
@@ -174,10 +172,7 @@ function correrSimulacao() {
 function iniciarJogo() { 
     clearInterval(simuInterval); 
     jogoAtivo = true; 
-    rondaAtual = 1; 
-    certos = 0; 
-    erros = 0; 
-    ajudasUsadas = 0; 
+    rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0; 
     proximaRonda(); 
 }
 
@@ -188,7 +183,6 @@ function proximaRonda() {
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
     const area = document.getElementById('game-content');
     
-    // Selecionar item e distractores
     const todos = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
     itemDestaque = todos[0];
     opcoesRonda = todos.slice(0, 3).sort(() => Math.random() - 0.5);
@@ -198,9 +192,7 @@ function proximaRonda() {
             <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png">
             <span class="texto-quem-sou">${JOGO_CONFIG.textoDestaque}</span>
         </div>
-        
         <p class="frase-intermedia">${JOGO_CONFIG.fraseIntermedia}</p>
-
         <div class="opcoes-grid">
             ${opcoesRonda.map(item => `
                 <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)">
@@ -208,8 +200,7 @@ function proximaRonda() {
                 </div>`).join('')}
         </div>`;
 
-    // Tocar o som automaticamente no início da ronda
-    setTimeout(tocarSomAnimal, 500);
+    setTimeout(tocarSomAnimal, 600);
 }
 
 function verificarResposta(id, el) {
@@ -238,9 +229,7 @@ function darAjuda() {
     const correto = document.getElementById(`card-${itemDestaque.id}`);
     if (correto) {
         correto.style.borderColor = "var(--primary-color)";
-        correto.animate([
-            {transform:'scale(1)'}, {transform:'scale(1.1)'}, {transform:'scale(1)'}
-        ], {duration:500, iterations:2});
+        correto.animate([{transform:'scale(1)'}, {transform:'scale(1.1)'}, {transform:'scale(1)'}], {duration:500, iterations:2});
     }
 }
 
