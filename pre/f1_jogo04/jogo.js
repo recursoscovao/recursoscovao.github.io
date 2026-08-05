@@ -3,39 +3,40 @@
 // ==========================================
 let jogoAtivo = false;
 let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0;
-let itemDestaque = null, opcoesRonda = [], simuInterval;
+let itemDestaque = null, opcoesRonda = [];
 let somAtualAnimal = null;
+let audioInstGlobal = null; // Para controlar o áudio das instruções
 
-const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
-const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
-const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
+const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.acerto);
+const somErro = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.erro);
+const somClique = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.clique);
 
 // ==========================================
-// 2. ESTILOS
+// 2. CONFIGURAÇÃO VISUAL (CSS)
 // ==========================================
 const style = document.createElement('style');
 style.innerHTML = `
+    .game-container-inner { display: flex; flex-direction: column; align-items: center; width: 100%; max-width: 600px; }
     .sound-main-card {
         background: white; border: 4px solid #e0f7fa; border-radius: 40px;
-        padding: 30px; display: flex; flex-direction: column; align-items: center;
-        cursor: pointer; box-shadow: 0 10px 20px rgba(0,0,0,0.05);
-        margin-bottom: 30px; transition: transform 0.2s;
+        padding: 25px; display: flex; flex-direction: column; align-items: center;
+        cursor: pointer; box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+        margin-bottom: 25px; width: 100%; max-width: 320px; transition: 0.2s;
     }
-    .sound-main-card:active { transform: scale(0.95); }
-    .sound-icon-big { width: 80px; height: 80px; margin-bottom: 15px; }
-    .sound-text-big { color: #2e7d32; font-size: 2.5rem; font-weight: 900; margin: 0; }
-    .sub-text { color: #5d7082; font-size: 1.1rem; font-weight: 600; opacity: 0.8; }
-
-    .grid-opcoes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; }
+    .sound-main-card:active { transform: scale(0.96); }
+    .sound-icon-big { width: 70px; height: 70px; margin-bottom: 10px; }
+    .sound-text-big { color: #2e7d32; font-size: 2rem; font-weight: 900; margin: 0; }
+    
+    .grid-opcoes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: 100%; }
     .card-animal {
-        background: white; border: 3px solid #f0f0f0; border-radius: 25px;
-        padding: 15px; display: flex; flex-direction: column; align-items: center;
+        background: white; border: 3px solid #f0f0f0; border-radius: 20px;
+        padding: 10px; display: flex; flex-direction: column; align-items: center;
         cursor: pointer; position: relative;
     }
-    .card-animal img { width: 100px; height: 100px; object-fit: contain; }
-    .card-animal span { margin-top: 10px; font-weight: 800; color: #5d7082; }
+    .card-animal img { width: 100%; aspect-ratio: 1/1; object-fit: contain; border-radius: 10px; }
+    .card-animal span { margin-top: 8px; font-weight: 800; color: #5d7082; font-size: 0.9rem; }
     
-    .feedback-icon { position: absolute; font-size: 3rem; top: 20%; z-index: 5; pointer-events: none; }
+    .feedback-icon { position: absolute; font-size: 3rem; top: 15%; z-index: 10; pointer-events: none; }
 `;
 document.head.appendChild(style);
 
@@ -45,38 +46,52 @@ document.head.appendChild(style);
 function tocarSomAnimal() {
     if (!itemDestaque) return;
     if (somAtualAnimal) { somAtualAnimal.pause(); somAtualAnimal.currentTime = 0; }
-    
     somAtualAnimal = new Audio(JOGO_CONFIG.caminhoSonsAnimais + itemDestaque.som);
-    somAtualAnimal.play();
+    somAtualAnimal.play().catch(e => console.log("Erro ao tocar som do animal:", e));
 }
 
 function tocarAudioInstrucoes() {
+    if (audioInstGlobal) { audioInstGlobal.pause(); audioInstGlobal.currentTime = 0; }
     somClique.play();
-    new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes).play();
+    audioInstGlobal = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes);
+    audioInstGlobal.play().catch(e => console.log("Erro ao tocar instruções:", e));
+}
+
+function pararInstrucoes() {
+    if (audioInstGlobal) {
+        audioInstGlobal.pause();
+        audioInstGlobal.currentTime = 0;
+    }
 }
 
 // ==========================================
 // 4. LÓGICA DO JOGO
 // ==========================================
 function mostrarCapa() {
+    if (jogoAtivo) return;
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">${JOGO_CONFIG.nomeDoJogo}</h2>`;
     document.getElementById('game-content').innerHTML = `
-        <div class="sound-main-card" onclick="tocarSomAnimal()" style="width:200px">
-            <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="sound-icon-big">
-            <p class="sound-text-big">?</p>
-        </div>
-        <p style="font-weight:800; color:#5d7082;">Ouve o som e descobre o animal!</p>
-    `;
+        <div class="game-container-inner">
+            <div class="sound-main-card">
+                <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="sound-icon-big">
+                <p class="sound-text-big">?</p>
+            </div>
+            <p style="font-weight:800; color:#5d7082; text-align:center;">${JOGO_CONFIG.descricao}</p>
+        </div>`;
+    
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
     footer.innerHTML = `
         <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="btn-audio-circle" onclick="tocarAudioInstrucoes()">
-        <button class="btn-play-rect" onclick="iniciarJogo()">JOGAR</button>
-    `;
+        <button class="btn-play-rect" onclick="iniciarJogo()">JOGAR</button>`;
 }
 
 function iniciarJogo() { 
-    jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; 
+    pararInstrucoes(); // Pára o som das instruções ao clicar em Jogar
+    jogoAtivo = true; 
+    rondaAtual = 1; 
+    certos = 0; 
+    erros = 0; 
     proximaRonda(); 
 }
 
@@ -86,26 +101,29 @@ function proximaRonda() {
 
     const todos = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
     itemDestaque = todos[0];
-    opcoesRonda = todos.slice(0, 3).sort(() => Math.random() - 0.5);
+    
+    let selecao = todos.slice(0, 3);
+    if (!selecao.find(i => i.id === itemDestaque.id)) selecao[0] = itemDestaque;
+    opcoesRonda = selecao.sort(() => Math.random() - 0.5);
 
     document.getElementById('game-content').innerHTML = `
-        <div class="sound-main-card" onclick="tocarSomAnimal()">
-            <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="sound-icon-big">
-            <p class="sound-text-big">Quem sou eu?</p>
-            <span class="sub-text">Clica para ouvir de novo</span>
-        </div>
+        <div class="game-container-inner">
+            <div class="sound-main-card" onclick="tocarSomAnimal()">
+                <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="sound-icon-big">
+                <p class="sound-text-big">Quem sou eu?</p>
+                <span style="opacity:0.6; font-size:0.8rem; font-weight:700;">CLICA PARA OUVIR</span>
+            </div>
+            <div class="grid-opcoes">
+                ${opcoesRonda.map(it => `
+                    <div class="card-animal" id="card-${it.id}" onclick="verificarResposta(${it.id}, this)">
+                        <img src="../../img/${it.pasta}/${it.img}">
+                        <span>${it.nome}</span>
+                    </div>
+                `).join('')}
+            </div>
+        </div>`;
 
-        <div class="grid-opcoes">
-            ${opcoesRonda.map(it => `
-                <div class="card-animal" id="card-${it.id}" onclick="verificarResposta(${it.id}, this)">
-                    <img src="../../img/${it.pasta}/${it.img}">
-                    <span>${it.nome}</span>
-                </div>
-            `).join('')}
-        </div>
-    `;
-
-    // Toca o som automaticamente mal a ronda abre
+    // Toca o som automaticamente ao entrar na ronda
     setTimeout(tocarSomAnimal, 500);
 }
 
