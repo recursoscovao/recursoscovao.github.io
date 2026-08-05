@@ -60,7 +60,7 @@ const JOGO_CONFIG = {
                 { nome: "Encontra o Animal", desc: "Encontra o animal Doméstico.", icon: "f1_jogo01.png", link: "f1_jogo01/", cor: "#C2185B" },
                 { nome: "Encontra o Animal", desc: "Encontra o animal Selvagem", icon: "f1_jogo02.png", link: "f1_jogo02/", cor: "#D32F2F" },
                 { nome: "Sombras Mágicas", desc: "Qual é a sombra correta.", icon: "f1_jogo03.png", link: "f1_jogo03/", cor: "#E64A19" },
-                { nome: "Quem Sou eu", desc: "Ouve e clica no animal certo.", icon: "fi_jogo04.png", link: "fi_jogo04/", cor: "#C2185B" },
+                { nome: "Quem Sou eu", desc: "Ouve e clica no animal certo.", icon: "f1_jogo04.png", link: "f1_jogo04/", cor: "#C2185B" },
                 { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
                 { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
                 { nome: "Toupeira das Letras", desc: "Bata nas toupeiras corretas.", icon: "rato.png", link: "toupeira/", cor: "#E64A19" }
