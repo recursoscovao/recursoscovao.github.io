@@ -35,24 +35,24 @@ const BIBLIOTECA_CONTEUDO = {
         "pre": { t1: "Pequenos", t2: "Curiosos", sub: "Atividades | Pré-Escolar", rodape: "&copy; Recursos Covão" } 
     },
     "ano1": { 
-        "portugues": { t1: "Pequenos", t2: "Leitores", sub: "1º Ano | Português", rodape: "&copy; Pequenos Leitores" },
-        "matematica": { t1: "Pequenos", t2: "Matemáticos", sub: "1º Ano | Matemática", rodape: "&copy; Pequenos Matemáticos" },
-        "estudo": { t1: "Pequenos", t2: "Exploradores", sub: "1º Ano | Estudo do Meio", rodape: "&copy; Pequenos Exploradores" }
+        "portugues": { t1: "Pequenos", t2: "Leitores", sub: "1º Ano | Português", rodape: "&copy; Recursos Covão" },
+        "matematica": { t1: "Pequenos", t2: "Matemáticos", sub: "1º Ano | Matemática", rodape: "&copy; Recursos Covão" },
+        "estudo": { t1: "Pequenos", t2: "Exploradores", sub: "1º Ano | Estudo do Meio", rodape: "&copy; Recursos Covão" }
     },
     "ano2": { 
-        "portugues": { t1: "Jovens", t2: "Leitores", sub: "2º Ano | Português", rodape: "&copy; Jovens Leitores" },
-        "matematica": { t1: "Jovens", t2: "Matemáticos", sub: "2º Ano | Matemática", rodape: "&copy; Jovens Matemáticos" },
-        "estudo": { t1: "Jovens", t2: "Exploradores", sub: "2º Ano | Estudo do Meio", rodape: "&copy; Jovens Exploradores" }
+        "portugues": { t1: "Jovens", t2: "Leitores", sub: "2º Ano | Português", rodape: "&copy; Recursos Covão" },
+        "matematica": { t1: "Jovens", t2: "Matemáticos", sub: "2º Ano | Matemática", rodape: "&copy; Recursos Covão" },
+        "estudo": { t1: "Jovens", t2: "Exploradores", sub: "2º Ano | Estudo do Meio", rodape: "&copy; Recursos Covão" }
     },
     "ano3": { 
-        "portugues": { t1: "Exploradores", t2: "Leitores", sub: "3º Ano | Português", rodape: "&copy; Exploradores" },
-        "matematica": { t1: "Exploradores", t2: "Cálculos", sub: "3º Ano | Matemática", rodape: "&copy; Exploradores" },
-        "estudo": { t1: "Exploradores", t2: "do Mundo", sub: "3º Ano | Estudo do Meio", rodape: "&copy; Exploradores" }
+        "portugues": { t1: "Exploradores", t2: "Leitores", sub: "3º Ano | Português", rodape: "&copy; Recursos Covão" },
+        "matematica": { t1: "Exploradores", t2: "Cálculos", sub: "3º Ano | Matemática", rodape: "&copy; Recursos Covão" },
+        "estudo": { t1: "Exploradores", t2: "do Mundo", sub: "3º Ano | Estudo do Meio", rodape: "&copy; Recursos Covão" }
     },
     "ano4": { 
-        "portugues": { t1: "Mestres", t2: "da Língua", sub: "4º Ano | Português", rodape: "&copy; Mestres Curiosos" },
-        "matematica": { t1: "Mestres", t2: "do Cálculo", sub: "4º Ano | Matemática", rodape: "&copy; Mestres Curiosos" },
-        "estudo": { t1: "Mestres", t2: "do Mundo", sub: "4º Ano | Estudo do Meio", rodape: "&copy; Mestres Curiosos" }
+        "portugues": { t1: "Mestres", t2: "da Língua", sub: "4º Ano | Português", rodape: "&copy; Recursos Covão" },
+        "matematica": { t1: "Mestres", t2: "do Cálculo", sub: "4º Ano | Matemática", rodape: "&copy; Recursos Covão" },
+        "estudo": { t1: "Mestres", t2: "do Mundo", sub: "4º Ano | Estudo do Meio", rodape: "&copy; Recursos Covão" }
     }
 };
 
@@ -70,8 +70,7 @@ const JOGO_CONFIG = {
     
     caminhoIconsMenu: "../../icons/", 
     caminhoIconsJogos: "../../icons/ic_jogos_pre/",
-    caminhoSonsSistema: "../../sons/", 
-    caminhoSonsAnimais: "../../sons/somanimais/", // Pasta exata do print
+    caminhoSonsBase: "../../sons/", 
 
     sons: {
         acerto: "certo.mp3",
@@ -82,6 +81,10 @@ const JOGO_CONFIG = {
     menuItens: [
         { id: "home", label: "Início", icon: "home.png", link: "/" },
         { id: "pre", label: "Pré-Escolar", icon: "iconpre.png", link: "/pre" },
+        { id: "ano1", label: "1º Ano", icon: "icon1.png", link: "/1" },
+        { id: "ano2", label: "2º Ano", icon: "icon2.png", link: "/2" },
+        { id: "ano3", label: "3º Ano", icon: "icon3.png", link: "/3" },
+        { id: "ano4", label: "4º Ano", icon: "icon4.png", link: "/4" },
         { id: "voltar", label: "Voltar", icon: "AUTO", link: "javascript:history.back()" } 
     ],
 
@@ -90,15 +93,12 @@ const JOGO_CONFIG = {
         comoJogar: [
             "Clica no botão de áudio no topo para ouvir o som.",
             "Observa as 3 opções de animais em baixo.",
-            "Escolhe o animal correto.",
-            "Acerta em 10 animais para terminar o jogo."
+            "Escolhe o animal que faz esse som.",
+            "Completa as 10 rondas."
         ],
-        regras: [
-            "Apenas uma resposta está correta.",
-            "Podes ouvir o som as vezes que quiseres."
-        ],
-        dicas: "Escuta bem! Alguns animais têm sons parecidos.",
-        desenvolvimento: ["Perceção Auditiva", "Conhecimento do Mundo", "Atenção"]
+        regras: ["Apenas uma resposta correta.", "Podes ouvir o som várias vezes."],
+        dicas: "Escuta com atenção!",
+        desenvolvimento: ["Perceção Auditiva", "Atenção"]
     },
 
     relatorios: [
@@ -115,6 +115,7 @@ const JOGO_CONFIG = {
 const DADOS_JOGO = {
     caminhoDomesticos: "../../img/animaisdomesticos/",
     caminhoSelvagens: "../../img/animaisselvagens/",
+    caminhoSonsAnimais: "../../sons/somanimais/", // Pasta exata do teu print
     somInstrucoes: "sonspre/f1jogo04.mp3", 
     
     itens: [
