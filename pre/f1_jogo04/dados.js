@@ -100,7 +100,7 @@ const JOGO_CONFIG = {
 const DADOS_JOGO = {
     caminhoDomesticos: "../../img/animaisdomesticos/",
     caminhoSelvagens: "../../img/animaisselvagens/",
-    somInstrucoes: "sonspre/instrucoes_animais.mp3", 
+    somInstrucoes:   somInstrucoes: "sonspre/f1jogo04.mp3", // Alterado para buscar f1jogo04.mp3
     
     itens: [
         // ANIMAIS DOMÉSTICOS (Conforme print 1)
