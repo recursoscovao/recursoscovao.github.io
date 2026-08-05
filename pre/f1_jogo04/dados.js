@@ -1,36 +1,25 @@
 // ==========================================
-// 1. BIBLIOTECA DE TEMAS
+// 1. BIBLIOTECA DE TEMAS E CONTEÚDO
 // ==========================================
 const BIBLIOTECA_TEMAS = {
-    "pre": { 
-        corPagina: "#FFF5F7", corPrimaria: "#E691A7", corEscura: "#D54267", 
-        corTexto: "#E691A7", voltarMobile: "voltar_rs.png" 
-    }
+    "pre": { corPagina: "#FFF5F7", corPrimaria: "#E691A7", corEscura: "#D54267", corTexto: "#E691A7", voltarMobile: "voltar_rs.png" }
 };
 
-// ==========================================
-// 2. BIBLIOTECA DE CONTEÚDO
-// ==========================================
 const BIBLIOTECA_CONTEUDO = {
-    "pre": { 
-        "pre": { t1: "Pequenos", t2: "Curiosos", sub: "Quem faz este som?", rodape: "&copy; Pequenos Curiosos" } 
-    }
+    "pre": { "pre": { t1: "Pequenos", t2: "Curiosos", sub: "Quem faz este som?", rodape: "&copy; Pequenos Curiosos" } }
 };
 
 // ==========================================
-// 3. CONFIGURAÇÃO DO JOGO ATUAL
+// 2. CONFIGURAÇÃO DO JOGO
 // ==========================================
 const JOGO_CONFIG = {
     nomeDoJogo: "Quem sou eu?",
     descricao: "Ouve o som e clica no animal correto!",
-    
     areaAtiva: "pre",   
     anoAtivo: "pre",    
-    
     caminhoIconsMenu: "../../icons/", 
-    caminhoIconsJogos: "../../icons/ic_jogos_pre",
     caminhoSons: "../../sons/", 
-    caminhoSonsAnimais: "../../sons/sonsanimais/", // Pasta conforme a tua imagem
+    caminhoSonsAnimais: "../../sons/sonsanimais/", // Caminho exato do seu GitHub
 
     sons: {
         acerto: "certo.mp3",
@@ -47,18 +36,17 @@ const JOGO_CONFIG = {
     relatorios: [
         { min: 9, max: 10, titulo: "És um mestre dos sons!", img: "taca_1.png" },
         { min: 7, max: 8, titulo: "Muito bem!", img: "taca_2.png" },
-        { min: 5, max: 6, titulo: "Estás quase lá!", img: "taca_3.png" },
-        { min: 0, max: 4, titulo: "Continua a praticar!", img: "taca_4.png" }
+        { min: 0, max: 6, titulo: "Continua a praticar!", img: "taca_4.png" }
     ]
 };
 
 // ==========================================
-// 4. DADOS DO CONTEÚDO DO JOGO (LISTA COMPLETA)
+// 3. DADOS DO CONTEÚDO (LISTA COMPLETA)
 // ==========================================
 const DADOS_JOGO = {
     somInstrucoes: "sonspre/f1jogo03.mp3", 
     itens: [
-        // ANIMAIS DOMÉSTICOS
+        // DOMÉSTICOS (Conforme a sua pasta animaisdomesticos)
         { id: 1, img: "cao.png", som: "cao.mp3", nome: "Cão", pasta: "animaisdomesticos" },
         { id: 2, img: "gato.png", som: "gato.mp3", nome: "Gato", pasta: "animaisdomesticos" },
         { id: 3, img: "coelho.png", som: "coelho.mp3", nome: "Coelho", pasta: "animaisdomesticos" },
@@ -72,7 +60,7 @@ const DADOS_JOGO = {
         { id: 11, img: "pombo.png", som: "pombo.mp3", nome: "Pombo", pasta: "animaisdomesticos" },
         { id: 12, img: "cabra.png", som: "cabra.mp3", nome: "Cabra", pasta: "animaisdomesticos" },
 
-        // ANIMAIS SELVAGENS / OUTROS
+        // SELVAGENS (Conforme a sua pasta animaisselvagens)
         { id: 13, img: "abelha.png", som: "abelha.mp3", nome: "Abelha", pasta: "animaisselvagens" },
         { id: 14, img: "abutre.png", som: "abutre.mp3", nome: "Abutre", pasta: "animaisselvagens" },
         { id: 15, img: "aguia.png", som: "aguia.mp3", nome: "Águia", pasta: "animaisselvagens" },
@@ -89,7 +77,7 @@ const DADOS_JOGO = {
         { id: 26, img: "foca.png", som: "foca.mp3", nome: "Foca", pasta: "animaisselvagens" },
         { id: 27, img: "formiga.png", som: "formiga.mp3", nome: "Formiga", pasta: "animaisselvagens" },
         { id: 28, img: "girafa.png", som: "girafa.mp3", nome: "Girafa", pasta: "animaisselvagens" },
-        { id: 29, img: "gorila.png", som: "gorila.mp3", nome: "Gorila" , pasta: "animaisselvagens" },
+        { id: 29, img: "gorila.png", som: "gorila.mp3", nome: "Gorila", pasta: "animaisselvagens" },
         { id: 30, img: "hiena.png", som: "hiena.mp3", nome: "Hiena", pasta: "animaisselvagens" },
         { id: 31, img: "hipopotamo.png", som: "hipopotamo.mp3", nome: "Hipopótamo", pasta: "animaisselvagens" },
         { id: 32, img: "leao.png", som: "leao.mp3", nome: "Leão", pasta: "animaisselvagens" },
