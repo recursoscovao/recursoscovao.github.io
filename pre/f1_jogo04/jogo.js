@@ -4,18 +4,23 @@
 let jogoAtivo = false;
 let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0, ajudasUsadas = 0; 
 let itemDestaque = null, opcoesRonda = [], simuInterval;
+let audioAnimalAtual = null;
 
-const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
-const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
-const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
+const somAcerto = new Audio(JOGO_CONFIG.caminhoSonsSistema + JOGO_CONFIG.sons.acerto);
+const somErro = new Audio(JOGO_CONFIG.caminhoSonsSistema + JOGO_CONFIG.sons.erro);
+const somClique = new Audio(JOGO_CONFIG.caminhoSonsSistema + JOGO_CONFIG.sons.clique);
+
+// Função auxiliar para obter o caminho correto da imagem baseada na pasta definida nos dados
+const getCaminhoImagem = (item) => {
+    return item.pasta === "domesticos" ? DADOS_JOGO.caminhoDomesticos : DADOS_JOGO.caminhoSelvagens;
+};
 
 // ==========================================
 // 2. CONFIGURAÇÃO VISUAL (CSS INJETADO)
 // ==========================================
 const style = document.createElement('style');
 style.innerHTML = `
-    /* [ESTILOS GERAIS] */
-    .status-container { width: 100%; display: flex; justify-content: space-between; align-items: center; }
+    .status-container { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
     .status-pill { background: #6c757d; color: white; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 1.1rem; }
     .score-group { display: flex; gap: 10px; }
     .score-box { padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; min-width: 60px; justify-content: center; }
@@ -31,16 +36,22 @@ style.innerHTML = `
     }
     .btn-audio-circle { width: 65px; height: 65px; cursor: pointer; flex-shrink: 0; }
 
-    /* EFEITO DE SOMBRA PARA O ITEM EM DESTAQUE */
+    /* CAIXA DE SOM (DESTAQUE) */
     .destaque-box {
         width: var(--dest-size); height: var(--dest-size); background: #fff; border-radius: 30px; 
-        border: 3.5px dashed var(--primary-color); display: flex; align-items: center; justify-content: center;
-        margin-bottom: 25px;
+        border: 3.5px dashed var(--primary-color); display: flex; flex-direction: column; 
+        align-items: center; justify-content: center; cursor: pointer; margin-bottom: 10px;
+        transition: transform 0.2s;
     }
-    .destaque-box img { 
-        max-width: 70%; max-height: 70%; object-fit: contain; 
-        filter: brightness(0); /* Transforma a imagem numa sombra preta */
+    .destaque-box:active { transform: scale(0.95); }
+    .destaque-box img { width: 50%; margin-bottom: 5px; }
+    .texto-quem-sou { color: var(--primary-color); font-weight: 900; font-size: 1rem; text-transform: uppercase; }
+
+    .frase-intermedia { 
+        color: var(--text-grey); font-weight: 700; margin-bottom: 20px; text-align: center; font-size: 1.1rem; 
     }
+
+    .opcoes-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; width: fit-content; }
     
     .opcao-card {
         background: white; border: 3px solid #f0f0f0; border-radius: 20px; 
@@ -53,33 +64,41 @@ style.innerHTML = `
     .feedback-icon { position: absolute; font-size: 3rem; z-index: 10; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3)); pointer-events: none; }
     .icon-v { color: #8cc63f; } .icon-x { color: #ff5a5f; }
 
-    /* CONFIGURAÇÃO DE GRELHA (3 COLUNAS CONFORME PEDIDO) */
     :root { 
-        --grid-cols: 3; 
-        --card-size: 110px; 
-        --dest-size: 160px; 
+        --card-size: 100px; 
+        --dest-size: 150px; 
     }
 
     @media screen and (min-width: 1025px) {
         :root { --card-size: 140px; --dest-size: 180px; }
     }
-
-    @media screen and (max-height: 500px) and (orientation: landscape) {
-        :root { --card-size: 90px; --dest-size: 110px; }
-        .destaque-box { margin-bottom: 10px; }
-    }
 `;
 document.head.appendChild(style);
 
 // ==========================================
-// 3. LÓGICA DE CAPA E SIMULAÇÃO
+// 3. LÓGICA DE ÁUDIO, CAPA E SIMULAÇÃO
 // ==========================================
+function pararAudios() {
+    if (audioAnimalAtual) {
+        audioAnimalAtual.pause();
+        audioAnimalAtual.currentTime = 0;
+    }
+}
+
+function tocarSomAnimal() {
+    if (!itemDestaque) return;
+    pararAudios();
+    somClique.play();
+    audioAnimalAtual = new Audio(JOGO_CONFIG.caminhoSonsAnimais + itemDestaque.som);
+    audioAnimalAtual.play().catch(e => console.log("Erro ao tocar som:", e));
+}
+
 function tocarAudioInstrucoes() {
     somClique.play();
-    const audioInst = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes);
+    const audioInst = new Audio(JOGO_CONFIG.caminhoSonsSistema + DADOS_JOGO.somInstrucoes);
     audioInst.play().catch(() => {
         const synth = window.speechSynthesis;
-        const utter = new SpeechSynthesisUtterance("Vê a sombra no topo e clica no fruto que corresponde a essa sombra.");
+        const utter = new SpeechSynthesisUtterance(JOGO_CONFIG.descricao);
         utter.lang = 'pt-PT'; synth.speak(utter);
     });
 }
@@ -91,11 +110,14 @@ function mostrarCapa() {
     document.getElementById('game-content').innerHTML = `
         <div id="simu-hand" style="position:absolute; font-size:3rem; z-index:100; pointer-events:none; display:none;">👆</div>
         <div style="display:flex; flex-direction:column; align-items:center;">
-            <div class="destaque-box"><img id="simu-destaque" src=""></div>
-            <div style="display:flex; gap:10px;">
-                <div class="opcao-card" style="width:80px; height:80px;" id="simu-opt-0"><img src=""></div>
-                <div class="opcao-card" style="width:80px; height:80px;" id="simu-opt-1"><img src=""></div>
-                <div class="opcao-card" style="width:80px; height:80px;" id="simu-opt-2"><img src=""></div>
+            <div class="destaque-box" id="simu-box">
+                <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png">
+                <span class="texto-quem-sou">${JOGO_CONFIG.textoDestaque}</span>
+            </div>
+            <div style="display:flex; gap:10px; margin-top:10px;">
+                <div class="opcao-card" style="width:70px; height:70px;" id="simu-opt-0"><img src=""></div>
+                <div class="opcao-card" style="width:70px; height:70px;" id="simu-opt-1"><img src=""></div>
+                <div class="opcao-card" style="width:70px; height:70px;" id="simu-opt-2"><img src=""></div>
             </div>
             <p style="color:var(--text-grey); font-weight:800; text-align:center; margin-top:15px; font-size:0.9rem;">${JOGO_CONFIG.descricao}</p>
         </div>`;
@@ -115,33 +137,39 @@ function correrSimulacao() {
     const animar = () => {
         const itens = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5).slice(0,3);
         const certoIdx = Math.floor(Math.random() * 3);
-        const imgD = document.getElementById('simu-destaque');
-        if(!imgD) return;
-        imgD.src = DADOS_JOGO.caminhoImagens + itens[certoIdx].img;
+        
         itens.forEach((it, i) => { 
             const card = document.getElementById(`simu-opt-${i}`);
-            card.querySelector('img').src = DADOS_JOGO.caminhoImagens + it.img;
-            card.style.borderColor = "#f0f0f0";
+            if(card) {
+                card.querySelector('img').src = getCaminhoImagem(it) + it.img;
+                card.style.borderColor = "#f0f0f0";
+            }
         });
+
         const container = document.getElementById('game-content').getBoundingClientRect();
-        hand.style.display = "block"; hand.style.opacity = "0"; hand.style.top = "80%"; hand.style.left = "80%";
+        hand.style.display = "block"; hand.style.opacity = "0"; hand.style.top = "50%"; hand.style.left = "50%";
+        
         setTimeout(() => {
-            const target = document.getElementById(`simu-opt-${certoIdx}`).getBoundingClientRect();
-            hand.style.transition = "all 0.8s ease-in-out"; hand.style.opacity = "1";
-            hand.style.top = (target.top - container.top + 20) + "px";
-            hand.style.left = (target.left - container.left + 20) + "px";
-            setTimeout(() => { 
-                const opt = document.getElementById(`simu-opt-${certoIdx}`);
-                if(opt) opt.style.borderColor = "#8cc63f";
-                setTimeout(() => { hand.style.opacity = "0"; }, 500);
-            }, 900);
+            const box = document.getElementById('simu-box').getBoundingClientRect();
+            hand.style.transition = "all 0.6s ease-in-out"; hand.style.opacity = "1";
+            hand.style.top = (box.top - container.top + 40) + "px"; hand.style.left = (box.left - container.left + 40) + "px";
+            
+            setTimeout(() => {
+                const target = document.getElementById(`simu-opt-${certoIdx}`).getBoundingClientRect();
+                hand.style.top = (target.top - container.top + 20) + "px"; hand.style.left = (target.left - container.left + 20) + "px";
+                setTimeout(() => { 
+                    const opt = document.getElementById(`simu-opt-${certoIdx}`);
+                    if(opt) opt.style.borderColor = "#8cc63f";
+                    setTimeout(() => { hand.style.opacity = "0"; }, 500);
+                }, 700);
+            }, 1000);
         }, 200);
     };
     animar(); simuInterval = setInterval(animar, 4000);
 }
 
 // ==========================================
-// 4. LÓGICA DE JOGO (3 OPÇÕES POR RONDA)
+// 4. LÓGICA DE JOGO
 // ==========================================
 function iniciarJogo() { 
     clearInterval(simuInterval); 
@@ -155,32 +183,39 @@ function iniciarJogo() {
 
 function proximaRonda() {
     if (rondaAtual > totalRondas) { finalizarJogo(); return; }
+    pararAudios();
     
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
     const area = document.getElementById('game-content');
     
-    // Seleciona o item correto e mais 2 distractores aleatórios
+    // Selecionar item e distractores
     const todos = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
     itemDestaque = todos[0];
-    
-    let selecao = todos.slice(0, 3); // Apenas 3 imagens como solicitado
-    opcoesRonda = selecao.sort(() => Math.random() - 0.5);
+    opcoesRonda = todos.slice(0, 3).sort(() => Math.random() - 0.5);
 
     area.innerHTML = `
-        <div class="destaque-box">
-            <img src="${DADOS_JOGO.caminhoImagens + itemDestaque.img}">
+        <div class="destaque-box" onclick="tocarSomAnimal()">
+            <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png">
+            <span class="texto-quem-sou">${JOGO_CONFIG.textoDestaque}</span>
         </div>
-        <div style="display:grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap:12px; width:fit-content;">
+        
+        <p class="frase-intermedia">${JOGO_CONFIG.fraseIntermedia}</p>
+
+        <div class="opcoes-grid">
             ${opcoesRonda.map(item => `
                 <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)">
-                    <img src="${DADOS_JOGO.caminhoImagens + item.img}">
+                    <img src="${getCaminhoImagem(item) + item.img}">
                 </div>`).join('')}
         </div>`;
+
+    // Tocar o som automaticamente no início da ronda
+    setTimeout(tocarSomAnimal, 500);
 }
 
 function verificarResposta(id, el) {
     if (!jogoAtivo) return;
     document.querySelectorAll('.opcao-card').forEach(c => c.style.pointerEvents = 'none');
+    pararAudios();
 
     if (id === itemDestaque.id) {
         certos++; somAcerto.play();
@@ -193,7 +228,7 @@ function verificarResposta(id, el) {
         const correto = document.getElementById(`card-${itemDestaque.id}`);
         if(correto) correto.style.borderColor = "#8cc63f";
     }
-    setTimeout(() => { rondaAtual++; proximaRonda(); }, 1500);
+    setTimeout(() => { rondaAtual++; proximaRonda(); }, 2000);
 }
 
 function darAjuda() {
@@ -204,15 +239,14 @@ function darAjuda() {
     if (correto) {
         correto.style.borderColor = "var(--primary-color)";
         correto.animate([
-            {transform:'scale(1)'},
-            {transform:'scale(1.1)'},
-            {transform:'scale(1)'}
+            {transform:'scale(1)'}, {transform:'scale(1.1)'}, {transform:'scale(1)'}
         ], {duration:500, iterations:2});
     }
 }
 
 function finalizarJogo() {
     jogoAtivo = false;
+    pararAudios();
     const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
     Engine.showResults(certos, erros, ajudasUsadas, rel);
 }
