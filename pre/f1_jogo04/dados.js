@@ -41,10 +41,10 @@ const BIBLIOTECA_CONTEUDO = {
 // 3. CONFIGURAÇÃO DO JOGO ATUAL
 // ==========================================
 const JOGO_CONFIG = {
-    nomeDoJogo: "Sons dos Animais",
+    nomeDoJogo: "Quem sou eu",
     descricao: "Ouve o som e descobre qual é o animal!",
     textoDestaque: "Quem sou eu?",
-    fraseIntermedia: "Clica no animal que faz este som:",
+    fraseIntermedia: "Clica no animal correto:",
 
     areaAtiva: "pre",   
     anoAtivo: "pre",    
