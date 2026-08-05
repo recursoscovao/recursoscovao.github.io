@@ -77,6 +77,28 @@ const JOGO_CONFIG = {
                 { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
                 { nome: "Toupeira das Letras", desc: "Bata nas toupeiras corretas.", icon: "rato.png", link: "toupeira/", cor: "#E64A19" }
             ]
+        },
+        {
+            tituloFase: "NÚMEROS E QUANTIDADES",
+            corEtiqueta: "#3F51B5",
+            jogos: [
+                { nome: "Contar Objetos", desc: "Quantos elementos vês no ecrã?", icon: "f3_jogo01.png", link: "f3_jogo01/", cor: "#303F9F" },
+                { nome: "Maior ou Menor", desc: "Onde estão mais elementos?", icon: "f3_jogo02.png", link: "f3_jogo02/", cor: "#3949AB" },
+                { nome: "Puzzle Numérico", desc: "Ordena os números do 1 ao 10.", icon: "f3_jogo03.png", link: "f3_jogo03/", cor: "#5C6BC0" },
+                { nome: "Dominó das Cores", desc: "Associa o número à cor correta.", icon: "f3_jogo04.png", link: "f3_jogo04/", cor: "#303F9F" },
+                { nome: "Sequência Lógica", desc: "O que vem a seguir na fila?", icon: "f3_jogo05.png", link: "f3_jogo05/", cor: "#3949AB" }
+            ]
+        },
+        {
+            tituloFase: "DESCOBRIR O MUNDO",
+            corEtiqueta: "#4CAF50",
+            jogos: [
+                { nome: "O Meu Corpo", desc: "Identifica as partes do corpo humano.", icon: "f4_jogo01.png", link: "f4_jogo01/", cor: "#388E3C" },
+                { nome: "Reciclagem", desc: "Coloca o lixo no ecoponto certo.", icon: "f4_jogo02.png", link: "f4_jogo02/", cor: "#2E7D32" },
+                { nome: "As Estações", desc: "Veste o boneco conforme o tempo.", icon: "f4_jogo03.png", link: "f4_jogo03/", cor: "#1B5E20" },
+                { nome: "Habitats Animais", desc: "Onde vive cada animal?", icon: "f4_jogo04.png", link: "f4_jogo04/", cor: "#388E3C" },
+                { nome: "Cuidar das Plantas", desc: "O que precisam as flores para crescer?", icon: "f4_jogo05.png", link: "f4_jogo05/", cor: "#2E7D32" }
+            ]
         }
     ]
 };
