@@ -93,7 +93,7 @@ const JOGO_CONFIG = {
 // ==========================================
 const DADOS_JOGO = {
     caminhoImagens: "../../img/frutos/",
-    somInstrucoes: "sonspre/f1_jogo06.mp3", 
+    somInstrucoes: "sonspre/f1_jogo05.mp3", 
     
     itens: [
         { id: 1,  img: "amora.png", nome: "Amora" },
