@@ -126,13 +126,13 @@ style.innerHTML = `
     
     /* PC / LANDSCAPE GRANDE */
     @media screen and (min-width: 1025px) {
-        :root { --cell-size: min(60px, 8vh); }
+        :root { --cell-size: min(55px, 7.5vh); }
         #simu-board { transform: scale(1); }
     }
 
-    /* TABLET VERTICAL (PORTRAIT) - Otimizado para não ficar gigante */
+    /* TABLET VERTICAL (PORTRAIT) */
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
-        :root { --cell-size: 10vw; }
+        :root { --cell-size: 9.5vw; }
         #simu-board { transform: scale(1.1); }
         #game-content { padding: 40px 20px; }
     }
@@ -157,25 +157,22 @@ style.innerHTML = `
 document.head.appendChild(style);
 
 // ============================================================
-// 3. CAPA E INSTRUÇÕES (FLUXO: HEADER -> SIMU -> BOTOES)
+// 3. CAPA E INSTRUÇÕES
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
 
-    // Título no Header (Shell)
     document.getElementById('shell-header-content').innerHTML = `
         <h2 style="color:var(--primary-color); font-weight:900; font-size:clamp(1.1rem, 3vw, 1.5rem); text-align:center; width:100%;">
             ${JOGO_CONFIG.nomeDoJogo.toUpperCase()}
         </h2>`;
     
-    // Garantir estrutura de avisos
     if(!document.getElementById('round-feedback')) {
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
         document.querySelector('.game-shell').appendChild(feedback);
     }
 
-    // Estrutura Dinâmica da Capa
     const area = document.getElementById('game-content');
     area.innerHTML = `
         <div id="simu-container">
@@ -198,7 +195,6 @@ function mostrarCapa() {
         <div id="nivel-select-container" class="nivel-select-container"></div>
     `;
     
-    // Painel de Instruções Premium (Criar se não existir)
     if(!document.getElementById('instrucoes-panel')) {
         const panel = document.createElement('div');
         panel.id = 'instrucoes-panel';
@@ -231,20 +227,27 @@ function mostrarNiveis(modo) {
     document.getElementById('capa-menu-principal').style.display = 'none';
     const container = document.getElementById('nivel-select-container');
     container.style.display = 'flex';
-    container.className = 'nivel-select-container'; // Garantir classe para CSS
+    container.className = 'nivel-select-container'; 
+    
     container.innerHTML = `
-        <p style="font-weight:800; color:#888; font-size:0.8rem; text-transform:uppercase; margin-bottom:10px;">Dificuldade:</p>
-        <div class="nivel-row" style="display:flex; gap:10px; width:100%;">
-            <div class="btn-nivel" onclick="setModo('${modo}', 1)" style="border:2px solid #8cc63f; color:#8cc63f; padding:15px; border-radius:12px; flex:1; text-align:center; cursor:pointer;"><b>Fácil</b></div>
-            <div class="btn-nivel" onclick="setModo('${modo}', 2)" style="border:2px solid #ff5a5f; color:#ff5a5f; padding:15px; border-radius:12px; flex:1; text-align:center; cursor:pointer;"><b>Difícil</b></div>
+        <p style="font-weight:800; color:#888; font-size:0.8rem; text-transform:uppercase; margin-bottom:15px;">Dificuldade:</p>
+        
+        <!-- Linha com os dois botões lado a lado -->
+        <div class="nivel-row" style="display:flex; flex-direction:row; gap:10px; width:100%; max-width:400px; justify-content:center;">
+            <div class="btn-nivel" onclick="setModo('${modo}', 1)" style="border:2px solid #8cc63f; color:#8cc63f; padding:15px; border-radius:12px; flex:1; text-align:center; cursor:pointer; font-weight:900;">FÁCIL</div>
+            <div class="btn-nivel" onclick="setModo('${modo}', 2)" style="border:2px solid #ff5a5f; color:#ff5a5f; padding:15px; border-radius:12px; flex:1; text-align:center; cursor:pointer; font-weight:900;">DIFÍCIL</div>
         </div>
-        <button class="btn-capa-small btn-voltar-nivel" onclick="voltarCapa()" style="background:#6c757d; width:150px; margin-top:15px;">VOLTAR</button>`;
+
+        <!-- Botão Voltar por baixo -->
+        <button class="btn-capa-small" onclick="voltarCapa()" style="background:#6c757d; width:160px; margin-top:20px; height:50px; border-radius:12px; color:white; border:none; font-weight:900; cursor:pointer; text-transform:uppercase;">
+            VOLTAR
+        </button>`;
 }
 
 function voltarCapa() { somClique.play(); document.getElementById('capa-menu-principal').style.display = 'flex'; document.getElementById('nivel-select-container').style.display = 'none'; }
 
 // ============================================================
-// 4. LÓGICA CORE (TABULEIRO E JOGO)
+// 4. LÓGICA CORE
 // ============================================================
 function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
@@ -276,7 +279,7 @@ function atualizarUI() {
     
     const area = document.getElementById('game-content');
     area.innerHTML = "";
-    area.style.justifyContent = "center"; // Centraliza o tabuleiro no jogo
+    area.style.justifyContent = "center"; 
     
     const boardEl = document.createElement('div');
     boardEl.className = "grid-board";
