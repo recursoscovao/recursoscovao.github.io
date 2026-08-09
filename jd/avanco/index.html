@@ -3,24 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title id="page-title">Jogo</title>
+    <title id="page-title">Jogo Educativo</title>
+    
+    <!-- Bibliotecas Externas -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
+
     <style>
         /* ============================================================
-           1. CONFIGURAÇÕES GLOBAIS
+           1. CONFIGURAÇÕES GLOBAIS E RESET
            ============================================================ */
-        :root { --primary-color: #5EA2E6; --bg-color: #EAF4FE; --text-grey: #8792a1; }
+        :root { 
+            --primary-color: #5EA2E6; 
+            --bg-color: #EAF4FE; 
+            --text-grey: #8792a1; 
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
         body, html { 
-            height: 100%; /* Mudado para 100% para controle de altura */
+            height: 100%; 
             width: 100vw; 
             background-color: var(--bg-color); 
             display: flex; 
             flex-direction: column; 
-            overflow-x: hidden;
+            overflow: hidden; /* Evita scrolls desnecessários na página principal */
         }
+
+        /* ============================================================
+           2. ESTRUTURA PRINCIPAL (HEADER, MAIN, FOOTER)
+           ============================================================ */
         
         header { 
             background: white; 
@@ -37,77 +49,91 @@
 
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
-        
-        /* AJUSTE AQUI: Centralização perfeita no espaço disponível */
+        #txt-titulo1 { font-weight: 900; color: var(--primary-color); font-size: 1.3rem; }
+        #txt-titulo2 { font-weight: 800; color: var(--text-grey); font-size: 1.1rem; }
+        #txt-subtitulo-header { font-size: 0.65rem; font-weight: 600; margin-top: 4px; color: var(--text-grey); }
+
+        /* MAIN: O segredo da centralização */
         main { 
             flex: 1; 
             display: flex; 
-            flex-direction: column;
-            justify-content: center; /* Centraliza horizontalmente */
-            align-items: center;    /* Centraliza verticalmente no espaço livre */
-            padding: 15px;          /* Padding uniforme em toda a volta */
-            min-height: 0;          /* Importante para flex containers */
+            align-items: center;    /* Centraliza verticalmente a shell */
+            justify-content: center; /* Centraliza horizontalmente a shell */
+            padding: 15px;          /* Espaçamento de segurança igual para header e footer */
+            overflow: hidden;
         }
 
         .game-shell { 
             background: white; 
             width: min(1100px, 100%); 
+            max-height: 100%;       /* Não deixa a shell ser maior que o espaço disponível */
             display: flex; 
             flex-direction: column; 
             border: 1.5px solid var(--primary-color); 
             border-radius: 40px; 
             overflow: hidden; 
-            max-height: 100%; /* Não deixa a shell ultrapassar o main */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
         }
 
         .shell-header { text-align: center; border-bottom: 2px dashed #f5f5f5; display: flex; align-items: center; justify-content: center; min-height: 65px; padding: 5px 15px; flex-shrink: 0; }
-        .shell-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; padding: 20px; overflow-y: auto; }
+        .shell-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; padding: 25px; overflow-y: auto; }
         .shell-footer { display: flex; align-items: center; background: #fafafa; min-height: 90px; padding: 15px 30px; gap: 15px; flex-shrink: 0; }
 
-        footer { text-align: center; background: white; padding: 12px; flex-shrink: 0; border-radius: 25px 25px 0 0; }
+        footer { 
+            text-align: center; 
+            background: white; 
+            padding: 12px; 
+            flex-shrink: 0; 
+            border-radius: 25px 25px 0 0; 
+        }
         .footer-text { font-size: 0.75rem; font-weight: 700; color: var(--text-grey); }
 
-        .hamburger-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; transition: 0.2s; font-size: 28px; }
+        /* ============================================================
+           3. MENU E INTERATIVIDADE
+           ============================================================ */
+        .hamburger-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; font-size: 28px; }
         .menu-dropdown { position: absolute; display: none; flex-direction: column; gap: 6px; z-index: 2000; top: 85px; left: 15px; }
-        .menu-item { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; height: 50px; padding: 0 20px; border-radius: 12px; min-width: 260px; }
-        .menu-item img { width: 32px; height: 32px; object-fit: contain; }
-        .menu-item:hover { background-color: var(--primary-color); color: white !important; }
+        .menu-item { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 0 20px; border-radius: 12px; height: 50px; min-width: 250px; }
+        .menu-item:hover { background: var(--primary-color); color: white !important; }
 
         /* ============================================================
-           2. RESPONSIVIDADE (AJUSTADA)
+           4. RESPONSIVIDADE (SEPARAÇÃO POR DISPOSITIVO)
            ============================================================ */
         
-        /* TABLET VERTICAL */
+        /* TABLET VERTICAL (Portrait) */
         @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
             header { height: 85px; }
-            #header-icon { height: 50px; width: auto; }
-            .game-shell { width: 95%; }
-            main { padding: 20px; } /* Padding igual em cima e baixo */
+            main { padding: 20px; }
+            .game-shell { width: 92%; }
         }
 
-        /* PC / TABLET LANDSCAPE */
+        /* PC E TABLET HORIZONTAL (Landscape) */
         @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
-            header { height: 85px; }
-            #header-icon { height: 55px; }
-            main { padding: 15px; }
+            header { height: 90px; }
+            main { padding: 25px; }
         }
 
-        /* TELEMÓVEL VERTICAL */
+        /* TELEMÓVEL VERTICAL (Portrait) */
         @media screen and (max-width: 500px) and (orientation: portrait) {
-            header { height: 80px; }
-            #header-icon { height: 48px; }
-            main { padding: 10px; } /* Mantém distância igual do header e footer */
+            header { height: 80px; padding: 0 10px; }
+            #header-icon { height: 45px; }
+            #txt-titulo1 { font-size: 1.1rem; }
+            #txt-titulo2 { font-size: 0.95rem; }
+            main { padding: 10px; } /* Padding reduzido mas igual em cima/baixo */
             .game-shell { border-radius: 30px; }
-            /* Removido margin-bottom para não quebrar a centralização */
+            .shell-footer { padding: 15px; min-height: 80px; }
         }
 
-        /* MODO HORIZONTAL CURTO */
+        /* TELEMÓVEL/TABLET HORIZONTAL CURTO (Landscape) */
         @media screen and (max-height: 500px) and (orientation: landscape) {
-            header { height: 75px; }
+            header { height: 70px; }
             #header-icon { height: 40px; }
+            .title-group { line-height: 0.75; }
+            #txt-subtitulo-header { display: none; } /* Esconde subtitulo para ganhar espaço */
             main { padding: 8px; }
             .game-shell { border-radius: 20px; }
-            /* Removido margin-bottom para não quebrar a centralização */
+            .shell-header { min-height: 50px; }
+            .shell-footer { min-height: 70px; padding: 10px; }
         }
     </style>
 </head>
@@ -117,7 +143,7 @@
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
         <div class="header-center">
-            <img id="header-icon" src="" alt="">
+            <img id="header-icon" src="" alt="" style="height: 50px; object-fit: contain;">
             <div class="title-group">
                 <div id="txt-titulo1">---</div>
                 <div id="txt-titulo2">---</div>
@@ -129,22 +155,30 @@
 
     <main>
         <div class="game-shell">
+            <!-- Topo do Jogo (Rondas/Pontos) -->
             <div id="shell-header-content" class="shell-header"></div>
+            
+            <!-- Corpo do Jogo (Conteúdo Dinâmico) -->
             <div id="game-content" class="shell-body"></div>
+            
+            <!-- Rodapé do Jogo (Botões de Ação) -->
             <div id="shell-footer-content" class="shell-footer"></div>
         </div>
     </main>
 
     <footer><span class="footer-text" id="txt-rodape"></span></footer>
 
+    <!-- Scripts de Dados e Lógica -->
     <script src="dados.js"></script>
     <script>
         const Engine = {
             init() {
-                const config = JOGO_CONFIG;
-                const tema = BIBLIOTECA_TEMAS[config.areaAtiva];
-                const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
+                // Tenta carregar dados. Se falhar (ex: sem arquivo), usa valores padrão para teste
+                const config = window.JOGO_CONFIG || { nomeDoJogo: "Jogo", areaAtiva: "default", caminhoIconsMenu: "" };
+                const tema = (window.BIBLIOTECA_TEMAS && BIBLIOTECA_TEMAS[config.areaAtiva]) || { corPrimaria: "#5EA2E6", corPagina: "#EAF4FE" };
+                const conteudo = (window.BIBLIOTECA_CONTEUDO && BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva]) || { t1: "TITULO", t2: "SUBTITULO", sub: "INFO", rodape: "© 2024" };
 
+                // Aplica Cores e Textos
                 document.title = config.nomeDoJogo;
                 document.documentElement.style.setProperty('--primary-color', tema.corPrimaria);
                 document.documentElement.style.setProperty('--bg-color', tema.corPagina);
@@ -154,62 +188,61 @@
                 document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
                 document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
                 
-                const voltarIconPath = config.caminhoIconsMenu + tema.voltarMobile;
-                document.getElementById('icon-voltar-top').src = voltarIconPath;
+                // Configura Ícones
+                if(tema.voltarMobile) document.getElementById('icon-voltar-top').src = config.caminhoIconsMenu + tema.voltarMobile;
 
-                const itemAtivo = (config.menuItens || config.menu_itens).find(i => i.id === config.anoAtivo);
-                if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
-                
+                // Monta Menu
                 const menuBox = document.getElementById('dropdownMenu');
-                menuBox.innerHTML = ''; 
+                if(config.menuItens || config.menu_itens) {
+                    const itens = config.menuItens || config.menu_itens;
+                    itens.forEach(item => {
+                        if (item.label === "Destaque") return;
+                        const a = document.createElement('a'); 
+                        a.className = 'menu-item'; 
+                        a.href = item.link;
+                        a.innerHTML = `<span>${item.label}</span>`;
+                        menuBox.appendChild(a);
+                    });
+                }
 
-                (config.menuItens || config.menu_itens).forEach(item => {
-                    if (item.label === "Destaque" || item.id === "jd") return;
-                    const a = document.createElement('a'); 
-                    a.className = 'menu-item'; 
-                    a.href = item.link;
-                    const imgPath = (item.icon === "AUTO") ? voltarIconPath : config.caminhoIconsMenu + item.icon;
-                    a.innerHTML = `<img src="${imgPath}"> <span>${item.label}</span>`;
-                    menuBox.appendChild(a);
-                });
-
+                // Inicia o Jogo chamando a Capa
                 if(typeof mostrarCapa === "function") mostrarCapa();
             },
 
+            // Ecrã de Progresso durante o jogo
             showStatusBar(ronda, total, certos, erros) {
-                const lampPath = JOGO_CONFIG.caminhoIconsMenu + "lampada.png";
+                const lampPath = (window.JOGO_CONFIG ? JOGO_CONFIG.caminhoIconsMenu : "") + "lampada.png";
                 document.getElementById('shell-header-content').innerHTML = `
                     <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
                         <div style="display:flex; align-items:center; gap:8px;">
-                            <img src="${lampPath}" style="height:45px; cursor:pointer;" onclick="darAjuda()">
-                            <div style="background: #6c757d; color: white; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 1.1rem;">${ronda}/${total}</div>
+                            <img src="${lampPath}" style="height:40px; cursor:pointer;" onclick="darAjuda()">
+                            <div style="background: #6c757d; color: white; padding: 4px 12px; border-radius: 20px; font-weight: 900;">${ronda}/${total}</div>
                         </div>
-                        <div style="display: flex; gap: 10px;">
-                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; min-width: 60px; justify-content: center; background: #8cc63f; box-shadow: 0 3px 0 #6da32f;"><i class="fas fa-check"></i> ${certos}</div>
-                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; min-width: 60px; justify-content: center; background: #ff5a5f; box-shadow: 0 3px 0 #d44348;"><i class="fas fa-times"></i> ${erros}</div>
+                        <div style="display: flex; gap: 8px;">
+                            <div style="padding: 5px 10px; border-radius: 10px; color: white; font-weight: 900; background: #8cc63f;"><i class="fas fa-check"></i> ${certos}</div>
+                            <div style="padding: 5px 10px; border-radius: 10px; color: white; font-weight: 900; background: #ff5a5f;"><i class="fas fa-times"></i> ${erros}</div>
                         </div>
                     </div>`;
                 document.getElementById('shell-footer-content').style.display = 'none';
             },
 
+            // Ecrã Final de Resultados
             showResults(certos, erros, ajudas, rel) {
                 document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">RESULTADOS</h2>`;
                 document.getElementById('game-content').innerHTML = `
                     <div style="text-align:center;">
-                        <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height:150px; object-fit:contain;">
-                        <h2 style="color:var(--primary-color); margin:10px 0; font-weight:900; text-transform:uppercase;">${rel.titulo}</h2>
+                        <h2 style="color:var(--primary-color); margin-bottom:15px; font-weight:900;">${rel.titulo}</h2>
                         <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #8cc63f;">CERTOS: ${certos}</div>
-                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #ff5a5f;">ERROS: ${erros}</div>
-                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #5EA2E6;">AJUDAS: ${ajudas}</div>
+                            <div style="padding: 10px; border-radius: 12px; color: white; font-weight: 900; background: #8cc63f;">CERTOS: ${certos}</div>
+                            <div style="padding: 10px; border-radius: 12px; color: white; font-weight: 900; background: #ff5a5f;">ERROS: ${erros}</div>
                         </div>
                     </div>`;
                 
                 const footer = document.getElementById('shell-footer-content');
                 footer.style.display = "flex";
                 footer.innerHTML = `
-                    <button onclick="location.reload()" style="flex: 1; height: 65px; border-radius: 35px; background: #6c757d; color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer;">REPETIR</button>
-                    <button onclick="window.history.back()" style="flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer;">SAIR</button>`;
+                    <button onclick="location.reload()" style="flex: 1; height: 60px; border-radius: 30px; background: #6c757d; color: white; border: none; font-size: 1.1rem; font-weight: 900; cursor: pointer;">REPETIR</button>
+                    <button onclick="window.history.back()" style="flex: 1; height: 60px; border-radius: 30px; background: var(--primary-color); color: white; border: none; font-size: 1.1rem; font-weight: 900; cursor: pointer;">SAIR</button>`;
             }
         };
 
@@ -219,12 +252,11 @@
             m.style.display = (m.style.display === 'flex') ? 'none' : 'flex'; 
         }
 
-        window.onclick = () => { 
-            document.getElementById('dropdownMenu').style.display = 'none'; 
-        }
-
+        window.onclick = () => { document.getElementById('dropdownMenu').style.display = 'none'; }
         window.onload = () => Engine.init();
     </script>
+
+    <!-- O Teu Ficheiro de Lógica de Jogo -->
     <script src="jogo.js"></script>
 </body>
 </html>
