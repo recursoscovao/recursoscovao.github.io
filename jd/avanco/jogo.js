@@ -23,7 +23,6 @@ const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
-    /* --- ESTILOS GERAIS --- */
     #game-content { 
         display: flex; flex-direction: column; align-items: center; justify-content: space-evenly; 
         width: 100%; height: 100%; padding: 15px; box-sizing: border-box; overflow: hidden; position: relative;
@@ -36,11 +35,22 @@ style.innerHTML = `
     .btn-inform { width: clamp(45px, 6.5vh, 60px); height: clamp(45px, 6.5vh, 60px); cursor: pointer; flex: none; }
     .btn-inform img { width: 100%; height: 100%; object-fit: contain; }
 
+    /* INSTRUÇÕES PREMIUM - SLIDE DE BAIXO PARA CIMA */
+    #instrucoes-panel { 
+        position: fixed; bottom: 0; left: 0; width: 100vw; height: 100vh; 
+        background: white; z-index: 10000; 
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+        transform: translateY(100%); 
+        visibility: hidden; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; 
+    }
+    #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
+    .close-x { position: absolute; top: 15px; right: 25px; font-size: 3rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; }
+
     /* CORES DA BARRA DE STATUS */
     .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .pill-j2 { background: #444 !important; box-shadow: 0 3px 0 #222; }
-    .blinking { animation: blinker 1s linear infinite; }
-    @keyframes blinker { 50% { opacity: 0.5; } }
+    .blinking { animation: blinker 1.5s linear infinite; }
+    @keyframes blinker { 50% { opacity: 0.4; } }
 
     /* TABULEIRO E PEÇAS */
     .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; margin: 0 auto; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
@@ -49,26 +59,22 @@ style.innerHTML = `
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); }
 
-    /* POPUP DE VITÓRIA */
-    #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; text-align: center; }
-    .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); width: 80%; max-width: 350px; }
+    /* POPUP DE VITÓRIA (CENTRADO NO CENTRO DO JOGO) */
+    #round-feedback { 
+        position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
+        background: rgba(255,255,255,0.92); z-index: 2000; 
+        display: none; align-items: center; justify-content: center; text-align: center;
+    }
+    .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); width: 85%; max-width: 350px; border: 2px solid #eee; }
 
-    /* --- RESPONSIVIDADE --- */
+    /* RESPONSIVIDADE */
     @media screen and (min-width: 1025px) { :root { --cell-size: min(55px, 7.5vh); } }
-    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
-        :root { --cell-size: 9.5vw; }
-        #simu-board { transform: scale(1.1); }
-        #game-content { padding: 30px 20px; }
-    }
-    @media screen and (max-width: 500px) and (orientation: portrait) {
-        :root { --cell-size: 11vw; }
-        #simu-board { transform: scale(0.85); }
-    }
+    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) { :root { --cell-size: 9.5vw; } #simu-board { transform: scale(1.1); } #game-content { padding: 30px 20px; } }
+    @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 11vw; } #simu-board { transform: scale(0.85); } }
     @media screen and (max-height: 600px) and (orientation: landscape) {
         :root { --cell-size: 10.5vh; }
         #game-content { flex-direction: row; gap: 30px; }
         #simu-container { flex: none; width: auto; }
-        #capa-menu-principal, #nivel-select-container { width: auto; }
         .capa-btn-row, .nivel-row { flex-direction: column; width: clamp(150px, 22vw, 190px); }
     }
 `;
@@ -86,22 +92,29 @@ function mostrarCapa() {
     if(!document.getElementById('instrucoes-panel')) {
         const panel = document.createElement('div');
         panel.id = 'instrucoes-panel';
-        panel.innerHTML = `<span class="close-x" onclick="toggleInstructions()">&times;</span>
+        panel.innerHTML = `
+            <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Instruções: Avanço</div>
                 <div class="inst-section-title">Objetivo</div>
-                <p>Vence quem chegar primeiro com qualquer peça à primeira linha do adversário.</p>
-                <div class="inst-section-title">Regras</div>
+                <p>Vence quem chegar primeiro com qualquer uma das suas peças à <b>primeira linha do adversário</b>.</p>
+                <div class="inst-section-title">Regras de Movimento</div>
                 <ul class="inst-list">
-                    <li><b>Vertical:</b> Move 1 casa se estiver vazia.</li>
-                    <li><b>Diagonal:</b> Move para vazia ou captura adversária.</li>
+                    <li><b>Vertical:</b> Move 1 casa para a frente apenas se estiver vazia.</li>
+                    <li><b>Diagonal:</b> Move para as diagonais se estiverem vazias ou para <b>capturar</b> uma peça adversária.</li>
                 </ul>
+                <div class="inst-section-title">Capturas</div>
+                <ul class="inst-list">
+                    <li><b>Só Diagonais:</b> Capturas apenas em movimento diagonal.</li>
+                    <li><b>Vertical:</b> Não é permitido capturar na vertical.</li>
+                </ul>
+                <div style="height:40px;"></div>
             </div>`;
         document.body.appendChild(panel);
 
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
-        document.getElementById('game-content').parentElement.appendChild(feedback);
+        document.querySelector('.game-shell').appendChild(feedback);
     }
 
     const area = document.getElementById('game-content');
@@ -119,7 +132,10 @@ function mostrarCapa() {
     iniciarSimulacao();
 }
 
-function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
+function toggleInstructions() { 
+    somClique.play(); 
+    document.getElementById('instrucoes-panel').classList.toggle('open'); 
+}
 
 function mostrarNiveis(modo) {
     somClique.play();
@@ -167,15 +183,14 @@ function atualizarUI() {
     const nomeVez = (turnoAtual === 0) ? "Jogador 1" : pcLabel;
     const classPill = (turnoAtual === 0) ? "pill-j1" : "pill-j2";
     
-    // BARRA DE STATUS: NOME COMPLETO E A PISCAR COM COR DINÂMICA
     document.getElementById('shell-header-content').innerHTML = `
         <div class="status-container" style="width:100%; display:flex; justify-content:space-between; align-items:center;">
-            <div class="status-pill ${classPill} blinking" style="padding:10px 20px; border-radius:12px; color:white; font-weight:900; font-size:1rem; text-transform:uppercase;">
+            <div class="status-pill ${classPill} blinking" style="padding:8px 18px; border-radius:10px; color:white; font-weight:900; font-size:0.95rem; text-transform:uppercase;">
                 VEZ DE: ${nomeVez}
             </div>
             <div class="score-group" style="display:flex; gap:6px;">
-                <div class="score-box" style="background:#8cc63f; padding:8px 12px; border-radius:10px; color:white; font-weight:900; min-width:60px; text-align:center;">J1: ${matchScore[0]}</div>
-                <div class="score-box" style="background:#444; padding:8px 12px; border-radius:10px; color:white; font-weight:900; min-width:60px; text-align:center;">${modoJogo === 'CPU' ? 'Pc' : 'J2'}: ${matchScore[1]}</div>
+                <div class="score-box" style="background:#8cc63f; padding:8px 12px; border-radius:10px; color:white; font-weight:900; min-width:60px;">J1: ${matchScore[0]}</div>
+                <div class="score-box" style="background:#444; padding:8px 12px; border-radius:10px; color:white; font-weight:900; min-width:60px;">${modoJogo === 'CPU' ? 'Pc' : 'J2'}: ${matchScore[1]}</div>
             </div>
         </div>`;
 
@@ -261,7 +276,14 @@ function finalizarRonda(vencedorIdx) {
     const pcLabel = modoJogo === 'CPU' ? "Pc" : "Jogador 2";
     const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : pcLabel;
     overlay.style.display = 'flex';
-    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:#8cc63f; font-size:2rem; font-weight:900;">${nomeV}</h1><p>Ganhou a ronda!</p><div style="margin-top:10px; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${modoJogo === 'CPU' ? 'Pc' : 'J2'}</div></div>`;
+    overlay.innerHTML = `
+        <div class="vitoria-card">
+            <h1 style="color:#8cc63f; font-size:2rem; font-weight:900; margin-bottom:5px;">${nomeV}</h1>
+            <p style="font-weight:700; color:#666;">Ganhou a ronda!</p>
+            <div style="margin-top:15px; border-top:2px dashed #eee; padding-top:15px; font-weight:800; font-size:1.1rem;">
+                PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${modoJogo === 'CPU' ? 'Pc' : 'J2'}
+            </div>
+        </div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2000);
     else setTimeout(() => { iniciarJogo(); }, 2000);
 }
@@ -272,13 +294,12 @@ function finalizarMatch() {
     const pcLabel = modoJogo === 'CPU' ? "PC" : "JOGADOR 2";
     const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : pcLabel;
     
-    // ECRÃ DE RESULTADOS FINAL COM PONTOS DETALHADOS
     document.getElementById('shell-header-content').innerHTML = `<h2>RESULTADOS FINAIS</h2>`;
     document.getElementById('game-content').innerHTML = `
         <div style="text-align:center; display:flex; flex-direction:column; align-items:center; gap:20px;">
             <img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:120px;">
             <h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">GANHOU O ${nomeV}</h2>
-            <div style="background:#f4f4f4; padding:15px 30px; border-radius:15px; border:2px dashed #ddd;">
+            <div style="background:#f9f9f9; padding:15px 30px; border-radius:15px; border:2px solid #eee;">
                 <p style="font-weight:800; color:#555; margin:5px 0;">PONTOS JOGADOR 1: <span style="color:#8cc63f;">${matchScore[0]}</span></p>
                 <p style="font-weight:800; color:#555; margin:5px 0;">PONTOS ${pcLabel}: <span style="color:#ff5a5f;">${matchScore[1]}</span></p>
             </div>
