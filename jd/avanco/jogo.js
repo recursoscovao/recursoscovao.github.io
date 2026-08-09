@@ -17,7 +17,7 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ============================================================
-// 2. CONFIGURAÇÃO VISUAL (EQUILIBRADA)
+// 2. CONFIGURAÇÃO VISUAL (DESIGN PREMIUM + EQUILIBRADO)
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
@@ -41,12 +41,16 @@ style.innerHTML = `
     .btn-inform { width: 50px; height: 50px; cursor: pointer; flex: none; }
     .btn-inform img { width: 100%; height: 100%; object-fit: contain; }
 
-    .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 95%; max-width: 400px; align-items: center; }
-    .nivel-row { display: flex; flex-direction: row; gap: 10px; width: 100%; justify-content: center; }
-    .btn-nivel { background: white; padding: 15px 5px; border-radius: 12px; border: 2px solid #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; flex: 1; }
-    .btn-nivel b { font-size: 0.9rem; font-weight: 900; }
-    
-    .btn-voltar-nivel { height: 55px !important; background: #6c757d !important; width: 160px; margin-top: 5px; border-radius: 12px; color: white; font-weight: 900; border: none; cursor: pointer; }
+    /* INSTRUÇÕES PREMIUM RESTAURADAS */
+    #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s ease; transform: translateY(100%); visibility: hidden; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; }
+    #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
+    .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
+    .inst-content { max-width: 600px; margin: 0 auto; text-align: left; }
+    .inst-header { color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 3px solid var(--bg-color); padding-bottom: 10px; }
+    .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 20px 0 10px; display: flex; align-items: center; gap: 10px; }
+    .inst-section-title::before { content: ''; width: 6px; height: 22px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
+    .inst-list { list-style: none; padding: 0; }
+    .inst-list li { background: #f9f9f9; margin-bottom: 8px; padding: 12px 15px; border-radius: 12px; border-left: 4px solid var(--bg-color); color: #555; font-size: 0.95rem; line-height: 1.4; }
 
     /* Tabuleiro Principal */
     .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; width: fit-content; margin: 0 auto; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
@@ -58,50 +62,69 @@ style.innerHTML = `
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); }
 
-    /* Vitória */
+    /* Níveis e Botões */
+    .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 95%; max-width: 400px; align-items: center; }
+    .nivel-row { display: flex; flex-direction: row; gap: 10px; width: 100%; justify-content: center; }
+    .btn-nivel { background: white; padding: 15px 5px; border-radius: 12px; border: 2px solid #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; flex: 1; }
+    .btn-nivel b { font-size: 0.9rem; font-weight: 900; }
+    .btn-voltar-nivel { height: 55px !important; background: #6c757d !important; width: 160px; margin-top: 5px; border-radius: 12px; color: white; font-weight: 900; border: none; cursor: pointer; }
+
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px); z-index: 1000; display: none; align-items: center; justify-content: center; border-radius: 35px; }
     .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); text-align: center; width: 80%; max-width: 350px; }
 
-    /* ============================================================
-       RESPONSIVIDADE AJUSTADA (VALORES EQUILIBRADOS)
-       ============================================================ */
-    
-    /* 1. PC E LAPTOPS */
-    @media screen and (min-width: 1025px) { 
-        :root { --cell-size: 58px; } 
-    }
-
-    /* 2. TABLET VERTICAL (iPad) */
+    /* RESPONSIVIDADE EQUILIBRADA */
+    @media screen and (min-width: 1025px) { :root { --cell-size: 58px; } }
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
         :root { --cell-size: 11.5vw; } 
         #simu-container { height: 320px; }
-        #simu-board { transform: scale(1.15); } 
+        #simu-board { transform: scale(1.1); } 
     }
-
-    /* 3. TELEMÓVEL VERTICAL */
     @media screen and (max-width: 500px) and (orientation: portrait) { 
         :root { --cell-size: 11vw; } 
         #simu-container { height: 240px; }
         #simu-board { transform: scale(0.9); }
     }
-
-    /* 4. LANDSCAPE (HORIZONTAL) */
     @media screen and (max-height: 600px) and (orientation: landscape) { 
         :root { --cell-size: 10vh; }
-        #simu-container { height: 160px; margin-bottom: 10px; }
-        #simu-board { transform: scale(0.7); }
+        #simu-container { height: 160px; }
     }
 `;
 document.head.appendChild(style);
 
 // ============================================================
-// 3. CAPA E INSTRUÇÕES
+// 3. CAPA E INSTRUÇÕES (PAINEL RESTAURADO)
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
-    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; font-size:1.4rem;">${JOGO_CONFIG.nomeDoJogo.toUpperCase()}</h2>`;
+    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">${JOGO_CONFIG.nomeDoJogo.toUpperCase()}</h2>`;
     
+    // Criar Painel de Instruções se não existir
     if(!document.getElementById('instrucoes-panel')) {
+        const panel = document.createElement('div');
+        panel.id = 'instrucoes-panel';
+        panel.innerHTML = `
+            <span class="close-x" onclick="toggleInstructions()">&times;</span>
+            <div class="inst-content">
+                <div class="inst-header">Instruções: Avanço</div>
+                
+                <div class="inst-section-title">Objetivo</div>
+                <p class="inst-text">Vence quem chegar primeiro com qualquer peça à <b>primeira linha do adversário</b>.</p>
+
+                <div class="inst-section-title">Regras de Movimento</div>
+                <ul class="inst-list">
+                    <li><b>Vertical:</b> Podes mover 1 casa para a frente se estiver vazia.</li>
+                    <li><b>Diagonal:</b> Podes mover para as diagonais se estiverem vazias ou para <b>capturar</b> uma peça adversária.</li>
+                </ul>
+
+                <div class="inst-section-title">Capturas</div>
+                <ul class="inst-list">
+                    <li><b>Diagonal apenas:</b> Só podes capturar peças movendo-te na diagonal.</li>
+                    <li><b>Vertical proibida:</b> Não podes capturar peças que estejam diretamente à tua frente.</li>
+                </ul>
+                <div style="height:40px;"></div>
+            </div>`;
+        document.body.appendChild(panel);
+
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
         document.querySelector('.game-shell').appendChild(feedback);
@@ -123,9 +146,9 @@ function mostrarCapa() {
     iniciarSimulacao();
 }
 
-function toggleInstructions() {
-    somClique.play();
-    alert("OBJETIVO: Chegar à primeira linha do adversário.\n\nMOVIMENTO: 1 casa para a frente (se vazia) ou 1 casa na diagonal (vazia ou para capturar).");
+function toggleInstructions() { 
+    somClique.play(); 
+    document.getElementById('instrucoes-panel').classList.toggle('open'); 
 }
 
 function mostrarNiveis(modo) {
