@@ -17,7 +17,7 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ============================================================
-// 2. CONFIGURAÇÃO VISUAL (DESIGN PREMIUM + EQUILIBRADO)
+// 2. CONFIGURAÇÃO VISUAL (REFEITA PARA EQUILÍBRIO DE ESPAÇOS)
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
@@ -32,11 +32,39 @@ style.innerHTML = `
     .blinking { animation: blinker 1s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
 
-    /* Capa e Simulação */
-    #simu-container { height: 280px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-bottom: 20px; }
-    #simu-board { transition: 0.3s; transform: scale(0.9); }
+    /* Contentor Principal da Capa */
+    #game-content { 
+        display: flex; 
+        flex-direction: column; 
+        align-items: center; 
+        justify-content: center; 
+        width: 100%; 
+        height: 100%; 
+        padding: 20px 0; 
+        gap: 30px; /* Padding entre os blocos */
+    }
 
-    .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 500px; justify-content: center; align-items: center; flex-wrap: wrap; }
+    /* Capa e Simulação */
+    #simu-container { 
+        width: 100%; 
+        display: flex; 
+        align-items: center; 
+        justify-content: center; 
+        overflow: visible; 
+        flex-shrink: 1;
+    }
+    #simu-board { transition: 0.3s; transform: scale(0.85); }
+
+    .capa-btn-row { 
+        display: flex; 
+        flex-direction: row; 
+        gap: 12px; 
+        width: 95%; 
+        max-width: 500px; 
+        justify-content: center; 
+        align-items: center; 
+        flex-wrap: wrap; 
+    }
     .btn-capa-small { flex: 1; min-width: 140px; height: 50px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.8rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 0 rgba(0,0,0,0.1); text-transform: uppercase; }
     .btn-inform { width: 50px; height: 50px; cursor: pointer; flex: none; }
     .btn-inform img { width: 100%; height: 100%; object-fit: contain; }
@@ -73,30 +101,39 @@ style.innerHTML = `
     .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); text-align: center; width: 80%; max-width: 350px; }
 
     /* RESPONSIVIDADE EQUILIBRADA */
-    @media screen and (min-width: 1025px) { :root { --cell-size: 58px; } }
+    @media screen and (min-width: 1025px) { 
+        :root { --cell-size: 55px; } 
+        #game-content { gap: 40px; }
+    }
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
-        :root { --cell-size: 11.5vw; } 
-        #simu-container { height: 320px; }
-        #simu-board { transform: scale(1.1); } 
+        :root { --cell-size: 9.5vw; } 
+        #game-content { gap: 35px; padding: 40px 0; }
+        #simu-board { transform: scale(1); } 
     }
     @media screen and (max-width: 500px) and (orientation: portrait) { 
         :root { --cell-size: 11vw; } 
-        #simu-container { height: 240px; }
-        #simu-board { transform: scale(0.9); }
+        #game-content { gap: 20px; }
+        #simu-board { transform: scale(0.8); }
     }
     @media screen and (max-height: 600px) and (orientation: landscape) { 
         :root { --cell-size: 10vh; }
-        #simu-container { height: 160px; }
+        #game-content { gap: 15px; padding: 5px 0; }
+        #simu-board { transform: scale(0.65); }
     }
 `;
 document.head.appendChild(style);
 
 // ============================================================
-// 3. CAPA E INSTRUÇÕES (PAINEL RESTAURADO)
+// 3. CAPA E INSTRUÇÕES (ESTRUTURA: TÍTULO > SIMU > BOTÕES)
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
-    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">${JOGO_CONFIG.nomeDoJogo.toUpperCase()}</h2>`;
+    
+    // Título no Cabeçalho
+    document.getElementById('shell-header-content').innerHTML = `
+        <h2 style="color:var(--primary-color); font-weight:900; font-size:1.4rem;">
+            ${JOGO_CONFIG.nomeDoJogo.toUpperCase()}
+        </h2>`;
     
     // Criar Painel de Instruções se não existir
     if(!document.getElementById('instrucoes-panel')) {
@@ -132,7 +169,12 @@ function mostrarCapa() {
 
     const area = document.getElementById('game-content');
     area.innerHTML = `
-        <div id="simu-container"><div id="simu-board"></div></div>
+        <!-- SEQUÊNCIA: 1. ANIMAÇÃO -->
+        <div id="simu-container">
+            <div id="simu-board"></div>
+        </div>
+
+        <!-- SEQUÊNCIA: 2. BOTÕES -->
         <div id="capa-menu-principal" style="width:100%; display:flex; flex-direction:column; align-items:center;">
             <div class="capa-btn-row">
                 <div class="btn-inform" onclick="toggleInstructions()"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
