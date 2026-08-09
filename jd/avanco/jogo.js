@@ -17,14 +17,14 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ============================================================
-// 2. CONFIGURAÇÃO VISUAL (DESIGN PREMIUM - AJUSTADO PARA TABLETS)
+// 2. CONFIGURAÇÃO VISUAL (OTIMIZADA PARA TABLETS)
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
     .status-container { width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 2px 5px; }
-    .status-pill { padding: 5px 15px; border-radius: 8px; font-weight: 800; font-size: 0.9rem; color: white; display: flex; align-items: center; gap: 10px; }
+    .status-pill { padding: 8px 18px; border-radius: 10px; font-weight: 800; font-size: 1rem; color: white; display: flex; align-items: center; gap: 10px; }
     .score-group { display: flex; gap: 8px; }
-    .score-box { padding: 5px 10px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1rem; min-width: 55px; justify-content: center; }
+    .score-box { padding: 8px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; min-width: 65px; justify-content: center; }
     
     .pill-j1, .box-v { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .pill-j2, .box-x { background: #444 !important; box-shadow: 0 3px 0 #222; }
@@ -32,63 +32,73 @@ style.innerHTML = `
     .blinking { animation: blinker 1s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
 
-    /* Ajuste Capa */
-    #simu-container { height: 300px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: 0px; margin-bottom: 30px; }
-    #simu-board { transform: scale(0.9); transition: 0.3s; }
+    /* Capa e Simulação */
+    #simu-container { height: 350px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-bottom: 20px; }
+    #simu-board { transition: 0.3s; }
 
-    .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 480px; justify-content: center; align-items: center; flex-wrap: wrap; }
-    .btn-capa-small { flex: 1; min-width: 140px; height: 50px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-transform: uppercase; }
-    .btn-inform { width: 50px; height: 50px; cursor: pointer; flex: none; }
+    .capa-btn-row { display: flex; flex-direction: row; gap: 15px; width: 95%; max-width: 600px; justify-content: center; align-items: center; flex-wrap: wrap; }
+    .btn-capa-small { flex: 1; min-width: 160px; height: 60px; border-radius: 15px; border: none; color: white; font-weight: 900; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; }
+    .btn-inform { width: 60px; height: 60px; cursor: pointer; flex: none; }
     .btn-inform img { width: 100%; height: 100%; object-fit: contain; }
 
-    .nivel-select-container { display: none; flex-direction: column; gap: 12px; width: 95%; max-width: 500px; align-items: center; }
-    .nivel-row { display: flex; flex-direction: row; gap: 10px; width: 100%; justify-content: center; }
-    .btn-nivel { background: white; padding: 12px 2px; border-radius: 12px; border: 2px solid #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; flex: 1; }
-    .btn-nivel b { font-size: 0.8rem; font-weight: 900; text-transform: uppercase; }
-    .btn-nivel span { font-size: 0.65rem; font-weight: 700; opacity: 0.7; text-align: center; line-height: 1.1; }
+    .nivel-select-container { display: none; flex-direction: column; gap: 15px; width: 95%; max-width: 500px; align-items: center; }
+    .nivel-row { display: flex; flex-direction: row; gap: 15px; width: 100%; justify-content: center; }
+    .btn-nivel { background: white; padding: 20px 5px; border-radius: 15px; border: 2px solid #eee; display: flex; flex-direction: column; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; flex: 1; }
+    .btn-nivel b { font-size: 1rem; font-weight: 900; text-transform: uppercase; }
+    .btn-nivel span { font-size: 0.75rem; font-weight: 700; opacity: 0.7; }
     .btn-nivel.l1 { border-color: #8cc63f; color: #8cc63f; }
     .btn-nivel.l2 { border-color: #ff5a5f; color: #ff5a5f; }
     
-    .btn-voltar-nivel { height: 60px !important; background: #6c757d !important; width: 160px; margin-top: 10px; border-radius: 12px; color: white; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; }
+    .btn-voltar-nivel { height: 60px !important; background: #6c757d !important; width: 180px; margin-top: 10px; border-radius: 15px; color: white; font-weight: 900; border: none; cursor: pointer; }
 
-    /* INSTRUÇÕES PREMIUM */
+    /* Instruções */
     #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s ease; transform: translateY(100%); visibility: hidden; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
-    .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
+    .close-x { position: absolute; top: 15px; right: 20px; font-size: 3rem; color: #ff5a5f; cursor: pointer; font-weight: 900; }
     
-    .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; width: fit-content; margin: 0 auto; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
-    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    .cell.selected { background: #fff9c4 !important; border: 2px solid #fbc02d; }
+    /* Tabuleiro Principal */
+    .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 5px; background: #bbb; padding: 8px; border-radius: 15px; width: fit-content; margin: 0 auto; box-shadow: 0 10px 25px rgba(0,0,0,0.1); }
+    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 5px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .cell.selected { background: #fff9c4 !important; border: 3px solid #fbc02d; }
     .cell.hint::after { content: ''; width: 30%; height: 30%; background: #8cc63f; border-radius: 50%; opacity: 0.5; }
 
-    .piece { width: 85%; height: 85%; border-radius: 50%; border: 2px solid rgba(0,0,0,0.1); box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: 0.2s; }
+    .piece { width: 85%; height: 85%; border-radius: 50%; border: 2px solid rgba(0,0,0,0.1); box-shadow: 0 4px 10px rgba(0,0,0,0.2); transition: 0.2s; }
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border-color: #ccc; }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); border-color: #000; }
 
-    #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px); z-index: 1000; display: none; align-items: center; justify-content: center; border-radius: 35px; }
-    .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); text-align: center; width: 85%; max-width: 400px; }
+    #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.85); backdrop-filter: blur(8px); z-index: 1000; display: none; align-items: center; justify-content: center; border-radius: 35px; }
+    .vitoria-card { background: white; padding: 40px; border-radius: 35px; box-shadow: 0 20px 50px rgba(0,0,0,0.2); text-align: center; width: 85%; max-width: 450px; }
 
-    /* RESPONSIVIDADE (CELL SIZE) */
-    @media screen and (min-width: 1025px) { :root { --cell-size: 65px; } }
+    /* ============================================================
+       RESPONSIVIDADE DAS CASAS (TABLET FOCUS)
+       ============================================================ */
     
-    /* TABLET VERTICAL (iPad, etc) */
-    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
-        :root { --cell-size: 11vw; } 
-        #simu-container { height: 350px; margin-top: 0; }
-        .grid-board { gap: 6px; padding: 10px; }
+    /* 1. PC */
+    @media screen and (min-width: 1025px) { 
+        :root { --cell-size: 70px; } 
     }
 
-    /* TELEMÓVEL VERTICAL */
+    /* 2. TABLET VERTICAL (Aumentado para preencher melhor) */
+    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
+        :root { --cell-size: 13vw; } 
+        #simu-container { height: 450px; }
+        #simu-board { transform: scale(1.4); } /* Simulação muito maior no tablet */
+        .grid-board { gap: 8px; padding: 12px; }
+        .status-pill { font-size: 1.2rem; padding: 12px 25px; }
+    }
+
+    /* 3. TELEMÓVEL VERTICAL */
     @media screen and (max-width: 500px) and (orientation: portrait) { 
         :root { --cell-size: 11.5vw; } 
-        #simu-container { height: 260px; margin-top: -20px; }
+        #simu-container { height: 260px; }
+        #simu-board { transform: scale(1); }
     }
 
-    /* MODO HORIZONTAL (LANDSCAPE) */
+    /* 4. LANDSCAPE (Geral) */
     @media screen and (max-height: 600px) and (orientation: landscape) { 
-        :root { --cell-size: 10vh; }
-        #simu-container { height: 180px; margin-top: -30px; }
-        .grid-board { gap: 3px; padding: 4px; }
+        :root { --cell-size: 11vh; }
+        #simu-container { height: 200px; }
+        #simu-board { transform: scale(0.85); }
     }
 `;
 document.head.appendChild(style);
@@ -107,21 +117,12 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Instruções: Avanço</div>
-                
                 <div class="inst-section-title">Objetivo</div>
-                <p class="inst-text">O Avanço é uma corrida estratégica. Vence o jogador que conseguir chegar com qualquer uma das suas peças à <b>primeira linha do adversário</b>.</p>
-
-                <div class="inst-section-title">Regras de Movimento</div>
+                <p class="inst-text">Chegar com qualquer uma das tuas peças à primeira linha do adversário.</p>
+                <div class="inst-section-title">Regras</div>
                 <ul class="inst-list">
-                    <li><b>Sentido:</b> As Brancas "sobem" e as Negras "descem".</li>
-                    <li><b>Em frente (Vertical):</b> Move para a frente se a casa estiver <b>vazia</b>.</li>
-                    <li><b>Diagonais:</b> Move para as diagonais à frente se estiverem <b>vazias</b> ou com <b>peça adversária</b>.</li>
-                </ul>
-
-                <div class="inst-section-title">Capturas</div>
-                <ul class="inst-list">
-                    <li><b>Como capturar:</b> Apenas movendo na diagonal para uma casa ocupada.</li>
-                    <li><b>Importante:</b> Não podes capturar a peça diretamente à tua frente.</li>
+                    <li><b>Vertical:</b> Move 1 casa se estiver vazia.</li>
+                    <li><b>Diagonal:</b> Move para vazia ou captura adversária.</li>
                 </ul>
                 <div style="height:40px;"></div>
             </div>`;
@@ -153,10 +154,10 @@ function mostrarNiveis(modo) {
     const container = document.getElementById('nivel-select-container');
     container.style.display = 'flex';
     container.innerHTML = `
-        <p style="font-weight:800; color:#888; margin-bottom:10px; font-size:0.8rem; text-transform:uppercase;">Jogar com o ${modo === 'CPU' ? 'computador' : 'adversário'}:</p>
+        <p style="font-weight:800; color:#888; margin-bottom:10px; text-transform:uppercase;">Dificuldade:</p>
         <div class="nivel-row">
-            <div class="btn-nivel l1" onclick="setModo('${modo}', 1)"><b>Nível 1</b><span>Fácil</span></div>
-            <div class="btn-nivel l2" onclick="setModo('${modo}', 2)"><b>Nível 2</b><span>Difícil</span></div>
+            <div class="btn-nivel l1" onclick="setModo('${modo}', 1)"><b>Fácil</b></div>
+            <div class="btn-nivel l2" onclick="setModo('${modo}', 2)"><b>Difícil</b></div>
         </div>
         <button class="btn-capa-small btn-voltar-nivel" onclick="voltarCapa()">VOLTAR</button>`;
 }
@@ -186,11 +187,11 @@ function iniciarJogo() {
 
 function atualizarUI() {
     const pcLabel = modoJogo === 'CPU' ? "Pc" : "J2";
-    const nomeVez = (turnoAtual === 0) ? "Jogador 1" : (modoJogo === 'CPU' ? "Pc" : "Jogador 2");
+    const nomeVez = (turnoAtual === 0) ? "J1" : (modoJogo === 'CPU' ? "Pc" : "J2");
     const classPill = (turnoAtual === 0) ? "pill-j1" : "pill-j2";
     document.getElementById('shell-header-content').innerHTML = `
         <div class="status-container">
-            <div class="status-pill ${classPill} blinking">VEZ DO ${nomeVez.toUpperCase()}</div>
+            <div class="status-pill ${classPill} blinking">VEZ DE: ${nomeVez}</div>
             <div class="score-group"><div class="score-box box-v">J1: ${matchScore[0]}</div><div class="score-box box-x">${pcLabel}: ${matchScore[1]}</div></div>
         </div>`;
     const area = document.getElementById('game-content');
@@ -270,7 +271,7 @@ function finalizarRonda(vencedorIdx) {
     const overlay = document.getElementById('round-feedback');
     const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
     overlay.style.display = 'flex';
-    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:#8cc63f; font-size:2rem; font-weight:900;">${nomeV}</h1><p>Ganhou a ronda!</p><div style="margin-top:15px; border-top:2px dashed #eee; padding-top:10px; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${modoJogo==='CPU'?'Pc':'J2'}</div></div>`;
+    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:#8cc63f; font-size:2.5rem; font-weight:900;">${nomeV}</h1><p>Ganhou a ronda!</p><div style="margin-top:15px; font-weight:800; font-size:1.2rem;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${modoJogo==='CPU'?'Pc':'J2'}</div></div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2000);
     else setTimeout(() => { currentGameNum++; iniciarJogo(); }, 2000);
 }
@@ -280,9 +281,9 @@ function finalizarMatch() {
     const vencedorIdx = matchScore[0] >= 3 ? 0 : 1;
     const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
     document.getElementById('shell-header-content').innerHTML = `<h2>RESULTADOS FINAIS</h2>`;
-    document.getElementById('game-content').innerHTML = `<div style="text-align:center;"><img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:120px;"><h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase; margin-bottom:20px;">GANHOU O ${nomeV}</h2></div>`;
+    document.getElementById('game-content').innerHTML = `<div style="text-align:center;"><img src="${JOGO_CONFIG.caminhoIconsMenu}taca_1.png" style="height:150px;"><h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase; margin-bottom:20px; font-size:2rem;">GANHOU O ${nomeV}</h2></div>`;
     const footer = document.getElementById('shell-footer-content');
-    footer.style.display = "flex"; footer.style.gap = "10px";
+    footer.style.display = "flex"; footer.style.gap = "15px";
     footer.innerHTML = `<button class="btn-capa-small" style="background:#6c757d; flex:1;" onclick="location.reload()">REPETIR</button><button class="btn-capa-small" style="background:var(--primary-color); flex:1;" onclick="window.history.back()">SAIR</button>`;
 }
 
@@ -299,7 +300,7 @@ function iniciarSimulacao() {
         }
         if (moves.length === 0) for(let c=0; c<7; c++) { sTab[0][c] = 2; sTab[1][c] = 2; sTab[5][c] = 1; sTab[6][c] = 1; }
         else { let m = moves[Math.floor(Math.random() * moves.length)]; sTab[m.tr][m.tc] = sTab[m.fr][m.fc]; sTab[m.fr][m.fc] = 0; }
-        let h = `<div class="grid-board" style="opacity:0.4; pointer-events:none; transform:scale(0.8);">`;
+        let h = `<div class="grid-board" style="opacity:0.4; pointer-events:none; transform:scale(0.85);">`;
         for(let r=0;r<7;r++) for(let c=0;c<7;c++) {
             h+=`<div class="cell">`;
             if(sTab[r][c]===1) h+='<div class="piece white"></div>';
