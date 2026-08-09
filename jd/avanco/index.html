@@ -13,7 +13,6 @@
         :root { --primary-color: #5EA2E6; --bg-color: #EAF4FE; --text-grey: #8792a1; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
-        /* Ajuste para permitir scroll em tablets e telemóveis se o conteúdo for grande */
         body, html { 
             min-height: 100vh; 
             width: 100vw; 
@@ -47,7 +46,6 @@
             padding: 15px; 
         }
 
-        /* O Game Shell agora adapta-se à altura do conteúdo */
         .game-shell { 
             background: white; 
             width: min(1100px, 100%); 
@@ -75,12 +73,15 @@
         .hamburger-btn:hover { transform: scale(1.1); opacity: 0.7; }
 
         /* ============================================================
-           2. TABLET VERTICAL (PORTRAIT)
+           2. TABLET VERTICAL (PORTRAIT) - CORREÇÃO DO ICON
            ============================================================ */
         @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
             header { height: 85px; }
-            #txt-titulo1 { font-size: 1.4rem; }
+            #header-icon { height: 50px; width: auto; } /* Limita o tamanho do icon no tablet vertical */
+            #txt-titulo1 { font-size: 1.3rem; }
             #txt-titulo2 { font-size: 1.1rem; }
+            #txt-subtitulo-header { font-size: 0.65rem; display: flex; color: var(--text-grey); }
+            
             .game-shell { width: 95%; min-height: 600px; }
             main { padding: 20px 10px; }
         }
@@ -104,7 +105,7 @@
            ============================================================ */
         @media screen and (max-width: 500px) and (orientation: portrait) {
             header { height: 80px; }
-            #header-icon { height: 50px; }
+            #header-icon { height: 48px; }
             #txt-titulo1 { font-size: 1.15rem; }
             #txt-titulo2 { font-size: 1rem; }
             #txt-subtitulo-header { font-size: 0.6rem; display: flex; color: var(--text-grey); }
@@ -120,10 +121,10 @@
            ============================================================ */
         @media screen and (max-height: 500px) and (orientation: landscape) {
             header { height: 75px; }
-            #header-icon { height: 45px; }
+            #header-icon { height: 40px; }
             #txt-titulo1 { font-size: 1.1rem; }
             #txt-titulo2 { font-size: 0.9rem; }
-            #txt-subtitulo-header { display: flex; font-size: 0.6rem; }
+            #txt-subtitulo-header { display: flex; font-size: 0.55rem; color: var(--text-grey); }
             
             main { padding: 5px; }
             .game-shell { border-radius: 20px; min-height: 400px; margin-bottom: 15px; }
