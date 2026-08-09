@@ -35,37 +35,45 @@ style.innerHTML = `
     .btn-inform { width: clamp(45px, 6.5vh, 60px); height: clamp(45px, 6.5vh, 60px); cursor: pointer; flex: none; }
     .btn-inform img { width: 100%; height: 100%; object-fit: contain; }
 
-    /* INSTRUÇÕES PREMIUM - SLIDE DE BAIXO PARA CIMA */
+    /* INSTRUÇÕES PREMIUM - DESIGN DRAWER (BAIXO PARA CIMA) */
     #instrucoes-panel { 
         position: fixed; bottom: 0; left: 0; width: 100vw; height: 100vh; 
         background: white; z-index: 10000; 
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+        transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1); 
         transform: translateY(100%); 
         visibility: hidden; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; 
+        box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
     }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
-    .close-x { position: absolute; top: 15px; right: 25px; font-size: 3rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; }
+    
+    .close-x { position: absolute; top: 15px; right: 25px; font-size: 3rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
+    .close-x:hover { transform: scale(1.1); }
 
-    /* CORES DA BARRA DE STATUS */
+    .inst-content { max-width: 650px; margin: 0 auto; text-align: left; font-family: 'Nunito', sans-serif; }
+    .inst-header { color: var(--primary-color); text-align: center; font-size: 2rem; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; border-bottom: 4px solid var(--bg-color); padding-bottom: 10px; }
+    .inst-section-title { color: #333; font-size: 1.3rem; font-weight: 800; margin: 25px 0 12px; display: flex; align-items: center; gap: 12px; }
+    .inst-section-title i { color: var(--primary-color); font-size: 1.1rem; }
+    .inst-text { color: #555; font-size: 1.05rem; line-height: 1.6; margin-bottom: 15px; }
+    .inst-list { list-style: none; padding: 0; }
+    .inst-list li { background: #f8f9fa; margin-bottom: 10px; padding: 15px; border-radius: 15px; border-left: 5px solid var(--primary-color); color: #444; font-size: 1rem; line-height: 1.5; }
+    .inst-list b { color: #222; }
+
+    /* BARRA DE STATUS */
     .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .pill-j2 { background: #444 !important; box-shadow: 0 3px 0 #222; }
     .blinking { animation: blinker 1.5s linear infinite; }
-    @keyframes blinker { 50% { opacity: 0.4; } }
+    @keyframes blinker { 50% { opacity: 0.5; } }
 
-    /* TABULEIRO E PEÇAS */
+    /* TABULEIRO */
     .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; margin: 0 auto; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; }
     .piece { width: 80%; height: 80%; border-radius: 50%; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); }
 
-    /* POPUP DE VITÓRIA (CENTRADO NO CENTRO DO JOGO) */
-    #round-feedback { 
-        position: absolute; top: 0; left: 0; width: 100%; height: 100%; 
-        background: rgba(255,255,255,0.92); z-index: 2000; 
-        display: none; align-items: center; justify-content: center; text-align: center;
-    }
-    .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); width: 85%; max-width: 350px; border: 2px solid #eee; }
+    /* POPUP VITÓRIA */
+    #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; text-align: center; }
+    .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); width: 80%; max-width: 350px; }
 
     /* RESPONSIVIDADE */
     @media screen and (min-width: 1025px) { :root { --cell-size: min(55px, 7.5vh); } }
@@ -83,7 +91,7 @@ document.head.appendChild(style);
 
 
 // ============================================================
-// === SECÇÃO 3: CAPA E INSTRUÇÕES (INÍCIO) ===
+// === SECÇÃO 3: CAPA E INSTRUÇÕES PREMIUM (INÍCIO) ===
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -95,26 +103,33 @@ function mostrarCapa() {
         panel.innerHTML = `
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
-                <div class="inst-header">Instruções: Avanço</div>
-                <div class="inst-section-title">Objetivo</div>
-                <p>Vence quem chegar primeiro com qualquer uma das suas peças à <b>primeira linha do adversário</b>.</p>
-                <div class="inst-section-title">Regras de Movimento</div>
+                <div class="inst-header">Como Jogar Avanço</div>
+                
+                <div class="inst-section-title"><i class="fas fa-bullseye"></i> O Objetivo</div>
+                <p class="inst-text">O Avanço é uma corrida estratégica. O teu objetivo é simples: ser o primeiro a levar qualquer uma das tuas peças à <b>última linha do adversário</b>.</p>
+
+                <div class="inst-section-title"><i class="fas fa-arrows-alt"></i> Movimentos Permitidos</div>
                 <ul class="inst-list">
-                    <li><b>Vertical:</b> Move 1 casa para a frente apenas se estiver vazia.</li>
-                    <li><b>Diagonal:</b> Move para as diagonais se estiverem vazias ou para <b>capturar</b> uma peça adversária.</li>
+                    <li><b>Movimento Vertical:</b> Podes avançar uma casa para a frente, desde que esta esteja <b>vazia</b>.</li>
+                    <li><b>Movimento Diagonal:</b> Podes mover-te para as duas casas diagonais à frente. Estas casas podem estar vazias ou ocupadas por uma peça do adversário.</li>
                 </ul>
-                <div class="inst-section-title">Capturas</div>
+
+                <div class="inst-section-title"><i class="fas fa-fist-raised"></i> Como Capturar</div>
                 <ul class="inst-list">
-                    <li><b>Só Diagonais:</b> Capturas apenas em movimento diagonal.</li>
-                    <li><b>Vertical:</b> Não é permitido capturar na vertical.</li>
+                    <li><b>Captura Diagonal:</b> Se uma peça adversária estiver na tua diagonal frontal, podes movê-la para essa casa e remover a peça dele do jogo.</li>
+                    <li><b>Proibido na Vertical:</b> Não podes capturar peças que estejam diretamente à tua frente. Apenas as diagonais permitem capturas.</li>
                 </ul>
-                <div style="height:40px;"></div>
+
+                <div class="inst-section-title"><i class="fas fa-trophy"></i> Vitória</div>
+                <p class="inst-text">O jogo termina no instante em que uma peça toca a linha de fundo oposta. Ganha o melhor de 5 rondas (quem chegar primeiro às 3 vitórias)!</p>
+                
+                <div style="height:50px;"></div>
             </div>`;
         document.body.appendChild(panel);
 
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
-        document.querySelector('.game-shell').appendChild(feedback);
+        document.getElementById('game-content').parentElement.appendChild(feedback);
     }
 
     const area = document.getElementById('game-content');
@@ -185,12 +200,12 @@ function atualizarUI() {
     
     document.getElementById('shell-header-content').innerHTML = `
         <div class="status-container" style="width:100%; display:flex; justify-content:space-between; align-items:center;">
-            <div class="status-pill ${classPill} blinking" style="padding:8px 18px; border-radius:10px; color:white; font-weight:900; font-size:0.95rem; text-transform:uppercase;">
+            <div class="status-pill ${classPill} blinking" style="padding:10px 20px; border-radius:12px; color:white; font-weight:900; font-size:1rem; text-transform:uppercase;">
                 VEZ DE: ${nomeVez}
             </div>
             <div class="score-group" style="display:flex; gap:6px;">
-                <div class="score-box" style="background:#8cc63f; padding:8px 12px; border-radius:10px; color:white; font-weight:900; min-width:60px;">J1: ${matchScore[0]}</div>
-                <div class="score-box" style="background:#444; padding:8px 12px; border-radius:10px; color:white; font-weight:900; min-width:60px;">${modoJogo === 'CPU' ? 'Pc' : 'J2'}: ${matchScore[1]}</div>
+                <div class="score-box" style="background:#8cc63f; padding:8px 12px; border-radius:10px; color:white; font-weight:900; min-width:60px; text-align:center;">J1: ${matchScore[0]}</div>
+                <div class="score-box" style="background:#444; padding:8px 12px; border-radius:10px; color:white; font-weight:900; min-width:60px; text-align:center;">${modoJogo === 'CPU' ? 'Pc' : 'J2'}: ${matchScore[1]}</div>
             </div>
         </div>`;
 
@@ -276,14 +291,7 @@ function finalizarRonda(vencedorIdx) {
     const pcLabel = modoJogo === 'CPU' ? "Pc" : "Jogador 2";
     const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : pcLabel;
     overlay.style.display = 'flex';
-    overlay.innerHTML = `
-        <div class="vitoria-card">
-            <h1 style="color:#8cc63f; font-size:2rem; font-weight:900; margin-bottom:5px;">${nomeV}</h1>
-            <p style="font-weight:700; color:#666;">Ganhou a ronda!</p>
-            <div style="margin-top:15px; border-top:2px dashed #eee; padding-top:15px; font-weight:800; font-size:1.1rem;">
-                PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${modoJogo === 'CPU' ? 'Pc' : 'J2'}
-            </div>
-        </div>`;
+    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:#8cc63f; font-size:2rem; font-weight:900;">${nomeV}</h1><p style="font-weight:700; color:#666;">Ganhou a ronda!</p><div style="margin-top:10px; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${modoJogo === 'CPU' ? 'Pc' : 'J2'}</div></div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2000);
     else setTimeout(() => { iniciarJogo(); }, 2000);
 }
