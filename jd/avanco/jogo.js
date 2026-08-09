@@ -15,10 +15,9 @@ let simuInterval;
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
-// [FIM DA SECÇÃO 1]
 
 // ============================================================
-// 2. CONFIGURAÇÃO VISUAL (DESIGN PREMIUM)
+// 2. CONFIGURAÇÃO VISUAL (DESIGN PREMIUM - AJUSTADO PARA TABLETS)
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
@@ -33,14 +32,12 @@ style.innerHTML = `
     .blinking { animation: blinker 1s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
 
-    /* Ajuste Capa: Simulação mais acima e mais padding */
-    #simu-container { height: 320px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: -60px !important; margin-bottom: 50px !important; }
-    
-    /* ESCALA DA ANIMAÇÃO AJUSTADA PARA 0.95 */
-    #simu-board { transform: scale(0.95); transition: 0.3s; }
+    /* Ajuste Capa */
+    #simu-container { height: 300px; display: flex; align-items: center; justify-content: center; width: 100%; overflow: visible; margin-top: 0px; margin-bottom: 30px; }
+    #simu-board { transform: scale(0.9); transition: 0.3s; }
 
-    .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 480px; justify-content: center; align-items: center; }
-    .btn-capa-small { flex: 1; height: 50px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-transform: uppercase; }
+    .capa-btn-row { display: flex; flex-direction: row; gap: 10px; width: 95%; max-width: 480px; justify-content: center; align-items: center; flex-wrap: wrap; }
+    .btn-capa-small { flex: 1; min-width: 140px; height: 50px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.75rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.1); text-transform: uppercase; }
     .btn-inform { width: 50px; height: 50px; cursor: pointer; flex: none; }
     .btn-inform img { width: 100%; height: 100%; object-fit: contain; }
 
@@ -52,41 +49,52 @@ style.innerHTML = `
     .btn-nivel.l1 { border-color: #8cc63f; color: #8cc63f; }
     .btn-nivel.l2 { border-color: #ff5a5f; color: #ff5a5f; }
     
-    /* Botão Voltar: 65px de altura */
-    .btn-voltar-nivel { height: 65px !important; background: #6c757d !important; width: 160px; margin-top: 10px; border-radius: 12px; color: white; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; }
+    .btn-voltar-nivel { height: 60px !important; background: #6c757d !important; width: 160px; margin-top: 10px; border-radius: 12px; color: white; font-weight: 900; border: none; cursor: pointer; text-transform: uppercase; }
 
     /* INSTRUÇÕES PREMIUM */
     #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s ease; transform: translateY(100%); visibility: hidden; padding: 40px 25px; overflow-y: auto; border-radius: 35px 35px 0 0; }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 2.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
     
-    .inst-content { max-width: 600px; margin: 0 auto; text-align: left; }
-    .inst-header { color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 3px solid var(--bg-color); padding-bottom: 10px; }
-    .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 20px 0 10px; display: flex; align-items: center; gap: 10px; }
-    .inst-section-title::before { content: ''; width: 6px; height: 22px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
-    .inst-list { list-style: none; padding: 0; }
-    .inst-list li { background: #f9f9f9; margin-bottom: 8px; padding: 12px 15px; border-radius: 12px; border-left: 4px solid var(--bg-color); color: #555; font-size: 0.95rem; line-height: 1.4; }
-
-    .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 3px; background: #bbb; padding: 4px; border-radius: 8px; width: fit-content; margin: 0 auto; }
-    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 2px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; }
+    .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; width: fit-content; margin: 0 auto; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
+    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; position: relative; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     .cell.selected { background: #fff9c4 !important; border: 2px solid #fbc02d; }
-    .cell.hint::after { content: ''; width: 10px; height: 10px; background: #8cc63f; border-radius: 50%; opacity: 0.6; }
+    .cell.hint::after { content: ''; width: 30%; height: 30%; background: #8cc63f; border-radius: 50%; opacity: 0.5; }
 
-    .piece { width: 80%; height: 80%; border-radius: 50%; border: 2px solid rgba(0,0,0,0.1); box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
-    .piece.white { background: #fff; border-color: #ddd; }
-    .piece.black { background: #333; border-color: #000; }
+    .piece { width: 85%; height: 85%; border-radius: 50%; border: 2px solid rgba(0,0,0,0.1); box-shadow: 0 4px 8px rgba(0,0,0,0.2); transition: 0.2s; }
+    .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border-color: #ccc; }
+    .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); border-color: #000; }
 
-    #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.75); backdrop-filter: blur(4px); z-index: 1000; display: none; align-items: center; justify-content: center; border-radius: 35px; }
-    .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); text-align: center; }
+    #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(5px); z-index: 1000; display: none; align-items: center; justify-content: center; border-radius: 35px; }
+    .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 35px rgba(0,0,0,0.15); text-align: center; width: 85%; max-width: 400px; }
 
-    @media screen and (min-width: 1025px) { :root { --cell-size: 55px; } }
-    @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 11vw; } }
-    @media screen and (max-height: 500px) and (orientation: landscape) { :root { --cell-size: 10vh; } }
+    /* RESPONSIVIDADE (CELL SIZE) */
+    @media screen and (min-width: 1025px) { :root { --cell-size: 65px; } }
+    
+    /* TABLET VERTICAL (iPad, etc) */
+    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
+        :root { --cell-size: 11vw; } 
+        #simu-container { height: 350px; margin-top: 0; }
+        .grid-board { gap: 6px; padding: 10px; }
+    }
+
+    /* TELEMÓVEL VERTICAL */
+    @media screen and (max-width: 500px) and (orientation: portrait) { 
+        :root { --cell-size: 11.5vw; } 
+        #simu-container { height: 260px; margin-top: -20px; }
+    }
+
+    /* MODO HORIZONTAL (LANDSCAPE) */
+    @media screen and (max-height: 600px) and (orientation: landscape) { 
+        :root { --cell-size: 10vh; }
+        #simu-container { height: 180px; margin-top: -30px; }
+        .grid-board { gap: 3px; padding: 4px; }
+    }
 `;
 document.head.appendChild(style);
 
 // ============================================================
-// 3. CAPA E INSTRUÇÕES (COMPLETAS)
+// 3. CAPA E INSTRUÇÕES
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -101,25 +109,20 @@ function mostrarCapa() {
                 <div class="inst-header">Instruções: Avanço</div>
                 
                 <div class="inst-section-title">Objetivo</div>
-                <p class="inst-text">O Avanço é uma corrida estratégica. Vence o jogador que conseguir chegar com qualquer uma das suas peças à <b>primeira linha do adversário</b> (a Linha 1 para as Brancas e a Linha 7 para as Negras).</p>
+                <p class="inst-text">O Avanço é uma corrida estratégica. Vence o jogador que conseguir chegar com qualquer uma das suas peças à <b>primeira linha do adversário</b>.</p>
 
                 <div class="inst-section-title">Regras de Movimento</div>
                 <ul class="inst-list">
-                    <li><b>Sentido:</b> As peças movem-se sempre em direção ao campo adversário (as Brancas "sobem" e as Negras "descem").</li>
-                    <li><b>Em frente (Vertical):</b> Podes mover uma peça para a casa imediatamente à frente se esta estiver <b>vazia</b>.</li>
-                    <li><b>Diagonais:</b> Podes mover uma peça para uma das duas casas diagonais à frente se estas estiverem <b>vazias</b> ou ocupadas por uma <b>peça adversária</b>.</li>
+                    <li><b>Sentido:</b> As Brancas "sobem" e as Negras "descem".</li>
+                    <li><b>Em frente (Vertical):</b> Move para a frente se a casa estiver <b>vazia</b>.</li>
+                    <li><b>Diagonais:</b> Move para as diagonais à frente se estiverem <b>vazias</b> ou com <b>peça adversária</b>.</li>
                 </ul>
 
                 <div class="inst-section-title">Capturas</div>
                 <ul class="inst-list">
-                    <li><b>Como capturar:</b> As capturas são feitas movendo a tua peça para a casa ocupada por um adversário, mas <b>apenas na diagonal</b>.</li>
-                    <li><b>Remoção:</b> A peça capturada é removida permanentemente do tabuleiro.</li>
-                    <li><b>Importante:</b> Não podes capturar uma peça que esteja diretamente à tua frente (na vertical).</li>
+                    <li><b>Como capturar:</b> Apenas movendo na diagonal para uma casa ocupada.</li>
+                    <li><b>Importante:</b> Não podes capturar a peça diretamente à tua frente.</li>
                 </ul>
-
-                <div class="inst-section-title">Notas de Jogo</div>
-                <p class="inst-text">As peças são obrigadas a mover-se sempre para a frente. O jogo termina rapidamente e <b>nunca há empates</b>, pois a peça mais avançada terá sempre um movimento possível.</p>
-                
                 <div style="height:40px;"></div>
             </div>`;
         document.body.appendChild(panel);
@@ -162,7 +165,7 @@ function voltarCapa() { somClique.play(); document.getElementById('capa-menu-pri
 function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
 
 // ============================================================
-// 4. LÓGICA CORE DO JOGO
+// 4. LÓGICA CORE
 // ============================================================
 function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
@@ -176,10 +179,7 @@ function iniciarJogo() {
     jogoAtivo = true;
     selectedPiece = null;
     tabuleiro = Array(7).fill().map(() => Array(7).fill(0));
-    // Pretas no TOPO (descem)
-    for(let c=0; c<7; c++) { tabuleiro[0][c] = 2; tabuleiro[1][c] = 2; }
-    // Brancas na BASE (sobem)
-    for(let c=0; c<7; c++) { tabuleiro[5][c] = 1; tabuleiro[6][c] = 1; }
+    for(let c=0; c<7; c++) { tabuleiro[0][c] = 2; tabuleiro[1][c] = 2; tabuleiro[5][c] = 1; tabuleiro[6][c] = 1; }
     document.getElementById('round-feedback').style.display = 'none';
     atualizarUI();
 }
@@ -228,7 +228,7 @@ function getLegalMoves(r, c) {
     const player = tabuleiro[r][c];
     if(player === 0) return [];
     let moves = [];
-    const step = (player === 1) ? -1 : 1; // Branca sobe, Preta desce
+    const step = (player === 1) ? -1 : 1;
     const opponent = (player === 1) ? 2 : 1;
     if(r + step >= 0 && r + step < 7) {
         if(tabuleiro[r + step][c] === 0) moves.push({r: r + step, c: c});
@@ -268,10 +268,9 @@ function iaControlador() {
 function finalizarRonda(vencedorIdx) {
     jogoAtivo = false; matchScore[vencedorIdx]++; somAcerto.play();
     const overlay = document.getElementById('round-feedback');
-    const nomeVencedor = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
-    const corVencedor = vencedorIdx === 0 ? "#8cc63f" : "#444";
+    const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "JOGADOR 2");
     overlay.style.display = 'flex';
-    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:#8cc63f; font-size:2.2rem; font-weight:900;">${nomeVencedor}</h1><p>Ganhou a ronda!</p><div style="margin-top:15px; border-top:2px dashed #eee; padding-top:10px; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} Pc</div></div>`;
+    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:#8cc63f; font-size:2rem; font-weight:900;">${nomeV}</h1><p>Ganhou a ronda!</p><div style="margin-top:15px; border-top:2px dashed #eee; padding-top:10px; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${modoJogo==='CPU'?'Pc':'J2'}</div></div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2000);
     else setTimeout(() => { currentGameNum++; iniciarJogo(); }, 2000);
 }
