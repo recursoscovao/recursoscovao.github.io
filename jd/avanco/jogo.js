@@ -44,17 +44,17 @@ style.innerHTML = `
         min-height: 150px;
     }
 
-    /* Bloco 2: Botões da Capa */
-    #capa-menu-principal {
+    /* Bloco 2: Botões da Capa e Seleção de Nível */
+    #capa-menu-principal, #nivel-select-container {
         width: 100%;
         display: flex;
         flex-direction: column;
         align-items: center;
-        gap: 15px; /* Espaço entre a linha de botões e outros elementos */
+        gap: 15px; 
         padding-bottom: 5px;
     }
 
-    .capa-btn-row { 
+    .capa-btn-row, .nivel-row { 
         display: flex; 
         flex-direction: row; 
         gap: 10px; 
@@ -62,13 +62,13 @@ style.innerHTML = `
         max-width: 550px; 
         justify-content: center; 
         align-items: center; 
-        flex-wrap: nowrap; /* Impede quebra para manter alinhamento */
+        flex-wrap: nowrap; 
     }
 
     /* Botões Premium */
     .btn-capa-small { 
         flex: 1; 
-        height: clamp(45px, 7vh, 60px); /* Altura adaptável */
+        height: clamp(45px, 7vh, 60px); 
         border-radius: 12px; 
         border: none; 
         color: white; 
@@ -121,36 +121,27 @@ style.innerHTML = `
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
 
     /* ============================================================
-       RESPONSIVIDADE CRITERIOSA (DIFERENTES DISPOSITIVOS)
+       RESPONSIVIDADE CRITERIOSA
        ============================================================ */
-    
-    /* PC / LANDSCAPE GRANDE */
     @media screen and (min-width: 1025px) {
         :root { --cell-size: min(55px, 7.5vh); }
         #simu-board { transform: scale(1); }
     }
-
-    /* TABLET VERTICAL (PORTRAIT) */
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
         :root { --cell-size: 9.5vw; }
         #simu-board { transform: scale(1.1); }
         #game-content { padding: 40px 20px; }
     }
-
-    /* TELEMÓVEL VERTICAL (PORTRAIT) */
     @media screen and (max-width: 500px) and (orientation: portrait) {
         :root { --cell-size: 11vw; }
         #simu-board { transform: scale(0.85); }
-        .capa-btn-row { width: 100%; gap: 8px; }
     }
-
-    /* TODOS OS DISPOSITIVOS EM LANDSCAPE (Telemóvel/Tablet deitado) */
     @media screen and (max-height: 550px) and (orientation: landscape) {
         :root { --cell-size: 10vh; }
         #game-content { flex-direction: row; justify-content: center; gap: 30px; padding: 5px; }
         #simu-board { transform: scale(0.65); }
-        #capa-menu-principal { width: auto; }
-        .capa-btn-row { flex-direction: column; width: 180px; }
+        #capa-menu-principal, #nivel-select-container { width: auto; }
+        .capa-btn-row, .nivel-row { flex-direction: column; width: 180px; }
         #simu-container { flex: none; width: auto; }
     }
 `;
@@ -161,11 +152,7 @@ document.head.appendChild(style);
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
-
-    document.getElementById('shell-header-content').innerHTML = `
-        <h2 style="color:var(--primary-color); font-weight:900; font-size:clamp(1.1rem, 3vw, 1.5rem); text-align:center; width:100%;">
-            ${JOGO_CONFIG.nomeDoJogo.toUpperCase()}
-        </h2>`;
+    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; font-size:clamp(1.1rem, 3vw, 1.5rem); text-align:center; width:100%;">${JOGO_CONFIG.nomeDoJogo.toUpperCase()}</h2>`;
     
     if(!document.getElementById('round-feedback')) {
         const feedback = document.createElement('div');
@@ -175,24 +162,15 @@ function mostrarCapa() {
 
     const area = document.getElementById('game-content');
     area.innerHTML = `
-        <div id="simu-container">
-            <div id="simu-board"></div>
-        </div>
-
+        <div id="simu-container"><div id="simu-board"></div></div>
         <div id="capa-menu-principal">
             <div class="capa-btn-row">
-                <div class="btn-inform" onclick="toggleInstructions()">
-                    <img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png">
-                </div>
-                <button class="btn-capa-small" style="background:var(--primary-color);" onclick="mostrarNiveis('CPU')">
-                    <i class="fas fa-robot"></i> COMPUTADOR
-                </button>
-                <button class="btn-capa-small" style="background:#6c757d;" onclick="mostrarNiveis('PVP')">
-                    <i class="fas fa-users"></i> 2 JOGADORES
-                </button>
+                <div class="btn-inform" onclick="toggleInstructions()"><img src="${JOGO_CONFIG.caminhoIconsMenu}inform.png"></div>
+                <button class="btn-capa-small" style="background:var(--primary-color);" onclick="mostrarNiveis('CPU')"><i class="fas fa-robot"></i> COMPUTADOR</button>
+                <button class="btn-capa-small" style="background:#6c757d;" onclick="mostrarNiveis('PVP')"><i class="fas fa-users"></i> 2 JOGADORES</button>
             </div>
         </div>
-        <div id="nivel-select-container" class="nivel-select-container"></div>
+        <div id="nivel-select-container" style="display:none;"></div>
     `;
     
     if(!document.getElementById('instrucoes-panel')) {
@@ -217,29 +195,25 @@ function mostrarCapa() {
     iniciarSimulacao();
 }
 
-function toggleInstructions() { 
-    somClique.play(); 
-    document.getElementById('instrucoes-panel').classList.toggle('open'); 
-}
+function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
 
 function mostrarNiveis(modo) {
     somClique.play();
     document.getElementById('capa-menu-principal').style.display = 'none';
     const container = document.getElementById('nivel-select-container');
     container.style.display = 'flex';
-    container.className = 'nivel-select-container'; 
     
     container.innerHTML = `
-        <p style="font-weight:800; color:#888; font-size:0.8rem; text-transform:uppercase; margin-bottom:15px;">Dificuldade:</p>
+        <p style="font-weight:800; color:#888; font-size:0.8rem; text-transform:uppercase; margin-bottom:5px;">Dificuldade:</p>
         
-        <!-- Linha com os dois botões lado a lado -->
-        <div class="nivel-row" style="display:flex; flex-direction:row; gap:10px; width:100%; max-width:400px; justify-content:center;">
+        <!-- Botões lado a lado -->
+        <div class="nivel-row">
             <div class="btn-nivel" onclick="setModo('${modo}', 1)" style="border:2px solid #8cc63f; color:#8cc63f; padding:15px; border-radius:12px; flex:1; text-align:center; cursor:pointer; font-weight:900;">FÁCIL</div>
             <div class="btn-nivel" onclick="setModo('${modo}', 2)" style="border:2px solid #ff5a5f; color:#ff5a5f; padding:15px; border-radius:12px; flex:1; text-align:center; cursor:pointer; font-weight:900;">DIFÍCIL</div>
         </div>
 
-        <!-- Botão Voltar por baixo -->
-        <button class="btn-capa-small" onclick="voltarCapa()" style="background:#6c757d; width:160px; margin-top:20px; height:50px; border-radius:12px; color:white; border:none; font-weight:900; cursor:pointer; text-transform:uppercase;">
+        <!-- Botão Voltar abaixo -->
+        <button class="btn-capa-small" onclick="voltarCapa()" style="background:#6c757d; width:160px; margin-top:5px; height:50px; border-radius:12px; color:white; border:none; font-weight:900; cursor:pointer; text-transform:uppercase;">
             VOLTAR
         </button>`;
 }
@@ -270,17 +244,10 @@ function atualizarUI() {
     const pcLabel = modoJogo === 'CPU' ? "Pc" : "J2";
     const nomeVez = (turnoAtual === 0) ? "J1" : (modoJogo === 'CPU' ? "Pc" : "J2");
     const classPill = (turnoAtual === 0) ? "pill-j1" : "pill-j2";
-    
-    document.getElementById('shell-header-content').innerHTML = `
-        <div class="status-container">
-            <div class="status-pill ${classPill} blinking">VEZ DE: ${nomeVez}</div>
-            <div class="score-group"><div class="score-box box-v">J1: ${matchScore[0]}</div><div class="score-box box-x">${pcLabel}: ${matchScore[1]}</div></div>
-        </div>`;
-    
+    document.getElementById('shell-header-content').innerHTML = `<div class="status-container"><div class="status-pill ${classPill} blinking">VEZ DE: ${nomeVez}</div><div class="score-group"><div class="score-box box-v">J1: ${matchScore[0]}</div><div class="score-box box-x">${pcLabel}: ${matchScore[1]}</div></div></div>`;
     const area = document.getElementById('game-content');
     area.innerHTML = "";
     area.style.justifyContent = "center"; 
-    
     const boardEl = document.createElement('div');
     boardEl.className = "grid-board";
     for(let r=0; r<7; r++) {
@@ -288,9 +255,7 @@ function atualizarUI() {
             const cell = document.createElement('div');
             cell.className = "cell";
             if(selectedPiece && selectedPiece.r === r && selectedPiece.c === c) cell.style.border = "3px solid #fbc02d";
-            if(mostrarDicas && selectedPiece && getLegalMoves(selectedPiece.r, selectedPiece.c).some(m => m.r === r && m.c === c)) {
-                cell.style.backgroundColor = "#fff9c4";
-            }
+            if(mostrarDicas && selectedPiece && getLegalMoves(selectedPiece.r, selectedPiece.c).some(m => m.r === r && m.c === c)) cell.style.backgroundColor = "#fff9c4";
             if(tabuleiro[r][c] === 1) cell.innerHTML = '<div class="piece white"></div>';
             if(tabuleiro[r][c] === 2) cell.innerHTML = '<div class="piece black"></div>';
             cell.onclick = () => handleCellClick(r, c);
