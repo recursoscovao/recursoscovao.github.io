@@ -45,18 +45,13 @@ style.innerHTML = `
         box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
     }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
-    
-    .close-x { position: absolute; top: 15px; right: 25px; font-size: 3rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
-    .close-x:hover { transform: scale(1.1); }
+    .close-x { position: absolute; top: 15px; right: 25px; font-size: 3rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; }
 
-    .inst-content { max-width: 650px; margin: 0 auto; text-align: left; font-family: 'Nunito', sans-serif; }
+    .inst-content { max-width: 650px; margin: 0 auto; text-align: left; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 2rem; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; border-bottom: 4px solid var(--bg-color); padding-bottom: 10px; }
     .inst-section-title { color: #333; font-size: 1.3rem; font-weight: 800; margin: 25px 0 12px; display: flex; align-items: center; gap: 12px; }
-    .inst-section-title i { color: var(--primary-color); font-size: 1.1rem; }
-    .inst-text { color: #555; font-size: 1.05rem; line-height: 1.6; margin-bottom: 15px; }
     .inst-list { list-style: none; padding: 0; }
-    .inst-list li { background: #f8f9fa; margin-bottom: 10px; padding: 15px; border-radius: 15px; border-left: 5px solid var(--primary-color); color: #444; font-size: 1rem; line-height: 1.5; }
-    .inst-list b { color: #222; }
+    .inst-list li { background: #f8f9fa; margin-bottom: 10px; padding: 15px; border-radius: 15px; border-left: 5px solid var(--primary-color); color: #444; font-size: 1rem; }
 
     /* BARRA DE STATUS */
     .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
@@ -75,15 +70,52 @@ style.innerHTML = `
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; text-align: center; }
     .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.2); width: 80%; max-width: 350px; }
 
-    /* RESPONSIVIDADE */
+    /* --- RESPONSIVIDADE --- */
+
+    /* 2.1 PC */
     @media screen and (min-width: 1025px) { :root { --cell-size: min(55px, 7.5vh); } }
-    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) { :root { --cell-size: 9.5vw; } #simu-board { transform: scale(1.1); } #game-content { padding: 30px 20px; } }
-    @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 11vw; } #simu-board { transform: scale(0.85); } }
+
+    /* 2.2 TABLET VERTICAL */
+    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) { 
+        :root { --cell-size: 9.5vw; } 
+        #simu-board { transform: scale(1.1); } 
+        #game-content { padding: 30px 20px; } 
+    }
+
+    /* 2.3 TELEMÓVEL VERTICAL */
+    @media screen and (max-width: 500px) and (orientation: portrait) {
+        :root { --cell-size: 11vw; }
+        #game-content { padding: 10px; justify-content: space-evenly; gap: 15px; }
+        #simu-container { min-height: 180px; }
+        #simu-board { transform: scale(0.85); }
+        .capa-btn-row, .nivel-row { width: 100%; gap: 8px; }
+        .btn-capa-small { height: 48px; font-size: 0.8rem; }
+    }
+
+    /* 2.4 MODO HORIZONTAL (LANDSCAPE) - TABLETS E TELEMÓVEIS */
     @media screen and (max-height: 600px) and (orientation: landscape) {
-        :root { --cell-size: 10.5vh; }
-        #game-content { flex-direction: row; gap: 30px; }
-        #simu-container { flex: none; width: auto; }
-        .capa-btn-row, .nivel-row { flex-direction: column; width: clamp(150px, 22vw, 190px); }
+        :root { --cell-size: 10vh; } 
+        #game-content { 
+            flex-direction: row; 
+            justify-content: center; 
+            gap: 50px; 
+            padding: 10px; 
+        }
+        #simu-container { flex: none; width: auto; min-height: auto; }
+        #simu-board { transform: scale(0.75); }
+        
+        #capa-menu-principal, #nivel-select-container { 
+            width: auto; 
+            padding-bottom: 0; 
+            gap: 10px; 
+        }
+        .capa-btn-row, .nivel-row { 
+            flex-direction: column; 
+            width: 200px; 
+            gap: 8px; 
+        }
+        .btn-capa-small { height: 45px; width: 100%; font-size: 0.8rem; }
+        .btn-inform { width: 45px; height: 45px; }
     }
 `;
 document.head.appendChild(style);
@@ -91,7 +123,7 @@ document.head.appendChild(style);
 
 
 // ============================================================
-// === SECÇÃO 3: CAPA E INSTRUÇÕES PREMIUM (INÍCIO) ===
+// === SECÇÃO 3: CAPA E INSTRUÇÕES (INÍCIO) ===
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -104,25 +136,17 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
-                
-                <div class="inst-section-title"><i class="fas fa-bullseye"></i> O Objetivo</div>
-                <p class="inst-text">O Avanço é uma corrida estratégica. O teu objetivo é simples: ser o primeiro a levar qualquer uma das tuas peças à <b>última linha do adversário</b>.</p>
-
-                <div class="inst-section-title"><i class="fas fa-arrows-alt"></i> Movimentos Permitidos</div>
+                <div class="inst-section-title">O Objetivo</div>
+                <p class="inst-text">Ser o primeiro a levar qualquer peça à <b>última linha do adversário</b>.</p>
+                <div class="inst-section-title">Movimentos</div>
                 <ul class="inst-list">
-                    <li><b>Movimento Vertical:</b> Podes avançar uma casa para a frente, desde que esta esteja <b>vazia</b>.</li>
-                    <li><b>Movimento Diagonal:</b> Podes mover-te para as duas casas diagonais à frente. Estas casas podem estar vazias ou ocupadas por uma peça do adversário.</li>
+                    <li><b>Vertical:</b> Avança 1 casa se estiver <b>vazia</b>.</li>
+                    <li><b>Diagonal:</b> Move para as diagonais se vazias ou para <b>capturar</b>.</li>
                 </ul>
-
-                <div class="inst-section-title"><i class="fas fa-fist-raised"></i> Como Capturar</div>
+                <div class="inst-section-title">Capturas</div>
                 <ul class="inst-list">
-                    <li><b>Captura Diagonal:</b> Se uma peça adversária estiver na tua diagonal frontal, podes movê-la para essa casa e remover a peça dele do jogo.</li>
-                    <li><b>Proibido na Vertical:</b> Não podes capturar peças que estejam diretamente à tua frente. Apenas as diagonais permitem capturas.</li>
+                    <li>Apenas permitidas em movimento <b>diagonal</b>.</li>
                 </ul>
-
-                <div class="inst-section-title"><i class="fas fa-trophy"></i> Vitória</div>
-                <p class="inst-text">O jogo termina no instante em que uma peça toca a linha de fundo oposta. Ganha o melhor de 5 rondas (quem chegar primeiro às 3 vitórias)!</p>
-                
                 <div style="height:50px;"></div>
             </div>`;
         document.body.appendChild(panel);
@@ -147,10 +171,7 @@ function mostrarCapa() {
     iniciarSimulacao();
 }
 
-function toggleInstructions() { 
-    somClique.play(); 
-    document.getElementById('instrucoes-panel').classList.toggle('open'); 
-}
+function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
 
 function mostrarNiveis(modo) {
     somClique.play();
