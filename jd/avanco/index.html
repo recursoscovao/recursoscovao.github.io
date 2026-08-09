@@ -14,12 +14,12 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
         body, html { 
-            height: 100vh; /* Ocupa a altura total do ecrã */
+            height: 100%; 
             width: 100vw; 
             background-color: var(--bg-color); 
             display: flex; 
             flex-direction: column; 
-            overflow: hidden; /* Evita scroll na página, o scroll será interno na shell */
+            overflow: hidden; /* Impede que a página inteira faça scroll */
         }
         
         header { 
@@ -37,28 +37,25 @@
 
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
-        
-        /* Estilos Originais de Texto */
         #txt-titulo1 { font-size: 1.3rem; font-weight: 900; color: var(--primary-color); }
         #txt-titulo2 { font-size: 1.1rem; font-weight: 800; color: var(--text-grey); }
         #txt-subtitulo-header { font-size: 0.65rem; font-weight: 600; margin-top: 4px; opacity: 0.8; color: var(--text-grey); }
 
         /* ============================================================
-           2. ÁREA DO JOGO (CENTRALIZAÇÃO PERFEITA)
+           2. ÁREA DO JOGO (ESTICADA COM PADDING DE 15PX)
            ============================================================ */
         main { 
-            flex: 1; 
+            flex: 1;            /* Ocupa todo o espaço entre header e footer */
             display: flex; 
-            align-items: center;    /* Centraliza verticalmente entre header e footer */
-            justify-content: center; /* Centraliza horizontalmente */
-            padding: 15px;          /* Padding uniforme que dita a distância mínima */
-            min-height: 0; 
+            justify-content: center; 
+            padding: 15px;      /* A distância exata que pediste */
+            min-height: 0;      /* Importante para permitir scroll interno no flexbox */
         }
 
         .game-shell { 
             background: white; 
             width: min(1100px, 100%); 
-            max-height: 100%;       /* Garante que a shell nunca ultrapassa o main */
+            height: 100%;       /* Estica para ocupar o main todo (menos o padding) */
             display: flex; 
             flex-direction: column; 
             border: 1.5px solid var(--primary-color); 
@@ -67,61 +64,79 @@
             box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
-        .shell-header { text-align: center; border-bottom: 2px dashed #f5f5f5; display: flex; align-items: center; justify-content: center; min-height: 65px; padding: 5px 15px; flex-shrink: 0; }
-        .shell-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; padding: 20px; overflow-y: auto; }
-        .shell-footer { display: flex; align-items: center; background: #fafafa; min-height: 90px; padding: 15px 30px; gap: 15px; flex-shrink: 0; }
+        .shell-header { 
+            text-align: center; 
+            border-bottom: 2px dashed #f5f5f5; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            min-height: 65px; 
+            padding: 5px 15px; 
+            flex-shrink: 0; 
+        }
 
-        footer { text-align: center; background: white; padding: 12px; flex-shrink: 0; border-radius: 25px 25px 0 0; }
+        .shell-body { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            align-items: center; 
+            position: relative; 
+            padding: 20px; 
+            overflow-y: auto;   /* ATIVA SCROLL APENAS AQUI SE NECESSÁRIO */
+            -webkit-overflow-scrolling: touch; /* Scroll suave em iOS */
+        }
+
+        .shell-footer { 
+            display: flex; 
+            align-items: center; 
+            background: #fafafa; 
+            min-height: 90px; 
+            padding: 15px 30px; 
+            gap: 15px; 
+            flex-shrink: 0; 
+        }
+
+        footer { 
+            text-align: center; 
+            background: white; 
+            padding: 12px; 
+            flex-shrink: 0; 
+            border-radius: 25px 25px 0 0; 
+        }
         .footer-text { font-size: 0.75rem; font-weight: 700; color: var(--text-grey); }
 
         /* MENU */
-        .hamburger-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; transition: 0.2s; font-size: 28px; }
+        .hamburger-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; font-size: 28px; }
         .menu-dropdown { position: absolute; display: none; flex-direction: column; gap: 6px; z-index: 2000; top: 85px; left: 15px; }
         .menu-item { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 0 20px; border-radius: 12px; min-width: 260px; height: 50px; }
         .menu-item img { width: 32px; height: 32px; object-fit: contain; }
-        .menu-item:hover { background-color: var(--primary-color); color: white !important; }
 
         /* ============================================================
-           3. MEDIA QUERIES ORIGINAIS (RESTAURADAS)
+           3. MEDIA QUERIES (ADAPTANDO ALTURAS)
            ============================================================ */
         
-        /* TABLET VERTICAL */
         @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
             header { height: 85px; }
-            #header-icon { height: 50px; width: auto; }
-            #txt-titulo1 { font-size: 1.3rem; }
-            #txt-titulo2 { font-size: 1.1rem; }
-            main { padding: 20px; }
             .game-shell { width: 95%; }
         }
 
-        /* PC / TABLET LANDSCAPE */
-        @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
-            header { height: 85px; }
-            #header-icon { height: 55px; }
-        }
-
-        /* TELEMÓVEL VERTICAL */
         @media screen and (max-width: 500px) and (orientation: portrait) {
             header { height: 80px; }
-            #header-icon { height: 48px; }
             #txt-titulo1 { font-size: 1.15rem; }
             #txt-titulo2 { font-size: 1rem; }
-            #txt-subtitulo-header { font-size: 0.6rem; }
-            main { padding: 10px; }
             .game-shell { border-radius: 30px; }
+            .shell-footer { padding: 15px; min-height: 85px; }
         }
 
-        /* TELEMÓVEL/TABLET HORIZONTAL CURTO */
+        /* TELEMÓVEL HORIZONTAL (LANDSCAPE) - O MAIS CRÍTICO */
         @media screen and (max-height: 500px) and (orientation: landscape) {
             header { height: 75px; }
             #header-icon { height: 40px; }
-            #txt-titulo1 { font-size: 1.1rem; }
-            #txt-titulo2 { font-size: 0.9rem; }
-            #txt-subtitulo-header { font-size: 0.55rem; }
-            main { padding: 5px; }
+            #txt-subtitulo-header { display: none; } /* Ganhar espaço vertical */
             .game-shell { border-radius: 20px; }
-            .shell-footer { min-height: 80px; padding: 10px 25px; }
+            .shell-header { min-height: 55px; }
+            .shell-footer { min-height: 75px; padding: 10px 25px; }
         }
     </style>
 </head>
