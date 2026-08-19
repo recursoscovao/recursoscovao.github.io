@@ -2,7 +2,7 @@
 // 1. ESTADO GLOBAL E SONS
 // ==========================================
 let jogoAtivo = false;
-let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0, ajudasUsadas = 0; // Adicionado ajudasUsadas
+let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0, ajudasUsadas = 0; 
 let itemDestaque = null, opcoesRonda = [], simuInterval;
 
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
@@ -10,7 +10,7 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ==========================================
-// 2. CONFIGURAÇÃO VISUAL (CSS INJETADO)
+// 2. CONFIGURAÇÃO VISUAL (CSS INJETADO) - ATUALIZADO PARA TABLET/PAINEL
 // ==========================================
 const style = document.createElement('style');
 style.innerHTML = `
@@ -34,23 +34,24 @@ style.innerHTML = `
     .destaque-box {
         width: var(--dest-size); height: var(--dest-size); background: #fff; border-radius: 30px; 
         border: 3.5px dashed var(--primary-color); display: flex; align-items: center; justify-content: center;
-        margin-bottom: 15px;
+        margin-bottom: 15px; flex-shrink: 0; /* Impede de encolher */
     }
-    .destaque-box img { max-width: 60%; max-height: 60%; object-fit: contain; }
+    .destaque-box img { max-width: 65%; max-height: 65%; object-fit: contain; }
     
     .opcao-card {
         background: white; border: 3px solid #f0f0f0; border-radius: 15px; 
         width: var(--card-size); height: var(--card-size);
         display: flex; align-items: center; justify-content: center; 
-        cursor: pointer; position: relative;
+        cursor: pointer; position: relative; transition: 0.2s;
     }
+    .opcao-card:active { transform: scale(0.95); }
     .opcao-card img { width: 80%; height: 80%; object-fit: contain; }
     
     .feedback-icon { position: absolute; font-size: 3rem; z-index: 10; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3)); pointer-events: none; }
     .icon-v { color: #8cc63f; } .icon-x { color: #ff5a5f; }
 
-/* ============================================================
-       A. PC / TABLET LANDSCAPE
+    /* ============================================================
+       A. PC / TABLET LANDSCAPE / PAINÉIS INTERATIVOS
        ============================================================ */
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
         :root { 
@@ -58,22 +59,25 @@ style.innerHTML = `
             --card-size: 135px; 
             --dest-size: 160px; 
         }
-
-        .shell-body {
-            padding-top: 10px !important;    
-            padding-bottom: 10px !important; 
-            justify-content: center !important; 
-        }
-
-        .destaque-box { 
-            margin-top: 0px;      
-            margin-bottom: 30px;  
-        }
+        .shell-body { padding: 10px !important; justify-content: center !important; }
+        .destaque-box { margin-bottom: 30px; }
     }
-    /* [FIM PC / TABLET LANDSCAPE] */
 
     /* ============================================================
-       B. TELEMÓVEL VERTICAL (PORTRAIT)
+       B. NOVO: TABLET VERTICAL (PORTRAIT) - RESOLVE O PROBLEMA DA FILA
+       ============================================================ */
+    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
+        :root { 
+            --grid-cols: 4;      /* 4 animais por linha */
+            --card-size: 160px;   /* Tamanho confortável para toque em tablet */
+            --dest-size: 220px;   /* Destaque bem visível */
+        }
+        .shell-body { padding: 20px !important; justify-content: center !important; }
+        .destaque-box { margin-bottom: 40px; }
+    }
+
+    /* ============================================================
+       C. TELEMÓVEL VERTICAL (PORTRAIT)
        ============================================================ */
     @media screen and (max-width: 500px) and (orientation: portrait) {
         :root { 
@@ -81,11 +85,11 @@ style.innerHTML = `
             --card-size: 90px; 
             --dest-size: 150px; 
         }
+        .shell-body { justify-content: center !important; }
     }
-    /* [FIM TELEMÓVEL VERTICAL] */
 
     /* ============================================================
-       C. TELEMÓVEL HORIZONTAL (LANDSCAPE)
+       D. TELEMÓVEL HORIZONTAL (LANDSCAPE)
        ============================================================ */
     @media screen and (max-height: 500px) and (orientation: landscape) {
         :root { 
@@ -94,7 +98,6 @@ style.innerHTML = `
             --dest-size: 120px; 
         }
     }
-    /* [FIM TELEMÓVEL HORIZONTAL] */
 `;
 document.head.appendChild(style);
 
@@ -176,14 +179,13 @@ function iniciarJogo() {
     rondaAtual = 1; 
     certos = 0; 
     erros = 0; 
-    ajudasUsadas = 0; // Reset das ajudas
+    ajudasUsadas = 0; 
     proximaRonda(); 
 }
 
 function proximaRonda() {
     if (rondaAtual > totalRondas) { finalizarJogo(); return; }
     
-    // Chama a função do Engine no index.html para mostrar o status
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
 
     const area = document.getElementById('game-content');
@@ -198,7 +200,7 @@ function proximaRonda() {
 
     area.innerHTML = `
         <div class="destaque-box"><img src="${DADOS_JOGO.caminhoImagens + itemDestaque.img}"></div>
-        <div style="display:grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap:8px; width:fit-content;">
+        <div style="display:grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap:12px; width:fit-content;">
             ${opcoesRonda.map(item => `
                 <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)">
                     <img src="${DADOS_JOGO.caminhoImagens + item.img}">
@@ -226,7 +228,7 @@ function verificarResposta(id, el) {
 
 function darAjuda() {
     if (!jogoAtivo) return;
-    ajudasUsadas++; // Conta a ajuda utilizada
+    ajudasUsadas++; 
     somClique.play();
     const correto = document.getElementById(`card-${itemDestaque.id}`);
     if (correto) {
@@ -238,7 +240,5 @@ function darAjuda() {
 function finalizarJogo() {
     jogoAtivo = false;
     const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
-    
-    // Agora chama a função do Engine no index.html passando as ajudas
     Engine.showResults(certos, erros, ajudasUsadas, rel);
 }
