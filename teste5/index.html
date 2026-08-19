@@ -13,7 +13,6 @@
         :root { --primary-color: #5EA2E6; --bg-color: #EAF4FE; --text-grey: #8792a1; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
-        /* ALTERADO: Permitir scroll global para não esmagar o conteúdo */
         body, html { 
             min-height: 100vh; 
             width: 100vw; 
@@ -28,13 +27,12 @@
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         
-        /* ALTERADO: Main agora permite que o conteúdo dite a altura */
         main { flex: 1 0 auto; display: flex; justify-content: center; padding: 10px; }
         
         .game-shell { 
             background: white; 
             width: min(1100px, 100%); 
-            height: auto; /* Deixa crescer conforme o jogo */
+            height: auto; 
             min-height: 500px; 
             border: 1.5px solid var(--primary-color); 
             display: flex; 
@@ -80,15 +78,21 @@
         }
 
         /* ============================================================
-           3. NOVO: TABLET PORTRAIT (ENTRE 501px e 1024px)
+           3. TABLET PORTRAIT (VERTICAL) - AJUSTADO
            ============================================================ */
         @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
             header { height: 90px; }
             #header-icon { height: 60px; }
+            
+            /* Ajustes pedidos: Hamburguer maior e icons do menu menores */
+            .hamburger-btn { font-size: 38px; } 
+            .menu-item img { width: 26px; height: 26px; } 
+            .menu-dropdown { top: 85px; left: 20px; }
+
             .game-shell { width: 92%; min-height: 700px; border-radius: 35px; }
             .shell-body { padding: 30px; }
             .shell-footer { min-height: 100px; }
-            .menu-item { height: 55px; font-size: 1.1rem; }
+            .menu-item { height: 55px; font-size: 1.1rem; min-width: 280px; }
         }
 
         /* ============================================================
