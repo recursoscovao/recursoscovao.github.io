@@ -78,21 +78,39 @@
         }
 
         /* ============================================================
-           3. TABLET PORTRAIT (VERTICAL) - AJUSTADO
+           3. TABLET PORTRAIT (VERTICAL) - CORREÇÃO DE CORTE
            ============================================================ */
         @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
-            header { height: 90px; }
-            #header-icon { height: 60px; }
+            header { height: 100px; } 
+            #header-icon { height: 65px; }
             
-            /* Ajustes pedidos: Hamburguer maior e icons do menu menores */
-            .hamburger-btn { font-size: 38px; } 
-            .menu-item img { width: 26px; height: 26px; } 
-            .menu-dropdown { top: 85px; left: 20px; }
+            .hamburger-btn { font-size: 45px; width: 60px; height: 60px; display: flex; align-items: center; justify-content: center; } 
+            
+            .menu-dropdown { 
+                top: 100px; 
+                left: 15px; 
+                padding: 12px;
+                gap: 10px;
+                background: white;
+                border-radius: 20px;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
 
-            .game-shell { width: 92%; min-height: 700px; border-radius: 35px; }
-            .shell-body { padding: 30px; }
-            .shell-footer { min-height: 100px; }
-            .menu-item { height: 55px; font-size: 1.1rem; min-width: 280px; }
+            .menu-item { 
+                height: 70px;      
+                min-width: 320px;  
+                padding: 0 25px; 
+                font-size: 1.2rem; 
+                border-radius: 15px;
+                display: flex;
+                white-space: nowrap; 
+            }
+
+            .menu-item img { width: 30px; height: 30px; } 
+
+            .game-shell { width: 94%; min-height: 800px; border-radius: 45px; }
+            .shell-body { padding: 40px; }
+            .shell-footer { min-height: 120px; }
         }
 
         /* ============================================================
