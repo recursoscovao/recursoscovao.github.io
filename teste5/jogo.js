@@ -69,7 +69,7 @@ style.innerHTML = `
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
         :root { 
             --grid-cols: 4;      
-            --card-size: 145px;   /* Reduzido de 160px para criar padding lateral */
+            --card-size: 140px;   /* Reduzido de 160px para criar padding lateral */
             --dest-size: 200px;   /* Reduzido de 220px */
         }
         /* Aumento do padding lateral (40px) para não tocar nas bordas */
