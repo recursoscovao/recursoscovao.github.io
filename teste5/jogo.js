@@ -10,7 +10,7 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ==========================================
-// 2. CONFIGURAÇÃO VISUAL (CSS INJETADO) - ATUALIZADO PARA TABLET/PAINEL
+// 2. CONFIGURAÇÃO VISUAL (CSS INJETADO) - AJUSTADO COM PADDING LATERAL
 // ==========================================
 const style = document.createElement('style');
 style.innerHTML = `
@@ -34,7 +34,7 @@ style.innerHTML = `
     .destaque-box {
         width: var(--dest-size); height: var(--dest-size); background: #fff; border-radius: 30px; 
         border: 3.5px dashed var(--primary-color); display: flex; align-items: center; justify-content: center;
-        margin-bottom: 15px; flex-shrink: 0; /* Impede de encolher */
+        margin-bottom: 15px; flex-shrink: 0; 
     }
     .destaque-box img { max-width: 65%; max-height: 65%; object-fit: contain; }
     
@@ -56,24 +56,25 @@ style.innerHTML = `
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
         :root { 
             --grid-cols: 6; 
-            --card-size: 135px; 
+            --card-size: 130px; /* Reduzido de 135px */
             --dest-size: 160px; 
         }
-        .shell-body { padding: 10px !important; justify-content: center !important; }
+        .shell-body { padding: 20px !important; justify-content: center !important; }
         .destaque-box { margin-bottom: 30px; }
     }
 
     /* ============================================================
-       B. NOVO: TABLET VERTICAL (PORTRAIT) - RESOLVE O PROBLEMA DA FILA
+       B. TABLET VERTICAL (PORTRAIT) - COM RESPIRO LATERAL
        ============================================================ */
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
         :root { 
-            --grid-cols: 4;      /* 4 animais por linha */
-            --card-size: 160px;   /* Tamanho confortável para toque em tablet */
-            --dest-size: 220px;   /* Destaque bem visível */
+            --grid-cols: 4;      
+            --card-size: 145px;   /* Reduzido de 160px para criar padding lateral */
+            --dest-size: 200px;   /* Reduzido de 220px */
         }
-        .shell-body { padding: 20px !important; justify-content: center !important; }
-        .destaque-box { margin-bottom: 40px; }
+        /* Aumento do padding lateral (40px) para não tocar nas bordas */
+        .shell-body { padding: 30px 40px !important; justify-content: center !important; }
+        .destaque-box { margin-bottom: 35px; }
     }
 
     /* ============================================================
@@ -82,10 +83,10 @@ style.innerHTML = `
     @media screen and (max-width: 500px) and (orientation: portrait) {
         :root { 
             --grid-cols: 3; 
-            --card-size: 90px; 
-            --dest-size: 150px; 
+            --card-size: 85px;  /* Reduzido de 90px */
+            --dest-size: 140px; /* Reduzido de 150px */
         }
-        .shell-body { justify-content: center !important; }
+        .shell-body { padding: 15px 20px !important; justify-content: center !important; }
     }
 
     /* ============================================================
@@ -94,9 +95,10 @@ style.innerHTML = `
     @media screen and (max-height: 500px) and (orientation: landscape) {
         :root { 
             --grid-cols: 6; 
-            --card-size: 75px; 
-            --dest-size: 120px; 
+            --card-size: 70px;  /* Reduzido de 75px */
+            --dest-size: 110px; /* Reduzido de 120px */
         }
+        .shell-body { padding: 10px 15px !important; }
     }
 `;
 document.head.appendChild(style);
