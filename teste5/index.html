@@ -106,10 +106,10 @@
 
             /* Proteção contra cortes nos botões */
             .menu-item { 
-                height: 70px;      
+                height: 55px;      /* Alterado de 70px para 55px */
                 min-width: 320px;  
                 padding: 0 25px; 
-                font-size: 1.2rem; 
+                font-size: 1.1rem; /* Alterado de 1.2rem para 1.1rem */
                 border-radius: 15px;
                 display: flex;
                 white-space: nowrap; 
@@ -249,6 +249,7 @@
                             <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; min-width: 60px; justify-content: center; background: #ff5a5f; box-shadow: 0 3px 0 #d44348;"><i class="fas fa-times"></i> ${erros}</div>
                         </div>
                     </div>`;
+                document.getElementById('shell-header-content').style.display = 'flex';
                 document.getElementById('shell-footer-content').style.display = 'none';
             },
 
