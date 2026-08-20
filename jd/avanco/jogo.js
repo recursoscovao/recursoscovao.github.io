@@ -37,18 +37,27 @@ Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
         </div>`;
 };
 
-// 2. Alteração dos Resultados: Remove a parte das ajudas
+// 2. Alteração dos Resultados: Ajuste de tamanhos e simetria
 Engine.showResults = function(s1, s2, rel, label2) {
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; padding: 15px;">RESULTADOS</h2>`;
     document.getElementById('game-content').innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 20px; text-align: center; padding: 20px;">
-            <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height: clamp(160px, 35vh, 320px); object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));">
-            <div><h2 style="color:var(--primary-color); font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight:900; text-transform:uppercase; margin:0;">${rel.titulo}</h2></div>
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 15px; text-align: center; padding: 20px;">
+            
+            <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height: clamp(150px, 30vh, 280px); object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));">
+            
+            <!-- Título do Feedback: Agora um pouco mais pequeno -->
+            <div>
+                <h2 style="color:var(--text-grey); font-size: clamp(1.2rem, 3.5vw, 1.8rem); font-weight:800; text-transform:uppercase; margin:0; opacity: 0.9;">
+                    ${rel.titulo}
+                </h2>
+            </div>
+
             <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; max-width: 600px;">
-                <div style="padding: 12px 25px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.3rem; background: #8cc63f; box-shadow: 0 4px 0 #6da32f;">
+                <!-- Caixas de Pontuação: Com min-width para serem iguais -->
+                <div style="min-width: 240px; padding: 12px 25px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.2rem; background: #8cc63f; box-shadow: 0 4px 0 #6da32f;">
                     JOGADOR 1: ${s1}
                 </div>
-                <div style="padding: 12px 25px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.3rem; background: #444; box-shadow: 0 4px 0 #222;">
+                <div style="min-width: 240px; padding: 12px 25px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.2rem; background: #444; box-shadow: 0 4px 0 #222;">
                     ${label2.toUpperCase()}: ${s2}
                 </div>
             </div>
@@ -202,9 +211,8 @@ function mostrarCapa() {
 function toggleInstructions() { 
     somClique.play(); 
     const p = document.getElementById('instrucoes-panel');
-    const isOpening = !p.classList.contains('open');
     p.classList.toggle('open');
-    document.body.style.overflow = isOpening ? 'hidden' : 'auto';
+    document.body.style.overflow = p.classList.contains('open') ? 'hidden' : 'auto';
 }
 
 function mostrarNiveis(modo) {
