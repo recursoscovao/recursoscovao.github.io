@@ -257,24 +257,42 @@
             },
 
             showResults(certos, erros, ajudas, rel) {
+                // Título no Header
                 document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; padding: 15px;">RESULTADOS</h2>`;
+                
+                // Conteúdo Central (Taça e Pontuações)
                 document.getElementById('game-content').innerHTML = `
-                    <div style="text-align:center; padding: 20px;">
-                        <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height:150px; object-fit:contain;">
-                        <h2 style="color:var(--primary-color); margin:10px 0; font-weight:900; text-transform:uppercase;">${rel.titulo}</h2>
-                        <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #8cc63f;">CERTOS: ${certos}</div>
-                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #ff5a5f;">ERROS: ${erros}</div>
-                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #5EA2E6;">AJUDAS: ${ajudas}</div>
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 20px; text-align: center; padding: 20px;">
+                        
+                        <!-- Imagem da Taça/Relatório: Cresce no tablet vertical -->
+                        <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" 
+                             style="height: clamp(160px, 35vh, 320px); object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));">
+                        
+                        <div>
+                            <h2 style="color:var(--primary-color); font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight:900; text-transform:uppercase; margin:0;">${rel.titulo}</h2>
+                        </div>
+
+                        <!-- Grupos de Pontuação -->
+                        <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; max-width: 600px;">
+                            <div style="padding: 12px 20px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.2rem; background: #8cc63f; box-shadow: 0 4px 0 #6da32f;">
+                                <i class="fas fa-check"></i> CERTOS: ${certos}
+                            </div>
+                            <div style="padding: 12px 20px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.2rem; background: #ff5a5f; box-shadow: 0 4px 0 #d44348;">
+                                <i class="fas fa-times"></i> ERROS: ${erros}
+                            </div>
+                            <div style="padding: 12px 20px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.2rem; background: #5EA2E6; box-shadow: 0 4px 0 #4a8dcb;">
+                                <i class="fas fa-lightbulb"></i> AJUDAS: ${ajudas}
+                            </div>
                         </div>
                     </div>`;
                 
+                // Botões de Ação
                 const footer = document.getElementById('shell-footer-content');
                 footer.style.display = "flex";
                 footer.innerHTML = `
-                    <div style="display:flex; width:100%; gap:15px; padding:20px;">
-                        <button onclick="location.reload()" style="flex: 1; height: 65px; border-radius: 35px; background: #6c757d; color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer;">REPETIR</button>
-                        <button onclick="window.history.back()" style="flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer;">SAIR</button>
+                    <div style="display:flex; width:100%; gap:20px; padding:25px;">
+                        <button onclick="location.reload()" style="flex: 1; height: clamp(65px, 8vh, 85px); border-radius: 40px; background: #6c757d; color: white; border: none; font-size: 1.4rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #4e555b;">REPETIR</button>
+                        <button onclick="window.history.back()" style="flex: 1; height: clamp(65px, 8vh, 85px); border-radius: 40px; background: var(--primary-color); color: white; border: none; font-size: 1.4rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #4582c0;">SAIR</button>
                     </div>`;
             }
         };
