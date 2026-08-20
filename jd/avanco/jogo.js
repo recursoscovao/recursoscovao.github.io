@@ -19,7 +19,7 @@ const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 // === SOBREPOSIÇÃO DO ENGINE (ALTERAÇÕES VISUAIS APENAS NO JOGO) ===
 // ============================================================
 
-// 1. Barra de Status: Sem "VEZ DE", altura igual aos pontos (padding 8px)
+// 1. Barra de Status: Removido "VEZ DE", altura (8px) e forma (12px) igual aos pontos
 Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
     const isJ1 = nomeVez.toUpperCase().includes("JOGADOR 1");
     const pillBg = isJ1 ? "#8cc63f" : "#444";
@@ -37,7 +37,7 @@ Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
         </div>`;
 };
 
-// 2. Resultados: Feedback menor, caixas iguais, sem ajudas
+// 2. Resultados: Feedback mais pequeno, caixas simétricas (min-width 240px)
 Engine.showResults = function(s1, s2, rel, label2) {
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; padding: 15px;">RESULTADOS</h2>`;
     document.getElementById('game-content').innerHTML = `
@@ -146,7 +146,17 @@ style.innerHTML = `
 
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) { :root { --cell-size: min(55px, 8vh); } }
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) { :root { --cell-size: 10vw; } #simu-board { transform: scale(1.15); } }
-    @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 11vw; } .capa-btn-row { flex-direction: column; width: 100%; } .btn-inform { width: 100%; height: 50px; order: -1; } .btn-capa-small { height: 55px; } }
+    
+    /* TELEMÓVEL VERTICAL - AJUSTES DE BOTÕES */
+    @media screen and (max-width: 500px) and (orientation: portrait) { 
+        :root { --cell-size: 11vw; } 
+        .capa-btn-row { flex-direction: column; width: 100%; gap: 12px; padding: 0 25px; } 
+        .btn-inform { width: 100%; height: 65px; order: -1; border-radius: 15px; } 
+        .btn-capa-small { height: 65px; border-radius: 15px; font-size: 1.05rem; width: 100%; }
+        .nivel-row { flex-direction: row; width: 100%; padding: 0 25px; gap: 10px; }
+        #nivel-select-container .capa-btn-row { width: 100%; padding: 0 25px; margin-top: 5px; }
+        #nivel-select-container .btn-capa-small[onclick*="voltarCapa"] { max-width: none !important; width: 100%; }
+    }
 
     .blinking { animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
@@ -209,8 +219,9 @@ function mostrarCapa() {
 function toggleInstructions() { 
     somClique.play(); 
     const p = document.getElementById('instrucoes-panel');
+    const isOpening = !p.classList.contains('open');
     p.classList.toggle('open');
-    document.body.style.overflow = p.classList.contains('open') ? 'hidden' : 'auto';
+    document.body.style.overflow = isOpening ? 'hidden' : 'auto';
 }
 
 function mostrarNiveis(modo) {
@@ -257,7 +268,6 @@ function atualizarUI() {
     const labelJ2 = modoJogo === 'CPU' ? "Computador" : "Jogador 2";
     const nomeVez = (turnoAtual === 0) ? "Jogador 1" : labelJ2;
     
-    // Chama a função sobreposta do Engine
     Engine.showStatusBar(nomeVez, matchScore[0], matchScore[1], pcLabel);
 
     const area = document.getElementById('game-content');
