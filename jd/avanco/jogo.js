@@ -27,7 +27,7 @@ style.innerHTML = `
     }
 
     /* Contentores Principais */
-    #simu-container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 100px; overflow: hidden; }
+    #simu-container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 100px; max-height: 50%; overflow: hidden; }
     #capa-menu-principal, #nivel-select-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 15px; flex-shrink: 0; }
     .capa-btn-row, .nivel-row { display: flex; flex-direction: row; gap: 12px; width: 100%; max-width: 550px; justify-content: center; }
     
@@ -68,19 +68,17 @@ style.innerHTML = `
         justify-content: center; 
         position: relative; 
     }
-    .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
+    .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ccc); border: 1px solid #eee; }
     .piece.black { background: radial-gradient(circle at 30% 30%, #444, #000); }
 
     /* --- RESPONSIVIDADE ESPECÍFICA --- */
 
-    /* 1. PC / TABLET LANDSCAPE / PAINÉIS */
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
         :root { --cell-size: min(65px, 8.2vh); }
         #game-content { padding: 20px; }
     }
 
-    /* 2. TABLET VERTICAL (Portrait) */
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
         :root { --cell-size: 10.5vw; } 
         #game-content { padding: 30px 15px; }
@@ -88,7 +86,6 @@ style.innerHTML = `
         .capa-btn-row { gap: 20px; }
     }
 
-    /* 3. TELEMÓVEL VERTICAL (Portrait) */
     @media screen and (max-width: 500px) and (orientation: portrait) {
         :root { --cell-size: 11.5vw; }
         #simu-board { transform: scale(0.85); }
@@ -96,11 +93,10 @@ style.innerHTML = `
         .btn-inform { order: -1; align-self: center; } 
     }
     
-    /* 4. MODO HORIZONTAL SMARTPHONE */
     @media screen and (max-height: 550px) and (orientation: landscape) and (max-width: 950px) {
         :root { --cell-size: 8.5vh; } 
         #game-content { flex-direction: row; justify-content: center; gap: 40px; padding: 5px; }
-        #simu-container { flex: 0 0 auto; width: auto; }
+        #simu-container { flex: 0 0 auto; width: auto; max-height: none; }
         #capa-menu-principal, #nivel-select-container { width: 200px; }
         .capa-btn-row, .nivel-row { flex-direction: column; width: 100%; gap: 8px; }
         .btn-capa-small { height: 45px; font-size: 0.8rem; }
@@ -182,12 +178,14 @@ function mostrarNiveis(modo) {
     area.innerHTML = `
         <div id="simu-container"><div id="simu-board"></div></div>
         <div id="nivel-select-container">
-            <p style="font-weight:800; color:#888; font-size:0.8rem; text-transform:uppercase; margin-bottom:-5px;">Dificuldade:</p>
+            <p style="font-weight:800; color:#888; font-size:0.8rem; text-transform:uppercase; margin-bottom:5px;">Escolha a Dificuldade:</p>
             <div class="nivel-row">
-                <div class="btn-nivel" onclick="setModo('${modo}', 1)" style="border:2px solid #8cc63f; color:#8cc63f; padding:15px; border-radius:12px; flex:1; text-align:center; cursor:pointer; font-weight:900;">FÁCIL</div>
-                <div class="btn-nivel" onclick="setModo('${modo}', 2)" style="border:2px solid #ff5a5f; color:#ff5a5f; padding:15px; border-radius:12px; flex:1; text-align:center; cursor:pointer; font-weight:900;">DIFÍCIL</div>
+                <button class="btn-capa-small" onclick="setModo('${modo}', 1)" style="background:#8cc63f;"><i class="fas fa-leaf"></i> FÁCIL</button>
+                <button class="btn-capa-small" onclick="setModo('${modo}', 2)" style="background:#ff5a5f;"><i class="fas fa-fire"></i> DIFÍCIL</button>
             </div>
-            <button class="btn-capa-small" onclick="voltarCapa()" style="background:#6c757d; width:160px; height:50px; border-radius:12px; color:white; border:none; font-weight:900; cursor:pointer;">VOLTAR</button>
+            <div class="capa-btn-row" style="margin-top:10px;">
+                <button class="btn-capa-small" onclick="voltarCapa()" style="background:#6c757d; max-width:200px;"><i class="fas fa-arrow-left"></i> VOLTAR</button>
+            </div>
         </div>
     `;
     iniciarSimulacao(); 
