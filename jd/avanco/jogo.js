@@ -16,7 +16,7 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ============================================================
-// === SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS ===
+// === SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS (RECONSTRUÇÃO PREMIUM) ===
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
@@ -30,7 +30,7 @@ style.innerHTML = `
     /* 1. ÁREA DE SIMULAÇÃO: Ocupa o centro e adapta-se ao espaço */
     #simu-container { 
         flex: 1; display: flex; align-items: center; justify-content: center; 
-        width: 100%; min-height: 0; overflow: hidden; padding: 10px;
+        width: 100%; min-height: 0; overflow: hidden;
     }
 
     /* 2. CONTENTOR DOS BOTÕES: Ancorado no fundo com padding de 20px */
@@ -54,7 +54,7 @@ style.innerHTML = `
     }
     
     .btn-inform { 
-        width: 55px; height: 55px; /* MESMA ALTURA DOS OUTROS */
+        width: 55px; height: 55px; 
         border-radius: 12px; background: white; border: 2px solid #eee;
         cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
         box-shadow: 0 5px 0 rgba(0,0,0,0.05); transition: 0.2s;
@@ -71,7 +71,7 @@ style.innerHTML = `
         transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
         transform: translateY(100%); 
         visibility: hidden; 
-        overflow-y: auto; /* SCROLL NA PÁGINA TODA */
+        overflow-y: auto; 
         padding: 0; margin: 0;
     }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
@@ -96,16 +96,17 @@ style.innerHTML = `
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1px solid #eee; }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); }
 
-    /* --- RESPONSIVIDADE ADAPTATIVA --- */
+    /* --- RESPONSIVIDADE --- */
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
         :root { --cell-size: min(55px, 8vh); }
     }
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
         :root { --cell-size: 10vw; } 
+        #simu-board { transform: scale(1.15); }
     }
     @media screen and (max-width: 500px) and (orientation: portrait) {
         :root { --cell-size: 11vw; }
-        .capa-btn-row { flex-direction: column; width: 100%; gap: 10px; }
+        .capa-btn-row, .nivel-row { flex-direction: column; width: 100%; gap: 10px; }
         .btn-inform { width: 100%; height: 50px; order: -1; }
         .btn-capa-small { height: 55px; }
     }
@@ -190,7 +191,12 @@ function mostrarNiveis(modo) {
                 <button class="btn-capa-small" onclick="setModo('${modo}', 1)" style="background:#8cc63f;"><i class="fas fa-leaf"></i> FÁCIL</button>
                 <button class="btn-capa-small" onclick="setModo('${modo}', 2)" style="background:#ff5a5f;"><i class="fas fa-fire"></i> DIFÍCIL</button>
             </div>
-            <button class="btn-capa-small" onclick="voltarCapa()" style="background:#6c757d; max-width:200px; margin-top:10px;"><i class="fas fa-arrow-left"></i> VOLTAR</button>
+            <!-- Botão Voltar Melhorado: Alinhado e com design Premium -->
+            <div class="capa-btn-row">
+                <button class="btn-capa-small" onclick="voltarCapa()" style="background:#6c757d; max-width:250px;">
+                    <i class="fas fa-arrow-left"></i> VOLTAR
+                </button>
+            </div>
         </div>
     `;
     iniciarSimulacao(); 
