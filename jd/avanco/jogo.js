@@ -19,7 +19,7 @@ const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 // === SOBREPOSIÇÃO DO ENGINE (ALTERAÇÕES VISUAIS APENAS NO JOGO) ===
 // ============================================================
 
-// 1. Barra de Status: Removido "VEZ DE", altura (8px) e forma (12px) igual aos pontos
+// 1. Barra de Status: Sem "VEZ DE", altura (8px) e forma (12px) igual aos pontos
 Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
     const isJ1 = nomeVez.toUpperCase().includes("JOGADOR 1");
     const pillBg = isJ1 ? "#8cc63f" : "#444";
@@ -147,15 +147,55 @@ style.innerHTML = `
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) { :root { --cell-size: min(55px, 8vh); } }
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) { :root { --cell-size: 10vw; } #simu-board { transform: scale(1.15); } }
     
-    /* TELEMÓVEL VERTICAL - AJUSTES DE BOTÕES */
+    /* TELEMÓVEL VERTICAL - AJUSTES ESPECÍFICOS DE ALTURA E FORMA */
     @media screen and (max-width: 500px) and (orientation: portrait) { 
         :root { --cell-size: 11vw; } 
-        .capa-btn-row { flex-direction: column; width: 100%; gap: 12px; padding: 0 25px; } 
-        .btn-inform { width: 100%; height: 65px; order: -1; border-radius: 15px; } 
-        .btn-capa-small { height: 65px; border-radius: 15px; font-size: 1.05rem; width: 100%; }
-        .nivel-row { flex-direction: row; width: 100%; padding: 0 25px; gap: 10px; }
-        #nivel-select-container .capa-btn-row { width: 100%; padding: 0 25px; margin-top: 5px; }
-        #nivel-select-container .btn-capa-small[onclick*="voltarCapa"] { max-width: none !important; width: 100%; }
+        
+        .capa-btn-row { 
+            flex-direction: column !important; 
+            width: 100% !important; 
+            gap: 12px !important; 
+            padding: 0 25px !important; 
+        } 
+
+        /* Força a mesma altura (65px) e forma (15px) para todos os botões no telemóvel */
+        .btn-inform { 
+            width: 100% !important; 
+            height: 65px !important; 
+            order: -1 !important; 
+            border-radius: 15px !important; 
+            background: white !important;
+        } 
+        
+        .btn-capa-small { 
+            height: 65px !important; 
+            border-radius: 15px !important; 
+            font-size: 1.05rem !important; 
+            width: 100% !important; 
+        }
+
+        /* Dificuldade: Mantém botões lado a lado mas com a nova altura */
+        .nivel-row { 
+            flex-direction: row !important; 
+            width: 100% !important; 
+            padding: 0 25px !important; 
+            gap: 10px !important;
+        }
+        
+        .nivel-row .btn-capa-small {
+             height: 65px !important;
+        }
+
+        /* Botão Voltar: Largura Total */
+        #nivel-select-container .capa-btn-row {
+            width: 100% !important;
+            padding: 0 25px !important;
+        }
+        
+        #nivel-select-container .btn-capa-small[onclick*="voltarCapa"] {
+            max-width: none !important;
+            width: 100% !important;
+        }
     }
 
     .blinking { animation: blinker 1.5s linear infinite; }
