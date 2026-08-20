@@ -13,46 +13,8 @@ let simuInterval;
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
+// === FIM SECÇÃO 1 ===
 
-// ============================================================
-// === SOBREPOSIÇÃO DO ENGINE (DESIGN TURNOS E RESULTADOS) ===
-// ============================================================
-
-Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
-    const isJ1 = nomeVez.toUpperCase().includes("JOGADOR 1");
-    const pillBg = isJ1 ? "#8cc63f" : "#444";
-    const pillShadow = isJ1 ? "#6da32f" : "#222";
-
-    document.getElementById('shell-header-content').innerHTML = `
-        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 15px;">
-            <div class="blinking" style="padding: 10px 22px; border-radius: 15px; color: white; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; background: ${pillBg}; box-shadow: 0 4px 0 ${pillShadow};">
-                ${nomeVez}
-            </div>
-            <div style="display: flex; gap: 8px;">
-                <div style="padding: 10px 15px; border-radius: 12px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 4px 0 #6da32f;">J1: ${s1}</div>
-                <div style="padding: 10px 15px; border-radius: 12px; color: white; font-weight: 900; background: #444; box-shadow: 0 4px 0 #222;">${label2}: ${s2}</div>
-            </div>
-        </div>`;
-};
-
-Engine.showResults = function(s1, s2, rel, label2) {
-    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; padding: 15px;">RESULTADOS</h2>`;
-    document.getElementById('game-content').innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 20px; text-align: center; padding: 20px;">
-            <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height: clamp(160px, 30vh, 280px); object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));">
-            <div><h2 style="color:var(--text-grey); font-size: clamp(1.1rem, 3vw, 1.6rem); font-weight:800; text-transform:uppercase; margin:0;">${rel.titulo}</h2></div>
-            <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; width:100%;">
-                <div style="min-width: 240px; padding: 15px; border-radius: 18px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 5px 0 #6da32f; font-size: 1.2rem;">JOGADOR 1: ${s1}</div>
-                <div style="min-width: 240px; padding: 15px; border-radius: 18px; color: white; font-weight: 900; background: #444; box-shadow: 0 5px 0 #222; font-size: 1.2rem;">${label2.toUpperCase()}: ${s2}</div>
-            </div>
-        </div>`;
-    const footer = document.getElementById('shell-footer-content');
-    footer.style.display = "flex";
-    footer.innerHTML = `<div style="display:flex; width:100%; gap:20px; padding:20px 25px 35px;">
-        <button onclick="location.reload()" style="flex: 1; height: 65px; border-radius: 40px; background: #6c757d; color: white; border: none; font-size: 1.4rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #4e555b;">REPETIR</button>
-        <button onclick="window.history.back()" style="flex: 1; height: 65px; border-radius: 40px; background: var(--primary-color); color: white; border: none; font-size: 1.4rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #4582c0;">SAIR</button>
-    </div>`;
-};
 
 // ============================================================
 // === INÍCIO SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS ===
@@ -65,13 +27,17 @@ style.innerHTML = `
         overflow: hidden; position: relative;
     }
 
-    /* AREA DA SIMULAÇÃO: Ocupa o centro e empurra os botões para o fundo */
+    /* AREA DA SIMULAÇÃO: Reduzida em 20% e centrada */
     #simu-container { 
         flex: 1; display: flex; align-items: center; justify-content: center; 
         width: 100%; min-height: 0; overflow: hidden;
     }
+    #simu-board { 
+        transform: scale(0.8); /* ANIMAÇÃO 20% MAIS PEQUENA */
+        transition: 0.3s;
+    }
 
-    /* CONTENTOR DOS BOTÕES: 20px de padding rigoroso do fundo */
+    /* CONTENTOR DOS BOTÕES: 20px de margem do fundo */
     #capa-menu-principal, #nivel-select-container { 
         width: 100%; display: flex; flex-direction: column; align-items: center; 
         gap: 15px; flex-shrink: 0; padding-bottom: 20px !important; 
@@ -82,7 +48,7 @@ style.innerHTML = `
         gap: 12px; width: 100%; max-width: 550px; justify-content: center; padding: 0 20px; 
     }
     
-    /* TODOS OS BOTÕES COM 60PX DE ALTURA E MESMA FORMA */
+    /* BOTÕES UNIFICADOS (60px de altura) */
     .btn-capa-small { 
         flex: 1; height: 60px; border-radius: 15px; border: none; color: white; 
         font-weight: 900; font-size: 1rem; cursor: pointer; display: flex; 
@@ -95,7 +61,7 @@ style.innerHTML = `
         cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
         box-shadow: 0 5px 0 rgba(0,0,0,0.05); transition: 0.2s;
     }
-    .btn-inform img { width: 65%; height: 65%; object-fit: contain; }
+    .btn-inform img { width: 60%; height: 60%; object-fit: contain; }
     .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
 
     /* INSTRUÇÕES PREMIUM - SCROLL DE PÁGINA INTEIRA */
@@ -121,14 +87,13 @@ style.innerHTML = `
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1px solid #eee; }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); }
 
-    /* RESPONSIVIDADE */
     :root { --cell-size: min(55px, 8vh); }
-    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) { :root { --cell-size: 10vw; } #simu-board { transform: scale(1.15); } }
+    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) { :root { --cell-size: 10vw; } }
     @media screen and (max-width: 500px) and (orientation: portrait) { 
         :root { --cell-size: 11vw; } 
         .capa-btn-row { flex-direction: column; width: 100%; padding: 0 30px; }
         .btn-inform { width: 100%; order: -1; }
-        #capa-menu-principal { padding-bottom: 25px !important; }
+        #capa-menu-principal { padding-bottom: 20px !important; }
     }
 
     .blinking { animation: blinker 1.5s linear infinite; }
@@ -207,8 +172,8 @@ function mostrarNiveis(modo) {
         <div id="nivel-select-container">
             <p style="font-weight:800; color:#888; font-size:0.8rem; text-transform:uppercase; margin-bottom:5px;">Escolha a Dificuldade:</p>
             <div class="nivel-row">
-                <button class="btn-capa-small" onclick="setModo('${modo}', 1)" style="background:#8cc63f;"><i class="fas fa-leaf"></i> FÁCIL</button>
-                <button class="btn-capa-small" onclick="setModo('${modo}', 2)" style="background:#ff5a5f;"><i class="fas fa-fire"></i> DIFÍCIL</button>
+                <button class="btn-capa-small" onclick="setModo('${modo}', 1)" style="background:#8cc63f;">FÁCIL</button>
+                <button class="btn-capa-small" onclick="setModo('${modo}', 2)" style="background:#ff5a5f;">DIFÍCIL</button>
             </div>
             <div class="capa-btn-row"><button class="btn-capa-small" onclick="voltarCapa()" style="background:#6c757d; max-width:250px;"><i class="fas fa-arrow-left"></i> VOLTAR</button></div>
         </div>
@@ -243,7 +208,10 @@ function atualizarUI() {
     const pcLabel = modoJogo === 'CPU' ? "Pc" : "J2";
     const labelJ2 = modoJogo === 'CPU' ? "Computador" : "Jogador 2";
     const nomeVez = (turnoAtual === 0) ? "Jogador 1" : labelJ2;
-    Engine.showStatusBar(nomeVez, matchScore[0], matchScore[1], pcLabel);
+    
+    // Chama a função sobreposta do Engine definida no Index
+    if(typeof Engine !== "undefined") Engine.showStatusBar(nomeVez, matchScore[0], matchScore[1], pcLabel);
+
     const area = document.getElementById('game-content');
     area.innerHTML = "";
     area.style.justifyContent = "center"; 
@@ -296,15 +264,30 @@ function finalizarMatch() {
     const vencedorIdx = matchScore[0] >= 3 ? 0 : 1;
     const pcLabel = modoJogo === 'CPU' ? "PC" : "JOGADOR 2";
     const rel = {img:"taca_1.png", titulo:"PARABÉNS!"};
-    Engine.showResults(matchScore[0], matchScore[1], rel, pcLabel);
+    if(typeof Engine !== "undefined") Engine.showResults(matchScore[0], matchScore[1], rel, pcLabel);
 }
+// === FIM SECÇÃO 4 ===
 
+
+// ============================================================
+// === INÍCIO SECÇÃO 6: SIMULAÇÃO DA CAPA (ANIMAÇÃO) ===
+// ============================================================
 function iniciarSimulacao() {
     clearInterval(simuInterval);
     const board = document.getElementById('simu-board');
     if(!board) return;
+    let sTab = Array(7).fill().map(() => Array(7).fill(0));
+    for(let c=0; c<7; c++) { sTab[0][c] = 2; sTab[6][c] = 1; }
+    
     simuInterval = setInterval(() => {
-        board.innerHTML = `<div class="grid-board" style="opacity:0.3; transform: scale(1.05);">` + 
-            Array(49).fill().map(() => `<div class="cell"></div>`).join('') + `</div>`;
-    }, 700);
+        // Gera um tabuleiro limpo com algumas peças em posições aleatórias para simular movimento
+        const r1 = Math.floor(Math.random() * 7);
+        const r2 = Math.floor(Math.random() * 7);
+        board.innerHTML = `<div class="grid-board" style="opacity:0.3;">` + 
+            Array(49).fill().map((_, i) => {
+                const isPiece = (i === r1 || i === r2 + 40);
+                return `<div class="cell">${isPiece ? `<div class="piece ${i < 20 ? 'black':'white'}"></div>` : ''}</div>`;
+            }).join('') + `</div>`;
+    }, 1200);
 }
+// === FIM SECÇÃO 6 ===
