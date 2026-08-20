@@ -19,7 +19,7 @@ const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 // === SOBREPOSIÇÃO DO ENGINE (ALTERAÇÕES VISUAIS APENAS NO JOGO) ===
 // ============================================================
 
-// 1. Alteração da Barra de Status: Sem "VEZ DE" e com estilo de Pill de Resultado
+// 1. Barra de Status: Sem "VEZ DE", altura igual aos pontos (padding 8px)
 Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
     const isJ1 = nomeVez.toUpperCase().includes("JOGADOR 1");
     const pillBg = isJ1 ? "#8cc63f" : "#444";
@@ -27,7 +27,7 @@ Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
 
     document.getElementById('shell-header-content').innerHTML = `
         <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
-            <div class="blinking" style="padding: 12px 20px; border-radius: 18px; color: white; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; background: ${pillBg}; box-shadow: 0 4px 0 ${pillShadow};">
+            <div class="blinking" style="padding: 8px 20px; border-radius: 12px; color: white; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; background: ${pillBg}; box-shadow: 0 4px 0 ${pillShadow};">
                 ${nomeVez}
             </div>
             <div style="display: flex; gap: 8px;">
@@ -37,7 +37,7 @@ Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
         </div>`;
 };
 
-// 2. Alteração dos Resultados: Ajuste de tamanhos e simetria
+// 2. Resultados: Feedback menor, caixas iguais, sem ajudas
 Engine.showResults = function(s1, s2, rel, label2) {
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; padding: 15px;">RESULTADOS</h2>`;
     document.getElementById('game-content').innerHTML = `
@@ -45,15 +45,13 @@ Engine.showResults = function(s1, s2, rel, label2) {
             
             <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height: clamp(150px, 30vh, 280px); object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));">
             
-            <!-- Título do Feedback: Agora um pouco mais pequeno -->
             <div>
-                <h2 style="color:var(--text-grey); font-size: clamp(1.2rem, 3.5vw, 1.8rem); font-weight:800; text-transform:uppercase; margin:0; opacity: 0.9;">
+                <h2 style="color:var(--text-grey); font-size: clamp(1.1rem, 3vw, 1.6rem); font-weight:800; text-transform:uppercase; margin:0; opacity: 0.9;">
                     ${rel.titulo}
                 </h2>
             </div>
 
             <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; max-width: 600px;">
-                <!-- Caixas de Pontuação: Com min-width para serem iguais -->
                 <div style="min-width: 240px; padding: 12px 25px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.2rem; background: #8cc63f; box-shadow: 0 4px 0 #6da32f;">
                     JOGADOR 1: ${s1}
                 </div>
@@ -350,8 +348,6 @@ function finalizarMatch() {
     const vencedorIdx = matchScore[0] >= 3 ? 0 : 1;
     const pcLabel = modoJogo === 'CPU' ? "PC" : "JOGADOR 2";
     const rel = JOGO_CONFIG.relatorios.find(r => matchScore[vencedorIdx] >= r.min && matchScore[vencedorIdx] <= r.max) || {img:"taca_1.png", titulo:"PARABÉNS!"};
-    
-    // Chama a função sobreposta do Engine
     Engine.showResults(matchScore[0], matchScore[1], rel, pcLabel);
 }
 
