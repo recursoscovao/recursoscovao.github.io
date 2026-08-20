@@ -19,42 +19,39 @@ const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 // ============================================================
 // === INÍCIO SECÇÃO: SOBREPOSIÇÃO DO ENGINE (DESIGN) ===
 // ============================================================
-
-// 1. Barra de Status: Sem "VEZ DE", altura e forma igual aos resultados
 Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
     const isJ1 = nomeVez.toUpperCase().includes("JOGADOR 1");
     const pillBg = isJ1 ? "#8cc63f" : "#444";
     const pillShadow = isJ1 ? "#6da32f" : "#222";
 
     document.getElementById('shell-header-content').innerHTML = `
-        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
-            <div class="blinking" style="padding: 10px 22px; border-radius: 12px; color: white; font-weight: 900; font-size: 1rem; text-transform: uppercase; background: ${pillBg}; box-shadow: 0 4px 0 ${pillShadow};">
+        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 15px;">
+            <div class="blinking" style="padding: 8px 20px; border-radius: 12px; color: white; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; background: ${pillBg}; box-shadow: 0 4px 0 ${pillShadow};">
                 ${nomeVez}
             </div>
             <div style="display: flex; gap: 8px;">
-                <div style="padding: 10px 15px; border-radius: 12px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 4px 0 #6da32f;">J1: ${s1}</div>
-                <div style="padding: 10px 15px; border-radius: 12px; color: white; font-weight: 900; background: #444; box-shadow: 0 4px 0 #222;">${label2}: ${s2}</div>
+                <div style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 4px 0 #6da32f;">J1: ${s1}</div>
+                <div style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: #444; box-shadow: 0 3px 0 #222;">${label2}: ${s2}</div>
             </div>
         </div>`;
 };
 
-// 2. Resultados: Feedback menor, caixas iguais, sem ajudas
 Engine.showResults = function(s1, s2, rel, label2) {
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; padding: 15px;">RESULTADOS</h2>`;
     document.getElementById('game-content').innerHTML = `
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 15px; text-align: center; padding: 20px;">
-            <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height: clamp(140px, 25vh, 260px); object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));">
-            <div><h2 style="color:var(--text-grey); font-size: clamp(1rem, 3vw, 1.4rem); font-weight:800; text-transform:uppercase; margin:0; opacity: 0.9;">${rel.titulo}</h2></div>
+            <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height: clamp(140px, 30vh, 280px); object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));">
+            <div><h2 style="color:var(--text-grey); font-size: clamp(1rem, 3.5vw, 1.4rem); font-weight:800; text-transform:uppercase; margin:0; opacity: 0.9;">${rel.titulo}</h2></div>
             <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; width:100%;">
-                <div style="min-width: 220px; padding: 12px 20px; border-radius: 18px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 5px 0 #6da32f; font-size: 1.1rem;">JOGADOR 1: ${s1}</div>
-                <div style="min-width: 220px; padding: 12px 20px; border-radius: 18px; color: white; font-weight: 900; background: #444; box-shadow: 0 5px 0 #222; font-size: 1.1rem;">${label2.toUpperCase()}: ${s2}</div>
+                <div style="min-width: 240px; padding: 15px; border-radius: 18px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 5px 0 #6da32f; font-size: 1.2rem;">JOGADOR 1: ${s1}</div>
+                <div style="min-width: 240px; padding: 15px; border-radius: 18px; color: white; font-weight: 900; background: #444; box-shadow: 0 5px 0 #222; font-size: 1.2rem;">${label2.toUpperCase()}: ${s2}</div>
             </div>
         </div>`;
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
     footer.innerHTML = `<div style="display:flex; width:100%; gap:20px; padding:20px 25px 35px;">
-        <button onclick="location.reload()" style="flex: 1; height: 60px; border-radius: 40px; background: #6c757d; color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #4e555b;">REPETIR</button>
-        <button onclick="window.history.back()" style="flex: 1; height: 60px; border-radius: 40px; background: var(--primary-color); color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #4582c0;">SAIR</button>
+        <button onclick="location.reload()" style="flex: 1; height: 65px; border-radius: 40px; background: #6c757d; color: white; border: none; font-size: 1.4rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #4e555b;">REPETIR</button>
+        <button onclick="window.history.back()" style="flex: 1; height: 65px; border-radius: 40px; background: var(--primary-color); color: white; border: none; font-size: 1.4rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #4582c0;">SAIR</button>
     </div>`;
 };
 // === FIM SECÇÃO ENGINE ===
@@ -68,18 +65,20 @@ style.innerHTML = `
     #game-content { display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; padding: 0; box-sizing: border-box; overflow: hidden; position: relative; }
 
     #simu-container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 0; overflow: hidden; }
-    #simu-board { transform: scale(0.8); transition: 0.3s; }
+    #simu-board { transform: scale(0.8); transition: transform 0.3s ease; }
 
     #capa-menu-principal, #nivel-select-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px; flex-shrink: 0; padding-bottom: 20px !important; }
     .capa-btn-row, .nivel-row { display: flex; flex-direction: row; align-items: stretch; gap: 12px; width: 100%; max-width: 550px; justify-content: center; padding: 0 20px; }
     
-    .btn-capa-small { flex: 1; height: 60px; border-radius: 15px; border: none; color: white; font-weight: 900; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
-    .btn-inform { width: 60px; height: 60px; border-radius: 15px; background: white; border: 2px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
-    .btn-inform img { width: 60%; height: 60%; object-fit: contain; }
-
-    /* Dificuldade menores */
+    .btn-capa-small { flex: 1; height: 58px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
+    
+    /* Botões de dificuldade menores */
     .nivel-row .btn-capa-small { height: 46px; font-size: 0.85rem; border-radius: 10px; }
-    .btn-voltar-pequeno { height: 46px !important; max-width: 250px !important; font-size: 0.85rem !important; border-radius: 10px !important; }
+    .btn-voltar-pequeno { height: 46px !important; max-width: 180px !important; font-size: 0.85rem !important; border-radius: 10px !important; }
+
+    .btn-inform { width: 58px; height: 58px; border-radius: 12px; background: white; border: 2px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
+    .btn-inform img { width: 65%; height: 65%; object-fit: contain; }
+    .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
 
     #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s ease; transform: translateY(100%); visibility: hidden; overflow-y: auto; padding: 0; margin: 0; }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
@@ -87,24 +86,17 @@ style.innerHTML = `
 
     .inst-content { max-width: 750px; margin: 0 auto; text-align: left; font-family: 'Nunito', sans-serif; padding: 60px 25px; clear: both; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 2.2rem; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; border-bottom: 5px solid var(--bg-color); padding-bottom: 15px; }
-    .inst-section-title { color: #333; font-size: 1.4rem; font-weight: 800; margin: 30px 0 15px; display: flex; align-items: center; gap: 12px; }
-    .inst-section-title::before { content: ''; width: 6px; height: 24px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
-    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.6; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
 
-    /* TABULEIRO AVANÇO 7x7 */
     .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; margin: auto; width: fit-content; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; }
+    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; transition: background 0.2s; }
     .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 3px 6px rgba(0,0,0,0.2); transition: all 0.4s ease; }
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1px solid #eee; }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); }
 
-    :root { --cell-size: min(55px, 7.5vh); }
-    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) { 
-        :root { --cell-size: 10vw; } 
-        #simu-board { transform: scale(1.1); }
-    }
+    :root { --cell-size: min(52px, 7.5vh); }
+    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) { :root { --cell-size: 10vw; } }
     @media screen and (max-width: 500px) and (orientation: portrait) { 
-        :root { --cell-size: 11vw; }
+        :root { --cell-size: 11vw; } 
         .capa-btn-row { flex-direction: column; width: 100%; padding: 0 30px; }
         .btn-inform { width: 100%; order: -1; }
     }
@@ -119,7 +111,7 @@ document.head.appendChild(style);
 
 
 // ============================================================
-// === INÍCIO SECÇÃO 3: CAPA E INSTRUÇÕES PREMIUM ===
+// === INÍCIO SECÇÃO 3: CAPA E INSTRUÇÕES ===
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -132,24 +124,7 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
-                
-                <div class="inst-section-title">Objetivo do Jogo</div>
-                <p class="inst-text">O Avanço é uma corrida estratégica. Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário.</p>
-
-                <div class="inst-section-title">Como Mover</div>
-                <ul class="inst-list">
-                    <li><b>Movimento Vertical:</b> Podes avançar 1 casa para a frente se esta estiver <b>vazia</b>.</li>
-                    <li><b>Movimento Diagonal:</b> Podes mover-te para as duas casas diagonais à tua frente, quer estejam vazias ou ocupadas por um adversário.</li>
-                </ul>
-
-                <div class="inst-section-title">Capturas</div>
-                <ul class="inst-list">
-                    <li><b>Só Diagonais:</b> Podes capturar uma peça adversária se ela estiver numa das tuas <b>diagonais frontais</b>.</li>
-                    <li><b>Proibido Vertical:</b> Não podes capturar uma peça que esteja diretamente à tua frente.</li>
-                </ul>
-
-                <div class="inst-section-title">Sistema de Jogo</div>
-                <p class="inst-text">As peças Brancas (Jogador 1) movem-se sempre para cima. As Negras (PC ou J2) movem-se para baixo. Ganha a melhor de 5 rondas!</p>
+                <p>O Avanço é uma corrida estratégica. Vence o primeiro jogador que conseguir levar qualquer uma das suas peças até à primeira linha do campo adversário.</p>
                 <div style="height:60px;"></div>
             </div>`;
         document.body.appendChild(panel);
@@ -184,10 +159,13 @@ function toggleInstructions() {
 function mostrarNiveis(modo) {
     somClique.play();
     const area = document.getElementById('game-content');
+    // Reduz a animação em mais 10% (de 0.75 para 0.65) para caber melhor os botões
+    if(document.getElementById('simu-board')) document.getElementById('simu-board').style.transform = 'scale(0.65)';
+    
     area.innerHTML = `
-        <div id="simu-container"><div id="simu-board"></div></div>
+        <div id="simu-container"><div id="simu-board" style="transform: scale(0.65);"></div></div>
         <div id="nivel-select-container">
-            <p style="font-weight:800; color:#888; font-size:0.8rem; text-transform:uppercase; margin-bottom:5px;">Escolha a Dificuldade:</p>
+            <p style="font-weight:800; color:#888; font-size:0.75rem; text-transform:uppercase; margin-bottom:5px;">Escolha a Dificuldade:</p>
             <div class="nivel-row">
                 <button class="btn-capa-small" onclick="setModo('${modo}', 1)" style="background:#8cc63f;">FÁCIL</button>
                 <button class="btn-capa-small" onclick="setModo('${modo}', 2)" style="background:#ff5a5f;">DIFÍCIL</button>
@@ -220,7 +198,6 @@ function iniciarJogo() {
     jogoAtivo = true;
     selectedPiece = null;
     tabuleiro = Array(7).fill().map(() => Array(7).fill(0));
-    // Inicialização real Avanço
     for(let c=0; c<7; c++) { 
         tabuleiro[0][c] = 2; tabuleiro[1][c] = 2; // Pretas
         tabuleiro[5][c] = 1; tabuleiro[6][c] = 1; // Brancas
@@ -240,13 +217,36 @@ function atualizarUI() {
     area.style.justifyContent = "center"; 
     const boardEl = document.createElement('div');
     boardEl.className = "grid-board";
+
+    // Calcula ajudas se for Nível 1
+    let movesHints = [];
+    if(selectedPiece && nivelJogo === 1) {
+        for(let r=0; r<7; r++) {
+            for(let c=0; c<7; c++) {
+                if(validarMovimento(selectedPiece.r, selectedPiece.c, r, c, (turnoAtual === 0 ? 1 : 2))) {
+                    movesHints.push({r, c});
+                }
+            }
+        }
+    }
+
     for(let r=0; r<7; r++) {
         for(let c=0; c<7; c++) {
             const cell = document.createElement('div');
             cell.className = "cell";
-            if(selectedPiece && selectedPiece.r === r && selectedPiece.c === c) cell.style.border = "3px solid #fbc02d";
+            
+            // Destaca peça selecionada
+            if(selectedPiece && selectedPiece.r === r && selectedPiece.c === c) cell.style.background = "#fff9c4";
+            
+            // Dica de movimento (Nível 1)
+            if(movesHints.some(m => m.r === r && m.c === c)) {
+                cell.style.background = "rgba(140, 198, 63, 0.25)";
+                cell.innerHTML = '<div style="width:10px; height:10px; background:#8cc63f; border-radius:50%; opacity:0.5;"></div>';
+            }
+
             if(tabuleiro[r][c] === 1) cell.innerHTML = '<div class="piece white"></div>';
             if(tabuleiro[r][c] === 2) cell.innerHTML = '<div class="piece black"></div>';
+            
             cell.onclick = () => handleCellClick(r, c);
             boardEl.appendChild(cell);
         }
@@ -256,10 +256,9 @@ function atualizarUI() {
 
 function handleCellClick(r, c) {
     if(!jogoAtivo || (modoJogo === 'CPU' && turnoAtual === 1)) return;
-    const piece = tabuleiro[r][c];
     const player = turnoAtual === 0 ? 1 : 2;
 
-    if(piece === player) {
+    if(tabuleiro[r][c] === player) {
         selectedPiece = {r, c}; somClique.play(); atualizarUI();
     } else if(selectedPiece) {
         if(validarMovimento(selectedPiece.r, selectedPiece.c, r, c, player)) {
@@ -284,7 +283,6 @@ function executarMovimento(fr, fc, tr, tc) {
     const p = tabuleiro[fr][fc];
     tabuleiro[fr][fc] = 0; tabuleiro[tr][tc] = p;
     selectedPiece = null; somClique.play();
-    // Vitória
     if((p === 1 && tr === 0) || (p === 2 && tr === 6)) { finalizarRonda(turnoAtual); return; }
     turnoAtual = (turnoAtual === 0) ? 1 : 0;
     atualizarUI();
@@ -293,31 +291,15 @@ function executarMovimento(fr, fc, tr, tc) {
 
 function iaControlador() {
     let moves = [];
-    for(let r=0; r<7; r++) {
-        for(let c=0; c<7; c++) {
-            if(tabuleiro[r][c] === 2) {
-                // Tenta todos os movimentos
-                for(let dr=0; dr<7; dr++) {
-                    for(let dc=0; dc<7; dc++) {
-                        if(validarMovimento(r, c, dr, dc, 2)) moves.push({fr:r, fc:c, tr:dr, tc:dc});
-                    }
-                }
-            }
-        }
-    }
+    for(let r=0; r<7; r++) for(let c=0; c<7; c++) if(tabuleiro[r][c] === 2) 
+        for(let dr=0; dr<7; dr++) for(let dc=0; dc<7; dc++) if(validarMovimento(r,c,dr,dc,2)) moves.push({fr:r,fc:c,tr:dr,tc:dc});
     if(moves.length === 0) { finalizarRonda(0); return; }
-    // Prioriza capturas ou vitória
-    const winMove = moves.find(m => m.tr === 6);
-    const capMove = moves.find(m => tabuleiro[m.tr][m.tc] === 1);
-    const m = winMove || capMove || moves[Math.floor(Math.random() * moves.length)];
+    const win = moves.find(m => m.tr === 6);
+    const cap = moves.find(m => tabuleiro[m.tr][m.tc] === 1);
+    const m = win || cap || moves[Math.floor(Math.random()*moves.length)];
     executarMovimento(m.fr, m.fc, m.tr, m.tc);
 }
-// === FIM SECÇÃO 4 ===
 
-
-// ============================================================
-// === INÍCIO SECÇÃO 5: FINALIZAÇÃO ===
-// ============================================================
 function finalizarRonda(vencedorIdx) {
     jogoAtivo = false; matchScore[vencedorIdx]++; somAcerto.play();
     const overlay = document.getElementById('round-feedback');
@@ -326,7 +308,7 @@ function finalizarRonda(vencedorIdx) {
     const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : labelJ2;
     const corV = vencedorIdx === 0 ? "#8cc63f" : "#444";
     overlay.style.display = 'flex';
-    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:${corV}; font-size:2rem; font-weight:900; text-transform:uppercase;">${nomeV}</h1><p style="font-weight:700; color:#666;">Ganhou a ronda!</p><div style="margin-top:10px; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${pcLabel}</div></div>`;
+    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:${corV}; font-size:2rem; font-weight:900; text-transform:uppercase;">${nomeV}</h1><p style="font-weight:700; color:#666;">Venceu a ronda!</p><div style="margin-top:10px; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${pcLabel}</div></div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2000);
     else setTimeout(() => { iniciarJogo(); }, 2000);
 }
@@ -334,15 +316,14 @@ function finalizarRonda(vencedorIdx) {
 function finalizarMatch() {
     const vencedorIdx = matchScore[0] >= 3 ? 0 : 1;
     const pcLabel = modoJogo === 'CPU' ? "PC" : "JOGADOR 2";
-    const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "PC" : "JOGADOR 2");
-    const rel = JOGO_CONFIG.relatorios.find(r => matchScore[vencedorIdx] >= r.min && matchScore[vencedorIdx] <= r.max) || {img:"taca_1.png", titulo:"PARABÉNS!"};
+    const rel = {img:"taca_1.png", titulo:"PARABÉNS!"};
     Engine.showResults(matchScore[0], matchScore[1], rel, pcLabel);
 }
-// === FIM SECÇÃO 5 ===
+// === FIM SECÇÃO 4 ===
 
 
 // ============================================================
-// === INÍCIO SECÇÃO 6: SIMULAÇÃO DA CAPA (RÁPIDA E REALISTA) ===
+// === INÍCIO SECÇÃO 6: SIMULAÇÃO DA CAPA (RÁPIDA) ===
 // ============================================================
 function iniciarSimulacao() {
     clearInterval(simuInterval);
@@ -350,9 +331,7 @@ function iniciarSimulacao() {
     if(!board) return;
     
     let sTab = Array(7).fill().map(() => Array(7).fill(0));
-    const resetTab = () => {
-        for(let c=0; c<7; c++) { sTab[0][c] = 2; sTab[1][c] = 2; sTab[5][c] = 1; sTab[6][c] = 1; }
-    };
+    const resetTab = () => { for(let c=0; c<7; c++) { sTab[0][c] = 2; sTab[1][c] = 2; sTab[5][c] = 1; sTab[6][c] = 1; } };
     resetTab();
 
     const render = () => {
@@ -364,13 +343,8 @@ function iniciarSimulacao() {
         const player = Math.random() > 0.5 ? 1 : 2;
         const dir = player === 1 ? -1 : 1;
         const possibleMoves = [];
-        for(let r=0; r<7; r++){
-            for(let c=0; c<7; c++){
-                if(sTab[r][c] === player){
-                    if(r+dir >= 0 && r+dir < 7 && sTab[r+dir][c] === 0) possibleMoves.push({fr:r, fc:c, tr:r+dir, tc:c});
-                }
-            }
-        }
+        for(let r=0; r<7; r++) for(let c=0; c<7; c++) if(sTab[r][c] === player && r+dir >= 0 && r+dir < 7 && sTab[r+dir][c] === 0) possibleMoves.push({fr:r,fc:c,tr:r+dir,tc:c});
+        
         if(possibleMoves.length > 0 && Math.random() > 0.1){
             const m = possibleMoves[Math.floor(Math.random()*possibleMoves.length)];
             sTab[m.tr][m.tc] = sTab[m.fr][m.fc]; sTab[m.fr][m.fc] = 0;
@@ -380,7 +354,7 @@ function iniciarSimulacao() {
         render();
     };
 
-    render();
-    simuInterval = setInterval(animStep, 600); // Rápido
+    render(); // Início imediato
+    simuInterval = setInterval(animStep, 500); // 600ms -> 500ms para ser mais rápido
 }
 // === FIM SECÇÃO 6 ===
