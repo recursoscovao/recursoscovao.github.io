@@ -1,5 +1,5 @@
 // ============================================================
-// === SECÇÃO 1: ESTADO GLOBAL E SONS ===
+// === INÍCIO SECÇÃO 1: ESTADO GLOBAL E SONS ===
 // ============================================================
 let jogoAtivo = false;
 let modoJogo = 'CPU';     
@@ -14,9 +14,11 @@ let simuInterval;
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
+// === FIM SECÇÃO 1 ===
+
 
 // ============================================================
-// === SOBREPOSIÇÃO DO ENGINE (ALTERAÇÕES VISUAIS APENAS NO JOGO) ===
+// === INÍCIO SECÇÃO: SOBREPOSIÇÃO DO ENGINE (DESIGN) ===
 // ============================================================
 
 // 1. Barra de Status: Sem "VEZ DE", altura (8px) e forma (12px) igual aos pontos
@@ -42,25 +44,13 @@ Engine.showResults = function(s1, s2, rel, label2) {
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; padding: 15px;">RESULTADOS</h2>`;
     document.getElementById('game-content').innerHTML = `
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 15px; text-align: center; padding: 20px;">
-            
             <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height: clamp(150px, 30vh, 280px); object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));">
-            
-            <div>
-                <h2 style="color:var(--text-grey); font-size: clamp(1.1rem, 3vw, 1.6rem); font-weight:800; text-transform:uppercase; margin:0; opacity: 0.9;">
-                    ${rel.titulo}
-                </h2>
-            </div>
-
+            <div><h2 style="color:var(--text-grey); font-size: clamp(1.1rem, 3vw, 1.6rem); font-weight:800; text-transform:uppercase; margin:0; opacity: 0.9;">${rel.titulo}</h2></div>
             <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; max-width: 600px;">
-                <div style="min-width: 240px; padding: 12px 25px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.2rem; background: #8cc63f; box-shadow: 0 4px 0 #6da32f;">
-                    JOGADOR 1: ${s1}
-                </div>
-                <div style="min-width: 240px; padding: 12px 25px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.2rem; background: #444; box-shadow: 0 4px 0 #222;">
-                    ${label2.toUpperCase()}: ${s2}
-                </div>
+                <div style="min-width: 240px; padding: 12px 25px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.2rem; background: #8cc63f; box-shadow: 0 4px 0 #6da32f;">JOGADOR 1: ${s1}</div>
+                <div style="min-width: 240px; padding: 12px 25px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; justify-content: center; gap: 10px; font-size: 1.2rem; background: #444; box-shadow: 0 4px 0 #222;">${label2.toUpperCase()}: ${s2}</div>
             </div>
         </div>`;
-    
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
     footer.innerHTML = `
@@ -69,9 +59,11 @@ Engine.showResults = function(s1, s2, rel, label2) {
             <button onclick="window.history.back()" style="flex: 1; height: 65px; border-radius: 40px; background: var(--primary-color); color: white; border: none; font-size: 1.4rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #4582c0;">SAIR</button>
         </div>`;
 };
+// === FIM SECÇÃO ENGINE ===
+
 
 // ============================================================
-// === SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS ===
+// === INÍCIO SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS ===
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
@@ -82,54 +74,21 @@ style.innerHTML = `
         overflow: hidden; position: relative;
     }
 
-    #simu-container { 
-        flex: 1; display: flex; align-items: center; justify-content: center; 
-        width: 100%; min-height: 0; overflow: hidden;
-    }
+    #simu-container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 0; overflow: hidden; }
 
-    #capa-menu-principal, #nivel-select-container { 
-        width: 100%; display: flex; flex-direction: column; align-items: center; 
-        gap: 15px; flex-shrink: 0; 
-        padding-bottom: 20px; 
-    }
+    #capa-menu-principal, #nivel-select-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 15px; flex-shrink: 0; padding-bottom: 20px; }
 
-    .capa-btn-row, .nivel-row { 
-        display: flex; flex-direction: row; align-items: stretch;
-        gap: 12px; width: 100%; max-width: 550px; justify-content: center; padding: 0 20px; 
-    }
+    .capa-btn-row, .nivel-row { display: flex; flex-direction: row; align-items: stretch; gap: 12px; width: 100%; max-width: 550px; justify-content: center; padding: 0 20px; }
     
-    .btn-capa-small { 
-        flex: 1; height: 55px; border-radius: 12px; border: none; color: white; 
-        font-weight: 900; font-size: 0.95rem; cursor: pointer; display: flex; 
-        align-items: center; justify-content: center; gap: 8px; 
-        box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; 
-    }
+    .btn-capa-small { flex: 1; height: 55px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
     
-    .btn-inform { 
-        width: 55px; height: 55px; 
-        border-radius: 12px; background: white; border: 2px solid #eee;
-        cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 5px 0 rgba(0,0,0,0.05); transition: 0.2s;
-    }
+    .btn-inform { width: 55px; height: 55px; border-radius: 12px; background: white; border: 2px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); transition: 0.2s; }
     .btn-inform img { width: 60%; height: 60%; object-fit: contain; }
     .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
 
-    #instrucoes-panel { 
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-        background: white; z-index: 10000; 
-        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
-        transform: translateY(100%); 
-        visibility: hidden; 
-        overflow-y: auto; 
-        padding: 0; margin: 0;
-    }
+    #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); transform: translateY(100%); visibility: hidden; overflow-y: auto; padding: 0; margin: 0; }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
-    
-    .close-x { 
-        position: sticky; top: 20px; float: right; margin-right: 25px;
-        font-size: 3.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; 
-        line-height: 1; z-index: 10001;
-    }
+    .close-x { position: sticky; top: 20px; float: right; margin-right: 25px; font-size: 3.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; z-index: 10001; }
 
     .inst-content { max-width: 750px; margin: 0 auto; text-align: left; font-family: 'Nunito', sans-serif; padding: 60px 25px; clear: both; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 2.2rem; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; border-bottom: 5px solid var(--bg-color); padding-bottom: 15px; }
@@ -144,58 +103,40 @@ style.innerHTML = `
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1px solid #eee; }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); }
 
-    @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) { :root { --cell-size: min(55px, 8vh); } }
-    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) { :root { --cell-size: 10vw; } #simu-board { transform: scale(1.15); } }
-    
-    /* TELEMÓVEL VERTICAL - AJUSTES ESPECÍFICOS DE ALTURA E FORMA */
-    @media screen and (max-width: 500px) and (orientation: portrait) { 
-        :root { --cell-size: 11vw; } 
-        
-        .capa-btn-row { 
-            flex-direction: column !important; 
-            width: 100% !important; 
-            gap: 12px !important; 
-            padding: 0 25px !important; 
-        } 
+    /* --- RESPONSIVIDADE ADAPTATIVA --- */
 
-        /* Força a mesma altura (65px) e forma (15px) para todos os botões no telemóvel */
-        .btn-inform { 
-            width: 100% !important; 
-            height: 65px !important; 
-            order: -1 !important; 
-            border-radius: 15px !important; 
-            background: white !important;
-        } 
-        
-        .btn-capa-small { 
-            height: 65px !important; 
-            border-radius: 15px !important; 
-            font-size: 1.05rem !important; 
-            width: 100% !important; 
-        }
+    /* TABLET VERTICAL */
+    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
+        :root { --cell-size: 10vw; } 
+        #game-content { gap: 40px; padding: 40px 20px; }
+        .capa-btn-row { flex-direction: column !important; width: 100% !important; max-width: 500px; gap: 15px !important; }
+        .btn-inform { width: 100% !important; height: 70px !important; order: -1 !important; border-radius: 15px !important; }
+        .btn-capa-small { height: 70px !important; border-radius: 15px !important; font-size: 1.2rem !important; }
+        .nivel-row { flex-direction: row !important; width: 100% !important; gap: 15px !important; }
+        #nivel-select-container .btn-capa-small[onclick*="voltarCapa"] { max-width: none !important; width: 100% !important; }
+        #simu-board { transform: scale(1.15); }
+    }
 
-        /* Dificuldade: Mantém botões lado a lado mas com a nova altura */
-        .nivel-row { 
-            flex-direction: row !important; 
-            width: 100% !important; 
-            padding: 0 25px !important; 
-            gap: 10px !important;
-        }
-        
-        .nivel-row .btn-capa-small {
-             height: 65px !important;
-        }
+    /* TABLET HORIZONTAL / PC / PAINEL */
+    @media screen and (min-width: 768px) and (orientation: landscape) {
+        :root { --cell-size: min(55px, 8vh); }
+        #game-content { flex-direction: row !important; justify-content: center !important; gap: 60px !important; padding: 20px !important; }
+        #simu-container { flex: 1; }
+        #capa-menu-principal, #nivel-select-container { width: 320px !important; padding-bottom: 0 !important; justify-content: center; }
+        .capa-btn-row, .nivel-row { flex-direction: column !important; width: 100% !important; gap: 12px !important; }
+        .btn-inform { width: 100% !important; height: 60px !important; order: -1 !important; border-radius: 15px !important; }
+        .btn-capa-small { height: 60px !important; border-radius: 15px !important; font-size: 1rem !important; }
+    }
 
-        /* Botão Voltar: Largura Total */
-        #nivel-select-container .capa-btn-row {
-            width: 100% !important;
-            padding: 0 25px !important;
-        }
-        
-        #nivel-select-container .btn-capa-small[onclick*="voltarCapa"] {
-            max-width: none !important;
-            width: 100% !important;
-        }
+    /* TELEMÓVEL VERTICAL */
+    @media screen and (max-width: 500px) and (orientation: portrait) {
+        :root { --cell-size: 11vw; }
+        .capa-btn-row { flex-direction: column !important; width: 100% !important; gap: 12px !important; padding: 0 25px !important; }
+        .btn-inform { width: 100% !important; height: 65px !important; order: -1 !important; border-radius: 15px !important; background: white !important; }
+        .btn-capa-small { height: 65px !important; border-radius: 15px !important; font-size: 1.05rem !important; width: 100% !important; }
+        .nivel-row { flex-direction: row !important; width: 100% !important; padding: 0 25px !important; gap: 10px !important; }
+        #nivel-select-container .capa-btn-row { width: 100% !important; padding: 0 25px !important; }
+        #nivel-select-container .btn-capa-small[onclick*="voltarCapa"] { max-width: none !important; width: 100% !important; }
     }
 
     .blinking { animation: blinker 1.5s linear infinite; }
@@ -204,9 +145,11 @@ style.innerHTML = `
     .vitoria-card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); width: 85%; max-width: 320px; text-align: center; }
 `;
 document.head.appendChild(style);
+// === FIM SECÇÃO 2 ===
+
 
 // ============================================================
-// === SECÇÃO 3: CAPA E INSTRUÇÕES ===
+// === INÍCIO SECÇÃO 3: CAPA E INSTRUÇÕES ===
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -275,16 +218,18 @@ function mostrarNiveis(modo) {
                 <button class="btn-capa-small" onclick="setModo('${modo}', 1)" style="background:#8cc63f;"><i class="fas fa-leaf"></i> FÁCIL</button>
                 <button class="btn-capa-small" onclick="setModo('${modo}', 2)" style="background:#ff5a5f;"><i class="fas fa-fire"></i> DIFÍCIL</button>
             </div>
-            <div class="capa-btn-row"><button class="btn-capa-small" onclick="voltarCapa()" style="background:#6c757d; max-width:250px;"><i class="fas fa-arrow-left"></i> VOLTAR</button></div>
+            <div class="capa-btn-row"><button class="btn-capa-small" onclick="voltarCapa()" style="background:#6c757d;"><i class="fas fa-arrow-left"></i> VOLTAR</button></div>
         </div>
     `;
     iniciarSimulacao(); 
 }
 
 function voltarCapa() { somClique.play(); mostrarCapa(); }
+// === FIM SECÇÃO 3 ===
+
 
 // ============================================================
-// === SECÇÃO 4: LÓGICA CORE DO JOGO ===
+// === INÍCIO SECÇÃO 4: LÓGICA CORE DO JOGO ===
 // ============================================================
 function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
@@ -307,7 +252,6 @@ function atualizarUI() {
     const pcLabel = modoJogo === 'CPU' ? "Pc" : "J2";
     const labelJ2 = modoJogo === 'CPU' ? "Computador" : "Jogador 2";
     const nomeVez = (turnoAtual === 0) ? "Jogador 1" : labelJ2;
-    
     Engine.showStatusBar(nomeVez, matchScore[0], matchScore[1], pcLabel);
 
     const area = document.getElementById('game-content');
@@ -379,7 +323,12 @@ function iaControlador() {
     } else m = allMoves[Math.floor(Math.random() * allMoves.length)];
     executarMovimento(m.fr, m.fc, m.tr, m.tc);
 }
+// === FIM SECÇÃO 4 ===
 
+
+// ============================================================
+// === INÍCIO SECÇÃO 5: FINALIZAÇÃO E RESULTADOS ===
+// ============================================================
 function finalizarRonda(vencedorIdx) {
     jogoAtivo = false; matchScore[vencedorIdx]++; somAcerto.play();
     const overlay = document.getElementById('round-feedback');
@@ -400,7 +349,12 @@ function finalizarMatch() {
     const rel = JOGO_CONFIG.relatorios.find(r => matchScore[vencedorIdx] >= r.min && matchScore[vencedorIdx] <= r.max) || {img:"taca_1.png", titulo:"PARABÉNS!"};
     Engine.showResults(matchScore[0], matchScore[1], rel, pcLabel);
 }
+// === FIM SECÇÃO 5 ===
 
+
+// ============================================================
+// === INÍCIO SECÇÃO 6: SIMULAÇÃO DA CAPA ===
+// ============================================================
 function iniciarSimulacao() {
     clearInterval(simuInterval);
     const board = document.getElementById('simu-board');
@@ -425,3 +379,4 @@ function iniciarSimulacao() {
         board.innerHTML = h + `</div>`;
     }, 700);
 }
+// === FIM SECÇÃO 6 ===
