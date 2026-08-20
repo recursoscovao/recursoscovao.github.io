@@ -17,6 +17,47 @@ const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 
 // ============================================================
+// === INÍCIO SECÇÃO: SOBREPOSIÇÃO DO ENGINE (DESIGN) ===
+// ============================================================
+Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
+    const isJ1 = nomeVez.toUpperCase().includes("JOGADOR 1");
+    const pillBg = isJ1 ? "#8cc63f" : "#444";
+    const pillShadow = isJ1 ? "#6da32f" : "#222";
+
+    document.getElementById('shell-header-content').innerHTML = `
+        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 15px;">
+            <div class="blinking" style="padding: 8px 20px; border-radius: 12px; color: white; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; background: ${pillBg}; box-shadow: 0 4px 0 ${pillShadow};">
+                ${nomeVez}
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <div style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 4px 0 #6da32f;">J1: ${s1}</div>
+                <div style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: #444; box-shadow: 0 4px 0 #222;">${label2}: ${s2}</div>
+            </div>
+        </div>`;
+};
+
+Engine.showResults = function(s1, s2, rel, label2) {
+    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; padding: 15px;">RESULTADOS</h2>`;
+    document.getElementById('game-content').innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 20px; text-align: center; padding: 20px;">
+            <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height: clamp(160px, 30vh, 280px); object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));">
+            <div><h2 style="color:var(--text-grey); font-size: clamp(1.1rem, 3vw, 1.6rem); font-weight:800; text-transform:uppercase; margin:0; opacity: 0.9;">${rel.titulo}</h2></div>
+            <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; width:100%;">
+                <div style="min-width: 240px; padding: 15px; border-radius: 18px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 5px 0 #6da32f; font-size: 1.2rem;">JOGADOR 1: ${s1}</div>
+                <div style="min-width: 240px; padding: 15px; border-radius: 18px; color: white; font-weight: 900; background: #444; box-shadow: 0 5px 0 #222; font-size: 1.2rem;">${label2.toUpperCase()}: ${s2}</div>
+            </div>
+        </div>`;
+    const footer = document.getElementById('shell-footer-content');
+    footer.style.display = "flex";
+    footer.innerHTML = `<div style="display:flex; width:100%; gap:20px; padding:20px 25px 35px;">
+        <button onclick="location.reload()" style="flex: 1; height: 65px; border-radius: 40px; background: #6c757d; color: white; border: none; font-size: 1.4rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #4e555b;">REPETIR</button>
+        <button onclick="window.history.back()" style="flex: 1; height: 65px; border-radius: 40px; background: var(--primary-color); color: white; border: none; font-size: 1.4rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #4582c0;">SAIR</button>
+    </div>`;
+};
+// === FIM SECÇÃO ENGINE ===
+
+
+// ============================================================
 // === INÍCIO SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS ===
 // ============================================================
 const style = document.createElement('style');
@@ -27,51 +68,23 @@ style.innerHTML = `
         overflow: hidden; position: relative;
     }
 
-    /* AREA DA SIMULAÇÃO: Reduzida em 20% e centrada */
-    #simu-container { 
-        flex: 1; display: flex; align-items: center; justify-content: center; 
-        width: 100%; min-height: 0; overflow: hidden;
-    }
-    #simu-board { 
-        transform: scale(0.8); /* ANIMAÇÃO 20% MAIS PEQUENA */
-        transition: 0.3s;
-    }
+    #simu-container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 0; overflow: hidden; }
+    #simu-board { transform: scale(0.8); transition: 0.3s; }
 
-    /* CONTENTOR DOS BOTÕES: 20px de margem do fundo */
-    #capa-menu-principal, #nivel-select-container { 
-        width: 100%; display: flex; flex-direction: column; align-items: center; 
-        gap: 15px; flex-shrink: 0; padding-bottom: 20px !important; 
-    }
+    #capa-menu-principal, #nivel-select-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 15px; flex-shrink: 0; padding-bottom: 20px !important; }
+    .capa-btn-row, .nivel-row { display: flex; flex-direction: row; align-items: stretch; gap: 12px; width: 100%; max-width: 550px; justify-content: center; padding: 0 20px; }
+    
+    .btn-capa-small { flex: 1; height: 60px; border-radius: 15px; border: none; color: white; font-weight: 900; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
+    
+    /* AJUSTE: Botões de dificuldade ligeiramente menores */
+    .nivel-row .btn-capa-small { height: 52px; font-size: 0.9rem; }
+    .btn-voltar-pequeno { height: 52px !important; max-width: 220px !important; font-size: 0.9rem !important; }
 
-    .capa-btn-row, .nivel-row { 
-        display: flex; flex-direction: row; align-items: stretch;
-        gap: 12px; width: 100%; max-width: 550px; justify-content: center; padding: 0 20px; 
-    }
-    
-    /* BOTÕES UNIFICADOS (60px de altura) */
-    .btn-capa-small { 
-        flex: 1; height: 60px; border-radius: 15px; border: none; color: white; 
-        font-weight: 900; font-size: 1rem; cursor: pointer; display: flex; 
-        align-items: center; justify-content: center; gap: 10px; 
-        box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; 
-    }
-    
-    .btn-inform { 
-        width: 60px; height: 60px; border-radius: 15px; background: white; border: 2px solid #eee;
-        cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 5px 0 rgba(0,0,0,0.05); transition: 0.2s;
-    }
-    .btn-inform img { width: 60%; height: 60%; object-fit: contain; }
+    .btn-inform { width: 60px; height: 60px; border-radius: 15px; background: white; border: 2px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
+    .btn-inform img { width: 65%; height: 65%; object-fit: contain; }
     .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
 
-    /* INSTRUÇÕES PREMIUM - SCROLL DE PÁGINA INTEIRA */
-    #instrucoes-panel { 
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-        background: white; z-index: 10000; 
-        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
-        transform: translateY(100%); 
-        visibility: hidden; overflow-y: auto; padding: 0; margin: 0;
-    }
+    #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s ease; transform: translateY(100%); visibility: hidden; overflow-y: auto; padding: 0; margin: 0; }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
     .close-x { position: sticky; top: 20px; float: right; margin-right: 25px; font-size: 3.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; z-index: 10001; }
 
@@ -80,7 +93,6 @@ style.innerHTML = `
     .inst-section-title { color: #333; font-size: 1.4rem; font-weight: 800; margin: 30px 0 15px; display: flex; align-items: center; gap: 12px; }
     .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.6; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
 
-    /* TABULEIRO */
     .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; margin: auto; width: fit-content; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; }
     .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
@@ -99,7 +111,6 @@ style.innerHTML = `
     .blinking { animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; }
-    .vitoria-card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); width: 85%; max-width: 320px; text-align: center; }
 `;
 document.head.appendChild(style);
 // === FIM SECÇÃO 2 ===
@@ -120,19 +131,9 @@ function mostrarCapa() {
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
                 <div class="inst-section-title"><i class="fas fa-bullseye"></i> Objetivo do Jogo</div>
-                <p class="inst-text">O Avanço é uma corrida estratégica. Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário.</p>
-                <div class="inst-section-title"><i class="fas fa-walking"></i> Como Mover</div>
-                <ul class="inst-list">
-                    <li><b>Movimento Vertical:</b> Podes avançar 1 casa para a frente se esta estiver <b>vazia</b>.</li>
-                    <li><b>Movimento Diagonal:</b> Podes mover-te para as duas casas diagonais à tua frente, quer estejam vazias ou ocupadas por um adversário.</li>
-                </ul>
-                <div class="inst-section-title"><i class="fas fa-fist-raised"></i> Capturas</div>
-                <ul class="inst-list">
-                    <li><b>Só Diagonais:</b> Podes capturar uma peça adversária se ela estiver numa das tuas <b>diagonais frontais</b>.</li>
-                    <li><b>Proibido Vertical:</b> Não podes capturar uma peça que esteja diretamente à tua frente.</li>
-                </ul>
-                <div class="inst-section-title"><i class="fas fa-trophy"></i> Sistema de Jogo</div>
-                <p class="inst-text">As peças Brancas (Jogador 1) movem-se sempre para cima. As Negras (PC ou J2) movem-se para baixo. Ganha a melhor de 5 rondas!</p>
+                <p>Vence o primeiro jogador que conseguir levar qualquer uma das suas peças até à primeira linha do campo adversário.</p>
+                <div class="inst-section-title"><i class="fas fa-walking"></i> Movimentos</div>
+                <p>Podes mover uma casa para a frente (se vazia) ou para as diagonais frontais (onde podes capturar peças inimigas).</p>
                 <div style="height:60px;"></div>
             </div>`;
         document.body.appendChild(panel);
@@ -175,7 +176,11 @@ function mostrarNiveis(modo) {
                 <button class="btn-capa-small" onclick="setModo('${modo}', 1)" style="background:#8cc63f;">FÁCIL</button>
                 <button class="btn-capa-small" onclick="setModo('${modo}', 2)" style="background:#ff5a5f;">DIFÍCIL</button>
             </div>
-            <div class="capa-btn-row"><button class="btn-capa-small" onclick="voltarCapa()" style="background:#6c757d; max-width:250px;"><i class="fas fa-arrow-left"></i> VOLTAR</button></div>
+            <div class="capa-btn-row">
+                <button class="btn-capa-small btn-voltar-pequeno" onclick="voltarCapa()" style="background:#6c757d;">
+                    <i class="fas fa-arrow-left"></i> VOLTAR
+                </button>
+            </div>
         </div>
     `;
     iniciarSimulacao(); 
@@ -208,8 +213,6 @@ function atualizarUI() {
     const pcLabel = modoJogo === 'CPU' ? "Pc" : "J2";
     const labelJ2 = modoJogo === 'CPU' ? "Computador" : "Jogador 2";
     const nomeVez = (turnoAtual === 0) ? "Jogador 1" : labelJ2;
-    
-    // Chama a função sobreposta do Engine definida no Index
     if(typeof Engine !== "undefined") Engine.showStatusBar(nomeVez, matchScore[0], matchScore[1], pcLabel);
 
     const area = document.getElementById('game-content');
@@ -221,7 +224,6 @@ function atualizarUI() {
         for(let c=0; c<7; c++) {
             const cell = document.createElement('div');
             cell.className = "cell";
-            if(selectedPiece && selectedPiece.r === r && selectedPiece.c === c) cell.style.border = "3px solid #fbc02d";
             if(tabuleiro[r][c] === 1) cell.innerHTML = '<div class="piece white"></div>';
             if(tabuleiro[r][c] === 2) cell.innerHTML = '<div class="piece black"></div>';
             cell.onclick = () => handleCellClick(r, c);
@@ -232,62 +234,57 @@ function atualizarUI() {
 }
 
 function handleCellClick(r, c) {
-    if(!jogoAtivo || (modoJogo === 'CPU' && turnoAtual === 1)) return;
-    const piece = tabuleiro[r][c];
-    if(piece === (turnoAtual === 0 ? 1 : 2)) {
-        selectedPiece = {r, c}; somClique.play(); atualizarUI();
-    } else if(selectedPiece) {
-        executarMovimento(selectedPiece.r, selectedPiece.c, r, c);
-    }
-}
-
-function executarMovimento(fr, fc, tr, tc) {
-    tabuleiro[fr][fc] = 0; tabuleiro[tr][tc] = turnoAtual === 0 ? 1 : 2;
-    selectedPiece = null; somClique.play();
-    if((turnoAtual === 0 && tr === 0) || (turnoAtual === 1 && tr === 6)) { finalizarRonda(turnoAtual); return; }
+    if(!jogoAtivo) return;
+    tabuleiro[r][c] = turnoAtual === 0 ? 1 : 2;
     turnoAtual = (turnoAtual === 0) ? 1 : 0;
     atualizarUI();
-    if(modoJogo === 'CPU' && turnoAtual === 1) setTimeout(iaControlador, 800);
-}
-
-function iaControlador() {
-    finalizarRonda(1); // Exemplo simplificado
-}
-
-function finalizarRonda(vencedorIdx) {
-    jogoAtivo = false; matchScore[vencedorIdx]++; somAcerto.play();
-    if (matchScore[0] >= 3 || matchScore[1] >= 3) finalizarMatch();
-    else iniciarJogo();
-}
-
-function finalizarMatch() {
-    const vencedorIdx = matchScore[0] >= 3 ? 0 : 1;
-    const pcLabel = modoJogo === 'CPU' ? "PC" : "JOGADOR 2";
-    const rel = {img:"taca_1.png", titulo:"PARABÉNS!"};
-    if(typeof Engine !== "undefined") Engine.showResults(matchScore[0], matchScore[1], rel, pcLabel);
 }
 // === FIM SECÇÃO 4 ===
 
 
 // ============================================================
-// === INÍCIO SECÇÃO 6: SIMULAÇÃO DA CAPA (ANIMAÇÃO) ===
+// === INÍCIO SECÇÃO 6: SIMULAÇÃO DA CAPA (REALISTA) ===
 // ============================================================
 function iniciarSimulacao() {
     clearInterval(simuInterval);
     const board = document.getElementById('simu-board');
     if(!board) return;
-    let sTab = Array(7).fill().map(() => Array(7).fill(0));
-    for(let c=0; c<7; c++) { sTab[0][c] = 2; sTab[6][c] = 1; }
     
+    // Posições reais de início do jogo
+    let simuTab = Array(7).fill().map(() => Array(7).fill(0));
+    for(let c=0; c<7; c++) { 
+        simuTab[0][c] = 2; simuTab[1][c] = 2; // Pretas no topo
+        simuTab[5][c] = 1; simuTab[6][c] = 1; // Brancas na base
+    }
+
+    const renderSimu = () => {
+        let h = `<div class="grid-board" style="opacity:0.35;">`;
+        for(let r=0; r<7; r++) {
+            for(let c=0; c<7; c++) {
+                h += `<div class="cell">`;
+                if(simuTab[r][c] === 1) h += '<div class="piece white"></div>';
+                if(simuTab[r][c] === 2) h += '<div class="piece black"></div>';
+                h += `</div>`;
+            }
+        }
+        board.innerHTML = h + `</div>`;
+    };
+
     simuInterval = setInterval(() => {
-        // Gera um tabuleiro limpo com algumas peças em posições aleatórias para simular movimento
-        const r1 = Math.floor(Math.random() * 7);
-        const r2 = Math.floor(Math.random() * 7);
-        board.innerHTML = `<div class="grid-board" style="opacity:0.3;">` + 
-            Array(49).fill().map((_, i) => {
-                const isPiece = (i === r1 || i === r2 + 40);
-                return `<div class="cell">${isPiece ? `<div class="piece ${i < 20 ? 'black':'white'}"></div>` : ''}</div>`;
-            }).join('') + `</div>`;
-    }, 1200);
+        // Simula uma jogada: escolhe uma peça branca e avança-a
+        // Limpa tabuleiro para reiniciar se estiver muito bagunçado
+        if(Math.random() > 0.8) {
+            simuTab = Array(7).fill().map(() => Array(7).fill(0));
+            for(let c=0; c<7; c++) { simuTab[0][c] = 2; simuTab[1][c] = 2; simuTab[5][c] = 1; simuTab[6][c] = 1; }
+        } else {
+            // Tenta mover uma peça aleatória
+            const r = 2 + Math.floor(Math.random() * 4);
+            const c = Math.floor(Math.random() * 7);
+            simuTab[r][c] = Math.random() > 0.5 ? 1 : 2;
+        }
+        renderSimu();
+    }, 1500);
+
+    renderSimu();
 }
 // === FIM SECÇÃO 6 ===
