@@ -19,10 +19,21 @@
             background-color: var(--bg-color); 
             display: flex; 
             flex-direction: column; 
-            overflow: hidden; /* Mantém a moldura fixa */
+            overflow: hidden; /* Mantém a moldura fixa e estável */
         }
         
-        header { background: white; border-radius: 0 0 35px 35px; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; padding: 0 15px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        header { 
+            background: white; 
+            border-radius: 0 0 35px 35px; 
+            display: grid; 
+            grid-template-columns: 60px 1fr 60px; 
+            align-items: center; 
+            padding: 0 15px; 
+            z-index: 1000; 
+            flex-shrink: 0; 
+            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
+            height: 80px;
+        }
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         
@@ -41,7 +52,6 @@
 
         .shell-header { text-align: center; border-bottom: 2px dashed #f5f5f5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; min-height: 65px; }
         
-        /* Shell Body: Atua como contentor flexível para o jogo */
         .shell-body { 
             flex: 1; 
             display: flex; 
@@ -55,10 +65,40 @@
         footer { text-align: center; background: white; flex-shrink: 0; padding: 8px; border-radius: 20px 20px 0 0; }
         .footer-text { font-size: 0.7rem; font-weight: 700; color: var(--text-grey); }
         
-        .hamburger-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; transition: 0.2s; font-size: 24px; }
-        .menu-dropdown { position: absolute; display: none; flex-direction: column; gap: 6px; z-index: 2000; top: 75px; left: 15px; }
-        .menu-item { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 10px 20px; border-radius: 12px; }
+        /* ============================================================
+           MENU HAMBÚRGUER (FORMATO ANTERIOR SEM DESTAQUE)
+           ============================================================ */
+        .hamburger-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; transition: 0.2s; font-size: 26px; }
+        
+        .menu-dropdown { 
+            position: absolute; 
+            display: none; 
+            flex-direction: column; 
+            gap: 8px; 
+            z-index: 2000; 
+            top: 85px; 
+            left: 15px; 
+            filter: drop-shadow(0 10px 25px rgba(0,0,0,0.1));
+        }
+        
+        .menu-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; 
+            text-decoration: none; 
+            color: var(--text-grey); 
+            font-weight: 800; 
+            background: white; 
+            padding: 12px 20px; 
+            border-radius: 15px; 
+            transition: 0.2s;
+            white-space: nowrap;
+            min-width: 220px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+        }
+        
         .menu-item:hover { background-color: var(--primary-color); color: white !important; }
+        .menu-item img { flex-shrink: 0; object-fit: contain; }
 
         /* ============================================================
            2. PC / TABLET LANDSCAPE
@@ -80,7 +120,10 @@
             #txt-titulo1 { font-size: 1.4rem; font-weight: 900; color: var(--primary-color); }
             #txt-titulo2 { font-size: 1.2rem; font-weight: 800; color: var(--text-grey); }
             #txt-subtitulo-header { font-size: 0.75rem; font-weight: 600; margin-top: 4px; opacity: 0.8; color: var(--text-grey); }
-            .hamburger-btn { font-size: 32px; }
+            
+            .hamburger-btn { font-size: 32px; width: 50px; height: 50px; }
+            .menu-dropdown { top: 105px; gap: 10px; }
+            .menu-item { padding: 15px 25px; min-width: 280px; font-size: 1.1rem; }
         }
 
         /* ============================================================
@@ -126,25 +169,36 @@
                 const config = JOGO_CONFIG;
                 const tema = BIBLIOTECA_TEMAS[config.areaAtiva];
                 const conteudo = BIBLIOTECA_CONTEUDO[config.anoAtivo][config.areaAtiva];
+
                 document.title = config.nomeDoJogo;
                 document.documentElement.style.setProperty('--primary-color', tema.corPrimaria);
                 document.documentElement.style.setProperty('--bg-color', tema.corPagina);
+
                 document.getElementById('txt-titulo1').innerText = conteudo.t1;
                 document.getElementById('txt-titulo2').innerText = conteudo.t2;
                 document.getElementById('txt-subtitulo-header').innerText = conteudo.sub;
                 document.getElementById('txt-rodape').innerHTML = conteudo.rodape;
+                
                 const voltarIconPath = config.caminhoIconsMenu + tema.voltarMobile;
                 document.getElementById('icon-voltar-top').src = voltarIconPath;
-                const itemAtivo = (config.menuItens || config.menu_itens).find(i => i.id === config.anoAtivo);
-                if(itemAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itemAtivo.icon;
+
+                // Define o ícone do jogo atual no centro do header
+                const itAtivo = (config.menuItens || config.menu_itens).find(i => i.id === config.anoAtivo);
+                if(itAtivo) document.getElementById('header-icon').src = config.caminhoIconsMenu + itAtivo.icon;
+                
                 const menuBox = document.getElementById('dropdownMenu');
                 menuBox.innerHTML = ''; 
+
+                // Constrói a lista do menu (Todos os itens iguais, sem destaque)
                 (config.menuItens || config.menu_itens).forEach(item => {
-                    const a = document.createElement('a'); a.className = 'menu-item'; a.href = item.link;
+                    const a = document.createElement('a'); 
+                    a.className = 'menu-item'; 
+                    a.href = item.link;
                     const imgPath = (item.icon === "AUTO") ? voltarIconPath : config.caminhoIconsMenu + item.icon;
-                    a.innerHTML = `<img src="${imgPath}" style="width:24px;height:24px;"> <span>${item.label}</span>`;
+                    a.innerHTML = `<img src="${imgPath}" style="width:28px; height:28px;"> <span>${item.label}</span>`;
                     menuBox.appendChild(a);
                 });
+
                 if(typeof mostrarCapa === "function") mostrarCapa();
             },
 
