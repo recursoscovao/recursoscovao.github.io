@@ -78,13 +78,17 @@
         }
 
         /* ============================================================
-           3. TABLET PORTRAIT (VERTICAL) - ÍCONE E MENU AJUSTADOS
+           3. TABLET PORTRAIT (VERTICAL) - CORRIGIDO
            ============================================================ */
         @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
             header { height: 100px; } 
             #header-icon { height: 65px; }
             
-            /* Ícone hambúrguer mais equilibrado para Tablet Vertical */
+            /* ADICIONADO: Configuração dos títulos para Tablet Vertical */
+            #txt-titulo1 { font-size: 1.4rem; font-weight: 900; color: var(--primary-color); }
+            #txt-titulo2 { font-size: 1.2rem; font-weight: 800; color: var(--text-grey); }
+            #txt-subtitulo-header { font-size: 0.75rem; font-weight: 600; margin-top: 4px; opacity: 0.8; color: var(--text-grey); }
+
             .hamburger-btn { 
                 font-size: 32px; 
                 width: 50px; 
@@ -104,12 +108,11 @@
                 box-shadow: 0 8px 25px rgba(0,0,0,0.15);
             }
 
-            /* Proteção contra cortes nos botões */
             .menu-item { 
-                height: 55px;      /* Alterado de 70px para 55px */
+                height: 55px;      
                 min-width: 320px;  
                 padding: 0 25px; 
-                font-size: 1.1rem; /* Alterado de 1.2rem para 1.1rem */
+                font-size: 1.1rem; 
                 border-radius: 15px;
                 display: flex;
                 white-space: nowrap; 
