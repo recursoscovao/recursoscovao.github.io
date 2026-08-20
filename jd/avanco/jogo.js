@@ -17,33 +17,38 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ============================================================
-// === SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS (RESTAURADO PREMIUM) ===
+// === SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS (RESTAURO PREMIUM) ===
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
     #game-content { 
         display: flex; flex-direction: column; align-items: center; justify-content: center; 
-        width: 100%; height: 100%; padding: 15px; box-sizing: border-box; overflow: hidden; 
-        position: relative; gap: 30px; /* Gap para separar simulação dos botões */
+        width: 100%; height: 100%; padding: 0 15px; box-sizing: border-box; overflow: hidden; 
+        position: relative; gap: 40px; /* Espaço entre a animação e os botões */
     }
 
+    /* AJUSTE DO TOPO: Tabuleiro simulado sobe mais para não perder espaço */
     #simu-container { 
-        flex: 1; display: flex; align-items: flex-end; /* Empurra o tabuleiro simulado para cima */
-        justify-content: center; width: 100%; padding-bottom: 10px;
+        flex: 1; display: flex; 
+        align-items: flex-start; /* Puxa o tabuleiro para o topo */
+        justify-content: center; width: 100%; 
+        margin-top: -10px; /* Reduz o padding do topo */
     }
 
     #capa-menu-principal, #nivel-select-container { 
         width: 100%; display: flex; flex-direction: column; align-items: center; gap: 15px; flex-shrink: 0; 
-        padding-bottom: 20px;
+        padding-bottom: 40px; /* Espaço em relação ao fundo */
     }
 
-    .capa-btn-row, .nivel-row { display: flex; flex-direction: row; gap: 12px; width: 100%; max-width: 500px; justify-content: center; }
+    .capa-btn-row, .nivel-row { display: flex; flex-direction: row; gap: 15px; width: 100%; max-width: 550px; justify-content: center; }
     
-    .btn-capa-small { flex: 1; height: 55px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
-    .btn-inform { width: 55px; height: 55px; cursor: pointer; flex-shrink: 0; }
+    .btn-capa-small { flex: 1; height: 60px; border-radius: 15px; border: none; color: white; font-weight: 900; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 4px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
+    .btn-inform { width: 60px; height: 60px; cursor: pointer; flex-shrink: 0; }
     .btn-inform img { width: 100%; height: 100%; object-fit: contain; }
 
-    /* --- INSTRUÇÕES PREMIUM (CONFIGURAÇÃO RESTAURADA) --- */
+    /* ============================================================
+       INSTRUÇÕES PREMIUM - DESIGN DRAWER (CONFIGURAÇÃO TOTAL)
+       ============================================================ */
     #instrucoes-panel { 
         position: fixed; bottom: 0; left: 0; width: 100vw; height: 100vh; 
         background: white; z-index: 10000; 
@@ -53,46 +58,45 @@ style.innerHTML = `
         box-shadow: 0 -10px 40px rgba(0,0,0,0.2);
     }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
-    .close-x { position: absolute; top: 15px; right: 25px; font-size: 3rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
-    .inst-content { max-width: 650px; margin: 0 auto; text-align: left; font-family: 'Nunito', sans-serif; }
-    .inst-header { color: var(--primary-color); text-align: center; font-size: 2rem; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; border-bottom: 4px solid var(--bg-color); padding-bottom: 10px; }
-    .inst-section-title { color: #333; font-size: 1.3rem; font-weight: 800; margin: 25px 0 12px; display: flex; align-items: center; gap: 12px; }
-    .inst-text { color: #555; font-size: 1.05rem; line-height: 1.6; margin-bottom: 15px; }
+    .close-x { position: absolute; top: 15px; right: 25px; font-size: 3.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; transition: 0.2s; }
+    
+    .inst-content { max-width: 700px; margin: 0 auto; text-align: left; font-family: 'Nunito', sans-serif; }
+    .inst-header { color: var(--primary-color); text-align: center; font-size: 2.2rem; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; border-bottom: 5px solid var(--bg-color); padding-bottom: 15px; }
+    .inst-section-title { color: #333; font-size: 1.4rem; font-weight: 800; margin: 30px 0 15px; display: flex; align-items: center; gap: 12px; }
+    .inst-text { color: #555; font-size: 1.1rem; line-height: 1.7; margin-bottom: 18px; }
     .inst-list { list-style: none; padding: 0; }
-    .inst-list li { background: #f8f9fa; margin-bottom: 10px; padding: 15px; border-radius: 15px; border-left: 5px solid var(--primary-color); color: #444; font-size: 1rem; line-height: 1.5; }
+    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.6; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
 
     /* TABULEIRO E PEÇAS */
-    .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 10px; margin: auto; width: fit-content; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+    .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 10px; margin: auto; width: fit-content; box-shadow: 0 8px 25px rgba(0,0,0,0.1); }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; }
-    .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.3); }
-    .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ccc); border: 1px solid #eee; }
-    .piece.black { background: radial-gradient(circle at 30% 30%, #444, #000); }
+    .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+    .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1px solid #eee; }
+    .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); }
 
     /* --- RESPONSIVIDADE --- */
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
-        :root { --cell-size: min(60px, 8vh); }
-        #game-content { gap: 50px; }
+        :root { --cell-size: min(65px, 8.5vh); }
     }
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
         :root { --cell-size: 10.5vw; } 
-        #simu-board { transform: scale(1.1); }
-        #game-content { gap: 60px; }
+        #simu-board { transform: scale(1.2); }
+        #game-content { gap: 80px; }
     }
     @media screen and (max-width: 500px) and (orientation: portrait) {
         :root { --cell-size: 11.5vw; }
         #simu-board { transform: scale(0.9); }
         .capa-btn-row { flex-direction: column; width: 90%; gap: 10px; }
         .btn-inform { order: -1; align-self: center; } 
-        #game-content { gap: 20px; }
+        #game-content { gap: 30px; }
     }
 
-    /* UI JOGO */
-    .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
-    .pill-j2 { background: #444 !important; box-shadow: 0 3px 0 #222; }
+    /* UI GERAL */
+    .status-pill { background: #6c757d; color: white; padding: 10px 20px; border-radius: 12px; font-weight: 900; font-size: 1rem; }
     .blinking { animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; }
-    .vitoria-card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); width: 85%; max-width: 320px; text-align: center; }
+    .vitoria-card { background: white; padding: 30px; border-radius: 30px; box-shadow: 0 15px 45px rgba(0,0,0,0.2); width: 85%; max-width: 350px; text-align: center; }
 `;
 document.head.appendChild(style);
 
@@ -160,7 +164,7 @@ function mostrarNiveis(modo) {
     area.innerHTML = `
         <div id="simu-container"><div id="simu-board"></div></div>
         <div id="nivel-select-container">
-            <p style="font-weight:800; color:#888; font-size:0.8rem; text-transform:uppercase; margin-bottom:5px;">Dificuldade:</p>
+            <p style="font-weight:800; color:#888; font-size:0.8rem; text-transform:uppercase; margin-bottom:5px;">Escolha a Dificuldade:</p>
             <div class="nivel-row">
                 <button class="btn-capa-small" onclick="setModo('${modo}', 1)" style="background:#8cc63f;"><i class="fas fa-leaf"></i> FÁCIL</button>
                 <button class="btn-capa-small" onclick="setModo('${modo}', 2)" style="background:#ff5a5f;"><i class="fas fa-fire"></i> DIFÍCIL</button>
@@ -198,14 +202,13 @@ function iniciarJogo() {
 function atualizarUI() {
     const pcLabel = modoJogo === 'CPU' ? "Pc" : "J2";
     const nomeVez = (turnoAtual === 0) ? "Jogador 1" : (modoJogo === 'CPU' ? "Computador" : "Jogador 2");
-    const classPill = (turnoAtual === 0) ? "pill-j1" : "pill-j2";
     
     document.getElementById('shell-header-content').innerHTML = `
         <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
-            <div class="status-pill ${classPill} blinking" style="padding:10px 15px; border-radius:10px; color:white; font-weight:900; font-size:0.9rem;">VEZ DE: ${nomeVez}</div>
-            <div style="display:flex; gap:5px;">
-                <div style="background:#8cc63f; color:white; padding:6px 12px; border-radius:8px; font-weight:900;">J1: ${matchScore[0]}</div>
-                <div style="background:#444; color:white; padding:6px 12px; border-radius:8px; font-weight:900;">${pcLabel}: ${matchScore[1]}</div>
+            <div class="status-pill ${turnoAtual === 0 ? 'pill-j1' : 'pill-j2'} blinking">VEZ DE: ${nomeVez}</div>
+            <div style="display:flex; gap:10px;">
+                <div style="background:#8cc63f; color:white; padding:8px 15px; border-radius:12px; font-weight:900;">J1: ${matchScore[0]}</div>
+                <div style="background:#444; color:white; padding:8px 15px; border-radius:12px; font-weight:900;">${pcLabel}: ${matchScore[1]}</div>
             </div>
         </div>`;
 
