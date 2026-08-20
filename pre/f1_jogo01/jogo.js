@@ -10,7 +10,7 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ==========================================
-// 2. CONFIGURAÇÃO VISUAL (CSS INJETADO)
+// 2. CONFIGURAÇÃO VISUAL (CSS INJETADO) - ADAPTADO PARA TABLET E PAINEL
 // ==========================================
 const style = document.createElement('style');
 style.innerHTML = `
@@ -34,31 +34,61 @@ style.innerHTML = `
     .destaque-box {
         width: var(--dest-size); height: var(--dest-size); background: #fff; border-radius: 30px; 
         border: 3.5px dashed var(--primary-color); display: flex; align-items: center; justify-content: center;
-        margin-bottom: 15px;
+        margin-bottom: 15px; flex-shrink: 0;
     }
-    .destaque-box img { max-width: 60%; max-height: 60%; object-fit: contain; }
+    .destaque-box img { max-width: 65%; max-height: 65%; object-fit: contain; }
     
     .opcao-card {
         background: white; border: 3px solid #f0f0f0; border-radius: 15px; 
         width: var(--card-size); height: var(--card-size);
         display: flex; align-items: center; justify-content: center; 
-        cursor: pointer; position: relative;
+        cursor: pointer; position: relative; transition: 0.2s;
     }
     .opcao-card img { width: 80%; height: 80%; object-fit: contain; }
     
     .feedback-icon { position: absolute; font-size: 3rem; z-index: 10; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3)); pointer-events: none; }
     .icon-v { color: #8cc63f; } .icon-x { color: #ff5a5f; }
 
+    /* A. PC / TABLET LANDSCAPE / PAINÉIS INTERATIVOS */
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
-        :root { --grid-cols: 6; --card-size: 135px; --dest-size: 160px; }
-        .shell-body { padding-top: 10px !important; padding-bottom: 10px !important; justify-content: center !important; }
-        .destaque-box { margin-top: 0px; margin-bottom: 30px; }
+        :root { 
+            --grid-cols: 6; 
+            --card-size: 130px; 
+            --dest-size: 160px; 
+        }
+        .shell-body { padding: 20px !important; justify-content: center !important; }
+        .destaque-box { margin-bottom: 25px; }
     }
+
+    /* B. TABLET PORTRAIT (VERTICAL) - COM PADDING LATERAL E 4 COLUNAS */
+    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
+        :root { 
+            --grid-cols: 4;      
+            --card-size: 145px;  
+            --dest-size: 200px;   
+        }
+        .shell-body { padding: 30px 40px !important; justify-content: center !important; }
+        .destaque-box { margin-bottom: 35px; }
+    }
+
+    /* C. TELEMÓVEL VERTICAL (PORTRAIT) */
     @media screen and (max-width: 500px) and (orientation: portrait) {
-        :root { --grid-cols: 3; --card-size: 90px; --dest-size: 150px; }
+        :root { 
+            --grid-cols: 3; 
+            --card-size: 85px; 
+            --dest-size: 140px; 
+        }
+        .shell-body { padding: 15px 20px !important; justify-content: center !important; }
     }
+
+    /* D. TELEMÓVEL HORIZONTAL (LANDSCAPE) */
     @media screen and (max-height: 500px) and (orientation: landscape) {
-        :root { --grid-cols: 6; --card-size: 75px; --dest-size: 120px; }
+        :root { 
+            --grid-cols: 6; 
+            --card-size: 70px; 
+            --dest-size: 110px; 
+        }
+        .shell-body { padding: 10px 15px !important; }
     }
 `;
 document.head.appendChild(style);
@@ -68,7 +98,6 @@ document.head.appendChild(style);
 // ==========================================
 function tocarAudioInstrucoes() {
     somClique.play();
-    // Alterado para buscar o som definido nos DADOS_JOGO
     const audioInst = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes);
     audioInst.play().catch(() => {
         const synth = window.speechSynthesis;
