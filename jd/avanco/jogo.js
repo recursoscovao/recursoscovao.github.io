@@ -16,34 +16,38 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ============================================================
-// === SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS ===
+// === SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS (AJUSTE DE ESPAÇOS) ===
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
     #game-content { 
         display: flex; flex-direction: column; align-items: center; 
-        width: 100%; height: 100%; padding: 0; box-sizing: border-box; 
-        overflow: hidden; position: relative;
+        justify-content: center; /* Centraliza o conjunto todo */
+        width: 100%; height: 100%; 
+        padding: 5px 15px 15px 15px; /* Reduzido padding no topo */
+        box-sizing: border-box; overflow: hidden; position: relative;
     }
 
-    /* AREA DA SIMULAÇÃO: Ocupa o centro e empurra os botões para o fundo */
+    /* AREA DA SIMULAÇÃO: Mais próxima do topo e dos botões */
     #simu-container { 
         flex: 1; display: flex; align-items: center; justify-content: center; 
         width: 100%; min-height: 0; overflow: hidden;
+        margin-top: -20px; /* Puxa o tabuleiro para cima */
     }
 
-    /* CONTENTOR DOS BOTÕES: 20px de padding do limite do fundo */
+    /* CONTENTOR DOS BOTÕES: Colado à simulação com 20px de margem do fundo */
     #capa-menu-principal, #nivel-select-container { 
         width: 100%; display: flex; flex-direction: column; align-items: center; 
-        gap: 15px; flex-shrink: 0; padding-bottom: 20px; /* Margem rigorosa de 20px */
+        gap: 12px; flex-shrink: 0; 
+        padding-top: 10px;    /* Reduz espaço entre tabuleiro e botões */
+        padding-bottom: 20px; /* Margem rigorosa de 20px do limite inferior */
     }
 
     .capa-btn-row, .nivel-row { 
-        display: flex; flex-direction: row; align-items: stretch; /* Garante mesma altura */
-        gap: 12px; width: 100%; max-width: 550px; justify-content: center; padding: 0 20px; 
+        display: flex; flex-direction: row; align-items: stretch; 
+        gap: 12px; width: 100%; max-width: 550px; justify-content: center; padding: 0 10px; 
     }
     
-    /* BOTÕES COM ALTURA UNIFICADA */
     .btn-capa-small { 
         flex: 1; height: 60px; border-radius: 15px; border: none; color: white; 
         font-weight: 900; font-size: 1rem; cursor: pointer; display: flex; 
@@ -52,7 +56,7 @@ style.innerHTML = `
     }
     
     .btn-inform { 
-        width: 60px; height: 60px; /* Mesma altura que os botões de texto */
+        width: 60px; height: 60px; 
         border-radius: 15px; background: white; border: 2px solid #eee;
         cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
         box-shadow: 0 5px 0 rgba(0,0,0,0.05); transition: 0.2s;
@@ -69,7 +73,7 @@ style.innerHTML = `
         transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
         transform: translateY(100%); 
         visibility: hidden; 
-        overflow-y: auto; /* Scroll aplicado aqui para a página toda */
+        overflow-y: auto; 
         padding: 0; margin: 0;
     }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
@@ -107,6 +111,7 @@ style.innerHTML = `
         .capa-btn-row { flex-direction: column; width: 100%; }
         .btn-inform { width: 100%; height: 50px; order: -1; }
         .btn-capa-small { height: 55px; }
+        #capa-menu-principal { padding-bottom: 20px; }
     }
 
     /* UI JOGO */
@@ -188,7 +193,7 @@ function mostrarNiveis(modo) {
     area.innerHTML = `
         <div id="simu-container"><div id="simu-board"></div></div>
         <div id="nivel-select-container">
-            <p style="font-weight:800; color:#888; font-size:0.8rem; text-transform:uppercase; margin-bottom:5px;">Dificuldade:</p>
+            <p style="font-weight:800; color:#888; font-size:0.8rem; text-transform:uppercase; margin-bottom:5px;">Escolha a Dificuldade:</p>
             <div class="nivel-row">
                 <button class="btn-capa-small" onclick="setModo('${modo}', 1)" style="background:#8cc63f;"><i class="fas fa-leaf"></i> FÁCIL</button>
                 <button class="btn-capa-small" onclick="setModo('${modo}', 2)" style="background:#ff5a5f;"><i class="fas fa-fire"></i> DIFÍCIL</button>
@@ -230,7 +235,7 @@ function atualizarUI() {
             <div class="status-pill blinking">VEZ DE: ${nomeVez}</div>
             <div style="display:flex; gap:10px;">
                 <div style="background:#8cc63f; color:white; padding:8px 15px; border-radius:12px; font-weight:900;">J1: ${matchScore[0]}</div>
-                <div style="background:#444; color:white; padding:8px 15px; border-radius:12px; font-weight:900;">${pcLabel}: ${matchScore[1]}</div>
+                <div style="background:#444; color:white; padding:8px 15px; border-radius:10px; font-weight:900;">${pcLabel}: ${matchScore[1]}</div>
             </div>
         </div>`;
 
