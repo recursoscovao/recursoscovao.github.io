@@ -7,30 +7,31 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* ============================================================
-           1. CONFIGURAÇÕES GLOBAIS
-           ============================================================ */
         :root { --primary-color: #5EA2E6; --bg-color: #EAF4FE; --text-grey: #8792a1; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
+        /* Body permite scroll natural se o conteúdo crescer */
         body, html { 
             min-height: 100vh; 
             width: 100vw; 
             background-color: var(--bg-color); 
             display: flex; 
             flex-direction: column; 
+            overflow-x: hidden;
+            overflow-y: auto; 
         }
         
-        header { background: white; border-radius: 0 0 35px 35px; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; padding: 0 15px; height: 90px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        header { background: white; border-radius: 0 0 35px 35px; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; padding: 0 15px; height: 80px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         
-        main { flex: 1; display: flex; justify-content: center; padding: 10px; }
+        main { flex: 1; display: flex; justify-content: center; padding: 15px; }
         
         .game-shell { 
             background: white; 
             width: min(1100px, 100%); 
-            height: 100%; 
+            min-height: 500px; /* Altura mínima de segurança */
+            height: fit-content; 
             border: 1.5px solid var(--primary-color); 
             display: flex; 
             flex-direction: column; 
@@ -38,30 +39,30 @@
             overflow: hidden; 
         }
 
-        .shell-header { text-align: center; border-bottom: 2px dashed #f5f5f5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; min-height: 65px; }
-        .shell-body { flex: 1; display: flex; flex-direction: column; position: relative; }
-        .shell-footer { display: flex; align-items: center; background: #fafafa; flex-shrink: 0; }
-        footer { text-align: center; background: white; flex-shrink: 0; padding: 8px; border-radius: 20px 20px 0 0; }
+        .shell-header { text-align: center; border-bottom: 2px dashed #f5f5f5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; min-height: 60px; }
         
-        .hamburger-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; font-size: 26px; }
-        .menu-dropdown { position: absolute; display: none; flex-direction: column; gap: 8px; z-index: 2000; top: 95px; left: 15px; filter: drop-shadow(0 10px 25px rgba(0,0,0,0.1)); }
-        .menu-item { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; padding: 12px 20px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
-        .menu-item:hover { background-color: var(--primary-color); color: white !important; }
-
-        /* ============================================================
-           2. ADAPTAÇÃO PARA TABLETS E TELEMÓVEIS (PERMITIR SCROLL)
-           ============================================================ */
-        @media screen and (max-width: 1024px) {
-            body, html { height: auto !important; overflow-y: auto !important; }
-            main { height: auto !important; display: block; }
-            .game-shell { height: auto !important; min-height: 500px; margin-bottom: 20px; }
-            .shell-body { overflow: visible !important; height: auto !important; }
+        /* shell-body agora deixa o jogo respirar e crescer */
+        .shell-body { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            position: relative;
+            padding: 0;
         }
 
-        @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
-            header { height: 100px; }
-            #txt-titulo1 { font-size: 1.4rem; font-weight: 900; color: var(--primary-color); }
-            #txt-titulo2 { font-size: 1.2rem; font-weight: 800; color: var(--text-grey); }
+        .shell-footer { display: flex; align-items: center; background: #fafafa; flex-shrink: 0; }
+        footer { text-align: center; background: white; flex-shrink: 0; padding: 12px; border-radius: 20px 20px 0 0; }
+        .footer-text { font-size: 0.7rem; font-weight: 700; color: var(--text-grey); }
+        
+        .hamburger-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; font-size: 26px; }
+        .menu-dropdown { position: absolute; display: none; flex-direction: column; gap: 8px; z-index: 2000; top: 85px; left: 15px; filter: drop-shadow(0 10px 25px rgba(0,0,0,0.1)); }
+        .menu-item { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; padding: 12px 20px; border-radius: 15px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); min-width: 240px; }
+        .menu-item:hover { background-color: var(--primary-color); color: white !important; }
+
+        @media screen and (max-width: 500px) {
+            header { height: 75px; }
+            #txt-titulo1 { font-size: 1.1rem; }
+            #txt-titulo2 { font-size: 0.9rem; }
         }
     </style>
 </head>
@@ -70,14 +71,14 @@
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
         <div class="header-center">
-            <img id="header-icon" src="" alt="" style="height:50px;">
+            <img id="header-icon" src="" alt="" style="height:45px;">
             <div class="title-group">
                 <div id="txt-titulo1">---</div>
                 <div id="txt-titulo2">---</div>
                 <div id="txt-subtitulo-header">---</div>
             </div>
         </div>
-         <img id="icon-voltar-top" src="" onclick="location.href='../../'" style="height: 38px; cursor: pointer;">
+         <img id="icon-voltar-top" src="" onclick="location.href='../../'" style="height: 35px; cursor: pointer;">
     </header>
     <main>
         <div class="game-shell">
@@ -111,7 +112,7 @@
                     if (item.label === "Destaque" || item.id === "jd") return;
                     const a = document.createElement('a'); a.className = 'menu-item'; a.href = item.link;
                     const imgPath = (item.icon === "AUTO") ? voltarIconPath : config.caminhoIconsMenu + item.icon;
-                    a.innerHTML = `<img src="${imgPath}" style="width:28px;"> <span>${item.label}</span>`;
+                    a.innerHTML = `<img src="${imgPath}" style="width:24px;"> <span>${item.label}</span>`;
                     menuBox.appendChild(a);
                 });
                 if(typeof mostrarCapa === "function") mostrarCapa();
@@ -120,30 +121,30 @@
                 const isJ1 = nomeVez.toUpperCase().includes("JOGADOR 1");
                 const pillBg = isJ1 ? "#8cc63f" : "#444";
                 document.getElementById('shell-header-content').innerHTML = `
-                    <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 10px;">
-                        <div class="blinking" style="padding: 8px 20px; border-radius: 12px; color: white; font-weight: 900; background: ${pillBg}; text-transform: uppercase;">${nomeVez}</div>
+                    <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 10px; flex-wrap: wrap; gap: 10px;">
+                        <div class="blinking" style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: ${pillBg}; text-transform: uppercase; font-size: 0.9rem;">${nomeVez}</div>
                         <div style="display: flex; gap: 8px;">
-                            <div style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: #8cc63f;">J1: ${s1}</div>
-                            <div style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: #444;">${label2}: ${s2}</div>
+                            <div style="padding: 8px 12px; border-radius: 10px; color: white; font-weight: 900; background: #8cc63f; font-size: 0.9rem;">J1: ${s1}</div>
+                            <div style="padding: 8px 12px; border-radius: 10px; color: white; font-weight: 900; background: #444; font-size: 0.9rem;">${label2}: ${s2}</div>
                         </div>
                     </div>`;
             },
             showResults(s1, s2, rel, label2) {
                 document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; padding: 15px;">RESULTADOS</h2>`;
                 document.getElementById('game-content').innerHTML = `
-                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px; gap: 20px;">
-                        <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height: 200px; object-fit:contain;">
-                        <h2 style="color:var(--text-grey); font-size: 1.4rem; font-weight:800; text-transform:uppercase;">${rel.titulo}</h2>
-                        <div style="display:flex; gap:15px; flex-wrap:wrap; justify-content:center;">
-                            <div style="min-width: 200px; padding: 12px; border-radius: 18px; color: white; font-weight: 900; background: #8cc63f; text-align:center;">JOGADOR 1: ${s1}</div>
-                            <div style="min-width: 200px; padding: 12px; border-radius: 18px; color: white; font-weight: 900; background: #444; text-align:center;">${label2.toUpperCase()}: ${s2}</div>
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px 20px; gap: 20px;">
+                        <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height: clamp(140px, 20vh, 220px); object-fit:contain;">
+                        <h2 style="color:var(--text-grey); font-size: 1.2rem; font-weight:800; text-transform:uppercase;">${rel.titulo}</h2>
+                        <div style="display:flex; gap:12px; flex-wrap:wrap; justify-content:center; width: 100%;">
+                            <div style="min-width: 220px; padding: 12px; border-radius: 15px; color: white; font-weight: 900; background: #8cc63f; text-align:center;">JOGADOR 1: ${s1}</div>
+                            <div style="min-width: 220px; padding: 12px; border-radius: 15px; color: white; font-weight: 900; background: #444; text-align:center;">${label2.toUpperCase()}: ${s2}</div>
                         </div>
                     </div>`;
                 const footer = document.getElementById('shell-footer-content');
                 footer.style.display = "flex";
-                footer.innerHTML = `<div style="display:flex; width:100%; gap:20px; padding:20px;">
-                    <button onclick="location.reload()" style="flex:1; height:60px; border-radius:30px; background:#6c757d; color:white; border:none; font-weight:900;">REPETIR</button>
-                    <button onclick="window.history.back()" style="flex:1; height:60px; border-radius:30px; background:var(--primary-color); color:white; border:none; font-weight:900;">SAIR</button>
+                footer.innerHTML = `<div style="display:flex; width:100%; gap:15px; padding:20px;">
+                    <button onclick="location.reload()" style="flex:1; height:55px; border-radius:15px; background:#6c757d; color:white; border:none; font-weight:900; cursor:pointer;">REPETIR</button>
+                    <button onclick="window.history.back()" style="flex:1; height:55px; border-radius:15px; background:var(--primary-color); color:white; border:none; font-weight:900; cursor:pointer;">SAIR</button>
                 </div>`;
             }
         };
