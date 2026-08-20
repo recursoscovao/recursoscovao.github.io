@@ -16,67 +16,63 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ============================================================
-// === SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS (DESIGN FINAL) ===
+// === SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS ===
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
     #game-content { 
         display: flex; flex-direction: column; 
         width: 100%; height: 100%; 
-        padding: 0; margin: 0;
-        box-sizing: border-box; overflow: hidden; position: relative;
+        padding: 0; box-sizing: border-box; 
+        overflow: hidden; position: relative;
     }
 
-    /* 1. AREA DE SIMULAÇÃO: Flex 1 com min-height 0 permite que ela encolha se não houver espaço */
+    /* 1. ÁREA DE SIMULAÇÃO: Ocupa o centro e adapta-se ao espaço */
     #simu-container { 
         flex: 1; display: flex; align-items: center; justify-content: center; 
         width: 100%; min-height: 0; overflow: hidden; padding: 10px;
     }
-    /* Faz o tabuleiro simulado nunca ser maior que o espaço disponível */
-    #simu-board { max-height: 100%; max-width: 100%; display: flex; align-items: center; justify-content: center; }
 
-    /* 2. CONTENTOR DOS BOTÕES: Ancorado no fundo com os 20px solicitados */
+    /* 2. CONTENTOR DOS BOTÕES: Ancorado no fundo com padding de 20px */
     #capa-menu-principal, #nivel-select-container { 
         width: 100%; display: flex; flex-direction: column; align-items: center; 
         gap: 15px; flex-shrink: 0; 
-        padding-bottom: 20px !important; /* MARGEM RIGOROSA DE 20PX DO LIMITE DO FUNDO */
+        padding-bottom: 20px; /* DISTÂNCIA RIGOROSA DO LIMITE DO FUNDO */
     }
 
     .capa-btn-row, .nivel-row { 
-        display: flex; flex-direction: row; align-items: center;
+        display: flex; flex-direction: row; align-items: stretch;
         gap: 12px; width: 100%; max-width: 550px; justify-content: center; padding: 0 20px; 
-        box-sizing: border-box;
     }
     
-    /* BOTÕES: Todos com a mesma altura e design */
+    /* BOTÕES: Todos com 55px de altura */
     .btn-capa-small { 
-        flex: 1; height: 58px; border-radius: 12px; border: none; color: white; 
+        flex: 1; height: 55px; border-radius: 12px; border: none; color: white; 
         font-weight: 900; font-size: 0.95rem; cursor: pointer; display: flex; 
         align-items: center; justify-content: center; gap: 8px; 
-        box-shadow: 0 4px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; 
+        box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; 
     }
     
     .btn-inform { 
-        width: 58px; height: 58px; /* EXATAMENTE A MESMA ALTURA */
+        width: 55px; height: 55px; /* MESMA ALTURA DOS OUTROS */
         border-radius: 12px; background: white; border: 2px solid #eee;
         cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 4px 0 rgba(0,0,0,0.05); transition: 0.2s; box-sizing: border-box;
+        box-shadow: 0 5px 0 rgba(0,0,0,0.05); transition: 0.2s;
     }
     .btn-inform img { width: 60%; height: 60%; object-fit: contain; }
-    .btn-capa-small:active, .btn-inform:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.1); }
+    .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
 
     /* ============================================================
-       INSTRUÇÕES PREMIUM - FIX SCROLL E INTERFERÊNCIA
+       INSTRUÇÕES PREMIUM - SCROLL DE PÁGINA INTEIRA
        ============================================================ */
     #instrucoes-panel { 
         position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
         background: white; z-index: 10000; 
-        transition: transform 0.4s ease-out; 
+        transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
         transform: translateY(100%); 
         visibility: hidden; 
-        overflow-y: auto; 
-        -webkit-overflow-scrolling: touch;
-        overscroll-behavior: contain; /* Impede interferência com o scroll da página principal */
+        overflow-y: auto; /* SCROLL NA PÁGINA TODA */
+        padding: 0; margin: 0;
     }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
     
@@ -93,14 +89,14 @@ style.innerHTML = `
     .inst-list { list-style: none; padding: 0; }
     .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.6; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
 
-    /* TABULEIRO DE JOGO */
-    .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 10px; margin: auto; width: fit-content; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    /* TABULEIRO E PEÇAS */
+    .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; margin: auto; width: fit-content; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; }
     .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1px solid #eee; }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); }
 
-    /* RESPONSIVIDADE UNITÁRIA */
+    /* --- RESPONSIVIDADE ADAPTATIVA --- */
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
         :root { --cell-size: min(55px, 8vh); }
     }
@@ -114,7 +110,7 @@ style.innerHTML = `
         .btn-capa-small { height: 55px; }
     }
 
-    /* FEEDBACKS */
+    /* UI JOGO */
     .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .pill-j2 { background: #444 !important; box-shadow: 0 3px 0 #222; }
     .blinking { animation: blinker 1.5s linear infinite; }
@@ -155,7 +151,6 @@ function mostrarCapa() {
                 <div style="height:60px;"></div>
             </div>`;
         document.body.appendChild(panel);
-
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
         document.getElementById('game-content').parentElement.appendChild(feedback);
@@ -312,10 +307,9 @@ function iaControlador() {
 function finalizarRonda(vencedorIdx) {
     jogoAtivo = false; matchScore[vencedorIdx]++; somAcerto.play();
     const overlay = document.getElementById('round-feedback');
-    const pcLabel = modoJogo === 'CPU' ? "Pc" : "Jogador 2";
-    const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : pcLabel;
+    const pcLabel = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "Jogador 2");
     overlay.style.display = 'flex';
-    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:#8cc63f; font-size:2rem; font-weight:900;">${nomeV}</h1><p style="font-weight:700; color:#666;">Ganhou a ronda!</p><div style="margin-top:10px; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]}</div></div>`;
+    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:#8cc63f; font-size:2rem; font-weight:900;">${pcLabel}</h1><p style="font-weight:700; color:#666;">Ganhou a ronda!</p><div style="margin-top:10px; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]}</div></div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2000);
     else setTimeout(() => { iniciarJogo(); }, 2000);
 }
@@ -345,7 +339,7 @@ function iniciarSimulacao() {
         }
         if (moves.length === 0) for(let c=0; c<7; c++) { sTab[0][c] = 2; sTab[1][c] = 2; sTab[5][c] = 1; sTab[6][c] = 1; }
         else { let m = moves[Math.floor(Math.random() * moves.length)]; sTab[m.tr][m.tc] = sTab[m.fr][m.fc]; sTab[m.fr][m.fc] = 0; }
-        let h = `<div class="grid-board" style="opacity:0.3; pointer-events:none; transform: scale(1.05);">`;
+        let h = `<div class="grid-board" style="opacity:0.3; pointer-events:none;">`;
         for(let r=0;r<7;r++) for(let c=0;c<7;c++) {
             h+=`<div class="cell" style="width:min(32px, 6vw); height:min(32px, 6vw);">`;
             if(sTab[r][c]===1) h+='<div class="piece white"></div>';
