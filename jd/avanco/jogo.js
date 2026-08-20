@@ -30,8 +30,8 @@ Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
                 ${nomeVez}
             </div>
             <div style="display: flex; gap: 8px;">
-                <div style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 4px 0 #6da32f;">J1: ${s1}</div>
-                <div style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: #444; box-shadow: 0 4px 0 #222;">${label2}: ${s2}</div>
+                <div style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 3px 0 #6da32f;">J1: ${s1}</div>
+                <div style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: #444; box-shadow: 0 3px 0 #222;">${label2}: ${s2}</div>
             </div>
         </div>`;
 };
@@ -69,18 +69,18 @@ style.innerHTML = `
     }
 
     #simu-container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 0; overflow: hidden; }
-    #simu-board { transform: scale(0.8); transition: 0.3s; }
+    #simu-board { transform: scale(0.75); transition: 0.3s; }
 
-    #capa-menu-principal, #nivel-select-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 15px; flex-shrink: 0; padding-bottom: 20px !important; }
+    #capa-menu-principal, #nivel-select-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px; flex-shrink: 0; padding-bottom: 20px !important; }
     .capa-btn-row, .nivel-row { display: flex; flex-direction: row; align-items: stretch; gap: 12px; width: 100%; max-width: 550px; justify-content: center; padding: 0 20px; }
     
-    .btn-capa-small { flex: 1; height: 60px; border-radius: 15px; border: none; color: white; font-weight: 900; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
+    .btn-capa-small { flex: 1; height: 58px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
     
-    /* AJUSTE: Botões de dificuldade ligeiramente menores */
-    .nivel-row .btn-capa-small { height: 52px; font-size: 0.9rem; }
-    .btn-voltar-pequeno { height: 52px !important; max-width: 220px !important; font-size: 0.9rem !important; }
+    /* ALTERAÇÃO: Botões de dificuldade e voltar mais pequenos para caber animação */
+    .nivel-row .btn-capa-small { height: 46px; font-size: 0.85rem; border-radius: 10px; }
+    .btn-voltar-pequeno { height: 46px !important; max-width: 180px !important; font-size: 0.85rem !important; border-radius: 10px !important; }
 
-    .btn-inform { width: 60px; height: 60px; border-radius: 15px; background: white; border: 2px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
+    .btn-inform { width: 58px; height: 58px; border-radius: 12px; background: white; border: 2px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
     .btn-inform img { width: 65%; height: 65%; object-fit: contain; }
     .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
 
@@ -90,22 +90,19 @@ style.innerHTML = `
 
     .inst-content { max-width: 750px; margin: 0 auto; text-align: left; font-family: 'Nunito', sans-serif; padding: 60px 25px; clear: both; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 2.2rem; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; border-bottom: 5px solid var(--bg-color); padding-bottom: 15px; }
-    .inst-section-title { color: #333; font-size: 1.4rem; font-weight: 800; margin: 30px 0 15px; display: flex; align-items: center; gap: 12px; }
-    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.6; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
 
     .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; margin: auto; width: fit-content; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; }
-    .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+    .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 3px 6px rgba(0,0,0,0.2); transition: all 0.5s ease; }
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1px solid #eee; }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); }
 
-    :root { --cell-size: min(55px, 8vh); }
-    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) { :root { --cell-size: 10vw; } }
+    :root { --cell-size: min(52px, 7.5vh); }
+    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) { :root { --cell-size: 9.5vw; } }
     @media screen and (max-width: 500px) and (orientation: portrait) { 
         :root { --cell-size: 11vw; } 
         .capa-btn-row { flex-direction: column; width: 100%; padding: 0 30px; }
         .btn-inform { width: 100%; order: -1; }
-        #capa-menu-principal { padding-bottom: 20px !important; }
     }
 
     .blinking { animation: blinker 1.5s linear infinite; }
@@ -130,10 +127,8 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
-                <div class="inst-section-title"><i class="fas fa-bullseye"></i> Objetivo do Jogo</div>
-                <p>Vence o primeiro jogador que conseguir levar qualquer uma das suas peças até à primeira linha do campo adversário.</p>
-                <div class="inst-section-title"><i class="fas fa-walking"></i> Movimentos</div>
-                <p>Podes mover uma casa para a frente (se vazia) ou para as diagonais frontais (onde podes capturar peças inimigas).</p>
+                <div class="inst-section-title">Objetivo</div>
+                <p>Vence o primeiro a levar uma peça à primeira linha adversária.</p>
                 <div style="height:60px;"></div>
             </div>`;
         document.body.appendChild(panel);
@@ -171,7 +166,7 @@ function mostrarNiveis(modo) {
     area.innerHTML = `
         <div id="simu-container"><div id="simu-board"></div></div>
         <div id="nivel-select-container">
-            <p style="font-weight:800; color:#888; font-size:0.8rem; text-transform:uppercase; margin-bottom:5px;">Escolha a Dificuldade:</p>
+            <p style="font-weight:800; color:#888; font-size:0.75rem; text-transform:uppercase; margin-bottom:5px;">Dificuldade:</p>
             <div class="nivel-row">
                 <button class="btn-capa-small" onclick="setModo('${modo}', 1)" style="background:#8cc63f;">FÁCIL</button>
                 <button class="btn-capa-small" onclick="setModo('${modo}', 2)" style="background:#ff5a5f;">DIFÍCIL</button>
@@ -213,8 +208,7 @@ function atualizarUI() {
     const pcLabel = modoJogo === 'CPU' ? "Pc" : "J2";
     const labelJ2 = modoJogo === 'CPU' ? "Computador" : "Jogador 2";
     const nomeVez = (turnoAtual === 0) ? "Jogador 1" : labelJ2;
-    if(typeof Engine !== "undefined") Engine.showStatusBar(nomeVez, matchScore[0], matchScore[1], pcLabel);
-
+    Engine.showStatusBar(nomeVez, matchScore[0], matchScore[1], pcLabel);
     const area = document.getElementById('game-content');
     area.innerHTML = "";
     area.style.justifyContent = "center"; 
@@ -236,55 +230,57 @@ function atualizarUI() {
 function handleCellClick(r, c) {
     if(!jogoAtivo) return;
     tabuleiro[r][c] = turnoAtual === 0 ? 1 : 2;
-    turnoAtual = (turnoAtual === 0) ? 1 : 0;
+    turnoAtual = turnoAtual === 0 ? 1 : 0;
     atualizarUI();
 }
 // === FIM SECÇÃO 4 ===
 
 
 // ============================================================
-// === INÍCIO SECÇÃO 6: SIMULAÇÃO DA CAPA (REALISTA) ===
+// === INÍCIO SECÇÃO 6: SIMULAÇÃO DA CAPA (MELHORADA E RÁPIDA) ===
 // ============================================================
 function iniciarSimulacao() {
     clearInterval(simuInterval);
     const board = document.getElementById('simu-board');
     if(!board) return;
     
-    // Posições reais de início do jogo
-    let simuTab = Array(7).fill().map(() => Array(7).fill(0));
-    for(let c=0; c<7; c++) { 
-        simuTab[0][c] = 2; simuTab[1][c] = 2; // Pretas no topo
-        simuTab[5][c] = 1; simuTab[6][c] = 1; // Brancas na base
-    }
+    let sTab = Array(7).fill().map(() => Array(7).fill(0));
+    const resetTab = () => {
+        for(let c=0; c<7; c++) { sTab[0][c] = 2; sTab[1][c] = 2; sTab[5][c] = 1; sTab[6][c] = 1; }
+    };
+    resetTab();
 
-    const renderSimu = () => {
-        let h = `<div class="grid-board" style="opacity:0.35;">`;
-        for(let r=0; r<7; r++) {
-            for(let c=0; c<7; c++) {
-                h += `<div class="cell">`;
-                if(simuTab[r][c] === 1) h += '<div class="piece white"></div>';
-                if(simuTab[r][c] === 2) h += '<div class="piece black"></div>';
-                h += `</div>`;
-            }
-        }
-        board.innerHTML = h + `</div>`;
+    const render = () => {
+        board.innerHTML = `<div class="grid-board" style="opacity:0.35;">` + 
+            sTab.flat().map(v => `<div class="cell">${v?`<div class="piece ${v==1?'white':'black'}"></div>`:''}</div>`).join('') + `</div>`;
     };
 
-    simuInterval = setInterval(() => {
-        // Simula uma jogada: escolhe uma peça branca e avança-a
-        // Limpa tabuleiro para reiniciar se estiver muito bagunçado
-        if(Math.random() > 0.8) {
-            simuTab = Array(7).fill().map(() => Array(7).fill(0));
-            for(let c=0; c<7; c++) { simuTab[0][c] = 2; simuTab[1][c] = 2; simuTab[5][c] = 1; simuTab[6][c] = 1; }
-        } else {
-            // Tenta mover uma peça aleatória
-            const r = 2 + Math.floor(Math.random() * 4);
-            const c = Math.floor(Math.random() * 7);
-            simuTab[r][c] = Math.random() > 0.5 ? 1 : 2;
+    const animStep = () => {
+        // Lógica: Tenta avançar uma peça branca ou preta
+        const player = Math.random() > 0.5 ? 1 : 2;
+        const dir = player === 1 ? -1 : 1;
+        const possibleMoves = [];
+        
+        for(let r=0; r<7; r++){
+            for(let c=0; c<7; c++){
+                if(sTab[r][c] === player){
+                    if(r+dir >= 0 && r+dir < 7 && sTab[r+dir][c] === 0) possibleMoves.push({fr:r, fc:c, tr:r+dir, tc:c});
+                }
+            }
         }
-        renderSimu();
-    }, 1500);
 
-    renderSimu();
+        if(possibleMoves.length > 0 && Math.random() > 0.1){
+            const m = possibleMoves[Math.floor(Math.random()*possibleMoves.length)];
+            sTab[m.tr][m.tc] = sTab[m.fr][m.fc];
+            sTab[m.fr][m.fc] = 0;
+        } else if (Math.random() > 0.7) {
+            sTab = Array(7).fill().map(() => Array(7).fill(0));
+            resetTab();
+        }
+        render();
+    };
+
+    render(); // Início imediato
+    simuInterval = setInterval(animStep, 600); // Mais rápido (800ms)
 }
 // === FIM SECÇÃO 6 ===
