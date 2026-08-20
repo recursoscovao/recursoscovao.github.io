@@ -16,84 +16,82 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ============================================================
-// === SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS ===
+// === SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS (RESTAURADO) ===
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
     #game-content { 
         display: flex; flex-direction: column; align-items: center; 
-        justify-content: space-between; /* Garante botões no fundo e jogo no topo/meio */
-        width: 100%; height: 100%; padding: 15px; box-sizing: border-box; 
+        justify-content: flex-start; /* Alinha ao topo para controlar gaps */
+        width: 100%; height: 100%; padding: 20px 15px; box-sizing: border-box; 
         overflow: hidden; position: relative;
     }
 
-    /* Contentor da Simulação: Ocupa o espaço que sobra e centraliza o tabuleiro */
+    /* SIMU-CONTAINER: Altura reduzida para os botões subirem */
     #simu-container { 
-        flex: 1; display: flex; align-items: center; justify-content: center; 
-        width: 100%; overflow: hidden; min-height: 0; 
+        height: 35%; /* Altura controlada */
+        width: 100%; display: flex; align-items: center; justify-content: center; 
+        margin-bottom: 20px; overflow: hidden;
     }
 
-    /* Contentor dos Botões: Sempre visível no fundo da shell */
+    /* CONTENTOR BOTÕES: Posicionados na shell sem sair fora */
     #capa-menu-principal, #nivel-select-container { 
         width: 100%; display: flex; flex-direction: column; align-items: center; 
-        gap: 12px; flex-shrink: 0; padding: 10px 0;
+        gap: 15px; flex-shrink: 0;
     }
 
-    .capa-btn-row, .nivel-row { display: flex; flex-direction: row; gap: 10px; width: 100%; max-width: 500px; justify-content: center; }
+    .capa-btn-row, .nivel-row { display: flex; flex-direction: row; gap: 12px; width: 100%; max-width: 500px; justify-content: center; }
     
-    .btn-capa-small { flex: 1; height: 50px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
-    .btn-inform { width: 50px; height: 50px; cursor: pointer; flex-shrink: 0; }
+    .btn-capa-small { flex: 1; height: 55px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px; box-shadow: 0 4px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
+    .btn-inform { width: 55px; height: 55px; cursor: pointer; flex-shrink: 0; }
     .btn-inform img { width: 100%; height: 100%; object-fit: contain; }
 
     /* ============================================================
-       INSTRUÇÕES PREMIUM - SCROLL DE PÁGINA INTEIRA
+       INSTRUÇÕES PREMIUM - SCROLL TOTAL DA PÁGINA
        ============================================================ */
     #instrucoes-panel { 
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
         background: white; z-index: 10000; 
         transition: transform 0.5s ease; transform: translateY(100%); 
-        visibility: hidden; overflow-y: auto; /* Ativa scroll na página toda */
-        display: block; box-sizing: border-box;
+        visibility: hidden; 
+        overflow-y: auto; /* O scroll agora é aqui, no contentor pai */
+        padding: 60px 25px; box-sizing: border-box;
     }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
-    
-    .close-x { position: sticky; top: 20px; left: 90%; font-size: 3.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; z-index: 10002; float: right; margin-right: 20px; }
-    
-    .inst-content { max-width: 700px; margin: 0 auto; text-align: left; font-family: 'Nunito', sans-serif; padding: 60px 25px; }
+    .close-x { position: fixed; top: 15px; right: 25px; font-size: 3.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; z-index: 10001; }
+
+    .inst-content { max-width: 700px; margin: 0 auto; text-align: left; font-family: 'Nunito', sans-serif; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 2.2rem; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; border-bottom: 5px solid var(--bg-color); padding-bottom: 15px; }
     .inst-section-title { color: #333; font-size: 1.4rem; font-weight: 800; margin: 30px 0 15px; display: flex; align-items: center; gap: 12px; }
     .inst-text { color: #555; font-size: 1.1rem; line-height: 1.7; margin-bottom: 18px; }
     .inst-list { list-style: none; padding: 0; }
-    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.6; }
+    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.6; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
 
-    /* TABULEIRO */
+    /* TABULEIRO E PEÇAS */
     .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 10px; margin: auto; width: fit-content; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; }
     .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1px solid #eee; }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); }
 
-    /* --- RESPONSIVIDADE PARA TODOS DISPOSITIVOS --- */
+    /* --- RESPONSIVIDADE --- */
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
-        :root { --cell-size: min(60px, 8.5vh); }
+        :root { --cell-size: min(50px, 7vh); }
     }
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
-        :root { --cell-size: 9.5vw; } 
+        :root { --cell-size: 9vw; } 
+        #simu-board { transform: scale(1.1); }
     }
     @media screen and (max-width: 500px) and (orientation: portrait) {
         :root { --cell-size: 11vw; }
         .capa-btn-row { flex-direction: column; width: 95%; gap: 8px; }
         .btn-inform { order: -1; align-self: center; } 
-    }
-    @media screen and (max-height: 500px) and (orientation: landscape) {
-        :root { --cell-size: 9vh; }
-        #game-content { flex-direction: row; gap: 30px; }
-        #capa-menu-principal { width: 220px; }
-        .capa-btn-row { flex-direction: column; }
+        #simu-container { height: 30%; }
     }
 
     /* UI JOGO */
-    .status-pill { background: #6c757d; color: white; padding: 10px 15px; border-radius: 10px; font-weight: 900; font-size: 0.9rem; }
+    .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
+    .pill-j2 { background: #444 !important; box-shadow: 0 3px 0 #222; }
     .blinking { animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; }
@@ -115,24 +113,28 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
+                
                 <div class="inst-section-title"><i class="fas fa-bullseye"></i> Objetivo do Jogo</div>
                 <p class="inst-text">O Avanço é uma corrida estratégica. Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário.</p>
+
                 <div class="inst-section-title"><i class="fas fa-walking"></i> Como Mover</div>
                 <ul class="inst-list">
                     <li><b>Movimento Vertical:</b> Podes avançar 1 casa para a frente se esta estiver <b>vazia</b>.</li>
                     <li><b>Movimento Diagonal:</b> Podes mover-te para as duas casas diagonais à tua frente, quer estejam vazias ou ocupadas por um adversário.</li>
                 </ul>
+
                 <div class="inst-section-title"><i class="fas fa-fist-raised"></i> Capturas</div>
                 <ul class="inst-list">
                     <li><b>Só Diagonais:</b> Podes capturar uma peça adversária se ela estiver numa das tuas <b>diagonais frontais</b>.</li>
                     <li><b>Proibido Vertical:</b> Não podes capturar uma peça que esteja diretamente à tua frente.</li>
                 </ul>
+
                 <div class="inst-section-title"><i class="fas fa-trophy"></i> Sistema de Jogo</div>
                 <p class="inst-text">As peças Brancas (Jogador 1) movem-se sempre para cima. As Negras (PC ou J2) movem-se para baixo. Ganha a melhor de 5 rondas!</p>
                 <div style="height:60px;"></div>
             </div>`;
         document.body.appendChild(panel);
-        
+
         const feedback = document.createElement('div');
         feedback.id = 'round-feedback';
         document.getElementById('game-content').parentElement.appendChild(feedback);
@@ -153,13 +155,7 @@ function mostrarCapa() {
     iniciarSimulacao();
 }
 
-function toggleInstructions() { 
-    somClique.play(); 
-    const panel = document.getElementById('instrucoes-panel');
-    panel.classList.toggle('open');
-    // Bloqueia o scroll do body quando as instruções estão abertas
-    document.body.style.overflow = panel.classList.contains('open') ? 'hidden' : 'auto';
-}
+function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
 
 function mostrarNiveis(modo) {
     somClique.play();
@@ -206,7 +202,7 @@ function atualizarUI() {
     
     document.getElementById('shell-header-content').innerHTML = `
         <div style="width:100%; display:flex; justify-content:space-between; align-items:center;">
-            <div class="status-pill blinking">VEZ DE: ${nomeVez}</div>
+            <div class="status-pill ${turnoAtual === 0 ? 'pill-j1' : 'pill-j2'} blinking">VEZ DE: ${nomeVez}</div>
             <div style="display:flex; gap:10px;">
                 <div style="background:#8cc63f; color:white; padding:8px 15px; border-radius:12px; font-weight:900;">J1: ${matchScore[0]}</div>
                 <div style="background:#444; color:white; padding:8px 15px; border-radius:12px; font-weight:900;">${pcLabel}: ${matchScore[1]}</div>
@@ -215,6 +211,7 @@ function atualizarUI() {
 
     const area = document.getElementById('game-content');
     area.innerHTML = "";
+    area.style.justifyContent = "center"; 
     const boardEl = document.createElement('div');
     boardEl.className = "grid-board";
     for(let r=0; r<7; r++) {
@@ -325,7 +322,7 @@ function iniciarSimulacao() {
         else { let m = moves[Math.floor(Math.random() * moves.length)]; sTab[m.tr][m.tc] = sTab[m.fr][m.fc]; sTab[m.fr][m.fc] = 0; }
         let h = `<div class="grid-board" style="opacity:0.3; pointer-events:none; transform:scale(0.85);">`;
         for(let r=0;r<7;r++) for(let c=0;c<7;c++) {
-            h+=`<div class="cell" style="width:min(35px, 7vw); height:min(35px, 7vw);">`;
+            h+=`<div class="cell" style="width:min(32px, 6.5vw); height:min(32px, 6.5vw);">`;
             if(sTab[r][c]===1) h+='<div class="piece white"></div>';
             if(sTab[r][c]===2) h+='<div class="piece black"></div>';
             h+=`</div>`;
