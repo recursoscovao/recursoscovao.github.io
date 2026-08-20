@@ -16,7 +16,55 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ============================================================
-// === SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS (RECONSTRUÇÃO PREMIUM) ===
+// === SOBREPOSIÇÃO DO ENGINE (ALTERAÇÕES VISUAIS APENAS NO JOGO) ===
+// ============================================================
+
+// 1. Alteração da Barra de Status: Sem "VEZ DE" e com estilo de Pill de Resultado
+Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
+    const isJ1 = nomeVez.toUpperCase().includes("JOGADOR 1");
+    const pillBg = isJ1 ? "#8cc63f" : "#444";
+    const pillShadow = isJ1 ? "#6da32f" : "#222";
+
+    document.getElementById('shell-header-content').innerHTML = `
+        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
+            <div class="blinking" style="padding: 12px 20px; border-radius: 18px; color: white; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; background: ${pillBg}; box-shadow: 0 4px 0 ${pillShadow};">
+                ${nomeVez}
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <div style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 3px 0 #6da32f;">J1: ${s1}</div>
+                <div style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: #444; box-shadow: 0 3px 0 #222;">${label2}: ${s2}</div>
+            </div>
+        </div>`;
+};
+
+// 2. Alteração dos Resultados: Remove a parte das ajudas
+Engine.showResults = function(s1, s2, rel, label2) {
+    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; padding: 15px;">RESULTADOS</h2>`;
+    document.getElementById('game-content').innerHTML = `
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 20px; text-align: center; padding: 20px;">
+            <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height: clamp(160px, 35vh, 320px); object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));">
+            <div><h2 style="color:var(--primary-color); font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight:900; text-transform:uppercase; margin:0;">${rel.titulo}</h2></div>
+            <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; max-width: 600px;">
+                <div style="padding: 12px 25px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.3rem; background: #8cc63f; box-shadow: 0 4px 0 #6da32f;">
+                    JOGADOR 1: ${s1}
+                </div>
+                <div style="padding: 12px 25px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.3rem; background: #444; box-shadow: 0 4px 0 #222;">
+                    ${label2.toUpperCase()}: ${s2}
+                </div>
+            </div>
+        </div>`;
+    
+    const footer = document.getElementById('shell-footer-content');
+    footer.style.display = "flex";
+    footer.innerHTML = `
+        <div style="display:flex; width:100%; gap:20px; padding:25px;">
+            <button onclick="location.reload()" style="flex: 1; height: 65px; border-radius: 40px; background: #6c757d; color: white; border: none; font-size: 1.4rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #4e555b;">REPETIR</button>
+            <button onclick="window.history.back()" style="flex: 1; height: 65px; border-radius: 40px; background: var(--primary-color); color: white; border: none; font-size: 1.4rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #4582c0;">SAIR</button>
+        </div>`;
+};
+
+// ============================================================
+// === SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS ===
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
@@ -27,17 +75,15 @@ style.innerHTML = `
         overflow: hidden; position: relative;
     }
 
-    /* 1. ÁREA DE SIMULAÇÃO: Ocupa o centro e adapta-se ao espaço */
     #simu-container { 
         flex: 1; display: flex; align-items: center; justify-content: center; 
         width: 100%; min-height: 0; overflow: hidden;
     }
 
-    /* 2. CONTENTOR DOS BOTÕES: Ancorado no fundo com padding de 20px */
     #capa-menu-principal, #nivel-select-container { 
         width: 100%; display: flex; flex-direction: column; align-items: center; 
         gap: 15px; flex-shrink: 0; 
-        padding-bottom: 20px; /* DISTÂNCIA RIGOROSA DO LIMITE DO FUNDO */
+        padding-bottom: 20px; 
     }
 
     .capa-btn-row, .nivel-row { 
@@ -45,7 +91,6 @@ style.innerHTML = `
         gap: 12px; width: 100%; max-width: 550px; justify-content: center; padding: 0 20px; 
     }
     
-    /* BOTÕES: Todos com 55px de altura */
     .btn-capa-small { 
         flex: 1; height: 55px; border-radius: 12px; border: none; color: white; 
         font-weight: 900; font-size: 0.95rem; cursor: pointer; display: flex; 
@@ -62,9 +107,6 @@ style.innerHTML = `
     .btn-inform img { width: 60%; height: 60%; object-fit: contain; }
     .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
 
-    /* ============================================================
-       INSTRUÇÕES PREMIUM - SCROLL DE PÁGINA INTEIRA
-       ============================================================ */
     #instrucoes-panel { 
         position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
         background: white; z-index: 10000; 
@@ -89,31 +131,16 @@ style.innerHTML = `
     .inst-list { list-style: none; padding: 0; }
     .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.6; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
 
-    /* TABULEIRO E PEÇAS */
     .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; margin: auto; width: fit-content; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; }
     .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1px solid #eee; }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); }
 
-    /* --- RESPONSIVIDADE --- */
-    @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
-        :root { --cell-size: min(55px, 8vh); }
-    }
-    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
-        :root { --cell-size: 10vw; } 
-        #simu-board { transform: scale(1.15); }
-    }
-    @media screen and (max-width: 500px) and (orientation: portrait) {
-        :root { --cell-size: 11vw; }
-        .capa-btn-row, .nivel-row { flex-direction: column; width: 100%; gap: 10px; }
-        .btn-inform { width: 100%; height: 50px; order: -1; }
-        .btn-capa-small { height: 55px; }
-    }
+    @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) { :root { --cell-size: min(55px, 8vh); } }
+    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) { :root { --cell-size: 10vw; } #simu-board { transform: scale(1.15); } }
+    @media screen and (max-width: 500px) and (orientation: portrait) { :root { --cell-size: 11vw; } .capa-btn-row { flex-direction: column; width: 100%; } .btn-inform { width: 100%; height: 50px; order: -1; } .btn-capa-small { height: 55px; } }
 
-    /* UI JOGO */
-    .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
-    .pill-j2 { background: #444 !important; box-shadow: 0 3px 0 #222; }
     .blinking { animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; }
@@ -191,12 +218,7 @@ function mostrarNiveis(modo) {
                 <button class="btn-capa-small" onclick="setModo('${modo}', 1)" style="background:#8cc63f;"><i class="fas fa-leaf"></i> FÁCIL</button>
                 <button class="btn-capa-small" onclick="setModo('${modo}', 2)" style="background:#ff5a5f;"><i class="fas fa-fire"></i> DIFÍCIL</button>
             </div>
-            <!-- Botão Voltar Melhorado: Alinhado e com design Premium -->
-            <div class="capa-btn-row">
-                <button class="btn-capa-small" onclick="voltarCapa()" style="background:#6c757d; max-width:250px;">
-                    <i class="fas fa-arrow-left"></i> VOLTAR
-                </button>
-            </div>
+            <div class="capa-btn-row"><button class="btn-capa-small" onclick="voltarCapa()" style="background:#6c757d; max-width:250px;"><i class="fas fa-arrow-left"></i> VOLTAR</button></div>
         </div>
     `;
     iniciarSimulacao(); 
@@ -226,16 +248,11 @@ function iniciarJogo() {
 
 function atualizarUI() {
     const pcLabel = modoJogo === 'CPU' ? "Pc" : "J2";
-    const nomeVez = (turnoAtual === 0) ? "Jogador 1" : (modoJogo === 'CPU' ? "Computador" : "Jogador 2");
+    const labelJ2 = modoJogo === 'CPU' ? "Computador" : "Jogador 2";
+    const nomeVez = (turnoAtual === 0) ? "Jogador 1" : labelJ2;
     
-    document.getElementById('shell-header-content').innerHTML = `
-        <div style="width:100%; display:flex; justify-content:space-between; align-items:center; padding: 0 10px;">
-            <div class="status-pill blinking">VEZ DE: ${nomeVez}</div>
-            <div style="display:flex; gap:10px;">
-                <div style="background:#8cc63f; color:white; padding:8px 15px; border-radius:12px; font-weight:900;">J1: ${matchScore[0]}</div>
-                <div style="background:#444; color:white; padding:8px 15px; border-radius:12px; font-weight:900;">${pcLabel}: ${matchScore[1]}</div>
-            </div>
-        </div>`;
+    // Chama a função sobreposta do Engine
+    Engine.showStatusBar(nomeVez, matchScore[0], matchScore[1], pcLabel);
 
     const area = document.getElementById('game-content');
     area.innerHTML = "";
@@ -307,15 +324,15 @@ function iaControlador() {
     executarMovimento(m.fr, m.fc, m.tr, m.tc);
 }
 
-// ============================================================
-// === SECÇÃO 5: FINALIZAÇÃO E RESULTADOS ===
-// ============================================================
 function finalizarRonda(vencedorIdx) {
     jogoAtivo = false; matchScore[vencedorIdx]++; somAcerto.play();
     const overlay = document.getElementById('round-feedback');
-    const pcLabel = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "Jogador 2");
+    const pcLabel = modoJogo === 'CPU' ? "Pc" : "J2";
+    const labelJ2 = modoJogo === 'CPU' ? "Computador" : "Jogador 2";
+    const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : labelJ2;
+    const corV = vencedorIdx === 0 ? "#8cc63f" : "#444";
     overlay.style.display = 'flex';
-    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:#8cc63f; font-size:2rem; font-weight:900;">${pcLabel}</h1><p style="font-weight:700; color:#666;">Ganhou a ronda!</p><div style="margin-top:10px; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]}</div></div>`;
+    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:${corV}; font-size:2rem; font-weight:900; text-transform:uppercase;">${nomeV}</h1><p style="font-weight:700; color:#666;">Ganhou a ronda!</p><div style="margin-top:10px; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${pcLabel}</div></div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2000);
     else setTimeout(() => { iniciarJogo(); }, 2000);
 }
@@ -323,14 +340,13 @@ function finalizarRonda(vencedorIdx) {
 function finalizarMatch() {
     document.getElementById('round-feedback').style.display = 'none';
     const vencedorIdx = matchScore[0] >= 3 ? 0 : 1;
-    const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "PC" : "JOGADOR 2");
+    const pcLabel = modoJogo === 'CPU' ? "PC" : "JOGADOR 2";
     const rel = JOGO_CONFIG.relatorios.find(r => matchScore[vencedorIdx] >= r.min && matchScore[vencedorIdx] <= r.max) || {img:"taca_1.png", titulo:"PARABÉNS!"};
-    Engine.showResults(matchScore[0], matchScore[1], "N/A", {img: rel.img, titulo: "GANHOU O " + nomeV});
+    
+    // Chama a função sobreposta do Engine
+    Engine.showResults(matchScore[0], matchScore[1], rel, pcLabel);
 }
 
-// ============================================================
-// === SECÇÃO 6: SIMULAÇÃO DA CAPA ===
-// ============================================================
 function iniciarSimulacao() {
     clearInterval(simuInterval);
     const board = document.getElementById('simu-board');
@@ -345,9 +361,9 @@ function iniciarSimulacao() {
         }
         if (moves.length === 0) for(let c=0; c<7; c++) { sTab[0][c] = 2; sTab[1][c] = 2; sTab[5][c] = 1; sTab[6][c] = 1; }
         else { let m = moves[Math.floor(Math.random() * moves.length)]; sTab[m.tr][m.tc] = sTab[m.fr][m.fc]; sTab[m.fr][m.fc] = 0; }
-        let h = `<div class="grid-board" style="opacity:0.3; pointer-events:none;">`;
+        let h = `<div class="grid-board" style="opacity:0.3; pointer-events:none; transform: scale(1.05);">`;
         for(let r=0;r<7;r++) for(let c=0;c<7;c++) {
-            h+=`<div class="cell" style="width:min(32px, 6vw); height:min(32px, 6vw);">`;
+            h+=`<div class="cell" style="width:30px; height:30px;">`;
             if(sTab[r][c]===1) h+='<div class="piece white"></div>';
             if(sTab[r][c]===2) h+='<div class="piece black"></div>';
             h+=`</div>`;
