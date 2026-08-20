@@ -8,126 +8,170 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
         /* ============================================================
-           1. CONFIGURAÇÕES GLOBAIS
+           1. CONFIGURAÇÕES GLOBAIS (CORES E BASE)
            ============================================================ */
         :root { --primary-color: #5EA2E6; --bg-color: #EAF4FE; --text-grey: #8792a1; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
         body, html { 
-            height: 100%; 
+            min-height: 100vh; 
             width: 100vw; 
             background-color: var(--bg-color); 
             display: flex; 
             flex-direction: column; 
-            overflow: hidden; 
+            overflow-x: hidden; 
+            overflow-y: auto; 
         }
         
-        /* HEADER (ORIGINAL) */
-        header { 
-            background: white; 
-            border-radius: 0 0 35px 35px; 
-            display: grid; 
-            grid-template-columns: 60px 1fr 60px; 
-            align-items: center; 
-            padding: 0 15px; 
-            height: 90px; 
-            z-index: 1000; 
-            flex-shrink: 0; 
-            box-shadow: 0 4px 15px rgba(0,0,0,0.03); 
-            position: relative;
-        }
-
-        #header-icon { height: 55px; width: auto; object-fit: contain; }
+        header { background: white; border-radius: 0 0 35px 35px; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; padding: 0 15px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         
-        #txt-titulo1 { font-size: 1.3rem; font-weight: 900; color: var(--primary-color); }
-        #txt-titulo2 { font-size: 1.1rem; font-weight: 800; color: var(--text-grey); }
-        #txt-subtitulo-header { font-size: 0.65rem; font-weight: 600; margin-top: 4px; opacity: 0.8; color: var(--text-grey); }
-
-        /* ============================================================
-           2. MENU HAMBÚRGUER + HOVER
-           ============================================================ */
-        .hamburger-btn { 
-            background: none; 
-            border: none; 
-            color: var(--primary-color); 
-            cursor: pointer; 
-            font-size: 28px;
-            transition: 0.2s; /* Para o hover ser suave */
-        }
-
-        /* O HOVER PEDIDO AQUI */
-        .hamburger-btn:hover { 
-            transform: scale(1.1); 
-            opacity: 0.7; 
-        }
-
-        .menu-dropdown { 
-            position: absolute; display: none; flex-direction: column; gap: 6px; 
-            z-index: 2000; top: 85px; left: 15px; 
-        }
-        .menu-item { 
-            display: flex; align-items: center; gap: 12px; text-decoration: none; 
-            color: var(--text-grey); font-weight: 800; background: white; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); padding: 0 20px; 
-            border-radius: 12px; height: 50px; min-width: 260px; 
-        }
-        .menu-item img { width: 32px; height: 32px; object-fit: contain; }
-        .menu-item:hover { background-color: var(--primary-color); color: white !important; }
-
-        /* ============================================================
-           3. ÁREA DO JOGO (SHELL ESTICADA - 15PX PADDING)
-           ============================================================ */
-        main { 
-            flex: 1; 
-            display: flex; 
-            justify-content: center; 
-            padding: 15px; 
-            min-height: 0; 
-        }
-
+        main { flex: 1 0 auto; display: flex; justify-content: center; padding: 10px; }
+        
         .game-shell { 
             background: white; 
             width: min(1100px, 100%); 
-            height: 100%; 
+            height: auto; 
+            min-height: 500px; 
+            border: 1.5px solid var(--primary-color); 
             display: flex; 
             flex-direction: column; 
-            border: 1.5px solid var(--primary-color); 
-            border-radius: 40px; 
             overflow: hidden; 
         }
 
-        .shell-header { text-align: center; border-bottom: 2px dashed #f5f5f5; display: flex; align-items: center; justify-content: center; min-height: 65px; padding: 5px 15px; flex-shrink: 0; }
-        .shell-body { flex: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; }
-        .shell-footer { display: flex; align-items: center; background: #fafafa; min-height: 90px; padding: 15px 30px; gap: 15px; flex-shrink: 0; }
+        .shell-header { text-align: center; border-bottom: 2px dashed #f5f5f5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .shell-body { flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; padding: 20px; }
+        .shell-footer { display: flex; align-items: center; background: #fafafa; flex-shrink: 0; }
 
-        footer { text-align: center; background: white; padding: 12px; flex-shrink: 0; border-radius: 25px 25px 0 0; }
-        .footer-text { font-size: 0.75rem; font-weight: 700; color: var(--text-grey); }
+        footer { text-align: center; background: white; flex-shrink: 0; padding: 10px; }
+        .hamburger-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; transition: 0.2s; }
+        .menu-dropdown { position: absolute; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
+        .menu-item { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; }
+        .menu-item img { flex-shrink: 0; object-fit: contain; }
+
+        .menu-item:hover { background-color: var(--primary-color); color: white !important; }
+        .hamburger-btn:hover { transform: scale(1.1); opacity: 0.7; }
+        
+        /* ============================================================
+           2. PC / TABLET LANDSCAPE / PAINEL INTERATIVO
+           ============================================================ */
+        @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
+            header { height: 85px; }
+            #header-icon { height: 55px; }
+            #txt-titulo1 { font-size: 1.3rem; font-weight: 900; color: var(--primary-color); }
+            #txt-titulo2 { font-size: 1.1rem; font-weight: 800; color: var(--text-grey); }
+            #txt-subtitulo-header { font-size: 0.65rem; font-weight: 600; margin-top: 4px; opacity: 0.8; color: var(--text-grey); }
+            
+            main { padding: 20px; }
+            .game-shell { border-radius: 40px; min-height: 600px; width: min(1200px, 95%); }
+            .shell-header { min-height: 65px; padding: 5px 15px; }
+            .shell-footer { min-height: 90px; padding: 15px 30px; gap: 15px; }
+            
+            footer { border-radius: 25px 25px 0 0; }
+            .footer-text { font-size: 0.7rem; font-weight: 700; color: var(--text-grey); }
+            
+            .hamburger-btn { font-size: 26px; }
+            .menu-dropdown { top: 80px; left: 15px; }
+            .menu-item { height: 48px; padding: 0 15px; border-radius: 12px; min-width: 250px; }
+            .menu-item img { width: 32px; height: 32px; }
+        }
 
         /* ============================================================
-           4. MEDIA QUERIES (DEFINIÇÕES DE ALTURA E ICON)
+           3. TABLET PORTRAIT (VERTICAL) - CORRIGIDO
            ============================================================ */
         @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
-            header { height: 85px; }
-            #header-icon { height: 50px; }
-            .game-shell { width: 95%; }
+            header { height: 100px; } 
+            #header-icon { height: 65px; }
+            
+            /* ADICIONADO: Configuração dos títulos para Tablet Vertical */
+            #txt-titulo1 { font-size: 1.4rem; font-weight: 900; color: var(--primary-color); }
+            #txt-titulo2 { font-size: 1.2rem; font-weight: 800; color: var(--text-grey); }
+            #txt-subtitulo-header { font-size: 0.75rem; font-weight: 600; margin-top: 4px; opacity: 0.8; color: var(--text-grey); }
+
+            .hamburger-btn { 
+                font-size: 32px; 
+                width: 50px; 
+                height: 50px; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+            } 
+            
+            .menu-dropdown { 
+                top: 100px; 
+                left: 15px; 
+                padding: 12px;
+                gap: 10px;
+                background: white;
+                border-radius: 20px;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
+
+            .menu-item { 
+                height: 55px;      
+                min-width: 320px;  
+                padding: 0 25px; 
+                font-size: 1.1rem; 
+                border-radius: 15px;
+                display: flex;
+                white-space: nowrap; 
+            }
+
+            .menu-item img { width: 30px; height: 30px; } 
+
+            .game-shell { width: 94%; min-height: 800px; border-radius: 45px; }
+            .shell-body { padding: 40px; }
+            .shell-footer { min-height: 120px; }
         }
 
+        /* ============================================================
+           4. TELEMÓVEL VERTICAL (PORTRAIT)
+           ============================================================ */
         @media screen and (max-width: 500px) and (orientation: portrait) {
-            header { height: 80px; }
-            #header-icon { height: 45px; }
-            #txt-titulo1 { font-size: 1.15rem; }
-            #txt-titulo2 { font-size: 1rem; }
-            .game-shell { border-radius: 30px; }
+            header { height: 85px; }
+            #header-icon { height: 55px; }
+            #txt-titulo1 { font-size: 1.3rem; font-weight: 900; color: var(--primary-color); }
+            #txt-titulo2 { font-size: 1.1rem; font-weight: 800; color: var(--text-grey); }
+            #txt-subtitulo-header { display: flex; font-size: 0.65rem; font-weight: 600; margin-top: 4px; opacity: 0.8; color: var(--text-grey); }
+            
+            main { padding: 10px; display: block; }
+            .game-shell { border-radius: 40px; min-height: 520px; margin-bottom: 20px; }
+            .shell-header { min-height: 65px; padding: 5px 15px; }
+            .shell-body { padding: 15px; min-height: 350px; }
+            .shell-footer { min-height: 90px; padding: 15px 30px; gap: 15px; }
+            
+            footer { border-radius: 25px 25px 0 0; position: relative; }
+            .footer-text { font-size: 0.7rem; font-weight: 700; color: var(--text-grey); }
+            
+            .hamburger-btn { font-size: 26px; }
+            .menu-dropdown { top: 80px; left: 15px; }
+            .menu-item { height: 48px; padding: 0 15px; border-radius: 12px; min-width: 250px; }
+            .menu-item img { width: 32px; height: 32px; }
         }
 
+        /* ============================================================
+           5. TELEMÓVEL HORIZONTAL (LANDSCAPE)
+           ============================================================ */
         @media screen and (max-height: 500px) and (orientation: landscape) {
             header { height: 75px; }
-            #header-icon { height: 38px; }
-            #txt-subtitulo-header { display: none; }
-            .game-shell { border-radius: 20px; }
-            .shell-footer { min-height: 80px; padding: 10px 25px; }
+            #header-icon { height: 45px; }
+            #txt-titulo1 { font-size: 1.1rem; color: var(--primary-color); font-weight: 900; }
+            #txt-titulo2 { font-size: 0.9rem; color: var(--text-grey); font-weight: 800; }
+            #txt-subtitulo-header { display: flex; font-size: 0.6rem; color: var(--text-grey); font-weight: 600; margin-top: 2px; opacity: 0.8; }
+            
+            main { padding: 5px; display: block; }
+            .game-shell { border-radius: 20px; min-height: 420px; margin-bottom: 20px; }
+            .shell-header { min-height: 55px; padding: 5px 15px; }
+            .shell-body { padding: 10px; min-height: 250px; }
+            .shell-footer { min-height: 80px; padding: 10px 25px; gap: 10px; }
+            
+            footer { padding: 10px; border-radius: 25px 25px 0 0; position: relative; }
+            
+            .hamburger-btn { font-size: 22px; }
+            .menu-dropdown { top: 75px; left: 10px; }
+            .menu-item { height: 42px; padding: 0 15px; border-radius: 10px; min-width: 200px; }
+            .menu-item img { width: 26px; height: 26px; }
         }
     </style>
 </head>
@@ -144,7 +188,7 @@
                 <div id="txt-subtitulo-header">---</div>
             </div>
         </div>
-        <img id="icon-voltar-top" src="" onclick="location.href='../../'" style="height: 38px; cursor: pointer;">
+        <img id="icon-voltar-top" src="" onclick="location.reload()" style="height: 38px; cursor: pointer;">
     </header>
 
     <main>
@@ -184,7 +228,6 @@
                 menuBox.innerHTML = ''; 
 
                 (config.menuItens || config.menu_itens).forEach(item => {
-                    if (item.label === "Destaque" || item.id === "jd") return;
                     const a = document.createElement('a'); 
                     a.className = 'menu-item'; 
                     a.href = item.link;
@@ -199,7 +242,7 @@
             showStatusBar(ronda, total, certos, erros) {
                 const lampPath = JOGO_CONFIG.caminhoIconsMenu + "lampada.png";
                 document.getElementById('shell-header-content').innerHTML = `
-                    <div style="width: 100%; display: flex; justify-content: space-between; align-items: center;">
+                    <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 10px;">
                         <div style="display:flex; align-items:center; gap:8px;">
                             <img src="${lampPath}" style="height:45px; cursor:pointer;" onclick="darAjuda()">
                             <div style="background: #6c757d; color: white; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 1.1rem;">${ronda}/${total}</div>
@@ -209,27 +252,48 @@
                             <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; min-width: 60px; justify-content: center; background: #ff5a5f; box-shadow: 0 3px 0 #d44348;"><i class="fas fa-times"></i> ${erros}</div>
                         </div>
                     </div>`;
+                document.getElementById('shell-header-content').style.display = 'flex';
                 document.getElementById('shell-footer-content').style.display = 'none';
             },
 
             showResults(certos, erros, ajudas, rel) {
-                document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900;">RESULTADOS</h2>`;
+                // Título no Header
+                document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; padding: 15px;">RESULTADOS</h2>`;
+                
+                // Conteúdo Central (Taça e Pontuações)
                 document.getElementById('game-content').innerHTML = `
-                    <div style="text-align:center;">
-                        <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height:150px; object-fit:contain;">
-                        <h2 style="color:var(--primary-color); margin:10px 0; font-weight:900; text-transform:uppercase;">${rel.titulo}</h2>
-                        <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #8cc63f;">CERTOS: ${certos}</div>
-                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #ff5a5f;">ERROS: ${erros}</div>
-                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #5EA2E6;">AJUDAS: ${ajudas}</div>
+                    <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 20px; text-align: center; padding: 20px;">
+                        
+                        <!-- Imagem da Taça/Relatório: Cresce no tablet vertical -->
+                        <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" 
+                             style="height: clamp(160px, 35vh, 320px); object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));">
+                        
+                        <div>
+                            <h2 style="color:var(--primary-color); font-size: clamp(1.8rem, 5vw, 2.8rem); font-weight:900; text-transform:uppercase; margin:0;">${rel.titulo}</h2>
+                        </div>
+
+                        <!-- Grupos de Pontuação -->
+                        <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; max-width: 600px;">
+                            <div style="padding: 12px 20px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.2rem; background: #8cc63f; box-shadow: 0 4px 0 #6da32f;">
+                                <i class="fas fa-check"></i> CERTOS: ${certos}
+                            </div>
+                            <div style="padding: 12px 20px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.2rem; background: #ff5a5f; box-shadow: 0 4px 0 #d44348;">
+                                <i class="fas fa-times"></i> ERROS: ${erros}
+                            </div>
+                            <div style="padding: 12px 20px; border-radius: 18px; color: white; font-weight: 900; display: flex; align-items: center; gap: 8px; font-size: 1.2rem; background: #5EA2E6; box-shadow: 0 4px 0 #4a8dcb;">
+                                <i class="fas fa-lightbulb"></i> AJUDAS: ${ajudas}
+                            </div>
                         </div>
                     </div>`;
                 
+                // Botões de Ação
                 const footer = document.getElementById('shell-footer-content');
                 footer.style.display = "flex";
                 footer.innerHTML = `
-                    <button onclick="location.reload()" style="flex: 1; height: 65px; border-radius: 35px; background: #6c757d; color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer;">REPETIR</button>
-                    <button onclick="window.history.back()" style="flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer;">SAIR</button>`;
+                    <div style="display:flex; width:100%; gap:20px; padding:25px;">
+                        <button onclick="location.reload()" style="flex: 1; height: clamp(65px, 8vh, 85px); border-radius: 40px; background: #6c757d; color: white; border: none; font-size: 1.4rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #4e555b;">REPETIR</button>
+                        <button onclick="window.history.back()" style="flex: 1; height: clamp(65px, 8vh, 85px); border-radius: 40px; background: var(--primary-color); color: white; border: none; font-size: 1.4rem; font-weight: 900; cursor: pointer; box-shadow: 0 5px 0 #4582c0;">SAIR</button>
+                    </div>`;
             }
         };
 
