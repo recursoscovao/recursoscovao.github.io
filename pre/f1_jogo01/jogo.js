@@ -10,11 +10,17 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ==========================================
-// 2. CONFIGURAÇÃO VISUAL (CSS INJETADO) - ADAPTADO PARA TABLET E PAINEL
+// 2. CONFIGURAÇÃO VISUAL (CSS INJETADO) 
 // ==========================================
 const style = document.createElement('style');
 style.innerHTML = `
-    /* [ESTILOS GERAIS - COMUNS A TODOS] */
+    /* [ESTILOS GERAIS - CONFIGURAÇÃO PADRÃO] */
+    :root { 
+        --grid-cols: 4;      /* Valor padrão para evitar fila única */
+        --card-size: 130px; 
+        --dest-size: 180px; 
+    }
+
     .status-container { width: 100%; display: flex; justify-content: space-between; align-items: center; }
     .status-pill { background: #6c757d; color: white; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 1.1rem; }
     .score-group { display: flex; gap: 10px; }
@@ -34,7 +40,7 @@ style.innerHTML = `
     .destaque-box {
         width: var(--dest-size); height: var(--dest-size); background: #fff; border-radius: 30px; 
         border: 3.5px dashed var(--primary-color); display: flex; align-items: center; justify-content: center;
-        margin-bottom: 15px; flex-shrink: 0;
+        margin-bottom: 15px; flex-shrink: 0; 
     }
     .destaque-box img { max-width: 65%; max-height: 65%; object-fit: contain; }
     
@@ -44,50 +50,37 @@ style.innerHTML = `
         display: flex; align-items: center; justify-content: center; 
         cursor: pointer; position: relative; transition: 0.2s;
     }
+    .opcao-card:active { transform: scale(0.95); }
     .opcao-card img { width: 80%; height: 80%; object-fit: contain; }
     
     .feedback-icon { position: absolute; font-size: 3rem; z-index: 10; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3)); pointer-events: none; }
     .icon-v { color: #8cc63f; } .icon-x { color: #ff5a5f; }
 
-    /* A. PC / TABLET LANDSCAPE / PAINÉIS INTERATIVOS */
+    /* A. PC / TABLET LANDSCAPE / PAINÉIS */
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
-        :root { 
-            --grid-cols: 6; 
-            --card-size: 130px; 
-            --dest-size: 160px; 
-        }
+        :root { --grid-cols: 6; --card-size: 130px; --dest-size: 160px; }
         .shell-body { padding: 20px !important; justify-content: center !important; }
-        .destaque-box { margin-bottom: 25px; }
     }
 
-    /* B. TABLET PORTRAIT (VERTICAL) - COM PADDING LATERAL E 4 COLUNAS */
+    /* B. TABLET VERTICAL (PORTRAIT) - FORÇANDO GRELHA */
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
         :root { 
-            --grid-cols: 4;      
-            --card-size: 145px;  
+            --grid-cols: 4 !important;      /* Garante 4 colunas */
+            --card-size: 140px;   
             --dest-size: 200px;   
         }
         .shell-body { padding: 30px 40px !important; justify-content: center !important; }
-        .destaque-box { margin-bottom: 35px; }
     }
 
     /* C. TELEMÓVEL VERTICAL (PORTRAIT) */
     @media screen and (max-width: 500px) and (orientation: portrait) {
-        :root { 
-            --grid-cols: 3; 
-            --card-size: 85px; 
-            --dest-size: 140px; 
-        }
-        .shell-body { padding: 15px 20px !important; justify-content: center !important; }
+        :root { --grid-cols: 3 !important; --card-size: 85px; --dest-size: 140px; }
+        .shell-body { padding: 15px 15px !important; justify-content: center !important; }
     }
 
     /* D. TELEMÓVEL HORIZONTAL (LANDSCAPE) */
     @media screen and (max-height: 500px) and (orientation: landscape) {
-        :root { 
-            --grid-cols: 6; 
-            --card-size: 70px; 
-            --dest-size: 110px; 
-        }
+        :root { --grid-cols: 6 !important; --card-size: 70px; --dest-size: 110px; }
         .shell-body { padding: 10px 15px !important; }
     }
 `;
@@ -177,16 +170,23 @@ function iniciarJogo() {
 
 function proximaRonda() {
     if (rondaAtual > totalRondas) { finalizarJogo(); return; }
+    
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
+
     const area = document.getElementById('game-content');
+    
     const todos = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
     itemDestaque = todos[0];
+    
     let selecao = todos.slice(0, 12);
     if (!selecao.find(i => i.id === itemDestaque.id)) selecao[0] = itemDestaque;
+    
     opcoesRonda = selecao.sort(() => Math.random() - 0.5);
+
+    // Adicionado style max-width para garantir que a grelha respeita o contentor
     area.innerHTML = `
         <div class="destaque-box"><img src="${DADOS_JOGO.caminhoImagens + itemDestaque.img}"></div>
-        <div style="display:grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap:8px; width:fit-content;">
+        <div style="display:grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap:12px; width:100%; max-width:fit-content; justify-items:center;">
             ${opcoesRonda.map(item => `
                 <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)">
                     <img src="${DADOS_JOGO.caminhoImagens + item.img}">
@@ -197,6 +197,7 @@ function proximaRonda() {
 function verificarResposta(id, el) {
     if (!jogoAtivo) return;
     document.querySelectorAll('.opcao-card').forEach(c => c.style.pointerEvents = 'none');
+
     if (id === itemDestaque.id) {
         certos++; somAcerto.play();
         el.style.borderColor = "#8cc63f";
