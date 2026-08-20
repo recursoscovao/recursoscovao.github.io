@@ -16,57 +16,55 @@ const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 
 // ============================================================
-// === SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS ===
+// === SECÇÃO 2: CONFIGURAÇÃO VISUAL / CSS (RECONSTRUÇÃO TOTAL) ===
 // ============================================================
 const style = document.createElement('style');
 style.innerHTML = `
     #game-content { 
-        display: flex; flex-direction: column; align-items: center; 
-        justify-content: center; 
+        display: flex; flex-direction: column; 
         width: 100%; height: 100%; 
-        padding: 5px 15px 15px 15px; 
-        box-sizing: border-box; overflow: hidden; position: relative;
+        padding: 0; box-sizing: border-box; 
+        overflow: hidden; position: relative;
     }
 
-    /* AREA DA SIMULAÇÃO: Altura reduzida em 5% para libertar espaço */
+    /* 1. AREA DE SIMULAÇÃO (CENTRO DINÂMICO) */
     #simu-container { 
-        height: 30%; /* Reduzido de 35% para 30% */
-        width: 100%; display: flex; align-items: center; justify-content: center; 
+        flex: 1; /* Ocupa todo o espaço disponível entre o título e os botões */
+        display: flex; align-items: center; justify-content: center; 
         width: 100%; min-height: 0; overflow: hidden;
-        margin-top: -20px; 
     }
 
-    /* CONTENTOR DOS BOTÕES: 20px de margem do fundo */
+    /* 2. CONTENTOR DOS BOTÕES (ANCORADO AO FUNDO) */
     #capa-menu-principal, #nivel-select-container { 
         width: 100%; display: flex; flex-direction: column; align-items: center; 
-        gap: 12px; flex-shrink: 0; 
-        padding-top: 10px;    
-        padding-bottom: 20px; /* Margem rigorosa de 20px do fundo */
+        gap: 15px; flex-shrink: 0; 
+        padding-bottom: 20px; /* MARGEM RIGOROSA DE 20PX DO FUNDO */
     }
 
     .capa-btn-row, .nivel-row { 
-        display: flex; flex-direction: row; align-items: stretch; 
-        gap: 12px; width: 100%; max-width: 550px; justify-content: center; padding: 0 10px; 
+        display: flex; flex-direction: row; align-items: stretch; /* Estica para terem mesma altura */
+        gap: 12px; width: 100%; max-width: 550px; justify-content: center; padding: 0 20px; 
     }
     
+    /* BOTÕES COM DESIGN UNIFICADO */
     .btn-capa-small { 
-        flex: 1; height: 60px; border-radius: 15px; border: none; color: white; 
-        font-weight: 900; font-size: 1rem; cursor: pointer; display: flex; 
+        flex: 1; height: 55px; border-radius: 12px; border: none; color: white; 
+        font-weight: 900; font-size: 0.9rem; cursor: pointer; display: flex; 
         align-items: center; justify-content: center; gap: 8px; 
-        box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; 
+        box-shadow: 0 4px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; 
     }
     
     .btn-inform { 
-        width: 60px; height: 60px; /* Mesma altura que os botões de texto */
-        border-radius: 15px; background: white; border: 2px solid #eee;
+        width: 55px; height: 55px; /* EXATAMENTE A MESMA ALTURA */
+        border-radius: 12px; background: white; border: 2px solid #eee;
         cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
-        box-shadow: 0 5px 0 rgba(0,0,0,0.05); transition: 0.2s;
+        box-shadow: 0 4px 0 rgba(0,0,0,0.05); transition: 0.2s;
     }
-    .btn-inform img { width: 70%; height: 70%; object-fit: contain; }
-    .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
+    .btn-inform img { width: 60%; height: 60%; object-fit: contain; }
+    .btn-capa-small:active, .btn-inform:active { transform: translateY(2px); box-shadow: 0 1px 0 rgba(0,0,0,0.1); }
 
     /* ============================================================
-       INSTRUÇÕES PREMIUM - SCROLL DE PÁGINA INTEIRA
+       INSTRUÇÕES PREMIUM - SCROLL TOTAL DE PÁGINA
        ============================================================ */
     #instrucoes-panel { 
         position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
@@ -74,7 +72,7 @@ style.innerHTML = `
         transition: transform 0.5s cubic-bezier(0.16, 1, 0.3, 1); 
         transform: translateY(100%); 
         visibility: hidden; 
-        overflow-y: auto; /* Scroll funcional na página toda */
+        overflow-y: auto; /* PERMITE SCROLL NA PÁGINA TODA */
         padding: 0; margin: 0;
     }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
@@ -92,31 +90,29 @@ style.innerHTML = `
     .inst-list { list-style: none; padding: 0; }
     .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.6; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
 
-    /* TABULEIRO */
-    .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; margin: auto; width: fit-content; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+    /* TABULEIRO (Sizing Inteligente) */
+    .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 10px; margin: auto; width: fit-content; box-shadow: 0 8px 20px rgba(0,0,0,0.1); }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; }
-    .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+    .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 2px 4px rgba(0,0,0,0.2); }
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1px solid #eee; }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); }
 
     /* --- RESPONSIVIDADE --- */
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
-        :root { --cell-size: min(55px, 8vh); }
+        :root { --cell-size: min(50px, 7.5vh); }
     }
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
-        :root { --cell-size: 10vw; } 
-        #simu-board { transform: scale(1.15); }
+        :root { --cell-size: 9vw; } 
+        #simu-board { transform: scale(1.1); }
     }
     @media screen and (max-width: 500px) and (orientation: portrait) {
-        :root { --cell-size: 11vw; }
-        .capa-btn-row { flex-direction: column; width: 100%; }
+        :root { --cell-size: 10.5vw; }
+        .capa-btn-row { flex-direction: column; width: 100%; gap: 10px; }
         .btn-inform { width: 100%; height: 50px; order: -1; }
         .btn-capa-small { height: 55px; }
-        #simu-container { height: 25%; } /* Reduzido de 30% para 25% */
-        #capa-menu-principal { padding-bottom: 20px; }
     }
 
-    /* UI JOGO */
+    /* ESTILOS DE JOGO */
     .pill-j1 { background: #8cc63f !important; box-shadow: 0 3px 0 #6da32f; }
     .pill-j2 { background: #444 !important; box-shadow: 0 3px 0 #222; }
     .blinking { animation: blinker 1.5s linear infinite; }
@@ -140,22 +136,18 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
-                
                 <div class="inst-section-title"><i class="fas fa-bullseye"></i> Objetivo do Jogo</div>
                 <p class="inst-text">O Avanço é uma corrida estratégica. Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário.</p>
-
                 <div class="inst-section-title"><i class="fas fa-walking"></i> Como Mover</div>
                 <ul class="inst-list">
                     <li><b>Movimento Vertical:</b> Podes avançar 1 casa para a frente se esta estiver <b>vazia</b>.</li>
                     <li><b>Movimento Diagonal:</b> Podes mover-te para as duas casas diagonais à tua frente, quer estejam vazias ou ocupadas por um adversário.</li>
                 </ul>
-
                 <div class="inst-section-title"><i class="fas fa-fist-raised"></i> Capturas</div>
                 <ul class="inst-list">
                     <li><b>Só Diagonais:</b> Podes capturar uma peça adversária se ela estiver numa das tuas <b>diagonais frontais</b>.</li>
                     <li><b>Proibido Vertical:</b> Não podes capturar uma peça que esteja diretamente à tua frente.</li>
                 </ul>
-
                 <div class="inst-section-title"><i class="fas fa-trophy"></i> Sistema de Jogo</div>
                 <p class="inst-text">As peças Brancas (Jogador 1) movem-se sempre para cima. As Negras (PC ou J2) movem-se para baixo. Ganha a melhor de 5 rondas!</p>
                 <div style="height:60px;"></div>
@@ -317,10 +309,9 @@ function iaControlador() {
 function finalizarRonda(vencedorIdx) {
     jogoAtivo = false; matchScore[vencedorIdx]++; somAcerto.play();
     const overlay = document.getElementById('round-feedback');
-    const pcLabel = modoJogo === 'CPU' ? "Pc" : "Jogador 2";
-    const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : pcLabel;
+    const pcLabel = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "Pc" : "Jogador 2");
     overlay.style.display = 'flex';
-    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:#8cc63f; font-size:2rem; font-weight:900;">${nomeV}</h1><p style="font-weight:700; color:#666;">Ganhou a ronda!</p><div style="margin-top:10px; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]} ${pcLabel}</div></div>`;
+    overlay.innerHTML = `<div class="vitoria-card"><h1 style="color:#8cc63f; font-size:2rem; font-weight:900;">${pcLabel}</h1><p style="font-weight:700; color:#666;">Ganhou a ronda!</p><div style="margin-top:10px; font-weight:800;">PLACAR: J1 ${matchScore[0]} - ${matchScore[1]}</div></div>`;
     if (matchScore[0] >= 3 || matchScore[1] >= 3) setTimeout(finalizarMatch, 2000);
     else setTimeout(() => { iniciarJogo(); }, 2000);
 }
@@ -328,10 +319,8 @@ function finalizarRonda(vencedorIdx) {
 function finalizarMatch() {
     document.getElementById('round-feedback').style.display = 'none';
     const vencedorIdx = matchScore[0] >= 3 ? 0 : 1;
-    const pcLabel = modoJogo === 'CPU' ? "PC" : "JOGADOR 2";
-    const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : pcLabel;
+    const nomeV = vencedorIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "PC" : "JOGADOR 2");
     const rel = JOGO_CONFIG.relatorios.find(r => matchScore[vencedorIdx] >= r.min && matchScore[vencedorIdx] <= r.max) || {img:"taca_1.png", titulo:"PARABÉNS!"};
-    
     Engine.showResults(matchScore[0], matchScore[1], "N/A", {img: rel.img, titulo: "GANHOU O " + nomeV});
 }
 
@@ -354,7 +343,7 @@ function iniciarSimulacao() {
         else { let m = moves[Math.floor(Math.random() * moves.length)]; sTab[m.tr][m.tc] = sTab[m.fr][m.fc]; sTab[m.fr][m.fc] = 0; }
         let h = `<div class="grid-board" style="opacity:0.3; pointer-events:none;">`;
         for(let r=0;r<7;r++) for(let c=0;c<7;c++) {
-            h+=`<div class="cell" style="width:min(40px, 7vw); height:min(40px, 7vw);">`;
+            h+=`<div class="cell" style="width:min(32px, 6vw); height:min(32px, 6vw);">`;
             if(sTab[r][c]===1) h+='<div class="piece white"></div>';
             if(sTab[r][c]===2) h+='<div class="piece black"></div>';
             h+=`</div>`;
