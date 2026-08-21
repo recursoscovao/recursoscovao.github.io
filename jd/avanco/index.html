@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
         /* ============================================================
-           1. CONFIGURAÇÕES GLOBAIS E ÁREA DE JOGO REDUZIDA
+           1. CONFIGURAÇÕES GLOBAIS
            ============================================================ */
         :root { --primary-color: #5EA2E6; --bg-color: #EAF4FE; --text-grey: #8792a1; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
@@ -29,7 +29,7 @@
         
         main { flex: 1 0 auto; display: flex; justify-content: center; align-items: flex-start; padding: 15px; }
         
-        /* Ajuste: Área de jogo mais compacta (max-width reduzido) */
+        /* Largura da área de jogo (Mantida conforme gostaste) */
         .game-shell { 
             background: white; 
             width: 95%;
@@ -47,58 +47,61 @@
         .shell-footer { display: flex; align-items: center; background: #fafafa; flex-shrink: 0; }
 
         footer { text-align: center; background: white; flex-shrink: 0; padding: 10px; }
-        .hamburger-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; transition: 0.2s; }
-        .menu-dropdown { position: absolute; display: none; flex-direction: column; gap: 6px; z-index: 2000; }
-        .menu-item { display: flex; align-items: center; gap: 12px; text-decoration: none; color: var(--text-grey); font-weight: 800; background: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transition: 0.2s; }
-        .menu-item img { flex-shrink: 0; object-fit: contain; }
+
+        /* ============================================================
+           MENU HAMBURGUER (CORREÇÃO DE DESIGN)
+           ============================================================ */
+        .hamburger-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; transition: 0.2s; font-size: 26px; width: 50px; height: 50px; }
+        
+        .menu-dropdown { 
+            position: absolute; 
+            display: none; 
+            flex-direction: column; 
+            gap: 8px; 
+            z-index: 2000; 
+            background: white; 
+            padding: 12px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+            border: 1px solid #f0f0f0;
+        }
+
+        .menu-item { 
+            display: flex; 
+            align-items: center; 
+            gap: 15px; 
+            text-decoration: none; 
+            color: var(--text-grey); 
+            font-weight: 800; 
+            background: #f8f9fa; 
+            padding: 0 20px; 
+            height: 52px; 
+            border-radius: 12px; 
+            transition: 0.2s;
+            white-space: nowrap;
+            min-width: 260px;
+        }
+
+        .menu-item img { width: 28px; height: 28px; flex-shrink: 0; object-fit: contain; }
         .menu-item:hover { background-color: var(--primary-color); color: white !important; }
         
         /* ============================================================
-           2. AJUSTES PC / TABLET LANDSCAPE
+           MEDIA QUERIES (AJUSTES DE POSIÇÃO)
            ============================================================ */
         @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
             header { height: 85px; }
-            #header-icon { height: 55px; }
-            #txt-titulo1 { font-size: 1.3rem; font-weight: 900; color: var(--primary-color); }
-            #txt-titulo2 { font-size: 1.1rem; font-weight: 800; color: var(--text-grey); }
-            
-            main { padding: 30px; }
-            .game-shell { min-height: 500px; } /* Reduzido de 600px */
-            .shell-header { min-height: 65px; }
-            .shell-footer { min-height: 90px; padding: 15px 30px; }
-            
-            .hamburger-btn { font-size: 26px; }
             .menu-dropdown { top: 80px; left: 15px; }
-            .menu-item { height: 48px; padding: 0 15px; border-radius: 12px; min-width: 250px; }
         }
 
-        /* ============================================================
-           3. TABLET PORTRAIT - CORREÇÃO DE ALTURA (MUITO IMPORTANTE)
-           ============================================================ */
         @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
             header { height: 100px; } 
-            .game-shell { width: 90%; min-height: 550px; } /* Reduzido de 800px para 550px */
-            .shell-body { padding: 30px; }
-            .shell-footer { min-height: 100px; }
-            .menu-dropdown { top: 100px; left: 15px; }
-            .menu-item { height: 55px; min-width: 300px; }
+            .menu-dropdown { top: 95px; left: 15px; }
+            .menu-item { min-width: 300px; height: 60px; font-size: 1.1rem; }
         }
 
-        /* ============================================================
-           4. TELEMÓVEL VERTICAL E HORIZONTAL
-           ============================================================ */
-        @media screen and (max-width: 500px) and (orientation: portrait) {
+        @media screen and (max-width: 500px) {
             header { height: 85px; }
-            main { padding: 10px; }
-            .game-shell { min-height: 450px; border-radius: 30px; }
-            .shell-body { padding: 15px; }
-        }
-
-        @media screen and (max-height: 500px) and (orientation: landscape) {
-            header { height: 70px; }
-            .game-shell { min-height: 350px; border-radius: 20px; max-width: 90%; }
-            .shell-header { min-height: 50px; }
-            .shell-footer { min-height: 75px; }
+            .menu-dropdown { top: 80px; left: 10px; width: calc(100vw - 20px); max-width: 300px; }
         }
     </style>
 </head>
@@ -108,7 +111,7 @@
         <button class="hamburger-btn" onclick="toggleMenu(event)"><i class="fas fa-bars"></i></button>
         <div id="dropdownMenu" class="menu-dropdown"></div>
         <div class="header-center">
-            <img id="header-icon" src="" alt="">
+            <img id="header-icon" src="" alt="" style="height: 50px;">
             <div class="title-group">
                 <div id="txt-titulo1">---</div>
                 <div id="txt-titulo2">---</div>
@@ -154,9 +157,12 @@
                 const menuBox = document.getElementById('dropdownMenu');
                 menuBox.innerHTML = ''; 
 
-                // --- FILTRO PARA REMOVER "DESTAQUES" ---
-                const itensMenu = (config.menuItens || config.menu_itens);
-                itensMenu.filter(item => item.label !== "Destaques").forEach(item => {
+                // --- FILTRO ROBUSTO PARA REMOVER "DESTAQUES" ---
+                const listaOriginal = (config.menuItens || config.menu_itens);
+                listaOriginal.forEach(item => {
+                    // Ignora se o texto for "Destaques" (independente de espaços ou maiúsculas)
+                    if (item.label.trim().toLowerCase() === "destaques") return;
+
                     const a = document.createElement('a'); 
                     a.className = 'menu-item'; 
                     a.href = item.link;
@@ -177,33 +183,11 @@
                             <div style="background: #6c757d; color: white; padding: 5px 15px; border-radius: 20px; font-weight: 900; font-size: 1.1rem;">${ronda}/${total}</div>
                         </div>
                         <div style="display: flex; gap: 10px;">
-                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; min-width: 60px; justify-content: center; background: #8cc63f; box-shadow: 0 3px 0 #6da32f;"><i class="fas fa-check"></i> ${certos}</div>
-                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; min-width: 60px; justify-content: center; background: #ff5a5f; box-shadow: 0 3px 0 #d44348;"><i class="fas fa-times"></i> ${erros}</div>
+                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; background: #8cc63f;">${certos}</div>
+                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; background: #ff5a5f;">${erros}</div>
                         </div>
                     </div>`;
                 document.getElementById('shell-header-content').style.display = 'flex';
-                document.getElementById('shell-footer-content').style.display = 'none';
-            },
-
-            showResults(certos, erros, ajudas, rel) {
-                document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; padding: 15px;">RESULTADOS</h2>`;
-                document.getElementById('game-content').innerHTML = `
-                    <div style="text-align:center; padding: 20px;">
-                        <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height:150px; object-fit:contain;">
-                        <h2 style="color:var(--primary-color); margin:10px 0; font-weight:900; text-transform:uppercase;">${rel.titulo}</h2>
-                        <div style="display:flex; justify-content:center; gap:10px; flex-wrap:wrap;">
-                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #8cc63f;">CERTOS: ${certos}</div>
-                            <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; display: flex; align-items: center; gap: 6px; font-size: 1.1rem; background: #ff5a5f;">ERROS: ${erros}</div>
-                        </div>
-                    </div>`;
-                
-                const footer = document.getElementById('shell-footer-content');
-                footer.style.display = "flex";
-                footer.innerHTML = `
-                    <div style="display:flex; width:100%; gap:15px; padding:20px;">
-                        <button onclick="location.reload()" style="flex: 1; height: 65px; border-radius: 35px; background: #6c757d; color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer;">REPETIR</button>
-                        <button onclick="window.history.back()" style="flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.3rem; font-weight: 900; cursor: pointer;">SAIR</button>
-                    </div>`;
             }
         };
 
