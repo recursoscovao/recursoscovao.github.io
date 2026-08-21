@@ -7,34 +7,26 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;700;800;900&display=swap" rel="stylesheet">
     <style>
-        /* ============================================================
-           1. CONFIGURAÇÕES GLOBAIS
-           ============================================================ */
         :root { --primary-color: #5EA2E6; --bg-color: #EAF4FE; --text-grey: #8792a1; }
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Nunito', sans-serif; }
         
-        body, html { 
-            min-height: 100vh; 
-            width: 100vw; 
-            background-color: var(--bg-color); 
-            display: flex; 
-            flex-direction: column; 
-            overflow-x: hidden; 
-            overflow-y: auto; 
-        }
+        body, html { min-height: 100vh; width: 100vw; background-color: var(--bg-color); display: flex; flex-direction: column; overflow-x: hidden; overflow-y: auto; }
         
-        header { background: white; border-radius: 0 0 35px 35px; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; padding: 0 15px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+        header { background: white; border-radius: 0 0 35px 35px; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; padding: 0 15px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); height: 85px; }
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
+        #txt-titulo1 { font-size: 1.3rem; font-weight: 900; color: var(--primary-color); }
+        #txt-titulo2 { font-size: 1.1rem; font-weight: 800; color: var(--text-grey); }
+        #txt-subtitulo-header { font-size: 0.65rem; font-weight: 600; margin-top: 4px; opacity: 0.8; color: var(--text-grey); }
+
+        main { flex: 1 0 auto; display: flex; justify-content: center; padding: 15px; }
         
-        main { flex: 1 0 auto; display: flex; justify-content: center; align-items: flex-start; padding: 15px; }
-        
-        /* Largura da área de jogo (Mantida conforme gostaste) */
+        /* ÁREA DE JOGO (Mantida a largura que gostaste) */
         .game-shell { 
             background: white; 
-            width: 95%;
+            width: 95%; 
             max-width: 960px; 
-            min-height: 450px; 
+            min-height: 500px; 
             border: 1.5px solid var(--primary-color); 
             display: flex; 
             flex-direction: column; 
@@ -42,66 +34,50 @@
             border-radius: 40px;
         }
 
-        .shell-header { text-align: center; border-bottom: 2px dashed #f5f5f5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .shell-header { text-align: center; border-bottom: 2px dashed #f5f5f5; display: flex; align-items: center; justify-content: center; min-height: 65px; }
         .shell-body { flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; padding: 20px; }
-        .shell-footer { display: flex; align-items: center; background: #fafafa; flex-shrink: 0; }
+        .shell-footer { display: flex; align-items: center; background: #fafafa; min-height: 90px; }
 
-        footer { text-align: center; background: white; flex-shrink: 0; padding: 10px; }
+        footer { text-align: center; background: white; padding: 10px; border-radius: 25px 25px 0 0; }
+        .footer-text { font-size: 0.7rem; font-weight: 700; color: var(--text-grey); }
 
-        /* ============================================================
-           MENU HAMBURGUER (CORREÇÃO DE DESIGN)
-           ============================================================ */
-        .hamburger-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; transition: 0.2s; font-size: 26px; width: 50px; height: 50px; }
-        
+        /* MENU HAMBURGUER RECONFIGURADO */
+        .hamburger-btn { background: none; border: none; color: var(--primary-color); cursor: pointer; font-size: 26px; }
         .menu-dropdown { 
             position: absolute; 
             display: none; 
             flex-direction: column; 
-            gap: 8px; 
+            gap: 6px; 
             z-index: 2000; 
-            background: white; 
-            padding: 12px; 
-            border-radius: 20px; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
-            border: 1px solid #f0f0f0;
+            top: 80px; 
+            left: 15px;
+            background: white;
+            padding: 10px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
         }
-
         .menu-item { 
             display: flex; 
             align-items: center; 
-            gap: 15px; 
+            gap: 12px; 
             text-decoration: none; 
             color: var(--text-grey); 
             font-weight: 800; 
-            background: #f8f9fa; 
-            padding: 0 20px; 
-            height: 52px; 
-            border-radius: 12px; 
+            background: white; 
+            height: 48px; 
+            padding: 0 15px; 
+            border-radius: 10px; 
+            min-width: 240px;
             transition: 0.2s;
-            white-space: nowrap;
-            min-width: 260px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05);
         }
-
-        .menu-item img { width: 28px; height: 28px; flex-shrink: 0; object-fit: contain; }
         .menu-item:hover { background-color: var(--primary-color); color: white !important; }
-        
-        /* ============================================================
-           MEDIA QUERIES (AJUSTES DE POSIÇÃO)
-           ============================================================ */
-        @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
-            header { height: 85px; }
-            .menu-dropdown { top: 80px; left: 15px; }
-        }
-
-        @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
-            header { height: 100px; } 
-            .menu-dropdown { top: 95px; left: 15px; }
-            .menu-item { min-width: 300px; height: 60px; font-size: 1.1rem; }
-        }
+        .menu-item img { width: 30px; height: 30px; object-fit: contain; }
 
         @media screen and (max-width: 500px) {
-            header { height: 85px; }
-            .menu-dropdown { top: 80px; left: 10px; width: calc(100vw - 20px); max-width: 300px; }
+            header { height: 75px; }
+            .menu-dropdown { top: 70px; left: 10px; }
+            .game-shell { border-radius: 30px; }
         }
     </style>
 </head>
@@ -157,11 +133,11 @@
                 const menuBox = document.getElementById('dropdownMenu');
                 menuBox.innerHTML = ''; 
 
-                // --- FILTRO ROBUSTO PARA REMOVER "DESTAQUES" ---
-                const listaOriginal = (config.menuItens || config.menu_itens);
-                listaOriginal.forEach(item => {
-                    // Ignora se o texto for "Destaques" (independente de espaços ou maiúsculas)
-                    if (item.label.trim().toLowerCase() === "destaques") return;
+                // FILTRO MELHORADO: Remove o item se o label contiver "DESTAQUE" (ignora maiúsculas/acentos)
+                const itensOriginal = (config.menuItens || config.menu_itens);
+                itensOriginal.forEach(item => {
+                    const labelLimpo = item.label.toUpperCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+                    if (labelLimpo.includes("DESTAQUE")) return; 
 
                     const a = document.createElement('a'); 
                     a.className = 'menu-item'; 
@@ -187,7 +163,6 @@
                             <div style="padding: 5px 12px; border-radius: 12px; color: white; font-weight: 900; background: #ff5a5f;">${erros}</div>
                         </div>
                     </div>`;
-                document.getElementById('shell-header-content').style.display = 'flex';
             }
         };
 
