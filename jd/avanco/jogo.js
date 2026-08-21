@@ -97,31 +97,38 @@ style.innerHTML = `
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1.5px solid #bbb; box-shadow: 0 3px 8px rgba(0,0,0,0.25); }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); border: 1.5px solid #000; }
 
-    :root { --cell-size: min(52px, 8vh); }
+    :root { --cell-size: min(52px, 7.5vh); }
 
     /* ============================================================
-       ADAPTAÇÃO TABLET E PAINEL
+       ADAPTAÇÃO PARA TABLET E PAINEL (LAYOUT VERTICAL COM SCROLL)
        ============================================================ */
     @media screen and (min-width: 501px) and (max-width: 1366px) {
-        #game-content { flex-direction: column !important; justify-content: space-between !important; padding: 20px 40px !important; gap: 20px !important; }
-        .capa-btn-row { flex-direction: column !important; width: 100% !important; max-width: 500px !important; gap: 15px !important; }
-        .btn-inform { width: 100% !important; height: 70px !important; order: -1 !important; border-radius: 15px !important; background: white !important; }
-        .btn-capa-small { height: 70px !important; border-radius: 15px !important; font-size: 1.2rem !important; width: 100% !important; }
+        html, body { height: auto !important; overflow-y: auto !important; display: block !important; }
+        main { height: auto !important; display: block !important; overflow: visible !important; }
+        .game-shell { height: auto !important; min-height: 700px !important; margin-bottom: 30px !important; }
+        .shell-body { height: auto !important; overflow: visible !important; min-height: 450px !important; }
+        :root { --cell-size: 10vw !important; }
+        #game-content { flex-direction: column !important; justify-content: flex-start !important; padding: 30px 50px !important; gap: 40px !important; }
+        #simu-container { flex: none !important; height: 350px !important; }
+        #simu-board { transform: scale(1.1) !important; }
+        .capa-btn-row { flex-direction: column !important; width: 100% !important; max-width: 550px !important; gap: 15px !important; }
+        .btn-inform, .btn-capa-small { height: 75px !important; border-radius: 18px !important; font-size: 1.25rem !important; width: 100% !important; box-shadow: 0 6px 0 rgba(0,0,0,0.1) !important; }
+        .btn-inform { order: -1 !important; background: white !important; }
         .nivel-row { flex-direction: row !important; width: 100% !important; gap: 15px !important; }
-        .btn-voltar-pequeno { max-width: none !important; width: 100% !important; height: 70px !important; font-size: 1.1rem !important; border-radius: 15px !important; }
+        #nivel-select-container .capa-btn-row { width: 100% !important; padding: 0 !important; }
+        .btn-voltar-pequeno { max-width: none !important; width: 100% !important; height: 70px !important; font-size: 1.1rem !important; }
     }
 
-    /* TABLET HORIZONTAL ESPECÍFICO */
     @media screen and (min-width: 768px) and (orientation: landscape) {
         :root { --cell-size: min(50px, 9vh) !important; }
-        #simu-board { transform: scale(0.9) !important; }
+        #simu-container { height: 280px !important; }
     }
 
     /* TELEMÓVEL VERTICAL */
     @media screen and (max-width: 500px) and (orientation: portrait) { 
         :root { --cell-size: 11vw; } 
         .capa-btn-row { flex-direction: column; width: 100%; padding: 0 30px; }
-        .btn-inform { width: 100% !important; height: 65px !important; order: -1; border-radius: 15px !important; }
+        .btn-inform { width: 100% !important; height: 65px !important; order: -1; }
         .btn-capa-small { height: 65px !important; border-radius: 15px !important; width: 100% !important; }
         .btn-voltar-pequeno { height: 60px !important; max-width: none !important; width: 100% !important; }
         #capa-menu-principal { padding-bottom: 20px !important; }
@@ -156,18 +163,22 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
+                
                 <div class="inst-section-title">Objetivo do Jogo</div>
-                <p class="inst-text">Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário.</p>
+                <p class="inst-text">Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário (a linha inicial do oponente).</p>
+
                 <div class="inst-section-title">Como Mover as Peças</div>
                 <ul class="inst-list">
                     <li><i class="fas fa-arrow-up"></i> <b>Movimento Vertical:</b> Podes avançar 1 casa para a frente se esta estiver <b>vazia</b>.</li>
-                    <li><i class="fas fa-arrow-up" style="transform: rotate(45deg);"></i> <b>Movimento Diagonal:</b> Podes mover-te para as casas diagonais à tua frente (sentido frente), quer estejam vazias ou ocupadas.</li>
+                    <li><i class="fas fa-arrow-up" style="transform: rotate(45deg);"></i> <b>Movimento Diagonal:</b> Podes mover-te para as casas diagonais <b>à tua frente</b>, quer estejam vazias ou ocupadas.</li>
                 </ul>
+
                 <div class="inst-section-title">Como Capturar</div>
                 <ul class="inst-list">
                     <li><i class="fas fa-fist-raised"></i> <b>Só Diagonais:</b> Podes capturar uma peça adversária se ela estiver numa das tuas <b>diagonais frontais</b>.</li>
                     <li><b>Proibido Vertical:</b> Não podes capturar peças movendo-te diretamente para a frente.</li>
                 </ul>
+
                 <div style="height:60px;"></div>
             </div>`;
         document.body.appendChild(panel);
