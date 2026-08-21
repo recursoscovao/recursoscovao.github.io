@@ -63,7 +63,7 @@ style.innerHTML = `
 
     #simu-container { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; min-height: 220px; }
     
-    /* AJUSTE: Simulação 10% menor (0.90) conforme pedido */
+    /* Base Simulação */
     #simu-board { transform: scale(0.90); transition: 0.3s; }
 
     #capa-menu-principal, #nivel-select-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 12px; }
@@ -82,7 +82,7 @@ style.innerHTML = `
     
     .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
 
-    /* --- CORREÇÃO BLINDADA DO SCROLL --- */
+    /* --- ESTILO BASE INSTRUÇÕES (TELEMÓVEL) --- */
     #instrucoes-panel { 
         position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
         background: white; z-index: 10000; 
@@ -100,13 +100,43 @@ style.innerHTML = `
     .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 20px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.5; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
 
     :root { --cell-size: clamp(38px, 8vw, 62px); }
-    @media screen and (min-width: 600px) { :root { --cell-size: clamp(45px, 6vw, 65px); } }
+
+    /* ============================================================
+       ALTERAÇÕES EXCLUSIVAS PC (MÍNIMO 600PX)
+       ============================================================ */
+    @media screen and (min-width: 600px) { 
+        :root { --cell-size: clamp(45px, 6vw, 65px); }
+
+        /* Diminuição de mais 10% na simulação (0.90 -> 0.81) */
+        #simu-board { transform: scale(0.81); }
+
+        /* Scroll alocado e estilo Modal para PC */
+        #instrucoes-panel { 
+            background: rgba(0, 0, 0, 0.4); /* Fundo escurecido */
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+        .inst-content { 
+            background: white;
+            max-height: 85vh; /* Altura limitada */
+            width: 90%;
+            border-radius: 35px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow-y: auto; /* Scroll apenas aqui dentro no PC */
+        }
+        .close-x { 
+            position: absolute; /* Fixa no canto do modal no PC */
+            top: 25px; 
+            right: 35px; 
+        }
+    }
 
     .blinking { animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.6; } }
     
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.92); z-index: 2000; display: none; align-items: center; justify-content: center; border-radius: 35px; }
-    .vitoria-card { text-align: center; padding: 30px; background: white; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); border: 2px solid #f0f0f0; }
 `;
 document.head.appendChild(style);
 
@@ -116,7 +146,6 @@ document.head.appendChild(style);
 function mostrarCapa() {
     if (jogoAtivo) return;
 
-    // Painel de Instruções Premium Blindado
     if(!document.getElementById('instrucoes-panel')) {
         const p = document.createElement('div');
         p.id = 'instrucoes-panel';
@@ -195,10 +224,7 @@ function toggleInstructions() {
     document.body.style.overflow = isOpening ? 'hidden' : 'auto';
 }
 
-// ============================================================
-// === INÍCIO SECÇÃO 4: LÓGICA CORE, IA E SIMULAÇÃO ===
-// ============================================================
-
+// ... Restante do código (IA, Lógica, Simulação) exatamente como o anterior ...
 function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
     modoJogo = modo; nivelJogo = nivel;
