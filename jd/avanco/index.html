@@ -27,19 +27,17 @@
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         .title-group { display: flex; flex-direction: column; line-height: 0.85; text-transform: uppercase; }
         
-        main { flex: 1 0 auto; display: flex; justify-content: center; align-items: flex-start; padding: 15px; }
+        main { flex: 1 0 auto; display: flex; justify-content: center; padding: 10px; }
         
-        /* Ajuste na largura máxima e altura mínima para não parecer gigante */
         .game-shell { 
             background: white; 
-            width: 100%;
-            max-width: 1000px; /* Reduzido de 1100px */
-            min-height: 450px; 
+            width: min(1100px, 100%); 
+            height: auto; 
+            min-height: 500px; 
             border: 1.5px solid var(--primary-color); 
             display: flex; 
             flex-direction: column; 
             overflow: hidden; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.05);
         }
 
         .shell-header { text-align: center; border-bottom: 2px dashed #f5f5f5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -56,7 +54,7 @@
         .hamburger-btn:hover { transform: scale(1.1); opacity: 0.7; }
         
         /* ============================================================
-           2. PC / TABLET LANDSCAPE
+           2. PC / TABLET LANDSCAPE / PAINEL INTERATIVO
            ============================================================ */
         @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
             header { height: 85px; }
@@ -65,8 +63,8 @@
             #txt-titulo2 { font-size: 1.1rem; font-weight: 800; color: var(--text-grey); }
             #txt-subtitulo-header { font-size: 0.65rem; font-weight: 600; margin-top: 4px; opacity: 0.8; color: var(--text-grey); }
             
-            main { padding: 30px; }
-            .game-shell { border-radius: 40px; min-height: 550px; }
+            main { padding: 20px; }
+            .game-shell { border-radius: 40px; min-height: 600px; width: min(1200px, 95%); }
             .shell-header { min-height: 65px; padding: 5px 15px; }
             .shell-footer { min-height: 90px; padding: 15px 30px; gap: 15px; }
             
@@ -80,23 +78,46 @@
         }
 
         /* ============================================================
-           3. TABLET PORTRAIT (VERTICAL) - CORREÇÃO DE TAMANHO
+           3. TABLET PORTRAIT (VERTICAL) - ÍCONE E MENU AJUSTADOS
            ============================================================ */
         @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
             header { height: 100px; } 
             #header-icon { height: 65px; }
             
-            .hamburger-btn { font-size: 32px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; } 
+            .hamburger-btn { 
+                font-size: 32px; 
+                width: 50px; 
+                height: 50px; 
+                display: flex; 
+                align-items: center; 
+                justify-content: center; 
+            } 
             
-            .menu-dropdown { top: 100px; left: 15px; padding: 12px; gap: 10px; background: white; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+            .menu-dropdown { 
+                top: 100px; 
+                left: 15px; 
+                padding: 12px;
+                gap: 10px;
+                background: white;
+                border-radius: 20px;
+                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+            }
 
-            .menu-item { height: 55px; min-width: 320px; padding: 0 25px; font-size: 1.1rem; border-radius: 15px; display: flex; white-space: nowrap; }
+            .menu-item { 
+                height: 55px;      
+                min-width: 320px;  
+                padding: 0 25px; 
+                font-size: 1.1rem; 
+                border-radius: 15px;
+                display: flex;
+                white-space: nowrap; 
+            }
+
             .menu-item img { width: 30px; height: 30px; } 
 
-            /* Reduzido de 800px para 600px para não ficar gigante no tablet */
-            .game-shell { width: 92%; min-height: 600px; border-radius: 45px; }
-            .shell-body { padding: 30px; }
-            .shell-footer { min-height: 110px; }
+            .game-shell { width: 94%; min-height: 800px; border-radius: 45px; }
+            .shell-body { padding: 40px; }
+            .shell-footer { min-height: 120px; }
         }
 
         /* ============================================================
@@ -105,34 +126,47 @@
         @media screen and (max-width: 500px) and (orientation: portrait) {
             header { height: 85px; }
             #header-icon { height: 55px; }
-            #txt-titulo1 { font-size: 1.2rem; font-weight: 900; }
-            #txt-titulo2 { font-size: 1.0rem; }
+            #txt-titulo1 { font-size: 1.3rem; font-weight: 900; color: var(--primary-color); }
+            #txt-titulo2 { font-size: 1.1rem; font-weight: 800; color: var(--text-grey); }
+            #txt-subtitulo-header { display: flex; font-size: 0.65rem; font-weight: 600; margin-top: 4px; opacity: 0.8; color: var(--text-grey); }
             
-            main { padding: 12px; }
-            .game-shell { border-radius: 35px; min-height: 480px; }
-            .shell-header { min-height: 60px; }
-            .shell-body { padding: 15px; }
+            main { padding: 10px; display: block; }
+            .game-shell { border-radius: 40px; min-height: 520px; margin-bottom: 20px; }
+            .shell-header { min-height: 65px; padding: 5px 15px; }
+            .shell-body { padding: 15px; min-height: 350px; }
+            .shell-footer { min-height: 90px; padding: 15px 30px; gap: 15px; }
+            
+            footer { border-radius: 25px 25px 0 0; position: relative; }
+            .footer-text { font-size: 0.7rem; font-weight: 700; color: var(--text-grey); }
             
             .hamburger-btn { font-size: 26px; }
-            .menu-dropdown { top: 80px; left: 10px; }
-            .menu-item { height: 48px; min-width: 220px; }
+            .menu-dropdown { top: 80px; left: 15px; }
+            .menu-item { height: 48px; padding: 0 15px; border-radius: 12px; min-width: 250px; }
+            .menu-item img { width: 32px; height: 32px; }
         }
 
         /* ============================================================
            5. TELEMÓVEL HORIZONTAL (LANDSCAPE)
            ============================================================ */
         @media screen and (max-height: 500px) and (orientation: landscape) {
-            header { height: 70px; }
-            #header-icon { height: 40px; }
-            #txt-titulo1 { font-size: 1.1rem; }
-            #txt-titulo2 { font-size: 0.9rem; }
+            header { height: 75px; }
+            #header-icon { height: 45px; }
+            #txt-titulo1 { font-size: 1.1rem; color: var(--primary-color); font-weight: 900; }
+            #txt-titulo2 { font-size: 0.9rem; color: var(--text-grey); font-weight: 800; }
+            #txt-subtitulo-header { display: flex; font-size: 0.6rem; color: var(--text-grey); font-weight: 600; margin-top: 2px; opacity: 0.8; }
             
-            main { padding: 10px; }
-            .game-shell { border-radius: 20px; min-height: 380px; max-width: 85%; }
-            .shell-header { min-height: 50px; }
-            .shell-footer { min-height: 70px; }
+            main { padding: 5px; display: block; }
+            .game-shell { border-radius: 20px; min-height: 420px; margin-bottom: 20px; }
+            .shell-header { min-height: 55px; padding: 5px 15px; }
+            .shell-body { padding: 10px; min-height: 250px; }
+            .shell-footer { min-height: 80px; padding: 10px 25px; gap: 10px; }
             
-            .menu-dropdown { top: 70px; }
+            footer { padding: 10px; border-radius: 25px 25px 0 0; position: relative; }
+            
+            .hamburger-btn { font-size: 22px; }
+            .menu-dropdown { top: 75px; left: 10px; }
+            .menu-item { height: 42px; padding: 0 15px; border-radius: 10px; min-width: 200px; }
+            .menu-item img { width: 26px; height: 26px; }
         }
     </style>
 </head>
@@ -188,17 +222,17 @@
                 const menuBox = document.getElementById('dropdownMenu');
                 menuBox.innerHTML = ''; 
 
-                // FILTRO ADICIONADO AQUI: Remove o item "Destaques" sem mudar o dados.js
-                const itensFiltrados = (config.menuItens || config.menu_itens).filter(item => item.label !== "Destaques");
-
-                itensFiltrados.forEach(item => {
-                    const a = document.createElement('a'); 
-                    a.className = 'menu-item'; 
-                    a.href = item.link;
-                    const imgPath = (item.icon === "AUTO") ? voltarIconPath : config.caminhoIconsMenu + item.icon;
-                    a.innerHTML = `<img src="${imgPath}"> <span>${item.label}</span>`;
-                    menuBox.appendChild(a);
-                });
+                // Filtra para não mostrar o item "Destaques"
+                (config.menuItens || config.menu_itens)
+                    .filter(item => item.label !== "Destaques")
+                    .forEach(item => {
+                        const a = document.createElement('a'); 
+                        a.className = 'menu-item'; 
+                        a.href = item.link;
+                        const imgPath = (item.icon === "AUTO") ? voltarIconPath : config.caminhoIconsMenu + item.icon;
+                        a.innerHTML = `<img src="${imgPath}"> <span>${item.label}</span>`;
+                        menuBox.appendChild(a);
+                    });
 
                 if(typeof mostrarCapa === "function") mostrarCapa();
             },
