@@ -85,18 +85,17 @@ style.innerHTML = `
 
     .inst-content { max-width: 750px; margin: 0 auto; text-align: left; font-family: 'Nunito', sans-serif; padding: 60px 25px; clear: both; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 2.2rem; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; border-bottom: 5px solid var(--bg-color); padding-bottom: 15px; }
+    .inst-section-title { color: #333; font-size: 1.4rem; font-weight: 800; margin: 30px 0 15px; display: flex; align-items: center; gap: 12px; }
+    .inst-section-title::before { content: ''; width: 6px; height: 24px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
+    .inst-list { list-style: none; padding: 0; }
+    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.6; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
 
     .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; margin: auto; width: fit-content; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; transition: background 0.3s; }
     
     .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 3px 6px rgba(0,0,0,0.2); transition: all 0.4s ease; }
     
-    /* Peças Brancas: Mais visíveis com borda e sombra reforçada */
-    .piece.white { 
-        background: radial-gradient(circle at 30% 30%, #fff, #ddd); 
-        border: 1.5px solid #bbb; 
-        box-shadow: 0 3px 8px rgba(0,0,0,0.25);
-    }
+    .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1.5px solid #bbb; box-shadow: 0 3px 8px rgba(0,0,0,0.25); }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); border: 1.5px solid #000; }
 
     :root { --cell-size: min(52px, 7.5vh); }
@@ -111,13 +110,14 @@ style.innerHTML = `
     .blinking { animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; }
+    .vitoria-card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); width: 85%; max-width: 320px; text-align: center; }
 `;
 document.head.appendChild(style);
 // === FIM SECÇÃO 2 ===
 
 
 // ============================================================
-// === INÍCIO SECÇÃO 3: CAPA E INSTRUÇÕES ===
+// === INÍCIO SECÇÃO 3: CAPA E INSTRUÇÕES PREMIUM ===
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
@@ -130,7 +130,24 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
-                <p>O Avanço é uma corrida estratégica. Vence o primeiro jogador que conseguir levar qualquer uma das suas peças até à primeira linha do campo adversário.</p>
+                
+                <div class="inst-section-title">Objetivo do Jogo</div>
+                <p class="inst-text">O Avanço é uma corrida estratégica. Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário (a linha de onde o oponente começou).</p>
+
+                <div class="inst-section-title">Como Mover as Peças</div>
+                <ul class="inst-list">
+                    <li><i class="fas fa-arrow-up"></i> <b>Movimento Vertical:</b> Podes avançar 1 casa para a frente se esta estiver <b>vazia</b>.</li>
+                    <li><i class="fas fa-arrows-alt-v"></i> <b>Movimento Diagonal:</b> Podes mover-te para as duas casas diagonais à tua frente, quer estejam vazias ou ocupadas por um adversário.</li>
+                </ul>
+
+                <div class="inst-section-title">Como Capturar</div>
+                <ul class="inst-list">
+                    <li><b>Captura Diagonal:</b> Podes capturar uma peça adversária se ela estiver numa das tuas <b>diagonais frontais</b>. A peça capturada é removida do tabuleiro.</li>
+                    <li><b>Nota Importante:</b> Não podes capturar peças movendo-te verticalmente (para a frente).</li>
+                </ul>
+
+                <div class="inst-section-title">Sistema de Pontuação</div>
+                <p class="inst-text">O jogo é disputado em rondas. Ganha o jogador que vencer primeiro 3 rondas (melhor de 5)!</p>
                 <div style="height:60px;"></div>
             </div>`;
         document.body.appendChild(panel);
@@ -221,7 +238,6 @@ function atualizarUI() {
     const boardEl = document.createElement('div');
     boardEl.className = "grid-board";
 
-    // Calcula ajudas discretas se for Nível 1
     let movesHints = [];
     if(selectedPiece && nivelJogo === 1) {
         for(let r=0; r<7; r++) {
@@ -235,17 +251,12 @@ function atualizarUI() {
         for(let c=0; c<7; c++) {
             const cell = document.createElement('div');
             cell.className = "cell";
-            
             if(selectedPiece && selectedPiece.r === r && selectedPiece.c === c) cell.style.background = "#fff9c4";
-            
-            // Dica discreta: apenas um pontinho minúsculo no centro
             if(movesHints.some(m => m.r === r && m.c === c)) {
                 cell.innerHTML = '<div style="width:6px; height:6px; background:#bbb; border-radius:50%; opacity:0.6;"></div>';
             }
-
             if(tabuleiro[r][c] === 1) cell.innerHTML = '<div class="piece white"></div>';
             if(tabuleiro[r][c] === 2) cell.innerHTML = '<div class="piece black"></div>';
-            
             cell.onclick = () => handleCellClick(r, c);
             boardEl.appendChild(cell);
         }
