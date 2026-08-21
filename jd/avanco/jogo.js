@@ -76,7 +76,7 @@ style.innerHTML = `
     .btn-inform { width: 58px; height: 58px; border-radius: 16px; background: white; border: 2.5px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
     .btn-inform img { width: 30px; height: 30px; object-fit: contain; }
 
-    /* --- AGREGADO: SCROLL DAS INSTRUÇÕES DO DOMINÓRIO --- */
+    /* --- ESTILO INSTRUÇÕES (ESTILO DOMINÓRIO) --- */
     #instrucoes-panel { 
         position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
         background: white; z-index: 10000; 
@@ -89,14 +89,15 @@ style.innerHTML = `
 
     .inst-content { max-width: 600px; margin: 0 auto; text-align: left; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 3px solid #f0f0f0; padding-bottom: 10px; }
-    .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 20px 0 10px; display: flex; align-items: center; gap: 10px; }
+    .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 25px 0 10px; display: flex; align-items: center; gap: 10px; }
     .inst-section-title::before { content: ''; width: 6px; height: 22px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
+    .inst-text { color: #666; font-size: 1.05rem; line-height: 1.6; margin-bottom: 15px; }
     .inst-list { list-style: none; padding: 0; }
-    .inst-list li { background: #f9f9f9; margin-bottom: 8px; padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary-color); color: #555; font-size: 1rem; line-height: 1.4; }
+    .inst-list li { background: #f9f9f9; margin-bottom: 12px; padding: 18px; border-radius: 12px; border-left: 5px solid var(--primary-color); color: #555; font-size: 1rem; line-height: 1.5; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
 
     :root { --cell-size: clamp(38px, 8vw, 62px); }
 
-    /* AJUSTE PC: Simulação 10% menor em relação aos 0.90 anteriores (0.81) */
+    /* AJUSTE PC: Simulação 10% menor (0.81) */
     @media screen and (min-width: 600px) { 
         :root { --cell-size: clamp(45px, 6vw, 65px); }
         #simu-board { transform: scale(0.81); } 
@@ -121,23 +122,26 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
-                <div class="inst-section-title">Objetivo</div>
-                <p>Vence quem levar <b>qualquer uma das suas peças</b> à primeira linha do campo adversário.</p>
                 
-                <div class="inst-section-title">Como Mover</div>
+                <div class="inst-section-title">Objetivo do Jogo</div>
+                <p class="inst-text">Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário.</p>
+                
+                <div class="inst-section-title">Como Mover as Peças</div>
                 <ul class="inst-list">
-                    <li><i class="fas fa-arrow-up"></i> <b>Frente:</b> 1 casa (se estiver vazia).</li>
+                    <li><i class="fas fa-arrow-up"></i> <b>Movimento Vertical:</b> Podes avançar 1 casa para a frente se esta estiver <b>vazia</b>.</li>
                     <li>
                         <i class="fas fa-arrow-up" style="transform:rotate(-45deg)"></i> 
                         <i class="fas fa-arrow-up" style="transform:rotate(45deg)"></i> 
-                        <b>Diagonais Frontais:</b> 1 casa para a frente (vazia ou ocupada).
+                        <b>Movimento Diagonal:</b> Podes mover-te 1 casa para as diagonais à tua frente (quer estejam vazias ou ocupadas por peças adversárias).
                     </li>
                 </ul>
 
                 <div class="inst-section-title">Como Capturar</div>
                 <ul class="inst-list">
-                    <li><i class="fas fa-fist-raised"></i> <b>Apenas Diagonais:</b> Só capturas peças adversárias que estejam nas tuas diagonais frontais.</li>
+                    <li><i class="fas fa-fist-raised"></i> <b>Apenas Diagonais:</b> Podes capturar uma peça adversária se ela estiver numa das tuas <b>diagonais frontais</b>.</li>
+                    <li><i class="fas fa-ban"></i> <b>Proibição:</b> É proibido capturar peças que estejam diretamente à tua frente.</li>
                 </ul>
+                <div style="height:60px;"></div>
             </div>`;
         document.body.appendChild(p);
 
