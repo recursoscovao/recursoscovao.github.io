@@ -29,15 +29,17 @@
         
         main { flex: 1 0 auto; display: flex; justify-content: center; padding: 10px; }
         
+        /* ALTERAÇÃO: Reduzi a largura máxima de 1100px para 850px */
         .game-shell { 
             background: white; 
-            width: min(1100px, 100%); 
+            width: min(850px, 100%); 
             height: auto; 
             min-height: 500px; 
             border: 1.5px solid var(--primary-color); 
             display: flex; 
             flex-direction: column; 
             overflow: hidden; 
+            margin: 0 auto;
         }
 
         .shell-header { text-align: center; border-bottom: 2px dashed #f5f5f5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
@@ -54,7 +56,7 @@
         .hamburger-btn:hover { transform: scale(1.1); opacity: 0.7; }
         
         /* ============================================================
-           2. PC / TABLET LANDSCAPE / PAINEL INTERATIVO
+           2. PC / TABLET LANDSCAPE
            ============================================================ */
         @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
             header { height: 85px; }
@@ -64,7 +66,10 @@
             #txt-subtitulo-header { font-size: 0.65rem; font-weight: 600; margin-top: 4px; opacity: 0.8; color: var(--text-grey); }
             
             main { padding: 20px; }
-            .game-shell { border-radius: 40px; min-height: 600px; width: min(1200px, 95%); }
+            
+            /* ALTERAÇÃO: Reduzi a largura no PC de 1200px para 900px */
+            .game-shell { border-radius: 40px; min-height: 600px; width: min(900px, 95%); }
+            
             .shell-header { min-height: 65px; padding: 5px 15px; }
             .shell-footer { min-height: 90px; padding: 15px 30px; gap: 15px; }
             
@@ -77,94 +82,50 @@
             .menu-item img { width: 32px; height: 32px; }
         }
 
-        /* ============================================================
-           3. TABLET PORTRAIT (VERTICAL) - ÍCONE E MENU AJUSTADOS
-           ============================================================ */
+        /* [Mantidos os demais estilos de media queries para dispositivos móveis...] */
         @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
             header { height: 100px; } 
             #header-icon { height: 65px; }
-            
-            /* Ícone hambúrguer mais equilibrado para Tablet Vertical */
-            .hamburger-btn { 
-                font-size: 32px; 
-                width: 50px; 
-                height: 50px; 
-                display: flex; 
-                align-items: center; 
-                justify-content: center; 
-            } 
-            
-            .menu-dropdown { 
-                top: 100px; 
-                left: 15px; 
-                padding: 12px;
-                gap: 10px;
-                background: white;
-                border-radius: 20px;
-                box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-            }
-
-            /* Proteção contra cortes nos botões */
-            .menu-item { 
-                height: 55px;      /* Alterado de 70px para 55px */
-                min-width: 320px;  
-                padding: 0 25px; 
-                font-size: 1.1rem; /* Alterado de 1.2rem para 1.1rem */
-                border-radius: 15px;
-                display: flex;
-                white-space: nowrap; 
-            }
-
+            .hamburger-btn { font-size: 32px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center; } 
+            .menu-dropdown { top: 100px; left: 15px; padding: 12px; gap: 10px; background: white; border-radius: 20px; box-shadow: 0 8px 25px rgba(0,0,0,0.15); }
+            .menu-item { height: 55px; min-width: 320px; padding: 0 25px; font-size: 1.1rem; border-radius: 15px; display: flex; white-space: nowrap; }
             .menu-item img { width: 30px; height: 30px; } 
-
             .game-shell { width: 94%; min-height: 800px; border-radius: 45px; }
             .shell-body { padding: 40px; }
             .shell-footer { min-height: 120px; }
         }
 
-        /* ============================================================
-           4. TELEMÓVEL VERTICAL (PORTRAIT)
-           ============================================================ */
         @media screen and (max-width: 500px) and (orientation: portrait) {
             header { height: 85px; }
             #header-icon { height: 55px; }
             #txt-titulo1 { font-size: 1.3rem; font-weight: 900; color: var(--primary-color); }
             #txt-titulo2 { font-size: 1.1rem; font-weight: 800; color: var(--text-grey); }
             #txt-subtitulo-header { display: flex; font-size: 0.65rem; font-weight: 600; margin-top: 4px; opacity: 0.8; color: var(--text-grey); }
-            
             main { padding: 10px; display: block; }
-            .game-shell { border-radius: 40px; min-height: 520px; margin-bottom: 20px; }
+            .game-shell { border-radius: 40px; min-height: 520px; margin-bottom: 20px; width: 100%; }
             .shell-header { min-height: 65px; padding: 5px 15px; }
             .shell-body { padding: 15px; min-height: 350px; }
             .shell-footer { min-height: 90px; padding: 15px 30px; gap: 15px; }
-            
             footer { border-radius: 25px 25px 0 0; position: relative; }
             .footer-text { font-size: 0.7rem; font-weight: 700; color: var(--text-grey); }
-            
             .hamburger-btn { font-size: 26px; }
             .menu-dropdown { top: 80px; left: 15px; }
             .menu-item { height: 48px; padding: 0 15px; border-radius: 12px; min-width: 250px; }
             .menu-item img { width: 32px; height: 32px; }
         }
 
-        /* ============================================================
-           5. TELEMÓVEL HORIZONTAL (LANDSCAPE)
-           ============================================================ */
         @media screen and (max-height: 500px) and (orientation: landscape) {
             header { height: 75px; }
             #header-icon { height: 45px; }
             #txt-titulo1 { font-size: 1.1rem; color: var(--primary-color); font-weight: 900; }
             #txt-titulo2 { font-size: 0.9rem; color: var(--text-grey); font-weight: 800; }
             #txt-subtitulo-header { display: flex; font-size: 0.6rem; color: var(--text-grey); font-weight: 600; margin-top: 2px; opacity: 0.8; }
-            
             main { padding: 5px; display: block; }
-            .game-shell { border-radius: 20px; min-height: 420px; margin-bottom: 20px; }
+            .game-shell { border-radius: 20px; min-height: 420px; margin-bottom: 20px; width: 80%; margin: 0 auto; }
             .shell-header { min-height: 55px; padding: 5px 15px; }
             .shell-body { padding: 10px; min-height: 250px; }
             .shell-footer { min-height: 80px; padding: 10px 25px; gap: 10px; }
-            
             footer { padding: 10px; border-radius: 25px 25px 0 0; position: relative; }
-            
             .hamburger-btn { font-size: 22px; }
             .menu-dropdown { top: 75px; left: 10px; }
             .menu-item { height: 42px; padding: 0 15px; border-radius: 10px; min-width: 200px; }
@@ -225,6 +186,9 @@
                 menuBox.innerHTML = ''; 
 
                 (config.menuItens || config.menu_itens).forEach(item => {
+                    // ALTERAÇÃO: Bloqueia a criação do item se o nome for "Destaque"
+                    if (item.label === "Destaque") return;
+
                     const a = document.createElement('a'); 
                     a.className = 'menu-item'; 
                     a.href = item.link;
@@ -235,7 +199,7 @@
 
                 if(typeof mostrarCapa === "function") mostrarCapa();
             },
-
+            // [Restante das funções showStatusBar e showResults permanecem iguais...]
             showStatusBar(ronda, total, certos, erros) {
                 const lampPath = JOGO_CONFIG.caminhoIconsMenu + "lampada.png";
                 document.getElementById('shell-header-content').innerHTML = `
