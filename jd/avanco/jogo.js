@@ -19,13 +19,15 @@ const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 // ============================================================
 // === INÍCIO SECÇÃO: SOBREPOSIÇÃO DO ENGINE (DESIGN) ===
 // ============================================================
+
+// 1. Barra de Status: Sem "VEZ DE", altura (8px) e forma igual aos pontos
 Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
     const isJ1 = nomeVez.toUpperCase().includes("JOGADOR 1");
     const pillBg = isJ1 ? "#8cc63f" : "#444";
     const pillShadow = isJ1 ? "#6da32f" : "#222";
 
     document.getElementById('shell-header-content').innerHTML = `
-        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 15px;">
+        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
             <div class="blinking" style="padding: 8px 20px; border-radius: 12px; color: white; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; background: ${pillBg}; box-shadow: 0 4px 0 ${pillShadow};">
                 ${nomeVez}
             </div>
@@ -36,12 +38,13 @@ Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
         </div>`;
 };
 
+// 2. Resultados: Feedback menor, caixas simétricas (min-width 240px)
 Engine.showResults = function(s1, s2, rel, label2) {
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; padding: 15px;">RESULTADOS</h2>`;
     document.getElementById('game-content').innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 20px; text-align: center; padding: 20px;">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 15px; text-align: center; padding: 20px;">
             <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height: clamp(140px, 30vh, 280px); object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));">
-            <div><h2 style="color:var(--text-grey); font-size: clamp(1.1rem, 3vw, 1.6rem); font-weight:800; text-transform:uppercase; margin:0; opacity: 0.9;">${rel.titulo}</h2></div>
+            <div><h2 style="color:var(--text-grey); font-size: clamp(1rem, 3.5vw, 1.3rem); font-weight:800; text-transform:uppercase; margin:0; opacity: 0.9;">${rel.titulo}</h2></div>
             <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; width:100%;">
                 <div style="min-width: 240px; padding: 15px; border-radius: 18px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 5px 0 #6da32f; font-size: 1.2rem;">JOGADOR 1: ${s1}</div>
                 <div style="min-width: 240px; padding: 15px; border-radius: 18px; color: white; font-weight: 900; background: #444; box-shadow: 0 5px 0 #222; font-size: 1.2rem;">${label2.toUpperCase()}: ${s2}</div>
@@ -72,16 +75,24 @@ style.innerHTML = `
     
     .btn-capa-small { flex: 1; height: 60px; border-radius: 15px; border: none; color: white; font-weight: 900; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
     
+    .nivel-row .btn-capa-small { height: 46px; font-size: 0.85rem; border-radius: 10px; }
+    .btn-voltar-pequeno { height: 46px !important; max-width: 180px !important; font-size: 0.85rem !important; border-radius: 10px !important; }
+
     .btn-inform { width: 60px; height: 60px; border-radius: 15px; background: white; border: 2px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
     .btn-inform img { width: 65%; height: 65%; object-fit: contain; }
     .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
 
+    /* --- INSTRUÇÕES PREMIUM --- */
     #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s ease; transform: translateY(100%); visibility: hidden; overflow-y: auto; padding: 0; margin: 0; }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
     .close-x { position: sticky; top: 20px; float: right; margin-right: 25px; font-size: 3.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; z-index: 10001; }
 
     .inst-content { max-width: 750px; margin: 0 auto; text-align: left; font-family: 'Nunito', sans-serif; padding: 60px 25px; clear: both; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 2.2rem; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; border-bottom: 5px solid var(--bg-color); padding-bottom: 15px; }
+    .inst-section-title { color: #333; font-size: 1.4rem; font-weight: 800; margin: 30px 0 15px; display: flex; align-items: center; gap: 12px; }
+    .inst-section-title::before { content: ''; width: 6px; height: 24px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
+    .inst-list { list-style: none; padding: 0; }
+    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.6; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
 
     .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; margin: auto; width: fit-content; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; transition: background 0.3s; }
@@ -92,38 +103,30 @@ style.innerHTML = `
 
     :root { --cell-size: min(52px, 7.5vh); }
 
-    /* ============================================================
-       TELEMÓVEL VERTICAL (PORTRAIT)
-       ============================================================ */
+    /* TELEMÓVEL VERTICAL */
     @media screen and (max-width: 500px) and (orientation: portrait) { 
         :root { --cell-size: 11vw; } 
         .capa-btn-row { flex-direction: column; width: 100%; padding: 0 30px; }
-        /* Todos os 3 botões com a mesma altura e forma */
         .btn-inform { width: 100% !important; height: 65px !important; order: -1; }
         .btn-capa-small { height: 65px !important; border-radius: 15px !important; width: 100% !important; }
-        
-        /* Ajuste dificuldade: Botão voltar largura total e mais alto */
-        .btn-voltar-pequeno { height: 55px !important; max-width: none !important; width: 100% !important; }
-        .nivel-row .btn-capa-small { height: 50px; }
+        .btn-voltar-pequeno { height: 60px !important; max-width: none !important; width: 100% !important; }
         #capa-menu-principal { padding-bottom: 20px !important; }
     }
 
-    /* ============================================================
-       TELEMÓVEL HORIZONTAL (LANDSCAPE)
-       ============================================================ */
+    /* TELEMÓVEL HORIZONTAL */
     @media screen and (max-height: 500px) and (orientation: landscape) {
-        /* Tabuleiro 5% maior e centralizado */
         :root { --cell-size: 9.5vh; }
         #game-content { justify-content: center !important; }
-        .grid-board { box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
     }
 
     .blinking { animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; }
+    .vitoria-card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); width: 85%; max-width: 320px; text-align: center; }
 `;
 document.head.appendChild(style);
 // === FIM SECÇÃO 2 ===
+
 
 // ============================================================
 // === INÍCIO SECÇÃO 3: CAPA E INSTRUÇÕES PREMIUM ===
@@ -139,13 +142,24 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
+                
                 <div class="inst-section-title">Objetivo do Jogo</div>
-                <p class="inst-text">O Avanço é uma corrida estratégica. Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário.</p>
+                <p class="inst-text">Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário (a linha inicial do oponente).</p>
+
                 <div class="inst-section-title">Como Mover as Peças</div>
                 <ul class="inst-list">
-                    <li><b>Vertical:</b> Avança 1 casa para a frente se estiver vazia.</li>
-                    <li><b>Diagonal:</b> Move para as duas casas diagonais frontais (pode capturar).</li>
+                    <li><i class="fas fa-arrow-up"></i> <b>Movimento Vertical:</b> Podes avançar 1 casa para a frente se esta estiver <b>vazia</b>.</li>
+                    <li><i class="fas fa-arrow-up" style="transform: rotate(45deg);"></i> <b>Movimento Diagonal:</b> Podes mover-te para as casas diagonais à tua frente, quer estejam vazias ou ocupadas pelo adversário.</li>
                 </ul>
+
+                <div class="inst-section-title">Como Capturar</div>
+                <ul class="inst-list">
+                    <li><b>Captura Diagonal:</b> Podes capturar uma peça adversária se ela estiver numa das tuas <b>diagonais frontais</b>. A peça capturada é removida.</li>
+                    <li><b>Proibido:</b> Não podes capturar peças movendo-te verticalmente (para a frente).</li>
+                </ul>
+
+                <div class="inst-section-title">Final da Partida</div>
+                <p class="inst-text">Ganha quem conquistar primeiro 3 rondas (melhor de 5)!</p>
                 <div style="height:60px;"></div>
             </div>`;
         document.body.appendChild(panel);
