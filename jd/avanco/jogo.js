@@ -63,7 +63,7 @@ style.innerHTML = `
 
     #simu-container { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; min-height: 220px; }
     
-    /* AJUSTE: Simulação reduzida em 5% (scale 0.95) */
+    /* AJUSTE: Simulação 5% menor */
     #simu-board { transform: scale(0.95); transition: 0.3s; }
 
     #capa-menu-principal, #nivel-select-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 12px; }
@@ -82,29 +82,25 @@ style.innerHTML = `
     
     .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
 
-    /* --- INSTRUÇÕES PREMIUM --- */
-    #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s ease; transform: translateY(100%); visibility: hidden; overflow-y: auto; }
-    #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
-    .close-x { position: sticky; top: 20px; float: right; margin-right: 25px; font-size: 3.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; z-index: 10001; }
-    .inst-content { max-width: 750px; margin: 0 auto; padding: 60px 25px; text-align: left; font-family: 'Nunito', sans-serif; }
-    .inst-header { color: var(--primary-color); text-align: center; font-size: 1.6rem; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; border-bottom: 4px solid #f0f0f0; padding-bottom: 12px; }
-    .inst-section-title { color: #333; font-size: 1.2rem; font-weight: 800; margin: 30px 0 15px; display: flex; align-items: center; gap: 12px; }
-    .inst-section-title::before { content: ''; width: 6px; height: 22px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
+    /* --- CORREÇÃO SCROLL INSTRUÇÕES --- */
+    #instrucoes-panel { 
+        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        background: white; z-index: 10000; 
+        display: none; flex-direction: column;
+        overflow-y: auto; -webkit-overflow-scrolling: touch; 
+    }
+    #instrucoes-panel.open { display: flex; }
+    .close-x { position: sticky; top: 15px; right: 15px; align-self: flex-end; margin-right: 20px; font-size: 3rem; color: #ff5a5f; cursor: pointer; font-weight: 900; z-index: 10001; }
+    
+    .inst-content { max-width: 700px; margin: 0 auto; padding: 20px 25px 80px; text-align: left; }
+    .inst-header { color: var(--primary-color); text-align: center; font-size: 1.5rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 4px solid #f0f0f0; padding-bottom: 10px; }
+    .inst-section-title { color: #333; font-size: 1.1rem; font-weight: 800; margin: 25px 0 12px; display: flex; align-items: center; gap: 10px; }
+    .inst-section-title::before { content: ''; width: 6px; height: 20px; background: var(--primary-color); border-radius: 3px; }
     .inst-list { list-style: none; padding: 0; }
-    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.5; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 18px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1rem; line-height: 1.5; }
 
     :root { --cell-size: clamp(38px, 8vw, 62px); }
-
-    @media screen and (min-width: 600px) {
-        :root { --cell-size: clamp(45px, 6vw, 65px); }
-    }
-
-    @media screen and (max-width: 480px) {
-        .capa-btn-row { flex-direction: column; }
-        .btn-inform { width: 100%; order: -1; }
-        .btn-capa-small { width: 100%; }
-        #simu-container { min-height: 180px; }
-    }
+    @media screen and (min-width: 600px) { :root { --cell-size: clamp(45px, 6vw, 65px); } }
 
     .blinking { animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.6; } }
@@ -119,7 +115,7 @@ document.head.appendChild(style);
 function mostrarCapa() {
     if (jogoAtivo) return;
 
-    // Criar Painel de Instruções Premium (Completo)
+    // Criar Painel de Instruções Premium (Corrigido)
     if(!document.getElementById('instrucoes-panel')) {
         const p = document.createElement('div');
         p.id = 'instrucoes-panel';
@@ -127,21 +123,23 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
-                <div class="inst-section-title">Objetivo do Jogo</div>
-                <p>Vence o jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário.</p>
+                <div class="inst-section-title">Objetivo</div>
+                <p>Vence quem levar <b>uma peça</b> à primeira linha do campo adversário.</p>
                 
                 <div class="inst-section-title">Como Mover</div>
                 <ul class="inst-list">
-                    <li><i class="fas fa-arrow-up"></i> <b>Frente:</b> Podes avançar 1 casa para a frente se estiver <b>vazia</b>.</li>
-                    <li><i class="fas fa-expand-arrows-alt" style="transform:rotate(45deg)"></i> <b>Diagonal:</b> Podes mover-te para as diagonais frontais se estiverem <b>vazias</b>.</li>
+                    <li><i class="fas fa-arrow-up"></i> <b>Frente:</b> 1 casa (se estiver vazia).</li>
+                    <li>
+                        <i class="fas fa-arrow-up" style="transform:rotate(-45deg)"></i> 
+                        <i class="fas fa-arrow-up" style="transform:rotate(45deg)"></i> 
+                        <b>Diagonal:</b> 1 casa para a frente (vazia ou ocupada).
+                    </li>
                 </ul>
 
-                <div class="inst-section-title">Como Capturar</div>
+                <div class="inst-section-title">Captura</div>
                 <ul class="inst-list">
-                    <li><i class="fas fa-crosshairs"></i> <b>Apenas Diagonais:</b> Podes capturar uma peça adversária se ela estiver numa das tuas <b>diagonais frontais</b>.</li>
-                    <li><i class="fas fa-ban"></i> <b>Sem Captura Frontal:</b> Não podes capturar peças que estejam diretamente à tua frente.</li>
+                    <li><i class="fas fa-fist-raised"></i> <b>Apenas Diagonais:</b> Só capturas peças adversárias que estejam nas tuas diagonais frontais.</li>
                 </ul>
-                <div style="height:60px;"></div>
             </div>`;
         document.body.appendChild(p);
 
@@ -171,7 +169,7 @@ function mostrarNiveis(modo) {
     somClique.play();
     const area = document.getElementById('game-content');
     area.innerHTML = `
-        <div id="simu-container" style="margin-bottom:5px;"><div id="simu-board"></div></div>
+        <div id="simu-container"><div id="simu-board"></div></div>
         <div id="nivel-select-container">
             <p style="font-weight:800; color:var(--text-grey); font-size:0.8rem; text-transform:uppercase; text-align:center; margin-bottom:8px;">Escolha a Dificuldade:</p>
             <div class="capa-btn-row" style="margin-bottom:10px;">
@@ -189,12 +187,13 @@ function voltarCapa() { somClique.play(); mostrarCapa(); }
 function toggleInstructions() { 
     somClique.play(); 
     const p = document.getElementById('instrucoes-panel');
-    p.classList.toggle('open');
+    const isOpening = p.style.display !== 'flex';
+    p.style.display = isOpening ? 'flex' : 'none';
+    document.body.style.overflow = isOpening ? 'hidden' : 'auto';
 }
 
-// ============================================================
-// === INÍCIO SECÇÃO 4: LÓGICA CORE E IA ===
-// ============================================================
+// ... Restante do código (Lógica, IA e Simulação Real) ...
+
 function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
     modoJogo = modo; nivelJogo = nivel;
@@ -306,30 +305,23 @@ function finalizarMatch() {
     Engine.showResults(matchScore[0], matchScore[1], rel, modoJogo === 'CPU' ? "PC" : "J2");
 }
 
-// ============================================================
-// === INÍCIO SECÇÃO 6: SIMULAÇÃO REAL ===
-// ============================================================
 function iniciarSimulacao() {
     clearInterval(simuInterval);
     const board = document.getElementById('simu-board');
     if(!board) return;
-    
     let sTab = Array(7).fill().map(() => Array(7).fill(0));
     const reset = () => { for(let c=0; c<7; c++){ sTab[0][c]=2; sTab[1][c]=2; sTab[5][c]=1; sTab[6][c]=1; } };
     reset();
-
     const render = () => {
         board.innerHTML = `<div class="grid-board" style="opacity:0.4; pointer-events:none;">` + 
             sTab.flat().map(v => `<div class="cell">${v?`<div class="piece ${v==1?'white':'black'}"></div>`:''}</div>`).join('') + `</div>`;
     };
-
     let sTurno = 1;
     const anim = () => {
         let moves = [];
         for(let r=0; r<7; r++) for(let c=0; c<7; c++) if(sTab[r][c] === sTurno)
             for(let dr=0; dr<7; dr++) for(let dc=0; dc<7; dc++) 
                 if(validarMovimentoSimu(r,c,dr,dc,sTurno,sTab)) moves.push({fr:r,fc:c,tr:dr,tc:dc});
-
         if(moves.length > 0) {
             const m = moves[Math.floor(Math.random()*moves.length)];
             sTab[m.tr][m.tc] = sTab[m.fr][m.fc]; sTab[m.fr][m.fc] = 0;
@@ -338,7 +330,6 @@ function iniciarSimulacao() {
         } else reset();
         render();
     };
-
     render();
     simuInterval = setInterval(anim, 700); 
 }
