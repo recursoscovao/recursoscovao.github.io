@@ -20,7 +20,7 @@ const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 // === INÍCIO SECÇÃO: SOBREPOSIÇÃO DO ENGINE (DESIGN) ===
 // ============================================================
 
-// 1. Barra de Status: Sem "VEZ DE", altura (8px) e forma igual aos pontos
+// 1. Barra de Status: Sem "VEZ DE", altura e forma igual aos resultados
 Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
     const isJ1 = nomeVez.toUpperCase().includes("JOGADOR 1");
     const pillBg = isJ1 ? "#8cc63f" : "#444";
@@ -38,13 +38,13 @@ Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
         </div>`;
 };
 
-// 2. Resultados: Feedback menor, caixas simétricas (min-width 240px)
+// 2. Resultados: Feedback menor, caixas iguais, sem ajudas
 Engine.showResults = function(s1, s2, rel, label2) {
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; padding: 15px;">RESULTADOS</h2>`;
     document.getElementById('game-content').innerHTML = `
         <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 15px; text-align: center; padding: 20px;">
             <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height: clamp(140px, 30vh, 280px); object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));">
-            <div><h2 style="color:var(--text-grey); font-size: clamp(1rem, 3.5vw, 1.3rem); font-weight:800; text-transform:uppercase; margin:0; opacity: 0.9;">${rel.titulo}</h2></div>
+            <div><h2 style="color:var(--text-grey); font-size: clamp(1rem, 3vw, 1.3rem); font-weight:800; text-transform:uppercase; margin:0; opacity: 0.9;">${rel.titulo}</h2></div>
             <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; width:100%;">
                 <div style="min-width: 240px; padding: 15px; border-radius: 18px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 5px 0 #6da32f; font-size: 1.2rem;">JOGADOR 1: ${s1}</div>
                 <div style="min-width: 240px; padding: 15px; border-radius: 18px; color: white; font-weight: 900; background: #444; box-shadow: 0 5px 0 #222; font-size: 1.2rem;">${label2.toUpperCase()}: ${s2}</div>
@@ -74,10 +74,6 @@ style.innerHTML = `
     .capa-btn-row, .nivel-row { display: flex; flex-direction: row; align-items: stretch; gap: 12px; width: 100%; max-width: 550px; justify-content: center; padding: 0 20px; }
     
     .btn-capa-small { flex: 1; height: 60px; border-radius: 15px; border: none; color: white; font-weight: 900; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
-    
-    .nivel-row .btn-capa-small { height: 46px; font-size: 0.85rem; border-radius: 10px; }
-    .btn-voltar-pequeno { height: 46px !important; max-width: 180px !important; font-size: 0.85rem !important; border-radius: 10px !important; }
-
     .btn-inform { width: 60px; height: 60px; border-radius: 15px; background: white; border: 2px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
     .btn-inform img { width: 65%; height: 65%; object-fit: contain; }
     .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
@@ -88,11 +84,11 @@ style.innerHTML = `
     .close-x { position: sticky; top: 20px; float: right; margin-right: 25px; font-size: 3.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; z-index: 10001; }
 
     .inst-content { max-width: 750px; margin: 0 auto; text-align: left; font-family: 'Nunito', sans-serif; padding: 60px 25px; clear: both; }
-    .inst-header { color: var(--primary-color); text-align: center; font-size: 1.4rem; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; border-bottom: 5px solid var(--bg-color); padding-bottom: 15px; }
-    .inst-section-title { color: #333; font-size: 1.4rem; font-weight: 800; margin: 30px 0 15px; display: flex; align-items: center; gap: 12px; }
-    .inst-section-title::before { content: ''; width: 6px; height: 24px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
+    .inst-header { color: var(--primary-color); text-align: center; font-size: 1.5rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 4px solid var(--bg-color); padding-bottom: 10px; }
+    .inst-section-title { color: #333; font-size: 1.1rem; font-weight: 800; margin: 25px 0 12px; display: flex; align-items: center; gap: 12px; }
+    .inst-section-title::before { content: ''; width: 6px; height: 22px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
     .inst-list { list-style: none; padding: 0; }
-    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.6; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
+    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1rem; line-height: 1.5; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
 
     .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; margin: auto; width: fit-content; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; transition: background 0.3s; }
@@ -101,13 +97,31 @@ style.innerHTML = `
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1.5px solid #bbb; box-shadow: 0 3px 8px rgba(0,0,0,0.25); }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); border: 1.5px solid #000; }
 
-    :root { --cell-size: min(52px, 7.5vh); }
+    :root { --cell-size: min(52px, 8vh); }
+
+    /* ============================================================
+       ADAPTAÇÃO TABLET E PAINEL
+       ============================================================ */
+    @media screen and (min-width: 501px) and (max-width: 1366px) {
+        #game-content { flex-direction: column !important; justify-content: space-between !important; padding: 20px 40px !important; gap: 20px !important; }
+        .capa-btn-row { flex-direction: column !important; width: 100% !important; max-width: 500px !important; gap: 15px !important; }
+        .btn-inform { width: 100% !important; height: 70px !important; order: -1 !important; border-radius: 15px !important; background: white !important; }
+        .btn-capa-small { height: 70px !important; border-radius: 15px !important; font-size: 1.2rem !important; width: 100% !important; }
+        .nivel-row { flex-direction: row !important; width: 100% !important; gap: 15px !important; }
+        .btn-voltar-pequeno { max-width: none !important; width: 100% !important; height: 70px !important; font-size: 1.1rem !important; border-radius: 15px !important; }
+    }
+
+    /* TABLET HORIZONTAL ESPECÍFICO */
+    @media screen and (min-width: 768px) and (orientation: landscape) {
+        :root { --cell-size: min(50px, 9vh) !important; }
+        #simu-board { transform: scale(0.9) !important; }
+    }
 
     /* TELEMÓVEL VERTICAL */
     @media screen and (max-width: 500px) and (orientation: portrait) { 
         :root { --cell-size: 11vw; } 
         .capa-btn-row { flex-direction: column; width: 100%; padding: 0 30px; }
-        .btn-inform { width: 100% !important; height: 65px !important; order: -1; }
+        .btn-inform { width: 100% !important; height: 65px !important; order: -1; border-radius: 15px !important; }
         .btn-capa-small { height: 65px !important; border-radius: 15px !important; width: 100% !important; }
         .btn-voltar-pequeno { height: 60px !important; max-width: none !important; width: 100% !important; }
         #capa-menu-principal { padding-bottom: 20px !important; }
@@ -142,24 +156,18 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
-                
                 <div class="inst-section-title">Objetivo do Jogo</div>
-                <p class="inst-text">Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário (a linha inicial do oponente).</p>
-
+                <p class="inst-text">Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário.</p>
                 <div class="inst-section-title">Como Mover as Peças</div>
                 <ul class="inst-list">
                     <li><i class="fas fa-arrow-up"></i> <b>Movimento Vertical:</b> Podes avançar 1 casa para a frente se esta estiver <b>vazia</b>.</li>
-                    <li><i class="fas fa-arrow-up" style="transform: rotate(45deg);"></i> <b>Movimento Diagonal:</b> Podes mover-te para as casas diagonais à tua frente, quer estejam vazias ou ocupadas pelo adversário.</li>
+                    <li><i class="fas fa-arrow-up" style="transform: rotate(45deg);"></i> <b>Movimento Diagonal:</b> Podes mover-te para as casas diagonais à tua frente (sentido frente), quer estejam vazias ou ocupadas.</li>
                 </ul>
-
                 <div class="inst-section-title">Como Capturar</div>
                 <ul class="inst-list">
-                    <li><b>Captura Diagonal:</b> Podes capturar uma peça adversária se ela estiver numa das tuas <b>diagonais frontais</b>. A peça capturada é removida.</li>
-                    <li><b>Proibido:</b> Não podes capturar peças movendo-te verticalmente (para a frente).</li>
+                    <li><i class="fas fa-fist-raised"></i> <b>Só Diagonais:</b> Podes capturar uma peça adversária se ela estiver numa das tuas <b>diagonais frontais</b>.</li>
+                    <li><b>Proibido Vertical:</b> Não podes capturar peças movendo-te diretamente para a frente.</li>
                 </ul>
-
-                <div class="inst-section-title">Final da Partida</div>
-                <p class="inst-text">Ganha quem conquistar primeiro 3 rondas (melhor de 5)!</p>
                 <div style="height:60px;"></div>
             </div>`;
         document.body.appendChild(panel);
@@ -338,7 +346,7 @@ function finalizarMatch() {
 
 
 // ============================================================
-// === INÍCIO SECÇÃO 6: SIMULAÇÃO DA CAPA (RÁPIDA) ===
+// === INÍCIO SECÇÃO 6: SIMULAÇÃO DA CAPA ===
 // ============================================================
 function iniciarSimulacao() {
     clearInterval(simuInterval);
