@@ -63,8 +63,8 @@ style.innerHTML = `
 
     #simu-container { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; min-height: 220px; }
     
-    /* AJUSTE: Simulação 5% menor */
-    #simu-board { transform: scale(0.95); transition: 0.3s; }
+    /* AJUSTE: Simulação 10% menor (0.90) conforme pedido */
+    #simu-board { transform: scale(0.90); transition: 0.3s; }
 
     #capa-menu-principal, #nivel-select-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 12px; }
 
@@ -82,7 +82,7 @@ style.innerHTML = `
     
     .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
 
-    /* --- CORREÇÃO SCROLL INSTRUÇÕES --- */
+    /* --- CORREÇÃO BLINDADA DO SCROLL --- */
     #instrucoes-panel { 
         position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
         background: white; z-index: 10000; 
@@ -90,14 +90,14 @@ style.innerHTML = `
         overflow-y: auto; -webkit-overflow-scrolling: touch; 
     }
     #instrucoes-panel.open { display: flex; }
-    .close-x { position: sticky; top: 15px; right: 15px; align-self: flex-end; margin-right: 20px; font-size: 3rem; color: #ff5a5f; cursor: pointer; font-weight: 900; z-index: 10001; }
+    .close-x { position: sticky; top: 15px; right: 20px; align-self: flex-end; font-size: 3.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; z-index: 10001; line-height: 1; }
     
-    .inst-content { max-width: 700px; margin: 0 auto; padding: 20px 25px 80px; text-align: left; }
-    .inst-header { color: var(--primary-color); text-align: center; font-size: 1.5rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 4px solid #f0f0f0; padding-bottom: 10px; }
-    .inst-section-title { color: #333; font-size: 1.1rem; font-weight: 800; margin: 25px 0 12px; display: flex; align-items: center; gap: 10px; }
-    .inst-section-title::before { content: ''; width: 6px; height: 20px; background: var(--primary-color); border-radius: 3px; }
+    .inst-content { max-width: 700px; margin: 0 auto; padding: 20px 25px 100px; text-align: left; }
+    .inst-header { color: var(--primary-color); text-align: center; font-size: 1.6rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 4px solid #f0f0f0; padding-bottom: 12px; }
+    .inst-section-title { color: #333; font-size: 1.2rem; font-weight: 800; margin: 30px 0 15px; display: flex; align-items: center; gap: 10px; }
+    .inst-section-title::before { content: ''; width: 6px; height: 24px; background: var(--primary-color); border-radius: 3px; }
     .inst-list { list-style: none; padding: 0; }
-    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 18px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1rem; line-height: 1.5; }
+    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 20px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.5; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
 
     :root { --cell-size: clamp(38px, 8vw, 62px); }
     @media screen and (min-width: 600px) { :root { --cell-size: clamp(45px, 6vw, 65px); } }
@@ -106,6 +106,7 @@ style.innerHTML = `
     @keyframes blinker { 50% { opacity: 0.6; } }
     
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.92); z-index: 2000; display: none; align-items: center; justify-content: center; border-radius: 35px; }
+    .vitoria-card { text-align: center; padding: 30px; background: white; border-radius: 30px; box-shadow: 0 15px 40px rgba(0,0,0,0.1); border: 2px solid #f0f0f0; }
 `;
 document.head.appendChild(style);
 
@@ -115,7 +116,7 @@ document.head.appendChild(style);
 function mostrarCapa() {
     if (jogoAtivo) return;
 
-    // Criar Painel de Instruções Premium (Corrigido)
+    // Painel de Instruções Premium Blindado
     if(!document.getElementById('instrucoes-panel')) {
         const p = document.createElement('div');
         p.id = 'instrucoes-panel';
@@ -123,22 +124,24 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
-                <div class="inst-section-title">Objetivo</div>
-                <p>Vence quem levar <b>uma peça</b> à primeira linha do campo adversário.</p>
                 
-                <div class="inst-section-title">Como Mover</div>
+                <div class="inst-section-title">Objetivo do Jogo</div>
+                <p>Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário.</p>
+                
+                <div class="inst-section-title">Como Mover as Peças</div>
                 <ul class="inst-list">
-                    <li><i class="fas fa-arrow-up"></i> <b>Frente:</b> 1 casa (se estiver vazia).</li>
+                    <li><i class="fas fa-arrow-up"></i> <b>Frente:</b> Podes avançar 1 casa para a frente se esta estiver <b>vazia</b>.</li>
                     <li>
                         <i class="fas fa-arrow-up" style="transform:rotate(-45deg)"></i> 
                         <i class="fas fa-arrow-up" style="transform:rotate(45deg)"></i> 
-                        <b>Diagonal:</b> 1 casa para a frente (vazia ou ocupada).
+                        <b>Diagonais Frontais:</b> Podes mover-te 1 casa para as diagonais à tua frente (vazias ou ocupadas).
                     </li>
                 </ul>
 
-                <div class="inst-section-title">Captura</div>
+                <div class="inst-section-title">Como Capturar</div>
                 <ul class="inst-list">
-                    <li><i class="fas fa-fist-raised"></i> <b>Apenas Diagonais:</b> Só capturas peças adversárias que estejam nas tuas diagonais frontais.</li>
+                    <li><i class="fas fa-fist-raised"></i> <b>Só Diagonais:</b> Podes capturar uma peça adversária se ela estiver numa das tuas <b>diagonais frontais</b>.</li>
+                    <li><i class="fas fa-ban"></i> <b>Não Captura de Frente:</b> É proibido capturar ou saltar peças que estejam diretamente à tua frente.</li>
                 </ul>
             </div>`;
         document.body.appendChild(p);
@@ -192,7 +195,9 @@ function toggleInstructions() {
     document.body.style.overflow = isOpening ? 'hidden' : 'auto';
 }
 
-// ... Restante do código (Lógica, IA e Simulação Real) ...
+// ============================================================
+// === INÍCIO SECÇÃO 4: LÓGICA CORE, IA E SIMULAÇÃO ===
+// ============================================================
 
 function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
