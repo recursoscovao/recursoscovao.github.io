@@ -25,7 +25,7 @@ Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
     const pillShadow = isJ1 ? "#6da32f" : "#222";
 
     document.getElementById('shell-header-content').innerHTML = `
-        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
+        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 15px;">
             <div class="blinking" style="padding: 8px 20px; border-radius: 12px; color: white; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; background: ${pillBg}; box-shadow: 0 4px 0 ${pillShadow};">
                 ${nomeVez}
             </div>
@@ -72,9 +72,6 @@ style.innerHTML = `
     
     .btn-capa-small { flex: 1; height: 60px; border-radius: 15px; border: none; color: white; font-weight: 900; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
     
-    .nivel-row .btn-capa-small { height: 46px; font-size: 0.85rem; border-radius: 10px; }
-    .btn-voltar-pequeno { height: 46px !important; max-width: 220px !important; font-size: 0.85rem !important; border-radius: 10px !important; }
-
     .btn-inform { width: 60px; height: 60px; border-radius: 15px; background: white; border: 2px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
     .btn-inform img { width: 65%; height: 65%; object-fit: contain; }
     .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
@@ -85,36 +82,48 @@ style.innerHTML = `
 
     .inst-content { max-width: 750px; margin: 0 auto; text-align: left; font-family: 'Nunito', sans-serif; padding: 60px 25px; clear: both; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 2.2rem; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; border-bottom: 5px solid var(--bg-color); padding-bottom: 15px; }
-    .inst-section-title { color: #333; font-size: 1.4rem; font-weight: 800; margin: 30px 0 15px; display: flex; align-items: center; gap: 12px; }
-    .inst-section-title::before { content: ''; width: 6px; height: 24px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
-    .inst-list { list-style: none; padding: 0; }
-    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 18px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.6; box-shadow: 0 4px 15px rgba(0,0,0,0.03); }
 
     .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; margin: auto; width: fit-content; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; transition: background 0.3s; }
     
     .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 3px 6px rgba(0,0,0,0.2); transition: all 0.4s ease; }
-    
     .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1.5px solid #bbb; box-shadow: 0 3px 8px rgba(0,0,0,0.25); }
     .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); border: 1.5px solid #000; }
 
     :root { --cell-size: min(52px, 7.5vh); }
-    @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) { :root { --cell-size: 10vw; } }
+
+    /* ============================================================
+       TELEMÓVEL VERTICAL (PORTRAIT)
+       ============================================================ */
     @media screen and (max-width: 500px) and (orientation: portrait) { 
         :root { --cell-size: 11vw; } 
         .capa-btn-row { flex-direction: column; width: 100%; padding: 0 30px; }
-        .btn-inform { width: 100%; order: -1; }
+        /* Todos os 3 botões com a mesma altura e forma */
+        .btn-inform { width: 100% !important; height: 65px !important; order: -1; }
+        .btn-capa-small { height: 65px !important; border-radius: 15px !important; width: 100% !important; }
+        
+        /* Ajuste dificuldade: Botão voltar largura total e mais alto */
+        .btn-voltar-pequeno { height: 55px !important; max-width: none !important; width: 100% !important; }
+        .nivel-row .btn-capa-small { height: 50px; }
         #capa-menu-principal { padding-bottom: 20px !important; }
+    }
+
+    /* ============================================================
+       TELEMÓVEL HORIZONTAL (LANDSCAPE)
+       ============================================================ */
+    @media screen and (max-height: 500px) and (orientation: landscape) {
+        /* Tabuleiro 5% maior e centralizado */
+        :root { --cell-size: 9.5vh; }
+        #game-content { justify-content: center !important; }
+        .grid-board { box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
     }
 
     .blinking { animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; }
-    .vitoria-card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); width: 85%; max-width: 320px; text-align: center; }
 `;
 document.head.appendChild(style);
 // === FIM SECÇÃO 2 ===
-
 
 // ============================================================
 // === INÍCIO SECÇÃO 3: CAPA E INSTRUÇÕES PREMIUM ===
@@ -130,24 +139,13 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
-                
                 <div class="inst-section-title">Objetivo do Jogo</div>
-                <p class="inst-text">O Avanço é uma corrida estratégica. Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário (a linha de onde o oponente começou).</p>
-
+                <p class="inst-text">O Avanço é uma corrida estratégica. Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário.</p>
                 <div class="inst-section-title">Como Mover as Peças</div>
                 <ul class="inst-list">
-                    <li><i class="fas fa-arrow-up"></i> <b>Movimento Vertical:</b> Podes avançar 1 casa para a frente se esta estiver <b>vazia</b>.</li>
-                    <li><i class="fas fa-arrows-alt-v"></i> <b>Movimento Diagonal:</b> Podes mover-te para as duas casas diagonais à tua frente, quer estejam vazias ou ocupadas por um adversário.</li>
+                    <li><b>Vertical:</b> Avança 1 casa para a frente se estiver vazia.</li>
+                    <li><b>Diagonal:</b> Move para as duas casas diagonais frontais (pode capturar).</li>
                 </ul>
-
-                <div class="inst-section-title">Como Capturar</div>
-                <ul class="inst-list">
-                    <li><b>Captura Diagonal:</b> Podes capturar uma peça adversária se ela estiver numa das tuas <b>diagonais frontais</b>. A peça capturada é removida do tabuleiro.</li>
-                    <li><b>Nota Importante:</b> Não podes capturar peças movendo-te verticalmente (para a frente).</li>
-                </ul>
-
-                <div class="inst-section-title">Sistema de Pontuação</div>
-                <p class="inst-text">O jogo é disputado em rondas. Ganha o jogador que vencer primeiro 3 rondas (melhor de 5)!</p>
                 <div style="height:60px;"></div>
             </div>`;
         document.body.appendChild(panel);
