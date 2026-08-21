@@ -75,38 +75,31 @@ style.innerHTML = `
     .btn-capa-small { flex: 1; height: 58px; border-radius: 16px; border: none; color: white; font-weight: 800; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 0 rgba(0,0,0,0.15); text-transform: uppercase; transition: 0.2s; }
     .btn-inform { width: 58px; height: 58px; border-radius: 16px; background: white; border: 2.5px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
     .btn-inform img { width: 30px; height: 30px; object-fit: contain; }
-    
-    /* --- INSTRUÇÕES: FIX PARA REMOVER SCROLL DUPLO --- */
+
+    /* --- AGREGADO: SCROLL DAS INSTRUÇÕES DO DOMINÓRIO --- */
     #instrucoes-panel { 
-        position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
         background: white; z-index: 10000; 
-        display: none; flex-direction: column;
-        overflow-y: auto; /* Apenas este contentor faz scroll */
-        overflow-x: hidden;
+        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
+        transform: translateY(100%); visibility: hidden; 
+        padding: 40px 25px; overflow-y: auto; 
     }
-    #instrucoes-panel.open { display: flex; }
-    
-    /* Impedir que o conteúdo interno crie uma segunda barra */
-    .inst-content { max-width: 700px; margin: 0 auto; padding: 20px 25px 100px; text-align: left; overflow: visible !important; }
-    
-    .close-x { position: sticky; top: 15px; right: 20px; align-self: flex-end; font-size: 3.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; z-index: 10001; line-height: 1; }
-    .inst-header { color: var(--primary-color); text-align: center; font-size: 1.6rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 4px solid #f0f0f0; padding-bottom: 12px; }
-    .inst-section-title { color: #333; font-size: 1.2rem; font-weight: 800; margin: 30px 0 15px; display: flex; align-items: center; gap: 10px; }
-    .inst-section-title::before { content: ''; width: 6px; height: 24px; background: var(--primary-color); border-radius: 3px; }
+    #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
+    .close-x { position: absolute; top: 15px; right: 20px; font-size: 3rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; }
+
+    .inst-content { max-width: 600px; margin: 0 auto; text-align: left; }
+    .inst-header { color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 3px solid #f0f0f0; padding-bottom: 10px; }
+    .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 20px 0 10px; display: flex; align-items: center; gap: 10px; }
+    .inst-section-title::before { content: ''; width: 6px; height: 22px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
     .inst-list { list-style: none; padding: 0; }
-    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 20px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.5; }
+    .inst-list li { background: #f9f9f9; margin-bottom: 8px; padding: 15px; border-radius: 12px; border-left: 4px solid var(--primary-color); color: #555; font-size: 1rem; line-height: 1.4; }
 
     :root { --cell-size: clamp(38px, 8vw, 62px); }
 
-    /* AJUSTES ESPECÍFICOS PC */
+    /* AJUSTE PC: Simulação 10% menor em relação aos 0.90 anteriores (0.81) */
     @media screen and (min-width: 600px) { 
         :root { --cell-size: clamp(45px, 6vw, 65px); }
-        #simu-board { transform: scale(0.81); } /* Redução extra 10% sobre 0.90 */
-        
-        #instrucoes-panel { background: rgba(0,0,0,0.4); padding: 40px; justify-content: center; }
-        .inst-content { background: white; border-radius: 35px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 90%; max-height: none; }
-        /* No PC, garantimos que o scroll do navegador desaparece ao abrir o modal */
-        body.modal-open { overflow: hidden !important; }
+        #simu-board { transform: scale(0.81); } 
     }
 
     .blinking { animation: blinker 1.5s linear infinite; }
@@ -128,20 +121,22 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
-                <div class="inst-section-title">Objetivo do Jogo</div>
-                <p>Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário.</p>
-                <div class="inst-section-title">Como Mover as Peças</div>
+                <div class="inst-section-title">Objetivo</div>
+                <p>Vence quem levar <b>qualquer uma das suas peças</b> à primeira linha do campo adversário.</p>
+                
+                <div class="inst-section-title">Como Mover</div>
                 <ul class="inst-list">
                     <li><i class="fas fa-arrow-up"></i> <b>Frente:</b> 1 casa (se estiver vazia).</li>
                     <li>
                         <i class="fas fa-arrow-up" style="transform:rotate(-45deg)"></i> 
                         <i class="fas fa-arrow-up" style="transform:rotate(45deg)"></i> 
-                        <b>Diagonais:</b> 1 casa para a frente (vazia ou ocupada).
+                        <b>Diagonais Frontais:</b> 1 casa para a frente (vazia ou ocupada).
                     </li>
                 </ul>
+
                 <div class="inst-section-title">Como Capturar</div>
                 <ul class="inst-list">
-                    <li><i class="fas fa-fist-raised"></i> <b>Só Diagonais:</b> Só capturas peças adversárias que estejam nas tuas diagonais frontais.</li>
+                    <li><i class="fas fa-fist-raised"></i> <b>Apenas Diagonais:</b> Só capturas peças adversárias que estejam nas tuas diagonais frontais.</li>
                 </ul>
             </div>`;
         document.body.appendChild(p);
@@ -168,20 +163,6 @@ function mostrarCapa() {
     iniciarSimulacao();
 }
 
-function toggleInstructions() { 
-    somClique.play(); 
-    const p = document.getElementById('instrucoes-panel');
-    const isOpening = p.style.display !== 'flex';
-    p.style.display = isOpening ? 'flex' : 'none';
-    
-    // CORREÇÃO: Bloqueia o scroll do fundo no navegador
-    if (isOpening) {
-        document.body.classList.add('modal-open');
-    } else {
-        document.body.classList.remove('modal-open');
-    }
-}
-
 function mostrarNiveis(modo) {
     somClique.play();
     const area = document.getElementById('game-content');
@@ -200,6 +181,11 @@ function mostrarNiveis(modo) {
 }
 
 function voltarCapa() { somClique.play(); mostrarCapa(); }
+function toggleInstructions() { somClique.play(); document.getElementById('instrucoes-panel').classList.toggle('open'); }
+
+// ============================================================
+// === INÍCIO SECÇÃO 4: LÓGICA CORE, IA E SIMULAÇÃO ===
+// ============================================================
 
 function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
