@@ -25,12 +25,12 @@ Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
     const pillShadow = isJ1 ? "#6da32f" : "#222";
 
     document.getElementById('shell-header-content').innerHTML = `
-        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 15px;">
+        <div style="width: 100%; display: flex; justify-content: space-between; align-items: center; padding: 0 10px;">
             <div class="blinking" style="padding: 8px 20px; border-radius: 12px; color: white; font-weight: 900; font-size: 1.1rem; text-transform: uppercase; background: ${pillBg}; box-shadow: 0 4px 0 ${pillShadow};">
                 ${nomeVez}
             </div>
             <div style="display: flex; gap: 8px;">
-                <div style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 4px 0 #6da32f;">J1: ${s1}</div>
+                <div style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 3px 0 #6da32f;">J1: ${s1}</div>
                 <div style="padding: 8px 15px; border-radius: 12px; color: white; font-weight: 900; background: #444; box-shadow: 0 3px 0 #222;">${label2}: ${s2}</div>
             </div>
         </div>`;
@@ -39,9 +39,9 @@ Engine.showStatusBar = function(nomeVez, s1, s2, label2) {
 Engine.showResults = function(s1, s2, rel, label2) {
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; padding: 15px;">RESULTADOS</h2>`;
     document.getElementById('game-content').innerHTML = `
-        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 15px; text-align: center; padding: 20px;">
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; width: 100%; gap: 20px; text-align: center; padding: 20px;">
             <img src="${JOGO_CONFIG.caminhoIconsMenu}${rel.img}" style="height: clamp(140px, 30vh, 280px); object-fit:contain; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.1));">
-            <div><h2 style="color:var(--text-grey); font-size: clamp(1rem, 3.5vw, 1.4rem); font-weight:800; text-transform:uppercase; margin:0; opacity: 0.9;">${rel.titulo}</h2></div>
+            <div><h2 style="color:var(--text-grey); font-size: clamp(1.1rem, 3vw, 1.6rem); font-weight:800; text-transform:uppercase; margin:0; opacity: 0.9;">${rel.titulo}</h2></div>
             <div style="display:flex; justify-content:center; gap:15px; flex-wrap:wrap; width:100%;">
                 <div style="min-width: 240px; padding: 15px; border-radius: 18px; color: white; font-weight: 900; background: #8cc63f; box-shadow: 0 5px 0 #6da32f; font-size: 1.2rem;">JOGADOR 1: ${s1}</div>
                 <div style="min-width: 240px; padding: 15px; border-radius: 18px; color: white; font-weight: 900; background: #444; box-shadow: 0 5px 0 #222; font-size: 1.2rem;">${label2.toUpperCase()}: ${s2}</div>
@@ -65,18 +65,17 @@ style.innerHTML = `
     #game-content { display: flex; flex-direction: column; align-items: center; width: 100%; height: 100%; padding: 0; box-sizing: border-box; overflow: hidden; position: relative; }
 
     #simu-container { flex: 1; display: flex; align-items: center; justify-content: center; width: 100%; min-height: 0; overflow: hidden; }
-    #simu-board { transform: scale(0.8); transition: transform 0.3s ease; }
+    #simu-board { transform: scale(0.8); transition: 0.3s; }
 
     #capa-menu-principal, #nivel-select-container { width: 100%; display: flex; flex-direction: column; align-items: center; gap: 12px; flex-shrink: 0; padding-bottom: 20px !important; }
     .capa-btn-row, .nivel-row { display: flex; flex-direction: row; align-items: stretch; gap: 12px; width: 100%; max-width: 550px; justify-content: center; padding: 0 20px; }
     
-    .btn-capa-small { flex: 1; height: 58px; border-radius: 12px; border: none; color: white; font-weight: 900; font-size: 0.95rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
+    .btn-capa-small { flex: 1; height: 60px; border-radius: 15px; border: none; color: white; font-weight: 900; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 0 rgba(0,0,0,0.1); text-transform: uppercase; transition: 0.2s; }
     
-    /* Botões de dificuldade menores */
     .nivel-row .btn-capa-small { height: 46px; font-size: 0.85rem; border-radius: 10px; }
-    .btn-voltar-pequeno { height: 46px !important; max-width: 180px !important; font-size: 0.85rem !important; border-radius: 10px !important; }
+    .btn-voltar-pequeno { height: 46px !important; max-width: 220px !important; font-size: 0.85rem !important; border-radius: 10px !important; }
 
-    .btn-inform { width: 58px; height: 58px; border-radius: 12px; background: white; border: 2px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
+    .btn-inform { width: 60px; height: 60px; border-radius: 15px; background: white; border: 2px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
     .btn-inform img { width: 65%; height: 65%; object-fit: contain; }
     .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
 
@@ -88,10 +87,17 @@ style.innerHTML = `
     .inst-header { color: var(--primary-color); text-align: center; font-size: 2.2rem; font-weight: 900; margin-bottom: 30px; text-transform: uppercase; border-bottom: 5px solid var(--bg-color); padding-bottom: 15px; }
 
     .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; background: #bbb; padding: 6px; border-radius: 12px; margin: auto; width: fit-content; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
-    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; transition: background 0.2s; }
+    .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; position: relative; transition: background 0.3s; }
+    
     .piece { width: 85%; height: 85%; border-radius: 50%; box-shadow: 0 3px 6px rgba(0,0,0,0.2); transition: all 0.4s ease; }
-    .piece.white { background: radial-gradient(circle at 30% 30%, #fff, #ddd); border: 1px solid #eee; }
-    .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); }
+    
+    /* Peças Brancas: Mais visíveis com borda e sombra reforçada */
+    .piece.white { 
+        background: radial-gradient(circle at 30% 30%, #fff, #ddd); 
+        border: 1.5px solid #bbb; 
+        box-shadow: 0 3px 8px rgba(0,0,0,0.25);
+    }
+    .piece.black { background: radial-gradient(circle at 30% 30%, #555, #111); border: 1.5px solid #000; }
 
     :root { --cell-size: min(52px, 7.5vh); }
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) { :root { --cell-size: 10vw; } }
@@ -99,12 +105,12 @@ style.innerHTML = `
         :root { --cell-size: 11vw; } 
         .capa-btn-row { flex-direction: column; width: 100%; padding: 0 30px; }
         .btn-inform { width: 100%; order: -1; }
+        #capa-menu-principal { padding-bottom: 20px !important; }
     }
 
     .blinking { animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.4; } }
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.9); z-index: 2000; display: none; align-items: center; justify-content: center; }
-    .vitoria-card { background: white; padding: 25px; border-radius: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); width: 85%; max-width: 320px; text-align: center; }
 `;
 document.head.appendChild(style);
 // === FIM SECÇÃO 2 ===
@@ -159,11 +165,8 @@ function toggleInstructions() {
 function mostrarNiveis(modo) {
     somClique.play();
     const area = document.getElementById('game-content');
-    // Reduz a animação em mais 10% (de 0.75 para 0.65) para caber melhor os botões
-    if(document.getElementById('simu-board')) document.getElementById('simu-board').style.transform = 'scale(0.65)';
-    
     area.innerHTML = `
-        <div id="simu-container"><div id="simu-board" style="transform: scale(0.65);"></div></div>
+        <div id="simu-container"><div id="simu-board" style="transform: scale(0.68);"></div></div>
         <div id="nivel-select-container">
             <p style="font-weight:800; color:#888; font-size:0.75rem; text-transform:uppercase; margin-bottom:5px;">Escolha a Dificuldade:</p>
             <div class="nivel-row">
@@ -199,8 +202,8 @@ function iniciarJogo() {
     selectedPiece = null;
     tabuleiro = Array(7).fill().map(() => Array(7).fill(0));
     for(let c=0; c<7; c++) { 
-        tabuleiro[0][c] = 2; tabuleiro[1][c] = 2; // Pretas
-        tabuleiro[5][c] = 1; tabuleiro[6][c] = 1; // Brancas
+        tabuleiro[0][c] = 2; tabuleiro[1][c] = 2; 
+        tabuleiro[5][c] = 1; tabuleiro[6][c] = 1; 
     }
     document.getElementById('round-feedback').style.display = 'none';
     atualizarUI();
@@ -218,14 +221,12 @@ function atualizarUI() {
     const boardEl = document.createElement('div');
     boardEl.className = "grid-board";
 
-    // Calcula ajudas se for Nível 1
+    // Calcula ajudas discretas se for Nível 1
     let movesHints = [];
     if(selectedPiece && nivelJogo === 1) {
         for(let r=0; r<7; r++) {
             for(let c=0; c<7; c++) {
-                if(validarMovimento(selectedPiece.r, selectedPiece.c, r, c, (turnoAtual === 0 ? 1 : 2))) {
-                    movesHints.push({r, c});
-                }
+                if(validarMovimento(selectedPiece.r, selectedPiece.c, r, c, (turnoAtual === 0 ? 1 : 2))) movesHints.push({r, c});
             }
         }
     }
@@ -235,13 +236,11 @@ function atualizarUI() {
             const cell = document.createElement('div');
             cell.className = "cell";
             
-            // Destaca peça selecionada
             if(selectedPiece && selectedPiece.r === r && selectedPiece.c === c) cell.style.background = "#fff9c4";
             
-            // Dica de movimento (Nível 1)
+            // Dica discreta: apenas um pontinho minúsculo no centro
             if(movesHints.some(m => m.r === r && m.c === c)) {
-                cell.style.background = "rgba(140, 198, 63, 0.25)";
-                cell.innerHTML = '<div style="width:10px; height:10px; background:#8cc63f; border-radius:50%; opacity:0.5;"></div>';
+                cell.innerHTML = '<div style="width:6px; height:6px; background:#bbb; border-radius:50%; opacity:0.6;"></div>';
             }
 
             if(tabuleiro[r][c] === 1) cell.innerHTML = '<div class="piece white"></div>';
@@ -257,25 +256,18 @@ function atualizarUI() {
 function handleCellClick(r, c) {
     if(!jogoAtivo || (modoJogo === 'CPU' && turnoAtual === 1)) return;
     const player = turnoAtual === 0 ? 1 : 2;
-
     if(tabuleiro[r][c] === player) {
         selectedPiece = {r, c}; somClique.play(); atualizarUI();
     } else if(selectedPiece) {
-        if(validarMovimento(selectedPiece.r, selectedPiece.c, r, c, player)) {
-            executarMovimento(selectedPiece.r, selectedPiece.c, r, c);
-        } else {
-            selectedPiece = null; atualizarUI();
-        }
+        if(validarMovimento(selectedPiece.r, selectedPiece.c, r, c, player)) executarMovimento(selectedPiece.r, selectedPiece.c, r, c);
+        else { selectedPiece = null; atualizarUI(); }
     }
 }
 
 function validarMovimento(r1, c1, r2, c2, p) {
     const dir = p === 1 ? -1 : 1;
-    const opponent = p === 1 ? 2 : 1;
-    // Vertical
     if(c1 === c2 && r2 === r1 + dir && tabuleiro[r2][c2] === 0) return true;
-    // Diagonal
-    if(Math.abs(c2 - c1) === 1 && r2 === r1 + dir && (tabuleiro[r2][c2] === 0 || tabuleiro[r2][c2] === opponent)) return true;
+    if(Math.abs(c2 - c1) === 1 && r2 === r1 + dir && (tabuleiro[r2][c2] === 0 || tabuleiro[r2][c2] === (p === 1 ? 2 : 1))) return true;
     return false;
 }
 
@@ -354,7 +346,7 @@ function iniciarSimulacao() {
         render();
     };
 
-    render(); // Início imediato
-    simuInterval = setInterval(animStep, 500); // 600ms -> 500ms para ser mais rápido
+    render();
+    simuInterval = setInterval(animStep, 500); 
 }
 // === FIM SECÇÃO 6 ===
