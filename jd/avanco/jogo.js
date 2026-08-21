@@ -61,11 +61,9 @@ const style = document.createElement('style');
 style.innerHTML = `
     #game-content { display: flex; flex-direction: column; align-items: center; width: 100%; min-height: 400px; padding: 10px; box-sizing: border-box; }
 
-    /* Contentores principais */
     #simu-container { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; min-height: 220px; }
     #capa-menu-principal, #nivel-select-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 12px; }
 
-    /* Grade do Tabuleiro */
     .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: clamp(2px, 0.5vw, 6px); background: #ced4da; padding: 8px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin: auto; }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
     
@@ -73,7 +71,6 @@ style.innerHTML = `
     .piece.white { background: radial-gradient(circle at 30% 30%, #ffffff, #e0e0e0); border: 1px solid #ccc; box-shadow: 0 3px 6px rgba(0,0,0,0.15); }
     .piece.black { background: radial-gradient(circle at 30% 30%, #444, #111); border: 1px solid #000; box-shadow: 0 3px 6px rgba(0,0,0,0.3); }
 
-    /* Botões Homogéneos */
     .capa-btn-row { display: flex; gap: 12px; width: 100%; align-items: center; }
     .btn-capa-small { flex: 1; height: 58px; border-radius: 16px; border: none; color: white; font-weight: 800; font-size: 1rem; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 10px; box-shadow: 0 5px 0 rgba(0,0,0,0.15); text-transform: uppercase; transition: 0.2s; }
     .btn-inform { width: 58px; height: 58px; border-radius: 16px; background: white; border: 2.5px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
@@ -81,17 +78,23 @@ style.innerHTML = `
     
     .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
 
-    /* Variáveis de Tamanho */
+    /* INSTRUÇÕES PREMIUM */
+    #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s ease; transform: translateY(100%); visibility: hidden; overflow-y: auto; }
+    #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
+    .close-x { position: sticky; top: 20px; float: right; margin-right: 25px; font-size: 3rem; color: #ff5a5f; cursor: pointer; font-weight: 900; z-index: 10001; }
+    .inst-content { max-width: 700px; margin: 0 auto; padding: 60px 25px; text-align: left; }
+    .inst-header { color: var(--primary-color); text-align: center; font-size: 1.5rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 4px solid #f0f0f0; padding-bottom: 10px; }
+    .inst-section-title { color: #333; font-size: 1.1rem; font-weight: 800; margin: 25px 0 12px; display: flex; align-items: center; gap: 10px; }
+    .inst-section-title::before { content: ''; width: 6px; height: 20px; background: var(--primary-color); border-radius: 3px; }
+    .inst-list { list-style: none; padding: 0; }
+    .inst-list li { background: #f8f9fa; margin-bottom: 10px; padding: 15px; border-radius: 15px; border-left: 5px solid var(--primary-color); color: #444; font-size: 1rem; line-height: 1.4; }
+
     :root { --cell-size: clamp(38px, 8vw, 62px); }
 
-    /* Tablet e PC */
     @media screen and (min-width: 600px) {
         :root { --cell-size: clamp(45px, 6vw, 65px); }
-        .capa-btn-row { gap: 15px; }
-        .btn-capa-small { font-size: 1.1rem; }
     }
 
-    /* Telemóvel */
     @media screen and (max-width: 480px) {
         .capa-btn-row { flex-direction: column; }
         .btn-inform { width: 100%; order: -1; }
@@ -112,6 +115,35 @@ document.head.appendChild(style);
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
+
+    // Criar Painel de Instruções se não existir
+    if(!document.getElementById('instrucoes-panel')) {
+        const p = document.createElement('div');
+        p.id = 'instrucoes-panel';
+        p.innerHTML = `
+            <span class="close-x" onclick="toggleInstructions()">&times;</span>
+            <div class="inst-content">
+                <div class="inst-header">Como Jogar Avanço</div>
+                <div class="inst-section-title">Objetivo</div>
+                <p>Leva qualquer uma das tuas peças até à <b>primeira linha do campo adversário</b>.</p>
+                <div class="inst-section-title">Movimento</div>
+                <ul class="inst-list">
+                    <li><b>Frente:</b> 1 casa se estiver vazia.</li>
+                    <li><b>Diagonal:</b> 1 casa (vazia ou ocupada).</li>
+                </ul>
+                <div class="inst-section-title">Captura</div>
+                <ul class="inst-list">
+                    <li>Capturas apenas nas <b>diagonais frontais</b>.</li>
+                </ul>
+            </div>`;
+        document.body.appendChild(p);
+
+        // Criar Feedback de Ronda se não existir
+        const f = document.createElement('div');
+        f.id = 'round-feedback';
+        document.querySelector('.game-shell').appendChild(f);
+    }
+
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; font-size:1.3rem; text-align:center; width:100%; margin: 15px 0;">${JOGO_CONFIG.nomeDoJogo.toUpperCase()}</h2>`;
     
     const area = document.getElementById('game-content');
@@ -143,6 +175,7 @@ function mostrarNiveis(modo) {
             <button class="btn-capa-small" onclick="voltarCapa()" style="background:#6c757d; width:100%;"><i class="fas fa-arrow-left"></i> VOLTAR</button>
         </div>
     `;
+    iniciarSimulacao(); // ADICIONADO: Inicia a simulação também neste ecrã
 }
 
 function voltarCapa() { somClique.play(); mostrarCapa(); }
@@ -153,9 +186,8 @@ function toggleInstructions() {
     p.classList.toggle('open');
 }
 
-// ============================================================
-// === INÍCIO SECÇÃO 4: LÓGICA CORE (AVANÇO) ===
-// ============================================================
+// ... Restante do código (Lógica core, IA, Finalização, Simulação) permanece exatamente igual ...
+
 function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
     modoJogo = modo; nivelJogo = nivel;
@@ -222,9 +254,7 @@ function handleCellClick(r, c) {
 function validarMovimento(r1, c1, r2, c2, p) {
     const dir = p === 1 ? -1 : 1;
     const enemy = p === 1 ? 2 : 1;
-    // Frente
     if(c1 === c2 && r2 === r1 + dir && tabuleiro[r2][c2] === 0) return true;
-    // Diagonais (captura ou movimento)
     if(Math.abs(c2 - c1) === 1 && r2 === r1 + dir && (tabuleiro[r2][c2] === 0 || tabuleiro[r2][c2] === enemy)) return true;
     return false;
 }
@@ -273,9 +303,6 @@ function finalizarMatch() {
     Engine.showResults(matchScore[0], matchScore[1], rel, modoJogo === 'CPU' ? "PC" : "J2");
 }
 
-// ============================================================
-// === INÍCIO SECÇÃO 6: SIMULAÇÃO REAL DA CAPA ===
-// ============================================================
 function iniciarSimulacao() {
     clearInterval(simuInterval);
     const board = document.getElementById('simu-board');
