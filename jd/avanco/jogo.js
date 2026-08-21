@@ -60,17 +60,13 @@ Engine.showResults = function(s1, s2, rel, label2) {
 const style = document.createElement('style');
 style.innerHTML = `
     #game-content { display: flex; flex-direction: column; align-items: center; width: 100%; min-height: 400px; padding: 10px; box-sizing: border-box; }
-
     #simu-container { width: 100%; display: flex; justify-content: center; align-items: center; margin-bottom: 20px; min-height: 220px; }
-    
-    /* Base Simulação */
     #simu-board { transform: scale(0.90); transition: 0.3s; }
 
     #capa-menu-principal, #nivel-select-container { width: 100%; max-width: 500px; display: flex; flex-direction: column; gap: 12px; }
 
     .grid-board { display: grid; grid-template-columns: repeat(7, 1fr); gap: clamp(2px, 0.5vw, 6px); background: #ced4da; padding: 8px; border-radius: 12px; box-shadow: 0 8px 24px rgba(0,0,0,0.12); margin: auto; }
     .cell { width: var(--cell-size); height: var(--cell-size); background: white; border-radius: 4px; display: flex; align-items: center; justify-content: center; cursor: pointer; }
-    
     .piece { width: 80%; height: 80%; border-radius: 50%; transition: all 0.3s ease; }
     .piece.white { background: radial-gradient(circle at 30% 30%, #ffffff, #e0e0e0); border: 1px solid #ccc; box-shadow: 0 3px 6px rgba(0,0,0,0.15); }
     .piece.black { background: radial-gradient(circle at 30% 30%, #444, #111); border: 1px solid #000; box-shadow: 0 3px 6px rgba(0,0,0,0.3); }
@@ -80,62 +76,41 @@ style.innerHTML = `
     .btn-inform { width: 58px; height: 58px; border-radius: 16px; background: white; border: 2.5px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
     .btn-inform img { width: 30px; height: 30px; object-fit: contain; }
     
-    .btn-capa-small:active, .btn-inform:active { transform: translateY(3px); box-shadow: 0 2px 0 rgba(0,0,0,0.1); }
-
-    /* --- ESTILO BASE INSTRUÇÕES (TELEMÓVEL) --- */
+    /* --- INSTRUÇÕES: FIX PARA REMOVER SCROLL DUPLO --- */
     #instrucoes-panel { 
         position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
         background: white; z-index: 10000; 
         display: none; flex-direction: column;
-        overflow-y: auto; -webkit-overflow-scrolling: touch; 
+        overflow-y: auto; /* Apenas este contentor faz scroll */
+        overflow-x: hidden;
     }
     #instrucoes-panel.open { display: flex; }
-    .close-x { position: sticky; top: 15px; right: 20px; align-self: flex-end; font-size: 3.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; z-index: 10001; line-height: 1; }
     
-    .inst-content { max-width: 700px; margin: 0 auto; padding: 20px 25px 100px; text-align: left; }
+    /* Impedir que o conteúdo interno crie uma segunda barra */
+    .inst-content { max-width: 700px; margin: 0 auto; padding: 20px 25px 100px; text-align: left; overflow: visible !important; }
+    
+    .close-x { position: sticky; top: 15px; right: 20px; align-self: flex-end; font-size: 3.5rem; color: #ff5a5f; cursor: pointer; font-weight: 900; z-index: 10001; line-height: 1; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 1.6rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 4px solid #f0f0f0; padding-bottom: 12px; }
     .inst-section-title { color: #333; font-size: 1.2rem; font-weight: 800; margin: 30px 0 15px; display: flex; align-items: center; gap: 10px; }
     .inst-section-title::before { content: ''; width: 6px; height: 24px; background: var(--primary-color); border-radius: 3px; }
     .inst-list { list-style: none; padding: 0; }
-    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 20px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.5; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+    .inst-list li { background: #f8f9fa; margin-bottom: 12px; padding: 20px; border-radius: 20px; border-left: 6px solid var(--primary-color); color: #444; font-size: 1.05rem; line-height: 1.5; }
 
     :root { --cell-size: clamp(38px, 8vw, 62px); }
 
-    /* ============================================================
-       ALTERAÇÕES EXCLUSIVAS PC (MÍNIMO 600PX)
-       ============================================================ */
+    /* AJUSTES ESPECÍFICOS PC */
     @media screen and (min-width: 600px) { 
         :root { --cell-size: clamp(45px, 6vw, 65px); }
-
-        /* Diminuição de mais 10% na simulação (0.90 -> 0.81) */
-        #simu-board { transform: scale(0.81); }
-
-        /* Scroll alocado e estilo Modal para PC */
-        #instrucoes-panel { 
-            background: rgba(0, 0, 0, 0.4); /* Fundo escurecido */
-            align-items: center;
-            justify-content: center;
-            padding: 40px;
-        }
-        .inst-content { 
-            background: white;
-            max-height: 85vh; /* Altura limitada */
-            width: 90%;
-            border-radius: 35px;
-            padding: 40px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
-            overflow-y: auto; /* Scroll apenas aqui dentro no PC */
-        }
-        .close-x { 
-            position: absolute; /* Fixa no canto do modal no PC */
-            top: 25px; 
-            right: 35px; 
-        }
+        #simu-board { transform: scale(0.81); } /* Redução extra 10% sobre 0.90 */
+        
+        #instrucoes-panel { background: rgba(0,0,0,0.4); padding: 40px; justify-content: center; }
+        .inst-content { background: white; border-radius: 35px; box-shadow: 0 20px 60px rgba(0,0,0,0.3); width: 90%; max-height: none; }
+        /* No PC, garantimos que o scroll do navegador desaparece ao abrir o modal */
+        body.modal-open { overflow: hidden !important; }
     }
 
     .blinking { animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.6; } }
-    
     #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.92); z-index: 2000; display: none; align-items: center; justify-content: center; border-radius: 35px; }
 `;
 document.head.appendChild(style);
@@ -153,24 +128,20 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
-                
                 <div class="inst-section-title">Objetivo do Jogo</div>
                 <p>Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário.</p>
-                
                 <div class="inst-section-title">Como Mover as Peças</div>
                 <ul class="inst-list">
-                    <li><i class="fas fa-arrow-up"></i> <b>Frente:</b> Podes avançar 1 casa para a frente se esta estiver <b>vazia</b>.</li>
+                    <li><i class="fas fa-arrow-up"></i> <b>Frente:</b> 1 casa (se estiver vazia).</li>
                     <li>
                         <i class="fas fa-arrow-up" style="transform:rotate(-45deg)"></i> 
                         <i class="fas fa-arrow-up" style="transform:rotate(45deg)"></i> 
-                        <b>Diagonais Frontais:</b> Podes mover-te 1 casa para as diagonais à tua frente (vazias ou ocupadas).
+                        <b>Diagonais:</b> 1 casa para a frente (vazia ou ocupada).
                     </li>
                 </ul>
-
                 <div class="inst-section-title">Como Capturar</div>
                 <ul class="inst-list">
-                    <li><i class="fas fa-fist-raised"></i> <b>Só Diagonais:</b> Podes capturar uma peça adversária se ela estiver numa das tuas <b>diagonais frontais</b>.</li>
-                    <li><i class="fas fa-ban"></i> <b>Não Captura de Frente:</b> É proibido capturar ou saltar peças que estejam diretamente à tua frente.</li>
+                    <li><i class="fas fa-fist-raised"></i> <b>Só Diagonais:</b> Só capturas peças adversárias que estejam nas tuas diagonais frontais.</li>
                 </ul>
             </div>`;
         document.body.appendChild(p);
@@ -197,6 +168,20 @@ function mostrarCapa() {
     iniciarSimulacao();
 }
 
+function toggleInstructions() { 
+    somClique.play(); 
+    const p = document.getElementById('instrucoes-panel');
+    const isOpening = p.style.display !== 'flex';
+    p.style.display = isOpening ? 'flex' : 'none';
+    
+    // CORREÇÃO: Bloqueia o scroll do fundo no navegador
+    if (isOpening) {
+        document.body.classList.add('modal-open');
+    } else {
+        document.body.classList.remove('modal-open');
+    }
+}
+
 function mostrarNiveis(modo) {
     somClique.play();
     const area = document.getElementById('game-content');
@@ -216,15 +201,6 @@ function mostrarNiveis(modo) {
 
 function voltarCapa() { somClique.play(); mostrarCapa(); }
 
-function toggleInstructions() { 
-    somClique.play(); 
-    const p = document.getElementById('instrucoes-panel');
-    const isOpening = p.style.display !== 'flex';
-    p.style.display = isOpening ? 'flex' : 'none';
-    document.body.style.overflow = isOpening ? 'hidden' : 'auto';
-}
-
-// ... Restante do código (IA, Lógica, Simulação) exatamente como o anterior ...
 function setModo(modo, nivel) {
     clearInterval(simuInterval); somClique.play();
     modoJogo = modo; nivelJogo = nivel;
