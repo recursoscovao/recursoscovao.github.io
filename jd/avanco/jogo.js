@@ -79,14 +79,7 @@ style.innerHTML = `
     #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(100%); visibility: hidden; padding: 40px 25px; overflow-y: auto; }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 3rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; }
-    .inst-content { max-width: 600px; margin: 0 auto; text-align: left; }
-    .inst-header { color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 3px solid #f0f0f0; padding-bottom: 10px; }
-    .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 25px 0 10px; display: flex; align-items: center; gap: 10px; }
-    .inst-section-title::before { content: ''; width: 6px; height: 22px; background: var(--primary-color); border-radius: 3px; display: inline-block; }
-    .inst-text { color: #666; font-size: 1.05rem; line-height: 1.6; margin-bottom: 15px; }
-    .inst-list { list-style: none; padding: 0; }
-    .inst-list li { background: #f9f9f9; margin-bottom: 12px; padding: 18px; border-radius: 12px; border-left: 5px solid var(--primary-color); color: #555; font-size: 1rem; line-height: 1.5; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
-
+    
     :root { --cell-size: clamp(38px, 8vw, 62px); }
 
     /* AJUSTE PC: Compactar para evitar scroll */
@@ -101,7 +94,7 @@ style.innerHTML = `
         #nivel-select-container p { margin-bottom: 4px !important; }
     }
 
-    /* AJUSTE TABLET VERTICAL: Animação e Jogo 20% maiores */
+    /* AJUSTE TABLET VERTICAL */
     @media screen and (min-width: 601px) and (max-width: 1024px) and (orientation: portrait) {
         :root { --cell-size: clamp(55px, 10vw, 78px) !important; }
         #game-content { justify-content: center !important; padding-top: 0px !important; min-height: 70vh !important; }
@@ -111,7 +104,7 @@ style.innerHTML = `
         .btn-capa-small { height: 65px !important; font-size: 1.2rem !important; }
     }
 
-    /* AJUSTE TABLET HORIZONTAL: Simulação -10% e botões compactos */
+    /* AJUSTE TABLET HORIZONTAL */
     @media screen and (min-width: 601px) and (max-width: 1280px) and (orientation: landscape) {
         #simu-board { transform: scale(0.81) !important; }
         #simu-container { min-height: 170px !important; margin-bottom: 10px !important; margin-top: -20px !important; }
@@ -119,22 +112,35 @@ style.innerHTML = `
         #nivel-select-container p { margin-bottom: 4px !important; }
     }
 
-    /* AJUSTE TELEMÓVEL: Botões verticais idênticos e animação mais acima */
+    /* AJUSTE TELEMÓVEL */
     @media screen and (max-width: 600px) {
         .capa-btn-row { flex-direction: column !important; gap: 10px !important; width: 100% !important; }
-        .btn-capa-small, .btn-inform { 
-            width: 100% !important; 
-            height: 58px !important; 
-            border-radius: 16px !important; 
-            flex: none !important; 
-        }
+        .btn-capa-small, .btn-inform { width: 100% !important; height: 58px !important; border-radius: 16px !important; flex: none !important; }
         #simu-container { min-height: 160px !important; margin-bottom: 10px !important; margin-top: -25px !important; }
         #simu-board { transform: scale(0.85) !important; }
     }
 
+    /* --- FEEDBACK DE VITÓRIA PEQUENO E CENTRADO NA PÁGINA --- */
+    #round-feedback { 
+        position: fixed; 
+        top: 50%; 
+        left: 50%; 
+        transform: translate(-50%, -50%); 
+        width: 280px; 
+        background: white; 
+        z-index: 10000; 
+        display: none; 
+        flex-direction: column;
+        align-items: center; 
+        justify-content: center; 
+        padding: 25px;
+        border-radius: 24px; 
+        box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+        text-align: center;
+        border: 4px solid #eee;
+    }
     .blinking { animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.6; } }
-    #round-feedback { position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(255,255,255,0.92); z-index: 2000; display: none; align-items: center; justify-content: center; border-radius: 35px; }
 `;
 document.head.appendChild(style);
 
@@ -143,7 +149,6 @@ document.head.appendChild(style);
 // ============================================================
 function mostrarCapa() {
     if (jogoAtivo) return;
-
     if(!document.getElementById('instrucoes-panel')) {
         const p = document.createElement('div');
         p.id = 'instrucoes-panel';
@@ -168,11 +173,10 @@ function mostrarCapa() {
 
         const f = document.createElement('div');
         f.id = 'round-feedback';
-        document.querySelector('.game-shell').appendChild(f);
+        document.body.appendChild(f); // Colocado no body para centro absoluto da página
     }
 
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; font-size:1.3rem; text-align:center; width:100%; margin: 15px 0;">${JOGO_CONFIG.nomeDoJogo.toUpperCase()}</h2>`;
-    
     const area = document.getElementById('game-content');
     area.innerHTML = `
         <div id="simu-container"><div id="simu-board"></div></div>
@@ -230,11 +234,7 @@ function iniciarJogo() {
     const feedback = document.getElementById('round-feedback');
     if(feedback) feedback.style.display = 'none';
     atualizarUI();
-
-    // CORREÇÃO: Se a ronda começar e for a vez do Computador, ele joga.
-    if(modoJogo === 'CPU' && turnoAtual === 1) {
-        setTimeout(iaControlador, 800);
-    }
+    if(modoJogo === 'CPU' && turnoAtual === 1) setTimeout(iaControlador, 800);
 }
 
 function atualizarUI() {
@@ -311,11 +311,14 @@ function finalizarRonda(vIdx) {
     jogoAtivo = false; matchScore[vIdx]++; somAcerto.play();
     const overlay = document.getElementById('round-feedback');
     const labelV = vIdx === 0 ? "JOGADOR 1" : (modoJogo === 'CPU' ? "COMPUTADOR" : "JOGADOR 2");
+    const corV = vIdx === 0 ? '#8cc63f' : '#444';
+    
     overlay.style.display = 'flex';
-    overlay.innerHTML = `<div class="vitoria-card">
-        <h1 style="color:${vIdx===0?'#8cc63f':'#444'}; font-size:1.8rem; margin-bottom:10px; font-weight:900;">${labelV}</h1>
-        <p style="font-weight:700; color:#888;">VENCEU A RONDA!</p>
-    </div>`;
+    overlay.style.borderTop = `6px solid ${corV}`;
+    overlay.innerHTML = `
+        <h3 style="color:${corV}; font-size:1.4rem; margin-bottom:5px; font-weight:900;">${labelV}</h3>
+        <p style="font-weight:700; color:#888; font-size:0.9rem; margin:0;">VENCEU A RONDA!</p>
+    `;
     setTimeout(() => {
         if (matchScore[0] >= 3 || matchScore[1] >= 3) finalizarMatch();
         else iniciarJogo();
