@@ -100,7 +100,7 @@ style.innerHTML = `
     /* AJUSTE PC: Simulação 10% menor (0.81) */
     @media screen and (min-width: 600px) { 
         :root { --cell-size: clamp(45px, 6vw, 65px); }
-        #simu-board { transform: scale(0.81); } 
+        #simu-board { transform: scale(0.73); } 
     }
 
     .blinking { animation: blinker 1.5s linear infinite; }
