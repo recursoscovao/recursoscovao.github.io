@@ -107,10 +107,15 @@ style.innerHTML = `
         #nivel-select-container p { margin-bottom: 4px !important; }
     }
 
-    /* AJUSTE TELEMÓVEL: Botões verticais e animação mais acima */
+    /* AJUSTE TELEMÓVEL: Botões verticais idênticos e animação mais acima */
     @media screen and (max-width: 600px) {
         .capa-btn-row { flex-direction: column !important; gap: 10px !important; width: 100% !important; }
-        .btn-capa-small, .btn-inform { width: 100% !important; flex: none !important; }
+        .btn-capa-small, .btn-inform { 
+            width: 100% !important; 
+            height: 58px !important; 
+            border-radius: 16px !important; 
+            flex: none !important; 
+        }
         #simu-container { min-height: 160px !important; margin-bottom: 10px !important; margin-top: -25px !important; }
         #simu-board { transform: scale(0.85) !important; }
     }
