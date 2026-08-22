@@ -109,14 +109,18 @@ style.innerHTML = `
 
     /* 2. Reduz drasticamente a área da animação e o espaço abaixo dela */
     #simu-container { 
-        min-height: 150px; /* Era 220px */
-        margin-bottom: 5px; /* Era 20px */
+        min-height: 150px; 
+        margin-bottom: 5px; 
     }
 
     /* 3. Mantém a animação 10% mais pequena */
     #simu-board { 
         transform: scale(0.73); 
     }
+
+    /* 4. Compactar menus e ecrã de dificuldades */
+    #capa-menu-principal, #nivel-select-container { gap: 6px; }
+    #nivel-select-container p { margin-bottom: 4px !important; }
 }
 
     .blinking { animation: blinker 1.5s linear infinite; }
