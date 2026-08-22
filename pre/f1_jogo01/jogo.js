@@ -4,7 +4,7 @@
 let jogoAtivo = false;
 let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0, ajudasUsadas = 0; 
 let itemDestaque = null, opcoesRonda = [], simuInterval;
-let audioInstrucoes = null; // Variável para controlar o áudio das instruções
+let audioInstrucoes = null; 
 
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
@@ -15,9 +15,8 @@ const somClique = new Audio(JOGO_CONFIG.caminhoSons + "clique.mp3");
 // ==========================================
 const style = document.createElement('style');
 style.innerHTML = `
-    /* [ESTILOS GERAIS - CONFIGURAÇÃO PADRÃO] */
     :root { 
-        --grid-cols: 4;      /* Valor padrão para evitar fila única */
+        --grid-cols: 4;
         --card-size: 130px; 
         --dest-size: 180px; 
     }
@@ -57,13 +56,13 @@ style.innerHTML = `
     .feedback-icon { position: absolute; font-size: 3rem; z-index: 10; filter: drop-shadow(2px 2px 2px rgba(0,0,0,0.3)); pointer-events: none; }
     .icon-v { color: #8cc63f; } .icon-x { color: #ff5a5f; }
 
-    /* A. PC / TABLET LANDSCAPE / PAINÉIS */
+    /* A. PC / TABLET LANDSCAPE */
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
         :root { --grid-cols: 6; --card-size: 130px; --dest-size: 160px; }
-        .shell-body { padding: 20px !important; justify-content: center !important; }
+        .shell-body { padding: 20px !important; justify-content: center !important; align-items: center !important; }
     }
 
-    /* B. TABLET VERTICAL (PORTRAIT) - CORREÇÃO DE CENTRALIZAÇÃO */
+    /* B. TABLET VERTICAL (PORTRAIT) - CORREÇÃO DEFINITIVA */
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
         :root { 
             --grid-cols: 4 !important;      
@@ -71,27 +70,24 @@ style.innerHTML = `
             --dest-size: 200px;   
         }
         .shell-body { 
-            padding: 30px 40px !important; 
+            padding: 30px 20px !important; 
             justify-content: center !important;
-            align-items: center !important; /* Força alinhamento central horizontal */
-        }
-        /* Garante que a div da grelha injetada via JS não desvie para a direita */
-        .shell-body > div[style*="grid"] {
-            margin: 0 auto !important;
-            width: fit-content !important;
+            align-items: center !important; /* Centra os filhos horizontalmente */
+            display: flex !important;
+            flex-direction: column !important;
         }
     }
 
-    /* C. TELEMÓVEL VERTICAL (PORTRAIT) */
+    /* C. TELEMÓVEL VERTICAL */
     @media screen and (max-width: 500px) and (orientation: portrait) {
         :root { --grid-cols: 3 !important; --card-size: 85px; --dest-size: 140px; }
-        .shell-body { padding: 15px 15px !important; justify-content: center !important; }
+        .shell-body { padding: 15px !important; justify-content: center !important; align-items: center !important; }
     }
 
-    /* D. TELEMÓVEL HORIZONTAL (LANDSCAPE) */
+    /* D. TELEMÓVEL HORIZONTAL */
     @media screen and (max-height: 500px) and (orientation: landscape) {
         :root { --grid-cols: 6 !important; --card-size: 70px; --dest-size: 110px; }
-        .shell-body { padding: 10px 15px !important; }
+        .shell-body { padding: 10px 15px !important; align-items: center !important; }
     }
 `;
 document.head.appendChild(style);
@@ -100,20 +96,13 @@ document.head.appendChild(style);
 // 3. LÓGICA DE CAPA E SIMULAÇÃO
 // ==========================================
 function tocarAudioInstrucoes() {
-    somClique.pause();
-    somClique.currentTime = 0;
-    somClique.play();
+    somClique.pause(); somClique.currentTime = 0; somClique.play();
     if (window.speechSynthesis) window.speechSynthesis.cancel();
-    if (audioInstrucoes) {
-        audioInstrucoes.pause();
-        audioInstrucoes.currentTime = 0;
-    } else {
-        audioInstrucoes = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes);
-    }
+    if (audioInstrucoes) { audioInstrucoes.pause(); audioInstrucoes.currentTime = 0; } 
+    else { audioInstrucoes = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes); }
     audioInstrucoes.play().catch(() => {
-        const synth = window.speechSynthesis;
-        const utter = new SpeechSynthesisUtterance("Olha para o animal em cima e encontra-o em baixo. Clica na lâmpada se precisares de ajuda!");
-        utter.lang = 'pt-PT'; synth.speak(utter);
+        const utter = new SpeechSynthesisUtterance("Olha para o animal em cima e encontra-o em baixo.");
+        utter.lang = 'pt-PT'; window.speechSynthesis.speak(utter);
     });
 }
 
@@ -154,7 +143,7 @@ function correrSimulacao() {
             card.style.borderColor = "#f0f0f0";
         });
         const container = document.getElementById('game-content').getBoundingClientRect();
-        hand.style.display = "block"; hand.style.opacity = "0"; hand.style.top = "80%"; hand.style.left = "80%";
+        hand.style.display = "block"; hand.style.opacity = "0";
         setTimeout(() => {
             const target = document.getElementById(`simu-opt-${certoIdx}`).getBoundingClientRect();
             hand.style.transition = "all 0.8s ease-in-out"; hand.style.opacity = "1";
@@ -171,16 +160,10 @@ function correrSimulacao() {
 }
 
 // ==========================================
-// 4. LÓGICA DE JOGO (12 ANIMAIS RANDOM)
+// 4. LÓGICA DE JOGO
 // ==========================================
 function iniciarJogo() { 
-    clearInterval(simuInterval); 
-    jogoAtivo = true; 
-    rondaAtual = 1; 
-    certos = 0; 
-    erros = 0; 
-    ajudasUsadas = 0; 
-    proximaRonda(); 
+    clearInterval(simuInterval); jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0; proximaRonda(); 
 }
 
 function proximaRonda() {
@@ -192,9 +175,11 @@ function proximaRonda() {
     let selecao = todos.slice(0, 12);
     if (!selecao.find(i => i.id === itemDestaque.id)) selecao[0] = itemDestaque;
     opcoesRonda = selecao.sort(() => Math.random() - 0.5);
+
+    // MUDANÇA AQUI: Removido width:100% e adicionado margin:0 auto para centrar
     area.innerHTML = `
         <div class="destaque-box"><img src="${DADOS_JOGO.caminhoImagens + itemDestaque.img}"></div>
-        <div style="display:grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap:12px; width:100%; max-width:fit-content; justify-items:center;">
+        <div style="display:grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap:12px; width:fit-content; margin:0 auto; justify-items:center;">
             ${opcoesRonda.map(item => `
                 <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)">
                     <img src="${DADOS_JOGO.caminhoImagens + item.img}">
@@ -221,8 +206,7 @@ function verificarResposta(id, el) {
 
 function darAjuda() {
     if (!jogoAtivo) return;
-    ajudasUsadas++; 
-    somClique.play();
+    ajudasUsadas++; somClique.play();
     const correto = document.getElementById(`card-${itemDestaque.id}`);
     if (correto) {
         correto.style.borderColor = "var(--primary-color)";
