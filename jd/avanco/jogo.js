@@ -76,7 +76,7 @@ style.innerHTML = `
     .btn-inform { width: 58px; height: 58px; border-radius: 16px; background: white; border: 2.5px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
     .btn-inform img { width: 30px; height: 30px; object-fit: contain; }
 
-    /* --- ESTILO INSTRUÇÕES (ESTILO DOMINÓRIO) --- */
+    /* --- ESTILO INSTRUÇÕES --- */
     #instrucoes-panel { 
         position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
         background: white; z-index: 10000; 
@@ -97,23 +97,23 @@ style.innerHTML = `
 
     :root { --cell-size: clamp(38px, 8vw, 62px); }
 
-/* AJUSTE PC: Compactar altura total para evitar scroll */
-@media screen and (min-width: 600px) { 
-    :root { --cell-size: clamp(45px, 6vw, 65px); }
-    #game-content { min-height: auto; padding-top: 0px; }
-    #simu-container { min-height: 150px; margin-bottom: 5px; }
-    #simu-board { transform: scale(0.73); }
-    #capa-menu-principal, #nivel-select-container { gap: 6px; }
-    #nivel-select-container p { margin-bottom: 4px !important; }
-}
+    /* AJUSTE PC: Compactar para evitar scroll e animação menor */
+    @media screen and (min-width: 601px) { 
+        :root { --cell-size: clamp(45px, 6vw, 65px); }
+        #game-content { min-height: auto !important; padding-top: 0px !important; }
+        #simu-container { min-height: 150px !important; margin-bottom: 5px !important; }
+        #simu-board { transform: scale(0.73) !important; }
+        #capa-menu-principal, #nivel-select-container { gap: 6px !important; }
+        #nivel-select-container p { margin-bottom: 4px !important; }
+    }
 
-/* AJUSTE TELEMÓVEL: Botões verticais e animação mais acima */
-@media screen and (max-width: 600px) {
-    .capa-btn-row { flex-direction: column; gap: 10px; width: 100%; }
-    .btn-capa-small, .btn-inform { width: 100%; }
-    #simu-container { min-height: 160px; margin-bottom: 10px; margin-top: -20px; }
-    #simu-board { transform: scale(0.85); }
-}
+    /* AJUSTE TELEMÓVEL: Botões verticais e animação mais acima */
+    @media screen and (max-width: 600px) {
+        .capa-btn-row { flex-direction: column !important; gap: 10px !important; width: 100% !important; }
+        .btn-capa-small, .btn-inform { width: 100% !important; flex: none !important; }
+        #simu-container { min-height: 160px !important; margin-bottom: 10px !important; margin-top: -25px !important; }
+        #simu-board { transform: scale(0.85) !important; }
+    }
 
     .blinking { animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.6; } }
@@ -134,24 +134,16 @@ function mostrarCapa() {
             <span class="close-x" onclick="toggleInstructions()">&times;</span>
             <div class="inst-content">
                 <div class="inst-header">Como Jogar Avanço</div>
-                
                 <div class="inst-section-title">Objetivo do Jogo</div>
                 <p class="inst-text">Vence o primeiro jogador que conseguir levar <b>qualquer uma das suas peças</b> até à primeira linha do campo adversário.</p>
-                
                 <div class="inst-section-title">Como Mover as Peças</div>
                 <ul class="inst-list">
                     <li><i class="fas fa-arrow-up"></i> <b>Movimento Vertical:</b> Podes avançar 1 casa para a frente se esta estiver <b>vazia</b>.</li>
-                    <li>
-                        <i class="fas fa-arrow-up" style="transform:rotate(-45deg)"></i> 
-                        <i class="fas fa-arrow-up" style="transform:rotate(45deg)"></i> 
-                        <b>Movimento Diagonal:</b> Podes mover-te 1 casa para as diagonais à tua frente (quer estejam vazias ou ocupadas por peças adversárias).
-                    </li>
+                    <li><i class="fas fa-arrow-up" style="transform:rotate(-45deg)"></i> <i class="fas fa-arrow-up" style="transform:rotate(45deg)"></i> <b>Movimento Diagonal:</b> Podes mover-te 1 casa para as diagonais à tua frente.</li>
                 </ul>
-
                 <div class="inst-section-title">Como Capturar</div>
                 <ul class="inst-list">
                     <li><i class="fas fa-fist-raised"></i> <b>Apenas Diagonais:</b> Podes capturar uma peça adversária se ela estiver numa das tuas <b>diagonais frontais</b>.</li>
-                    <li><i class="fas fa-ban"></i> <b>Proibição:</b> É proibido capturar peças que estejam diretamente à tua frente.</li>
                 </ul>
                 <div style="height:60px;"></div>
             </div>`;
