@@ -4,6 +4,7 @@
 let jogoAtivo = false;
 let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0, ajudasUsadas = 0; 
 let itemDestaque = null, opcoesRonda = [], simuInterval;
+let audioInstrucoes = null; // Variável para controlar o áudio das instruções
 
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
@@ -90,9 +91,26 @@ document.head.appendChild(style);
 // 3. LÓGICA DE CAPA E SIMULAÇÃO
 // ==========================================
 function tocarAudioInstrucoes() {
+    // Para o som do clique se estiver a tocar e reinicia
+    somClique.pause();
+    somClique.currentTime = 0;
     somClique.play();
-    const audioInst = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes);
-    audioInst.play().catch(() => {
+
+    // Cancela qualquer narração de voz do sistema que esteja a correr
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+
+    // Se o áudio já estiver a tocar, para-o e volta ao início
+    if (audioInstrucoes) {
+        audioInstrucoes.pause();
+        audioInstrucoes.currentTime = 0;
+    } else {
+        // Se ainda não foi criado, cria o objeto de áudio
+        audioInstrucoes = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes);
+    }
+
+    // Tenta tocar o ficheiro de áudio
+    audioInstrucoes.play().catch(() => {
+        // Fallback: Se o áudio falhar, usa a voz do sistema
         const synth = window.speechSynthesis;
         const utter = new SpeechSynthesisUtterance("Olha para o animal em cima e encontra-o em baixo. Clica na lâmpada se precisares de ajuda!");
         utter.lang = 'pt-PT'; synth.speak(utter);
@@ -225,6 +243,8 @@ function darAjuda() {
 
 function finalizarJogo() {
     jogoAtivo = false;
+    // Para o áudio das instruções se ainda estiver a tocar ao acabar o jogo
+    if(audioInstrucoes) audioInstrucoes.pause();
     const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
     Engine.showResults(certos, erros, ajudasUsadas, rel);
 }
