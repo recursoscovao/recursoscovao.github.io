@@ -4,6 +4,7 @@
 let jogoAtivo = false;
 let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0, ajudasUsadas = 0; 
 let itemDestaque = null, opcoesRonda = [], simuInterval;
+let audioInstrucoes = null; // Variável global para controlar as instruções
 
 const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + "acerto.mp3");
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + "erro.mp3");
@@ -74,9 +75,23 @@ document.head.appendChild(style);
 // 3. LÓGICA DE CAPA E SIMULAÇÃO
 // ==========================================
 function tocarAudioInstrucoes() {
+    // Reinicia o som do clique
+    somClique.pause();
+    somClique.currentTime = 0;
     somClique.play();
-    const audioInst = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes);
-    audioInst.play().catch(() => {
+
+    // Cancela síntese de voz se estiver a decorrer
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+
+    // Reinicia o áudio de instruções se já existir, ou cria se for a primeira vez
+    if (audioInstrucoes) {
+        audioInstrucoes.pause();
+        audioInstrucoes.currentTime = 0;
+    } else {
+        audioInstrucoes = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes);
+    }
+
+    audioInstrucoes.play().catch(() => {
         const synth = window.speechSynthesis;
         const utter = new SpeechSynthesisUtterance("Olha para o animal em cima e encontra-o em baixo. Clica na lâmpada se precisares de ajuda!");
         utter.lang = 'pt-PT'; synth.speak(utter);
@@ -201,6 +216,7 @@ function darAjuda() {
 
 function finalizarJogo() {
     jogoAtivo = false;
+    if (audioInstrucoes) audioInstrucoes.pause(); // Para o som ao finalizar
     const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
     Engine.showResults(certos, erros, ajudasUsadas, rel);
 }
