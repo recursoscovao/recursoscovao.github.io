@@ -230,6 +230,11 @@ function iniciarJogo() {
     const feedback = document.getElementById('round-feedback');
     if(feedback) feedback.style.display = 'none';
     atualizarUI();
+
+    // CORREÇÃO: Se a ronda começar e for a vez do Computador, ele joga.
+    if(modoJogo === 'CPU' && turnoAtual === 1) {
+        setTimeout(iaControlador, 800);
+    }
 }
 
 function atualizarUI() {
@@ -293,7 +298,7 @@ function executarMovimento(fr, fc, tr, tc) {
 
 function iaControlador() {
     let moves = [];
-    for(let r=0; r<7; r++) for(let c=0; r<7; c++) if(tabuleiro[r][c] === 2) 
+    for(let r=0; r<7; r++) for(let c=0; c<7; c++) if(tabuleiro[r][c] === 2) 
         for(let dr=0; dr<7; dr++) for(let dc=0; dc<7; dc++) if(validarMovimento(r,c,dr,dc,2)) moves.push({fr:r,fc:c,tr:dr,tc:dc});
     if(moves.length === 0) { finalizarRonda(0); return; }
     const win = moves.find(m => m.tr === 6);
