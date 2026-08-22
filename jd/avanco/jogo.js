@@ -97,11 +97,19 @@ style.innerHTML = `
 
     :root { --cell-size: clamp(38px, 8vw, 62px); }
 
-    /* AJUSTE PC: Simulação 10% menor (0.81) */
-    @media screen and (min-width: 600px) { 
-        :root { --cell-size: clamp(45px, 6vw, 65px); }
-        #simu-board { transform: scale(0.73); } 
-    }
+/* AJUSTE PC: Redução de espaços no topo e entre elementos */
+@media screen and (min-width: 600px) { 
+    :root { --cell-size: clamp(45px, 6vw, 65px); }
+
+    /* 1. Reduz escala da animação */
+    #simu-board { transform: scale(0.73); } 
+
+    /* 2. Reduz espaço no topo da área de jogo (de 10px para 5px) */
+    #game-content { padding-top: 5px; }
+
+    /* 3. Reduz espaço entre a simulação e os botões (de 20px para 10px) */
+    #simu-container { margin-bottom: 10px; min-height: 180px; }
+}
 
     .blinking { animation: blinker 1.5s linear infinite; }
     @keyframes blinker { 50% { opacity: 0.6; } }
