@@ -63,14 +63,23 @@ style.innerHTML = `
         .shell-body { padding: 20px !important; justify-content: center !important; }
     }
 
-    /* B. TABLET VERTICAL (PORTRAIT) - FORÇANDO GRELHA */
+    /* B. TABLET VERTICAL (PORTRAIT) - CORREÇÃO DE CENTRALIZAÇÃO */
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
         :root { 
-            --grid-cols: 4 !important;      /* Garante 4 colunas */
+            --grid-cols: 4 !important;      
             --card-size: 140px;   
             --dest-size: 200px;   
         }
-        .shell-body { padding: 30px 40px !important; justify-content: center !important; }
+        .shell-body { 
+            padding: 30px 40px !important; 
+            justify-content: center !important;
+            align-items: center !important; /* Força alinhamento central horizontal */
+        }
+        /* Garante que a div da grelha injetada via JS não desvie para a direita */
+        .shell-body > div[style*="grid"] {
+            margin: 0 auto !important;
+            width: fit-content !important;
+        }
     }
 
     /* C. TELEMÓVEL VERTICAL (PORTRAIT) */
@@ -91,26 +100,17 @@ document.head.appendChild(style);
 // 3. LÓGICA DE CAPA E SIMULAÇÃO
 // ==========================================
 function tocarAudioInstrucoes() {
-    // Para o som do clique se estiver a tocar e reinicia
     somClique.pause();
     somClique.currentTime = 0;
     somClique.play();
-
-    // Cancela qualquer narração de voz do sistema que esteja a correr
     if (window.speechSynthesis) window.speechSynthesis.cancel();
-
-    // Se o áudio já estiver a tocar, para-o e volta ao início
     if (audioInstrucoes) {
         audioInstrucoes.pause();
         audioInstrucoes.currentTime = 0;
     } else {
-        // Se ainda não foi criado, cria o objeto de áudio
         audioInstrucoes = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes);
     }
-
-    // Tenta tocar o ficheiro de áudio
     audioInstrucoes.play().catch(() => {
-        // Fallback: Se o áudio falhar, usa a voz do sistema
         const synth = window.speechSynthesis;
         const utter = new SpeechSynthesisUtterance("Olha para o animal em cima e encontra-o em baixo. Clica na lâmpada se precisares de ajuda!");
         utter.lang = 'pt-PT'; synth.speak(utter);
@@ -120,7 +120,6 @@ function tocarAudioInstrucoes() {
 function mostrarCapa() {
     if (jogoAtivo) return;
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">${JOGO_CONFIG.nomeDoJogo}</h2>`;
-    
     document.getElementById('game-content').innerHTML = `
         <div id="simu-hand" style="position:absolute; font-size:3rem; z-index:100; pointer-events:none; display:none;">👆</div>
         <div style="display:flex; flex-direction:column; align-items:center;">
@@ -132,13 +131,11 @@ function mostrarCapa() {
             </div>
             <p style="color:var(--text-grey); font-weight:800; text-align:center; margin-top:15px; font-size:0.9rem;">${JOGO_CONFIG.descricao}</p>
         </div>`;
-
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
     footer.innerHTML = `
         <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="btn-audio-circle" onclick="tocarAudioInstrucoes()">
         <button class="btn-play-rect" onclick="iniciarJogo()"><i class="fas fa-play"></i> JOGAR</button>`;
-    
     correrSimulacao();
 }
 
@@ -188,20 +185,13 @@ function iniciarJogo() {
 
 function proximaRonda() {
     if (rondaAtual > totalRondas) { finalizarJogo(); return; }
-    
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
-
     const area = document.getElementById('game-content');
-    
     const todos = [...DADOS_JOGO.itens].sort(() => Math.random() - 0.5);
     itemDestaque = todos[0];
-    
     let selecao = todos.slice(0, 12);
     if (!selecao.find(i => i.id === itemDestaque.id)) selecao[0] = itemDestaque;
-    
     opcoesRonda = selecao.sort(() => Math.random() - 0.5);
-
-    // Adicionado style max-width para garantir que a grelha respeita o contentor
     area.innerHTML = `
         <div class="destaque-box"><img src="${DADOS_JOGO.caminhoImagens + itemDestaque.img}"></div>
         <div style="display:grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap:12px; width:100%; max-width:fit-content; justify-items:center;">
@@ -215,7 +205,6 @@ function proximaRonda() {
 function verificarResposta(id, el) {
     if (!jogoAtivo) return;
     document.querySelectorAll('.opcao-card').forEach(c => c.style.pointerEvents = 'none');
-
     if (id === itemDestaque.id) {
         certos++; somAcerto.play();
         el.style.borderColor = "#8cc63f";
@@ -243,7 +232,6 @@ function darAjuda() {
 
 function finalizarJogo() {
     jogoAtivo = false;
-    // Para o áudio das instruções se ainda estiver a tocar ao acabar o jogo
     if(audioInstrucoes) audioInstrucoes.pause();
     const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
     Engine.showResults(certos, erros, ajudasUsadas, rel);
