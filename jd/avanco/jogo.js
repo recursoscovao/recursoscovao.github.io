@@ -89,20 +89,26 @@ style.innerHTML = `
 
     :root { --cell-size: clamp(38px, 8vw, 62px); }
 
-    /* AJUSTE PC: Compactar TUDO (incluindo a game-shell) para evitar scroll */
-    @media screen and (min-width: 601px) { 
+    /* AJUSTE PC: Compactar para evitar scroll */
+    @media screen and (min-width: 1025px) { 
         :root { --cell-size: clamp(45px, 6vw, 65px) !important; }
-        
-        /* Ajuste na casca externa do motor de jogo */
         .game-shell { padding: 0 !important; display: flex !important; flex-direction: column !important; justify-content: flex-start !important; }
         #shell-header-content { padding: 0 !important; margin: 0 !important; min-height: auto !important; }
-
-        /* Ajuste no conteúdo interno */
         #game-content { min-height: auto !important; padding-top: 2px !important; }
         #simu-container { min-height: 140px !important; margin-bottom: 5px !important; }
         #simu-board { transform: scale(0.73) !important; }
         #capa-menu-principal, #nivel-select-container { gap: 6px !important; }
         #nivel-select-container p { margin-bottom: 4px !important; }
+    }
+
+    /* AJUSTE TABLET E PAINEL VERTICAL: Animação e Jogo 20% maiores */
+    @media screen and (min-width: 601px) and (max-width: 1024px) {
+        :root { --cell-size: clamp(55px, 10vw, 78px) !important; }
+        #game-content { justify-content: center !important; padding-top: 0px !important; min-height: 70vh !important; }
+        #simu-container { min-height: 280px !important; margin-top: -50px !important; margin-bottom: 40px !important; }
+        #simu-board { transform: scale(1.1) !important; }
+        #capa-menu-principal, #nivel-select-container { max-width: 650px !important; gap: 20px !important; }
+        .btn-capa-small { height: 65px !important; font-size: 1.2rem !important; }
     }
 
     /* AJUSTE TELEMÓVEL: Botões verticais idênticos e animação mais acima */
