@@ -89,12 +89,18 @@ style.innerHTML = `
 
     :root { --cell-size: clamp(38px, 8vw, 62px); }
 
-    /* AJUSTE PC: Reduz espaços e animação 10% menor */
+    /* AJUSTE PC: Compactar TUDO (incluindo a game-shell) para evitar scroll */
     @media screen and (min-width: 601px) { 
         :root { --cell-size: clamp(45px, 6vw, 65px) !important; }
-        #simu-board { transform: scale(0.73) !important; }
-        #game-content { min-height: auto !important; padding-top: 0px !important; }
+        
+        /* Ajuste na casca externa do motor de jogo */
+        .game-shell { padding: 0 !important; display: flex !important; flex-direction: column !important; justify-content: flex-start !important; }
+        #shell-header-content { padding: 0 !important; margin: 0 !important; min-height: auto !important; }
+
+        /* Ajuste no conteúdo interno */
+        #game-content { min-height: auto !important; padding-top: 2px !important; }
         #simu-container { min-height: 140px !important; margin-bottom: 5px !important; }
+        #simu-board { transform: scale(0.73) !important; }
         #capa-menu-principal, #nivel-select-container { gap: 6px !important; }
         #nivel-select-container p { margin-bottom: 4px !important; }
     }
