@@ -101,14 +101,22 @@ style.innerHTML = `
         #nivel-select-container p { margin-bottom: 4px !important; }
     }
 
-    /* AJUSTE TABLET E PAINEL VERTICAL: Animação e Jogo 20% maiores */
-    @media screen and (min-width: 601px) and (max-width: 1024px) {
+    /* AJUSTE TABLET VERTICAL: Animação e Jogo 20% maiores */
+    @media screen and (min-width: 601px) and (max-width: 1024px) and (orientation: portrait) {
         :root { --cell-size: clamp(55px, 10vw, 78px) !important; }
         #game-content { justify-content: center !important; padding-top: 0px !important; min-height: 70vh !important; }
         #simu-container { min-height: 280px !important; margin-top: -50px !important; margin-bottom: 40px !important; }
         #simu-board { transform: scale(1.1) !important; }
         #capa-menu-principal, #nivel-select-container { max-width: 650px !important; gap: 20px !important; }
         .btn-capa-small { height: 65px !important; font-size: 1.2rem !important; }
+    }
+
+    /* AJUSTE TABLET HORIZONTAL: Simulação -10% e botões compactos */
+    @media screen and (min-width: 601px) and (max-width: 1280px) and (orientation: landscape) {
+        #simu-board { transform: scale(0.81) !important; }
+        #simu-container { min-height: 170px !important; margin-bottom: 10px !important; margin-top: -20px !important; }
+        #capa-menu-principal, #nivel-select-container { gap: 8px !important; max-width: 500px !important; }
+        #nivel-select-container p { margin-bottom: 4px !important; }
     }
 
     /* AJUSTE TELEMÓVEL: Botões verticais idênticos e animação mais acima */
@@ -285,7 +293,7 @@ function executarMovimento(fr, fc, tr, tc) {
 
 function iaControlador() {
     let moves = [];
-    for(let r=0; r<7; r++) for(let c=0; c<7; c++) if(tabuleiro[r][c] === 2) 
+    for(let r=0; r<7; r++) for(let c=0; r<7; c++) if(tabuleiro[r][c] === 2) 
         for(let dr=0; dr<7; dr++) for(let dc=0; dc<7; dc++) if(validarMovimento(r,c,dr,dc,2)) moves.push({fr:r,fc:c,tr:dr,tc:dc});
     if(moves.length === 0) { finalizarRonda(0); return; }
     const win = moves.find(m => m.tr === 6);
