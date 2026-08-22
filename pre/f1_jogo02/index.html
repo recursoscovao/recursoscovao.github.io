@@ -26,10 +26,14 @@
         header { background: white; border-radius: 0 0 35px 35px; display: grid; grid-template-columns: 60px 1fr 60px; align-items: center; padding: 0 15px; z-index: 1000; flex-shrink: 0; box-shadow: 0 4px 15px rgba(0,0,0,0.03); height: 80px; }
         .header-center { display: flex; align-items: center; justify-content: center; gap: 12px; }
         .title-group { display: flex; flex-direction: column; line-height: 0.9; text-transform: uppercase; }
+
+        /* ESTILOS DE TÍTULO GLOBAIS (Cores e Pesos garantidos em Mobile/Tablet) */
+        #txt-titulo1 { font-weight: 900; color: var(--primary-color); }
+        #txt-titulo2 { font-weight: 800; color: var(--text-grey); }
+        #txt-subtitulo-header { font-weight: 600; color: var(--text-grey); }
         
         main { flex: 1 0 auto; display: flex; justify-content: center; padding: 15px; }
         
-        /* AJUSTE: Largura aumentada para 1050px */
         .game-shell { 
             background: white; 
             width: min(1050px, 100%); 
@@ -45,7 +49,7 @@
 
         .shell-header { text-align: center; border-bottom: 2px dashed #f5f5f5; display: flex; align-items: center; justify-content: center; flex-shrink: 0; min-height: 65px; }
         .shell-body { flex: 1 0 auto; display: flex; flex-direction: column; justify-content: center; align-items: center; position: relative; padding: 25px; }
-        .shell-footer { display: flex; align-items: center; background: #fafafa; flex-shrink: 0; min-height: 90px; padding: 0 20px; gap: 15px;  }
+        .shell-footer { display: flex; align-items: center; background: #fafafa; flex-shrink: 0; min-height: 90px; padding: 0 20px; gap: 15px; }
 
         footer { text-align: center; background: white; flex-shrink: 0; padding: 12px; border-radius: 25px 25px 0 0; }
         .footer-text { font-size: 0.75rem; font-weight: 700; color: var(--text-grey); }
@@ -62,26 +66,27 @@
         #icon-voltar-top:hover { transform: scale(1.1); }
 
         /* ============================================================
-           2. PC / LANDSCAPE (Otimização de Espaço)
+           2. PC / LANDSCAPE
            ============================================================ */
         @media screen and (min-width: 1025px) {
-            #txt-titulo1 { font-size: 1.4rem; font-weight: 900; color: var(--primary-color); }
-            #txt-titulo2 { font-size: 1.1rem; font-weight: 800; color: var(--text-grey); }
-            #txt-subtitulo-header { font-size: 0.7rem; font-weight: 600; color: var(--text-grey); }
+            #txt-titulo1 { font-size: 1.4rem; }
+            #txt-titulo2 { font-size: 1.1rem; }
+            #txt-subtitulo-header { font-size: 0.7rem; }
             .game-shell { width: min(1100px, 95%); }
         }
 
         /* ============================================================
-           3. TABLET PORTRAIT (Correção de Ícones Grandes)
+           3. TABLET PORTRAIT
            ============================================================ */
         @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
             header { height: 90px; }
-            #header-icon { height: 55px; } /* Reduzido de 65px */
-            .hamburger-btn { font-size: 28px; }
+            #header-icon { height: 55px; }
+            #txt-titulo1 { font-size: 1.3rem; }
+            #txt-titulo2 { font-size: 1.05rem; }
+            #txt-subtitulo-header { font-size: 0.65rem; }
             
+            .hamburger-btn { font-size: 28px; }
             .menu-item { min-width: 280px; padding: 15px 20px; font-size: 1.05rem; }
-            .menu-item img { width: 28px; height: 28px; }
-
             .game-shell { width: 92%; min-height: 700px; }
         }
 
@@ -155,9 +160,7 @@
                 menuBox.innerHTML = ''; 
 
                 (config.menuItens || config.menu_itens).forEach(item => {
-                    // BLOQUEIO: Retira o item "Destaque"
                     if (item.label === "Destaque") return;
-
                     const a = document.createElement('a'); 
                     a.className = 'menu-item'; 
                     a.href = item.link;
