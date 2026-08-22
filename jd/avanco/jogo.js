@@ -76,17 +76,9 @@ style.innerHTML = `
     .btn-inform { width: 58px; height: 58px; border-radius: 16px; background: white; border: 2.5px solid #eee; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; box-shadow: 0 5px 0 rgba(0,0,0,0.05); }
     .btn-inform img { width: 30px; height: 30px; object-fit: contain; }
 
-    /* --- ESTILO INSTRUÇÕES --- */
-    #instrucoes-panel { 
-        position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; 
-        background: white; z-index: 10000; 
-        transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); 
-        transform: translateY(100%); visibility: hidden; 
-        padding: 40px 25px; overflow-y: auto; 
-    }
+    #instrucoes-panel { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; background: white; z-index: 10000; transition: transform 0.5s cubic-bezier(0.4, 0, 0.2, 1); transform: translateY(100%); visibility: hidden; padding: 40px 25px; overflow-y: auto; }
     #instrucoes-panel.open { transform: translateY(0); visibility: visible; }
     .close-x { position: absolute; top: 15px; right: 20px; font-size: 3rem; color: #ff5a5f; cursor: pointer; font-weight: 900; line-height: 1; }
-
     .inst-content { max-width: 600px; margin: 0 auto; text-align: left; }
     .inst-header { color: var(--primary-color); text-align: center; font-size: 1.8rem; font-weight: 900; margin-bottom: 25px; text-transform: uppercase; border-bottom: 3px solid #f0f0f0; padding-bottom: 10px; }
     .inst-section-title { color: #444; font-size: 1.2rem; font-weight: 800; margin: 25px 0 10px; display: flex; align-items: center; gap: 10px; }
@@ -97,12 +89,12 @@ style.innerHTML = `
 
     :root { --cell-size: clamp(38px, 8vw, 62px); }
 
-    /* AJUSTE PC: Compactar para evitar scroll e animação menor */
+    /* AJUSTE PC: Reduz espaços e animação 10% menor */
     @media screen and (min-width: 601px) { 
-        :root { --cell-size: clamp(45px, 6vw, 65px); }
-        #game-content { min-height: auto !important; padding-top: 0px !important; }
-        #simu-container { min-height: 150px !important; margin-bottom: 5px !important; }
+        :root { --cell-size: clamp(45px, 6vw, 65px) !important; }
         #simu-board { transform: scale(0.73) !important; }
+        #game-content { min-height: auto !important; padding-top: 0px !important; }
+        #simu-container { min-height: 140px !important; margin-bottom: 5px !important; }
         #capa-menu-principal, #nivel-select-container { gap: 6px !important; }
         #nivel-select-container p { margin-bottom: 4px !important; }
     }
