@@ -97,18 +97,26 @@ style.innerHTML = `
 
     :root { --cell-size: clamp(38px, 8vw, 62px); }
 
-/* AJUSTE PC: Redução de espaços no topo e entre elementos */
+/* AJUSTE PC: Compactar altura total para evitar scroll */
 @media screen and (min-width: 600px) { 
     :root { --cell-size: clamp(45px, 6vw, 65px); }
 
-    /* 1. Reduz escala da animação */
-    #simu-board { transform: scale(0.73); } 
+    /* 1. Reduz a altura mínima obrigatória da área de jogo */
+    #game-content { 
+        min-height: auto; 
+        padding-top: 0px; 
+    }
 
-    /* 2. Reduz espaço no topo da área de jogo (de 10px para 5px) */
-    #game-content { padding-top: 5px; }
+    /* 2. Reduz drasticamente a área da animação e o espaço abaixo dela */
+    #simu-container { 
+        min-height: 150px; /* Era 220px */
+        margin-bottom: 5px; /* Era 20px */
+    }
 
-    /* 3. Reduz espaço entre a simulação e os botões (de 20px para 10px) */
-    #simu-container { margin-bottom: 10px; min-height: 180px; }
+    /* 3. Mantém a animação 10% mais pequena */
+    #simu-board { 
+        transform: scale(0.73); 
+    }
 }
 
     .blinking { animation: blinker 1.5s linear infinite; }
