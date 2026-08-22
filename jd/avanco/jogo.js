@@ -100,27 +100,19 @@ style.innerHTML = `
 /* AJUSTE PC: Compactar altura total para evitar scroll */
 @media screen and (min-width: 600px) { 
     :root { --cell-size: clamp(45px, 6vw, 65px); }
-
-    /* 1. Reduz a altura mínima obrigatória da área de jogo */
-    #game-content { 
-        min-height: auto; 
-        padding-top: 0px; 
-    }
-
-    /* 2. Reduz drasticamente a área da animação e o espaço abaixo dela */
-    #simu-container { 
-        min-height: 150px; 
-        margin-bottom: 5px; 
-    }
-
-    /* 3. Mantém a animação 10% mais pequena */
-    #simu-board { 
-        transform: scale(0.73); 
-    }
-
-    /* 4. Compactar menus e ecrã de dificuldades */
+    #game-content { min-height: auto; padding-top: 0px; }
+    #simu-container { min-height: 150px; margin-bottom: 5px; }
+    #simu-board { transform: scale(0.73); }
     #capa-menu-principal, #nivel-select-container { gap: 6px; }
     #nivel-select-container p { margin-bottom: 4px !important; }
+}
+
+/* AJUSTE TELEMÓVEL: Botões verticais e animação mais acima */
+@media screen and (max-width: 600px) {
+    .capa-btn-row { flex-direction: column; gap: 10px; width: 100%; }
+    .btn-capa-small, .btn-inform { width: 100%; }
+    #simu-container { min-height: 160px; margin-bottom: 10px; margin-top: -20px; }
+    #simu-board { transform: scale(0.85); }
 }
 
     .blinking { animation: blinker 1.5s linear infinite; }
