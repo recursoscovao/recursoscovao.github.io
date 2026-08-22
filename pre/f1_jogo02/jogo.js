@@ -35,7 +35,7 @@ style.innerHTML = `
     .destaque-box {
         width: var(--dest-size); height: var(--dest-size); background: #fff; border-radius: 30px; 
         border: 3.5px dashed var(--primary-color); display: flex; align-items: center; justify-content: center;
-        margin-bottom: 15px;
+        margin-bottom: 15px; flex-shrink: 0;
     }
     .destaque-box img { max-width: 60%; max-height: 60%; object-fit: contain; }
     
@@ -43,7 +43,7 @@ style.innerHTML = `
         background: white; border: 3px solid #f0f0f0; border-radius: 15px; 
         width: var(--card-size); height: var(--card-size);
         display: flex; align-items: center; justify-content: center; 
-        cursor: pointer; position: relative;
+        cursor: pointer; position: relative; transition: 0.2s;
     }
     .opcao-card img { width: 80%; height: 80%; object-fit: contain; }
     
@@ -51,22 +51,29 @@ style.innerHTML = `
     .icon-v { color: #8cc63f; } .icon-x { color: #ff5a5f; }
 
     @media screen and (min-width: 1025px), (min-width: 768px) and (orientation: landscape) {
-        :root { --grid-cols: 6; --card-size: 135px; --dest-size: 160px; }
-        .shell-body { padding-top: 10px !important; padding-bottom: 10px !important; justify-content: center !important; }
+        :root { --grid-cols: 6; --card-size: 132px; --dest-size: 160px; }
+        .shell-body { padding-top: 10px !important; padding-bottom: 10px !important; justify-content: center !important; align-items: center !important; }
         .destaque-box { margin-top: 0px; margin-bottom: 30px; }
     }
 
-    /* BLOCO ADICIONADO PARA TABLET VERTICAL */
+    /* TABLET VERTICAL - CENTRALIZADO E CARTÕES -2% */
     @media screen and (min-width: 501px) and (max-width: 1024px) and (orientation: portrait) {
-        :root { --grid-cols: 4; --card-size: 150px; --dest-size: 200px; }
-        .shell-body { justify-content: center !important; }
+        :root { --grid-cols: 4; --card-size: 147px; --dest-size: 200px; }
+        .shell-body { 
+            display: flex !important;
+            flex-direction: column !important;
+            align-items: center !important; 
+            justify-content: center !important; 
+        }
     }
 
     @media screen and (max-width: 500px) and (orientation: portrait) {
-        :root { --grid-cols: 3; --card-size: 90px; --dest-size: 150px; }
+        :root { --grid-cols: 3; --card-size: 88px; --dest-size: 150px; }
+        .shell-body { align-items: center !important; }
     }
     @media screen and (max-height: 500px) and (orientation: landscape) {
-        :root { --grid-cols: 6; --card-size: 75px; --dest-size: 120px; }
+        :root { --grid-cols: 6; --card-size: 73px; --dest-size: 120px; }
+        .shell-body { align-items: center !important; }
     }
 `;
 document.head.appendChild(style);
@@ -75,15 +82,12 @@ document.head.appendChild(style);
 // 3. LÓGICA DE CAPA E SIMULAÇÃO
 // ==========================================
 function tocarAudioInstrucoes() {
-    // Reinicia o som do clique
     somClique.pause();
     somClique.currentTime = 0;
     somClique.play();
 
-    // Cancela síntese de voz se estiver a decorrer
     if (window.speechSynthesis) window.speechSynthesis.cancel();
 
-    // Reinicia o áudio de instruções se já existir, ou cria se for a primeira vez
     if (audioInstrucoes) {
         audioInstrucoes.pause();
         audioInstrucoes.currentTime = 0;
@@ -178,7 +182,7 @@ function proximaRonda() {
     opcoesRonda = selecao.sort(() => Math.random() - 0.5);
     area.innerHTML = `
         <div class="destaque-box"><img src="${DADOS_JOGO.caminhoImagens + itemDestaque.img}"></div>
-        <div style="display:grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap:8px; width:fit-content;">
+        <div style="display:grid; grid-template-columns: repeat(var(--grid-cols), 1fr); gap:8px; width:fit-content; margin: 0 auto;">
             ${opcoesRonda.map(item => `
                 <div class="opcao-card" id="card-${item.id}" onclick="verificarResposta(${item.id}, this)">
                     <img src="${DADOS_JOGO.caminhoImagens + item.img}">
@@ -216,7 +220,7 @@ function darAjuda() {
 
 function finalizarJogo() {
     jogoAtivo = false;
-    if (audioInstrucoes) audioInstrucoes.pause(); // Para o som ao finalizar
+    if (audioInstrucoes) audioInstrucoes.pause(); 
     const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
     Engine.showResults(certos, erros, ajudasUsadas, rel);
 }
