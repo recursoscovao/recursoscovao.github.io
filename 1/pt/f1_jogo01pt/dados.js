@@ -1,16 +1,18 @@
 // ==========================================
-// 3. CONFIGURAÇÃO DO JOGO DE GRAFISMOS
+// 3. CONFIGURAÇÃO DO JOGO ATUAL (GRAFISMOS)
 // ==========================================
 const JOGO_CONFIG = {
     nomeDoJogo: "Traça o Caminho",
-    descricao: "Usa o teu dedo para ligar os amigos seguindo o caminho tracejado!",
+    descricao: "Usa o teu dedo ou rato para ligar os animais seguindo o caminho tracejado!",
     
-    areaAtiva: "pre",   
-    anoAtivo: "pre",    
+    // Como o jogo está na pasta /1/pt/, assumo que é 1º Ano de Português
+    areaAtiva: "portugues",   
+    anoAtivo: "ano1",    
 
-    caminhoIconsMenu: "../../icons/", 
-    caminhoIconsJogos: "../../icons/ic_grafismos", // Ajusta se necessário
-    caminhoSons: "../../sons/", 
+    // CAMINHOS RETIFICADOS (Recua 3 pastas: f1_jogo01pt -> pt -> 1 -> raiz)
+    caminhoIconsMenu: "../../../icons/", 
+    caminhoIconsJogos: "../../../icons/ic_jogos_pre", // Ajusta se a pasta for diferente
+    caminhoSons: "../../../sons/", 
 
     sons: {
         acerto: "certo.mp3",
@@ -22,15 +24,18 @@ const JOGO_CONFIG = {
         { id: "home",   label: "Início",       icon: "home.png",    link: "/" },
         { id: "pre",    label: "Pré-Escolar",  icon: "iconpre.png", link: "/pre" },
         { id: "ano1",   label: "1º Ano",       icon: "icon1.png",   link: "/1" },
+        { id: "ano2",   label: "2º Ano",       icon: "icon2.png",   link: "/2" },
+        { id: "ano3",   label: "3º Ano",       icon: "icon3.png",   link: "/3" },
+        { id: "ano4",   label: "4º Ano",       icon: "icon4.png",   link: "/4" },
         { id: "voltar", label: "Voltar",       icon: "AUTO",        link: "javascript:history.back()" } 
     ],
 
     instrucoes: {
-        objetivo: "Usa o rato ou o dedo para desenhar uma linha desde a figura da esquerda até à figura da direita, sem largar!",
+        objetivo: "Usa o rato ou o dedo para desenhar uma linha desde o animal da esquerda até ao animal da direita, sem largar!",
         comoJogar: [
-            "Toca na imagem da esquerda para começar.",
+            "Toca no animal da esquerda para começar.",
             "Sem levantar o dedo, segue a linha tracejada.",
-            "Chega até à imagem da direita para ganhares a ronda."
+            "Chega até ao animal da direita para ganhares a ronda."
         ],
         regras: [
             "Tens de chegar perto da imagem de destino.",
@@ -56,21 +61,21 @@ const JOGO_CONFIG = {
 // 4. DADOS DO CONTEÚDO DO JOGO
 // ==========================================
 const DADOS_JOGO = {
-    caminhoImagens: "../../img/grafismos/", // Cria esta pasta e põe lá as imagens
-    somInstrucoes: "sonspre/f1jogo_grafismos.mp3",
+    // CAMINHO RETIFICADO PARA A PASTA DE IMAGENS DO GITHUB
+    caminhoImagens: "../../../img/animaisdomesticos/", 
+    somInstrucoes: "sonspre/f1jogo_grafismos.mp3", // Ajusta se não tiveres este som
     
-    // Cada nível liga a imgA à imgB. 
-    // tipo de caminho: "reta", "curva", ou "ziguezague"
+    // Ligações usando os ficheiros reais que tens no GitHub
     itens: [
-        { id: 1,  imgA: "abelha.png",  imgB: "flor.png",   tipo: "reta" },
-        { id: 2,  imgA: "rato.png",    imgB: "queijo.png", tipo: "curva" },
-        { id: 3,  imgA: "sapo.png",    imgB: "lago.png",   tipo: "ziguezague" },
-        { id: 4,  imgA: "cao.png",     imgB: "osso.png",   tipo: "reta" },
-        { id: 5,  imgA: "macaco.png",  imgB: "banana.png", tipo: "curva" },
-        { id: 6,  imgA: "passaro.png", imgB: "ninho.png",  tipo: "ziguezague" },
-        { id: 7,  imgA: "coelho.png",  imgB: "cenoura.png",tipo: "curva" },
-        { id: 8,  imgA: "gato.png",    imgB: "peixe.png",  tipo: "reta" },
-        { id: 9,  imgA: "menino.png",  imgB: "bola.png",   tipo: "ziguezague" },
-        { id: 10, imgA: "urso.png",    imgB: "mel.png",    tipo: "curva" }
+        { id: 1,  imgA: "galinha.png", imgB: "pintainho.png", tipo: "reta" },       // Mãe e filho
+        { id: 2,  imgA: "pato.png",    imgB: "patinho.png",   tipo: "curva" },      // Pai e filho
+        { id: 3,  imgA: "cao.png",     imgB: "cao1.png",      tipo: "ziguezague" }, // Cão para Cão
+        { id: 4,  imgA: "gato.png",    imgB: "gato1.png",     tipo: "reta" },       // Gato para Gato
+        { id: 5,  imgA: "vaca.png",    imgB: "boi.png",       tipo: "curva" },
+        { id: 6,  imgA: "cabra.png",   imgB: "ovelha.png",    tipo: "ziguezague" },
+        { id: 7,  imgA: "cavalo.png",  imgB: "burro.png",     tipo: "reta" },
+        { id: 8,  imgA: "porco.png",   imgB: "galo.png",      tipo: "curva" },
+        { id: 9,  imgA: "peru.png",    imgB: "galinha.png",   tipo: "ziguezague" },
+        { id: 10, imgA: "coelho.png",  imgB: "gato.png",      tipo: "reta" }
     ]
 };
