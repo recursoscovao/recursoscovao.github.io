@@ -1,17 +1,73 @@
 // ==========================================
+// 1. BIBLIOTECA DE TEMAS
+// ==========================================
+const BIBLIOTECA_TEMAS = {
+    "portugues": { 
+        corPagina: "#e9f0f8", corPrimaria: "#5ba4e5", corEscura: "#3d7db8", 
+        corTexto: "#5d7082", voltarMobile: "voltar_az.png" 
+    },
+    "matematica": { 
+        corPagina: "#e8f9f4", corPrimaria: "#45cfa8", corEscura: "#2BA886", 
+        corTexto: "#45cfa8", voltarMobile: "voltar_vr.png" 
+    },
+    "estudo": { 
+        corPagina: "#EAE2E5", corPrimaria: "#994D4D", corEscura: "#6C3737", 
+        corTexto: "#994D4D", voltarMobile: "voltar_cs.png" 
+    },
+    "pre": { 
+        corPagina: "#FFF5F7", corPrimaria: "#E691A7", corEscura: "#D54267", 
+        corTexto: "#E691A7", voltarMobile: "voltar_rs.png" 
+    },
+    "jd": { 
+        corPagina: "#f0f2f5", corPrimaria: "#6c757d", corEscura: "#495057", 
+        corTexto: "#6c757d", voltarMobile: "voltar_cin.png" 
+    }
+};
+
+// ==========================================
+// 2. BIBLIOTECA DE CONTEÚDO
+// ==========================================
+const BIBLIOTECA_CONTEUDO = {
+    "jd": {
+        "jd": { t1: "Jogos em", t2: "Destaque", sub: "Recursos Especiais", rodape: "© Pequenos Curiosos" }
+    },
+    "pre": {
+        "pre": { t1: "Pequenos", t2: "Curiosos", sub: "Atividades | Pré-Escolar", rodape: "© Pequenos Curiosos" }
+    },
+    "ano1": {
+        "portugues": { t1: "Pequenos", t2: "Leitores", sub: "1º Ano | Português", rodape: "© Pequenos Leitores" },
+        "matematica": { t1: "Pequenos", t2: "Matemáticos", sub: "1º Ano | Matemática", rodape: "© Pequenos Matemáticos" },
+        "estudo": { t1: "Pequenos", t2: "Exploradores", sub: "1º Ano | Estudo do Meio", rodape: "© Pequenos Exploradores" }
+    },
+    "ano2": {
+        "portugues": { t1: "Jovens", t2: "Leitores", sub: "2º Ano | Português", rodape: "© Jovens Leitores" },
+        "matematica": { t1: "Jovens", t2: "Matemáticos", sub: "2º Ano | Matemática", rodape: "© Jovens Matemáticos" },
+        "estudo": { t1: "Jovens", t2: "Exploradores", sub: "2º Ano | Estudo do Meio", rodape: "© Jovens Exploradores" }
+    },
+    "ano3": {
+        "portugues": { t1: "Exploradores", t2: "Leitores", sub: "3º Ano | Português", rodape: "© Exploradores" },
+        "matematica": { t1: "Exploradores", t2: "Cálculos", sub: "3º Ano | Matemática", rodape: "© Exploradores" },
+        "estudo": { t1: "Exploradores", t2: "do Mundo", sub: "3º Ano | Estudo do Meio", rodape: "© Exploradores" }
+    },
+    "ano4": {
+        "portugues": { t1: "Mestres", t2: "da Língua", sub: "4º Ano | Português", rodape: "© Mestres Curiosos" },
+        "matematica": { t1: "Mestres", t2: "do Cálculo", sub: "4º Ano | Matemática", rodape: "© Mestres Curiosos" },
+        "estudo": { t1: "Mestres", t2: "do Mundo", sub: "4º Ano | Estudo do Meio", rodape: "© Mestres Curiosos" }
+    }
+};
+
+// ==========================================
 // 3. CONFIGURAÇÃO DO JOGO ATUAL (GRAFISMOS)
 // ==========================================
 const JOGO_CONFIG = {
     nomeDoJogo: "Traça o Caminho",
     descricao: "Usa o teu dedo ou rato para ligar os animais seguindo o caminho tracejado!",
     
-    // Como o jogo está na pasta /1/pt/, assumo que é 1º Ano de Português
     areaAtiva: "portugues",   
     anoAtivo: "ano1",    
 
-    // CAMINHOS RETIFICADOS (Recua 3 pastas: f1_jogo01pt -> pt -> 1 -> raiz)
     caminhoIconsMenu: "../../../icons/", 
-    caminhoIconsJogos: "../../../icons/ic_jogos_pre", // Ajusta se a pasta for diferente
+    caminhoIconsJogos: "../../../icons/ic_jogos_1ano/", // <-- CORRIGIDO AQUI!
     caminhoSons: "../../../sons/", 
 
     sons: {
@@ -61,16 +117,14 @@ const JOGO_CONFIG = {
 // 4. DADOS DO CONTEÚDO DO JOGO
 // ==========================================
 const DADOS_JOGO = {
-    // CAMINHO RETIFICADO PARA A PASTA DE IMAGENS DO GITHUB
     caminhoImagens: "../../../img/animaisdomesticos/", 
-    somInstrucoes: "sonspre/f1jogo_grafismos.mp3", // Ajusta se não tiveres este som
+    somInstrucoes: "sonspre/f1jogo_grafismos.mp3", 
     
-    // Ligações usando os ficheiros reais que tens no GitHub
     itens: [
-        { id: 1,  imgA: "galinha.png", imgB: "pintainho.png", tipo: "reta" },       // Mãe e filho
-        { id: 2,  imgA: "pato.png",    imgB: "patinho.png",   tipo: "curva" },      // Pai e filho
-        { id: 3,  imgA: "cao.png",     imgB: "cao1.png",      tipo: "ziguezague" }, // Cão para Cão
-        { id: 4,  imgA: "gato.png",    imgB: "gato1.png",     tipo: "reta" },       // Gato para Gato
+        { id: 1,  imgA: "galinha.png", imgB: "pintainho.png", tipo: "reta" },       
+        { id: 2,  imgA: "pato.png",    imgB: "patinho.png",   tipo: "curva" },      
+        { id: 3,  imgA: "cao.png",     imgB: "cao1.png",      tipo: "ziguezague" }, 
+        { id: 4,  imgA: "gato.png",    imgB: "gato1.png",     tipo: "reta" },       
         { id: 5,  imgA: "vaca.png",    imgB: "boi.png",       tipo: "curva" },
         { id: 6,  imgA: "cabra.png",   imgB: "ovelha.png",    tipo: "ziguezague" },
         { id: 7,  imgA: "cavalo.png",  imgB: "burro.png",     tipo: "reta" },
