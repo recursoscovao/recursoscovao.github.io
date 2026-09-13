@@ -23,8 +23,6 @@ let sequenciaNiveis = [];
 
 // ==========================================
 // 2. DICIONÁRIO ALFABETO MANUSCRIPT CORRIGIDO
-// L = Linha reta (x1, y1, x2, y2)
-// A = Arco (centroX, centroY, raio, angulo_inicio, angulo_fim, sentido_inverso)
 // ==========================================
 const ALFABETO_VETORES = {
     'A': [ [["L", 0.5, 0.2, 0.2, 0.8]], [["L", 0.5, 0.2, 0.8, 0.8]], [["L", 0.35, 0.5, 0.65, 0.5]] ],
@@ -107,7 +105,7 @@ function tocarAudioInstrucoes() {
     if (audioInstrucoes) { audioInstrucoes.pause(); audioInstrucoes.currentTime = 0; }
     else { audioInstrucoes = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes); }
     audioInstrucoes.play().catch(() => {
-        const utter = new SpeechSynthesisUtterance("Começa na bola azul e arrasta o dedo até chegares à bola verde!");
+        const utter = new SpeechSynthesisUtterance("Começa exatamente na bola azul e escorrega o dedo até ao meio da bola verde!");
         utter.lang = 'pt-PT'; window.speechSynthesis.speak(utter);
     });
 }
@@ -126,7 +124,7 @@ function mostrarCapa() {
                 <div id="simu-hand" style="position:absolute; font-size:3rem; z-index:100; pointer-events:none; filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3)); transition: opacity 0.3s;">👆</div>
             </div>
             <p style="color:var(--text-grey); font-weight:800; text-align:center; font-size:1.1rem; max-width: 500px; padding: 0 15px;">
-                Vai da bola azul até à bola verde!
+                Vai da bola azul à bola verde!
             </p>
         </div>
     `;
@@ -141,27 +139,18 @@ function mostrarCapa() {
     setTimeout(iniciarSimulacaoAnimada, 100);
 }
 
-// DESENHA PAUTAS PERFEITAMENTE PROPORCIONAIS
 function desenharPautas(context, w, h) {
     let size = Math.min(w, h);
     let offsetY = (h - size) / 2;
-
     let yTop = offsetY + 0.2 * size;
     let yBot = offsetY + 0.8 * size;
     let yMid = offsetY + 0.5 * size;
 
-    context.beginPath();
-    context.lineWidth = 3; context.strokeStyle = "#b3d4ff"; 
+    context.beginPath(); context.lineWidth = 3; context.strokeStyle = "#b3d4ff"; 
     context.moveTo(w*0.05, yTop); context.lineTo(w*0.95, yTop); 
-    context.moveTo(w*0.05, yBot); context.lineTo(w*0.95, yBot); 
-    context.stroke();
-    
-    context.beginPath();
-    context.lineWidth = 2; context.strokeStyle = "#d1e5ff";
-    context.setLineDash([15, 10]);
-    context.moveTo(w*0.05, yMid); context.lineTo(w*0.95, yMid); 
-    context.stroke();
-    context.setLineDash([]);
+    context.moveTo(w*0.05, yBot); context.lineTo(w*0.95, yBot); context.stroke();
+    context.beginPath(); context.lineWidth = 2; context.strokeStyle = "#d1e5ff"; context.setLineDash([15, 10]);
+    context.moveTo(w*0.05, yMid); context.lineTo(w*0.95, yMid); context.stroke(); context.setLineDash([]);
 }
 
 function iniciarSimulacaoAnimada() {
@@ -171,7 +160,6 @@ function iniciarSimulacaoAnimada() {
     const sArea = document.getElementById('simu-area');
     
     sCanvas.width = sArea.clientWidth; sCanvas.height = sArea.clientHeight;
-    
     const paths = gerarLetraTracos('A', sCanvas.width, sCanvas.height);
     const hand = document.getElementById('simu-hand');
     const sStart = document.getElementById('simu-inicio');
@@ -185,38 +173,30 @@ function iniciarSimulacaoAnimada() {
         if (step === 0 && currentS === 0) {
             sCtx.clearRect(0,0, sCanvas.width, sCanvas.height);
             desenharPautas(sCtx, sCanvas.width, sCanvas.height);
-            
             paths.forEach(stroke => {
                 sCtx.beginPath(); sCtx.setLineDash([12, 12]); sCtx.lineWidth = 14; sCtx.strokeStyle = "#e0e0e0"; sCtx.lineCap = "round"; sCtx.lineJoin = "round";
-                sCtx.moveTo(stroke[0].x, stroke[0].y);
-                stroke.forEach(p => sCtx.lineTo(p.x, p.y));
+                sCtx.moveTo(stroke[0].x, stroke[0].y); stroke.forEach(p => sCtx.lineTo(p.x, p.y));
                 sCtx.stroke(); sCtx.setLineDash([]);
             });
         }
 
         if (currentS < paths.length) {
             const traco = paths[currentS];
-            
             if (step === 0) {
                 sStart.style.display = 'flex'; sStart.style.left = traco[0].x + "px"; sStart.style.top = traco[0].y + "px";
                 sEnd.style.display = 'flex'; sEnd.style.left = traco[traco.length-1].x + "px"; sEnd.style.top = traco[traco.length-1].y + "px";
-                
                 sCtx.beginPath(); sCtx.lineWidth = 18; sCtx.strokeStyle = corTemaAtual; sCtx.lineCap = "round"; sCtx.lineJoin = "round";
                 sCtx.moveTo(traco[0].x, traco[0].y);
                 hand.style.opacity = 1; hand.innerText = "👆";
             }
-
             if (step < traco.length) {
                 const pt = traco[step];
                 hand.style.left = (pt.x - 22) + "px"; hand.style.top = (pt.y - 5) + "px"; 
                 if(step > 5) hand.innerText = "✊"; 
-                
                 sCtx.lineTo(pt.x, pt.y); sCtx.stroke();
-                step += 3; 
-                simuTimer = setTimeout(animar, 15); 
+                step += 3; simuTimer = setTimeout(animar, 15); 
             } else {
-                hand.innerText = "👆";
-                step = 0; currentS++;
+                hand.innerText = "👆"; step = 0; currentS++;
                 simuTimer = setTimeout(animar, 400); 
             }
         } else {
@@ -232,23 +212,18 @@ function iniciarSimulacaoAnimada() {
 // 5. LÓGICA DE JOGO PRINCIPAL
 // ==========================================
 function iniciarJogo() {
-    clearTimeout(simuTimer); 
-    lerCorDoTema(); 
-    jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0; 
-    totalRondas = 10; 
-    ajudaEmCurso = false;
+    clearTimeout(simuTimer); lerCorDoTema(); 
+    jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0; totalRondas = 10; ajudaEmCurso = false;
     
     const todasLetras = Object.keys(ALFABETO_VETORES);
     sequenciaNiveis = [];
     todasLetras.sort(() => Math.random() - 0.5); 
     for(let i=0; i<10; i++) sequenciaNiveis.push({ letra: todasLetras[i] });
-
     proximaRonda();
 }
 
 function proximaRonda() {
     if (rondaAtual > totalRondas) { finalizarJogo(); return; }
-    
     ajudaEmCurso = false;
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
     const area = document.getElementById('game-content');
@@ -275,8 +250,7 @@ function configurarCanvas() {
     tracosLetra = gerarLetraTracos(itemDestaque.letra, canvas.width, canvas.height);
     tracoAtualIndex = 0;
     
-    atualizarPontos();
-    desenharGuiasJogo();
+    atualizarPontos(); desenharGuiasJogo();
 
     canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw);
     canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseleave', stopDrawing);
@@ -290,9 +264,8 @@ function atualizarPontos() {
     const endDot = document.getElementById('ponto-fim');
 
     if (tracoAtualIndex < tracosLetra.length) {
-        const traco = tracosLetra[tracoAtualIndex];
-        const ptInicio = traco[0];
-        const ptFim = traco[traco.length - 1];
+        const ptInicio = tracosLetra[tracoAtualIndex][0];
+        const ptFim = tracosLetra[tracoAtualIndex][tracosLetra[tracoAtualIndex].length - 1];
 
         startDot.style.display = 'flex';
         startDot.style.left = ptInicio.x + "px"; startDot.style.top = ptInicio.y + "px";
@@ -306,59 +279,39 @@ function atualizarPontos() {
     }
 }
 
-// ==========================================
-// MOTOR MATEMÁTICO COM PROPORÇÃO QUADRADA
-// ==========================================
 function gerarLetraTracos(letra, w, h) {
     const strokes = ALFABETO_VETORES[letra];
     let todosTracos = [];
     const steps = 80; 
 
-    // Garante que a letra é perfeitamente proporcional (não estica)
     let size = Math.min(w, h);
     let offsetX = (w - size) / 2;
     let offsetY = (h - size) / 2;
 
     strokes.forEach(strokeCmds => {
         let pts = [];
-        
         strokeCmds.forEach(cmd => {
             let tipo = cmd[0];
-            
             if (tipo === "L") {
                 let [_, x1, y1, x2, y2] = cmd;
                 for(let i=0; i<=steps; i++){
-                    pts.push({ 
-                        x: offsetX + (x1 + (x2-x1)*(i/steps)) * size, 
-                        y: offsetY + (y1 + (y2-y1)*(i/steps)) * size, 
-                        hit: false 
-                    });
+                    pts.push({ x: offsetX + (x1 + (x2-x1)*(i/steps)) * size, y: offsetY + (y1 + (y2-y1)*(i/steps)) * size, hit: false });
                 }
-            } 
-            else if (tipo === "A") {
+            } else if (tipo === "A") {
                 let [_, cx, cy, r, a1, a2, anti] = cmd;
-                let rad1 = a1 * Math.PI/180; 
-                let rad2 = a2 * Math.PI/180;
+                let rad1 = a1 * Math.PI/180; let rad2 = a2 * Math.PI/180;
                 
-                if (anti) {
-                    while (rad2 >= rad1) rad2 -= Math.PI * 2;
-                } else {
-                    while (rad2 <= rad1) rad2 += Math.PI * 2;
-                }
+                if (anti) { while (rad2 >= rad1) rad2 -= Math.PI * 2; } 
+                else { while (rad2 <= rad1) rad2 += Math.PI * 2; }
 
                 for(let i=0; i<=steps; i++){
                     let ang = rad1 + (rad2-rad1)*(i/steps);
-                    pts.push({ 
-                        x: offsetX + (cx + Math.cos(ang)*r) * size, 
-                        y: offsetY + (cy + Math.sin(ang)*r) * size, 
-                        hit: false 
-                    });
+                    pts.push({ x: offsetX + (cx + Math.cos(ang)*r) * size, y: offsetY + (cy + Math.sin(ang)*r) * size, hit: false });
                 }
             }
         });
         todosTracos.push(pts);
     });
-
     return todosTracos;
 }
 
@@ -366,7 +319,6 @@ function desenharGuiasJogo(mostrarConcluido = false) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     desenharPautas(ctx, canvas.width, canvas.height);
     
-    // Fundo branco grosso (destaque)
     tracosLetra.forEach(traco => {
         ctx.beginPath(); ctx.lineWidth = 44; ctx.strokeStyle = "#ffffff"; ctx.lineCap = "round"; ctx.lineJoin = "round";
         ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
@@ -374,24 +326,15 @@ function desenharGuiasJogo(mostrarConcluido = false) {
 
     tracosLetra.forEach((traco, index) => {
         ctx.beginPath(); ctx.lineCap = "round"; ctx.lineJoin = "round";
-        
         if (mostrarConcluido || index < tracoAtualIndex) {
-            // TRAÇOS JÁ CONCLUÍDOS (Cor Principal Sólida e Visível!)
             ctx.lineWidth = 18; ctx.strokeStyle = corTemaAtual; ctx.setLineDash([]);
-            ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
-        } 
-        else if (index === tracoAtualIndex) {
-            // TRAÇO ATUAL (Tracejado)
+        } else if (index === tracoAtualIndex) {
             ctx.lineWidth = 14; ctx.strokeStyle = "#a0a0a0"; ctx.setLineDash([15, 15]);
-            ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
-            ctx.setLineDash([]);
-        } 
-        else {
-            // TRAÇOS FUTUROS (Mais claros)
+        } else {
             ctx.lineWidth = 14; ctx.strokeStyle = "#e5e5e5"; ctx.setLineDash([15, 15]);
-            ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
-            ctx.setLineDash([]);
         }
+        ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
+        ctx.setLineDash([]);
     });
 }
 
@@ -401,6 +344,9 @@ function getClientOffset(e) {
     return { x: e.clientX - rect.left, y: e.clientY - rect.top };
 }
 
+// ==========================================
+// MOTOR DE TOQUE RIGOROSO (ÍMAN)
+// ==========================================
 function startDrawing(e) {
     if (!jogoAtivo || ajudaEmCurso || tracoAtualIndex >= tracosLetra.length) return; 
     e.preventDefault();
@@ -408,16 +354,19 @@ function startDrawing(e) {
     const pos = getClientOffset(e);
     const startPt = tracosLetra[tracoAtualIndex][0];
     
-    if (Math.hypot(pos.x - startPt.x, pos.y - startPt.y) > 60) return; 
+    // TEM DE TOCAR DENTRO DA BOLA AZUL (Tolerância de 30px)
+    if (Math.hypot(pos.x - startPt.x, pos.y - startPt.y) > 30) return; 
 
     isDrawing = true; saiuDoCaminho = false;
     tracosLetra[tracoAtualIndex].forEach(p => p.hit = false); 
-    posAtualX = pos.x; posAtualY = pos.y;
+    
+    // SNAP (cola a linha ao centro da bola azul)
+    posAtualX = startPt.x; posAtualY = startPt.y;
     
     document.getElementById('ponto-inicio').style.opacity = '0.2';
     document.getElementById('ponto-fim').style.opacity = '0.5';
     
-    ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
+    ctx.beginPath(); ctx.moveTo(startPt.x, startPt.y); // Começa exatamente no centro
     ctx.lineWidth = 18; ctx.strokeStyle = corTemaAtual; ctx.lineCap = "round"; ctx.lineJoin = "round";
 }
 
@@ -439,18 +388,31 @@ function draw(e) {
             let d = Math.hypot(chkX - trajetoAtual[i].x, chkY - trajetoAtual[i].y);
             if(d < minDist) { minDist = d; closestIdx = i; }
         }
-        
         if (minDist > 65) saiuDoCaminho = true; 
         else if (closestIdx !== -1) trajetoAtual[closestIdx].hit = true; 
     }
+    
     posAtualX = pos.x; posAtualY = pos.y;
     ctx.lineTo(pos.x, pos.y); ctx.stroke();
+
+    // AUTO-COMPLETAR SE CHEGAR AO CENTRO DA BOLA VERDE DURANTE O MOVIMENTO
+    let ptFim = trajetoAtual[trajetoAtual.length - 1];
+    let distAteFim = Math.hypot(ptFim.x - pos.x, ptFim.y - pos.y);
+    
+    if (distAteFim <= 30) { // Se entrou na área da bola verde
+        let accuracia = trajetoAtual.filter(p => p.hit).length / trajetoAtual.length;
+        if (accuracia >= 0.45 && !saiuDoCaminho) {
+            // SNAP (cola a linha ao centro da bola verde e acaba o traço automaticamente)
+            ctx.lineTo(ptFim.x, ptFim.y); ctx.stroke();
+            posAtualX = ptFim.x; posAtualY = ptFim.y;
+            stopDrawing(e); 
+        }
+    }
 }
 
 function stopDrawing(e) {
     if (!isDrawing || ajudaEmCurso) return;
-    isDrawing = false;
-    ctx.closePath();
+    isDrawing = false; ctx.closePath();
     document.getElementById('ponto-inicio').style.opacity = '1';
     document.getElementById('ponto-fim').style.opacity = '1';
     avaliarJogada();
@@ -458,52 +420,38 @@ function stopDrawing(e) {
 
 function avaliarJogada() {
     let trajetoAtual = tracosLetra[tracoAtualIndex];
-    let ultimoPonto = trajetoAtual[trajetoAtual.length - 1];
+    let ptFim = trajetoAtual[trajetoAtual.length - 1];
     
-    let distanciaFim = Math.hypot(ultimoPonto.x - posAtualX, ultimoPonto.y - posAtualY);
-    let pontosAtingidos = trajetoAtual.filter(p => p.hit).length;
-    let accuracia = pontosAtingidos / trajetoAtual.length;
+    // TEM DE TER PARADO/LARGADO DENTRO DA BOLA VERDE (Tolerância 30px)
+    let distanciaFim = Math.hypot(ptFim.x - posAtualX, ptFim.y - posAtualY);
+    let accuracia = trajetoAtual.filter(p => p.hit).length / trajetoAtual.length;
     
-    if (distanciaFim < 70 && accuracia >= 0.45 && !saiuDoCaminho) {
+    if (distanciaFim <= 35 && accuracia >= 0.45 && !saiuDoCaminho) {
         tracoAtualIndex++; 
         somClique.currentTime = 0; somClique.play().catch(e=>console.log(e));
         
         if (tracoAtualIndex >= tracosLetra.length) {
             jogoAtivo = false; certos++; 
             somAcerto.currentTime = 0; somAcerto.play().catch(e=>console.log(e));
-            
-            atualizarPontos(); 
-            desenharGuiasJogo(true); 
+            atualizarPontos(); desenharGuiasJogo(true); 
             
             const area = document.getElementById('area-desenho');
             area.classList.add('letra-sucesso'); 
-            
-            setTimeout(() => { 
-                area.classList.remove('letra-sucesso');
-                rondaAtual++; jogoAtivo = true; proximaRonda(); 
-            }, 1800);
+            setTimeout(() => { area.classList.remove('letra-sucesso'); rondaAtual++; jogoAtivo = true; proximaRonda(); }, 1800);
         } else {
-            atualizarPontos(); 
-            desenharGuiasJogo(); 
+            atualizarPontos(); desenharGuiasJogo(); 
         }
     } else {
-        erros++; 
-        somErro.currentTime = 0; somErro.play().catch(e=>console.log(e));
-        trajetoAtual.forEach(p => p.hit = false); 
-        desenharGuiasJogo(); 
-        Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
+        erros++; somErro.currentTime = 0; somErro.play().catch(e=>console.log(e));
+        trajetoAtual.forEach(p => p.hit = false); desenharGuiasJogo(); Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
     }
 }
 
 function darAjuda() {
     if (!jogoAtivo || ajudaEmCurso || tracoAtualIndex >= tracosLetra.length) return;
-    ajudasUsadas++; 
-    somClique.currentTime = 0; somClique.play().catch(e=>console.log(e));
-    
+    ajudasUsadas++; somClique.currentTime = 0; somClique.play().catch(e=>console.log(e));
     ajudaEmCurso = true; isDrawing = false; 
-    document.getElementById('ponto-inicio').style.opacity = '0';
-    document.getElementById('ponto-fim').style.opacity = '0';
-    
+    document.getElementById('ponto-inicio').style.opacity = '0'; document.getElementById('ponto-fim').style.opacity = '0';
     desenharGuiasJogo();
     
     const hand = document.getElementById('game-hand');
@@ -513,37 +461,26 @@ function darAjuda() {
     let step = 0;
     
     function animarAjuda() {
-        if (!jogoAtivo || !document.getElementById('game-hand')) {
-            ajudaEmCurso = false; return;
-        }
-        
+        if (!jogoAtivo || !document.getElementById('game-hand')) { ajudaEmCurso = false; return; }
         if (step === 0) {
             ctx.beginPath(); ctx.lineWidth = 18; ctx.strokeStyle = corTemaAtual; ctx.lineCap = "round"; ctx.lineJoin = "round";
             ctx.moveTo(trajetoAtual[0].x, trajetoAtual[0].y);
         }
-
         if (step < trajetoAtual.length) {
             const pt = trajetoAtual[step];
             hand.style.left = (pt.x - 22) + "px"; hand.style.top = (pt.y - 5) + "px";
             if(step > 10) hand.innerText = "✊"; 
-            
             ctx.lineTo(pt.x, pt.y); ctx.stroke();
             step += 4; 
-            
             if (step >= trajetoAtual.length) step = trajetoAtual.length - 1; 
-            if (step < trajetoAtual.length - 1) {
-                setTimeout(animarAjuda, 10); 
+            if (step < trajetoAtual.length - 1) { setTimeout(animarAjuda, 10); 
             } else {
                 const lastPt = trajetoAtual[trajetoAtual.length - 1];
                 hand.style.left = (lastPt.x - 22) + "px"; hand.style.top = (lastPt.y - 5) + "px";
                 ctx.lineTo(lastPt.x, lastPt.y); ctx.stroke();
-                
                 setTimeout(() => {
-                    hand.style.opacity = 0;
-                    document.getElementById('ponto-inicio').style.opacity = '1';
-                    document.getElementById('ponto-fim').style.opacity = '1';
-                    desenharGuiasJogo(); 
-                    ajudaEmCurso = false; 
+                    hand.style.opacity = 0; document.getElementById('ponto-inicio').style.opacity = '1'; document.getElementById('ponto-fim').style.opacity = '1';
+                    desenharGuiasJogo(); ajudaEmCurso = false; 
                 }, 800);
             }
         }
