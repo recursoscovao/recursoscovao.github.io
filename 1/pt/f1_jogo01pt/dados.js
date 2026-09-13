@@ -118,7 +118,7 @@ const JOGO_CONFIG = {
 // ==========================================
 const DADOS_JOGO = {
     caminhoImagens: "../../../img/animaisdomesticos/", 
-    somInstrucoes: "sonspre/f1jogo_grafismos.mp3", 
+    somInstrucoes: "sons1ano/f1_jogo01pt.mp3", 
     
     itens: [
         { id: 1,  imgA: "galinha.png", imgB: "pintainho.png", tipo: "reta" },       
