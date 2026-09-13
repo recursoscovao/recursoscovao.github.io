@@ -150,7 +150,7 @@ function iniciarSimulacaoAnimada() {
             if(step > 10) hand.innerText = "✊"; 
             
             sCtx.lineTo(pt.x, pt.y); sCtx.stroke();
-            step += 2; // Avança 2 pontos para a animação não ser demasiado lenta
+            step += 2; 
             simuTimer = setTimeout(animar, 15); 
         } else {
             hand.style.opacity = 0; step = 0;
@@ -169,8 +169,8 @@ function iniciarJogo() {
     totalRondas = 10; 
     ajudaEmCurso = false;
     
-    // Tipos de linhas Curvas + Reta base
-    const padroes = ["reta", "onda", "lacos", "montanha", "onda_larga", "arcos_baixo"];
+    // Apenas tipos de linhas curvas!
+    const padroes = ["onda", "lacos", "montanha", "onda_larga", "arcos_baixo"];
     sequenciaNiveis = [];
     
     let deck = [...padroes, ...padroes]; 
@@ -200,13 +200,11 @@ function proximaRonda() {
 }
 
 function desenharGuiasJogo() {
-    // Guia branca mais grossa de fundo
     ctx.beginPath(); ctx.lineWidth = 40; ctx.strokeStyle = "#ffffff"; ctx.lineCap = "round"; ctx.lineJoin = "round";
     ctx.moveTo(pontosCaminho[0].x, pontosCaminho[0].y);
     pontosCaminho.forEach(pt => ctx.lineTo(pt.x, pt.y));
     ctx.stroke();
 
-    // Tracejado
     ctx.beginPath(); ctx.setLineDash([15, 15]); ctx.lineWidth = 6; ctx.strokeStyle = "#c0c0c0"; ctx.lineCap = "round"; ctx.lineJoin = "round";
     ctx.moveTo(pontosCaminho[0].x, pontosCaminho[0].y);
     pontosCaminho.forEach(pt => ctx.lineTo(pt.x, pt.y));
@@ -244,8 +242,8 @@ function configurarCanvas() {
 function gerarPontosGrafismos(tipo, sX, sY, eX, eY) {
     let pts = [];
     const w = eX - sX;
-    const h = 70; // Amplitude das curvas
-    const steps = 200; // Alta resolução para curvas suaves
+    const h = 70; 
+    const steps = 200; 
     
     let ciclos = 3;
 
@@ -256,36 +254,27 @@ function gerarPontosGrafismos(tipo, sX, sY, eX, eY) {
         let currX = sX + w * prog;
         let currY = sY;
 
-        if (tipo === "reta") {
-            currY = sY;
-        }
-        else if (tipo === "onda") {
-            // Onda perfeitamente sinuosa (Senóide)
+        if (tipo === "onda") {
             currY = sY - (Math.sin(t) * h);
         }
         else if (tipo === "onda_larga") {
-            // Onda mais larga
             currY = sY - (Math.sin(prog * Math.PI * 2 * 1.5) * h);
         }
         else if (tipo === "lacos") {
-            // Laços / Loops (Trocoide)
             let radius = h * 0.7;
             currX = sX + w * prog - Math.sin(t) * radius;
-            currY = sY - Math.cos(t) * radius + radius; // + radius mantém o eixo centrado
+            currY = sY - Math.cos(t) * radius + radius; 
         }
         else if (tipo === "montanha") {
-            // Picos redondos em cima, bicos afiados em baixo (Valor absoluto do seno)
             currY = sY - (Math.abs(Math.sin(prog * Math.PI * ciclos)) * h);
         }
         else if (tipo === "arcos_baixo") {
-            // Arcos para baixo (como escamas invertidas)
             currY = sY + (Math.abs(Math.sin(prog * Math.PI * ciclos)) * h);
         }
 
         pts.push({ x: currX, y: currY, hit: false });
     }
 
-    // Garante que a linha acopla exatamente nos pontos de início e fim
     pts[0].x = sX; pts[0].y = sY;
     pts[pts.length-1].x = eX; pts[pts.length-1].y = eY;
 
@@ -332,7 +321,6 @@ function draw(e) {
             if(d < minDist) { minDist = d; closestIdx = i; }
         }
         
-        // Tolerância de saída ajustada para acomodar os laços (loops)
         if (minDist > 55) saiuDoCaminho = true; 
         else if (closestIdx !== -1) pontosCaminho[closestIdx].hit = true; 
     }
@@ -352,8 +340,7 @@ function avaliarJogada() {
     let pontosAtingidos = pontosCaminho.filter(p => p.hit).length;
     let accuracia = pontosAtingidos / pontosCaminho.length;
     
-    // Curvas exigem menos percentagem de cobertura do que retas puras, pois há "saltos" do touch
-    let accuraciaNecessaria = (itemDestaque.tipo === "reta") ? 0.40 : 0.55; 
+    let accuraciaNecessaria = 0.55; 
     
     if (distanciaFim < 80 && accuracia >= accuraciaNecessaria && !saiuDoCaminho) {
         jogoAtivo = false; certos++; 
@@ -416,7 +403,7 @@ function darAjuda() {
             ctx.lineTo(pt.x, pt.y); 
             ctx.stroke();
             
-            step += 3; // Saltos maiores para a ajuda ser fluída e não demorar muito
+            step += 3; 
             
             if (step >= pontosCaminho.length) step = pontosCaminho.length - 1; 
             
