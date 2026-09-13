@@ -10,7 +10,7 @@ const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.acerto);
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.erro);
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.clique);
 
-let canvas, ctx;
+let canvas, ctx, corPrincipal = "#5EA2E6"; // Guardará a cor correta do Tema
 let isDrawing = false;
 let ajudaEmCurso = false; 
 let posAtualX = 0, posAtualY = 0;
@@ -22,38 +22,38 @@ let simuTimer = null;
 let sequenciaNiveis = [];
 
 // ==========================================
-// 2. DICIONÁRIO ALFABETO (BASEADO NA TUA IMAGEM)
-// Cada letra é um Array de Traços. 
-// Cada Traço é um Array de Segmentos (Linhas "L" ou Arcos "A").
-// Isso permite que letras como o "U" ou o "S" sejam feitas num só traço sem levantar o dedo!
+// 2. DICIONÁRIO ALFABETO (BASEADO NO MANUSCRIPT)
+// L = Linha (x1, y1, x2, y2)
+// A = Arco (cx, cy, raio, angulo_inicio, angulo_fim, anti_horario)
+// Grelha: Topo(0.2), Meio(0.5), Fundo(0.8). Esquerda(0.2), Direita(0.8)
 // ==========================================
 const ALFABETO_VETORES = {
-    'A': [ [["L", 0.5, 0.1, 0.2, 0.9]], [["L", 0.5, 0.1, 0.8, 0.9]], [["L", 0.35, 0.55, 0.65, 0.55]] ],
-    'B': [ [["L", 0.25, 0.1, 0.25, 0.9]], [["A", 0.25, 0.3, 0.2, 270, 90, false]], [["A", 0.25, 0.7, 0.2, 270, 90, false]] ],
-    'C': [ [["A", 0.6, 0.5, 0.4, 315, 45, true]] ],
-    'D': [ [["L", 0.25, 0.1, 0.25, 0.9]], [["A", 0.25, 0.5, 0.4, 270, 90, false]] ],
-    'E': [ [["L", 0.25, 0.1, 0.25, 0.9]], [["L", 0.25, 0.1, 0.7, 0.1]], [["L", 0.25, 0.5, 0.6, 0.5]], [["L", 0.25, 0.9, 0.7, 0.9]] ],
-    'F': [ [["L", 0.25, 0.1, 0.25, 0.9]], [["L", 0.25, 0.1, 0.7, 0.1]], [["L", 0.25, 0.5, 0.6, 0.5]] ],
-    'G': [ [["A", 0.6, 0.5, 0.4, 315, 45, true], ["L", 0.88, 0.78, 0.6, 0.78]] ], // Curva contínua para a esquerda
-    'H': [ [["L", 0.25, 0.1, 0.25, 0.9]], [["L", 0.75, 0.1, 0.75, 0.9]], [["L", 0.25, 0.5, 0.75, 0.5]] ],
-    'I': [ [["L", 0.5, 0.1, 0.5, 0.9]] ],
-    'J': [ [["L", 0.7, 0.1, 0.7, 0.7], ["A", 0.5, 0.7, 0.2, 0, 180, false]] ], // Linha desce e curva
-    'K': [ [["L", 0.25, 0.1, 0.25, 0.9]], [["L", 0.75, 0.1, 0.25, 0.5]], [["L", 0.25, 0.5, 0.75, 0.9]] ],
-    'L': [ [["L", 0.25, 0.1, 0.25, 0.9]], [["L", 0.25, 0.9, 0.75, 0.9]] ],
-    'M': [ [["L", 0.2, 0.1, 0.2, 0.9]], [["L", 0.2, 0.1, 0.5, 0.9]], [["L", 0.5, 0.9, 0.8, 0.1]], [["L", 0.8, 0.1, 0.8, 0.9]] ], // 4 traços como na imagem
-    'N': [ [["L", 0.2, 0.1, 0.2, 0.9]], [["L", 0.2, 0.1, 0.8, 0.9]], [["L", 0.8, 0.9, 0.8, 0.1]] ], // Sobe no último traço
-    'O': [ [["A", 0.5, 0.5, 0.4, 270, 269, true]] ],
-    'P': [ [["L", 0.25, 0.1, 0.25, 0.9]], [["A", 0.25, 0.3, 0.2, 270, 90, false]] ],
-    'Q': [ [["A", 0.5, 0.5, 0.4, 270, 269, true]], [["L", 0.6, 0.6, 0.9, 0.9]] ],
-    'R': [ [["L", 0.25, 0.1, 0.25, 0.9]], [["A", 0.25, 0.3, 0.2, 270, 90, false]], [["L", 0.35, 0.5, 0.75, 0.9]] ],
-    'S': [ [["A", 0.5, 0.3, 0.2, 60, 270, true], ["A", 0.5, 0.7, 0.2, 270, 90, false]] ], // Um único traço contínuo
-    'T': [ [["L", 0.5, 0.1, 0.5, 0.9]], [["L", 0.2, 0.1, 0.8, 0.1]] ], // Desce primeiro, depois corta
-    'U': [ [["L", 0.2, 0.1, 0.2, 0.6], ["A", 0.5, 0.6, 0.3, 180, 0, true], ["L", 0.8, 0.6, 0.8, 0.1]] ], // Um traço contínuo
-    'V': [ [["L", 0.2, 0.1, 0.5, 0.9]], [["L", 0.5, 0.9, 0.8, 0.1]] ],
-    'W': [ [["L", 0.1, 0.1, 0.3, 0.9]], [["L", 0.3, 0.9, 0.5, 0.3]], [["L", 0.5, 0.3, 0.7, 0.9]], [["L", 0.7, 0.9, 0.9, 0.1]] ],
-    'X': [ [["L", 0.2, 0.1, 0.8, 0.9]], [["L", 0.8, 0.1, 0.2, 0.9]] ],
-    'Y': [ [["L", 0.2, 0.1, 0.5, 0.5]], [["L", 0.8, 0.1, 0.5, 0.5]], [["L", 0.5, 0.5, 0.5, 0.9]] ],
-    'Z': [ [["L", 0.2, 0.1, 0.8, 0.1]], [["L", 0.8, 0.1, 0.2, 0.9]], [["L", 0.2, 0.9, 0.8, 0.9]] ]
+    'A': [ [["L", 0.5, 0.2, 0.2, 0.8]], [["L", 0.5, 0.2, 0.8, 0.8]], [["L", 0.35, 0.5, 0.65, 0.5]] ],
+    'B': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["A", 0.3, 0.35, 0.15, 270, 90, false]], [["A", 0.3, 0.65, 0.15, 270, 90, false]] ],
+    'C': [ [["A", 0.55, 0.5, 0.3, 290, 70, true]] ],
+    'D': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["A", 0.3, 0.5, 0.3, 270, 90, false]] ],
+    'E': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["L", 0.3, 0.2, 0.7, 0.2]], [["L", 0.3, 0.5, 0.6, 0.5]], [["L", 0.3, 0.8, 0.7, 0.8]] ],
+    'F': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["L", 0.3, 0.2, 0.7, 0.2]], [["L", 0.3, 0.5, 0.6, 0.5]] ],
+    'G': [ [["A", 0.6, 0.5, 0.3, 290, 90, true], ["L", 0.6, 0.8, 0.6, 0.5], ["L", 0.6, 0.5, 0.45, 0.5]] ], 
+    'H': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["L", 0.7, 0.2, 0.7, 0.8]], [["L", 0.3, 0.5, 0.7, 0.5]] ],
+    'I': [ [["L", 0.5, 0.2, 0.5, 0.8]] ],
+    'J': [ [["L", 0.65, 0.2, 0.65, 0.65], ["A", 0.5, 0.65, 0.15, 0, 180, false]] ], 
+    'K': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["L", 0.7, 0.2, 0.3, 0.5]], [["L", 0.3, 0.5, 0.7, 0.8]] ],
+    'L': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["L", 0.3, 0.8, 0.7, 0.8]] ],
+    'M': [ [["L", 0.2, 0.2, 0.2, 0.8]], [["L", 0.2, 0.2, 0.5, 0.8]], [["L", 0.5, 0.8, 0.8, 0.2]], [["L", 0.8, 0.2, 0.8, 0.8]] ], // Como na imagem!
+    'N': [ [["L", 0.2, 0.2, 0.2, 0.8]], [["L", 0.2, 0.2, 0.8, 0.8]], [["L", 0.8, 0.2, 0.8, 0.8]] ], // Último traço para baixo!
+    'O': [ [["A", 0.5, 0.5, 0.3, 270, 269.9, true]] ], 
+    'P': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["A", 0.3, 0.35, 0.15, 270, 90, false]] ],
+    'Q': [ [["A", 0.5, 0.5, 0.3, 270, 269.9, true]], [["L", 0.55, 0.55, 0.8, 0.8]] ],
+    'R': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["A", 0.3, 0.35, 0.15, 270, 90, false]], [["L", 0.45, 0.5, 0.7, 0.8]] ],
+    'S': [ [["A", 0.5, 0.35, 0.15, 60, 270, true], ["A", 0.5, 0.65, 0.15, 270, 120, false]] ], 
+    'T': [ [["L", 0.5, 0.2, 0.5, 0.8]], [["L", 0.2, 0.2, 0.8, 0.2]] ],
+    'U': [ [["L", 0.2, 0.2, 0.2, 0.65], ["A", 0.5, 0.65, 0.3, 180, 0, true], ["L", 0.8, 0.65, 0.8, 0.2]] ],
+    'V': [ [["L", 0.2, 0.2, 0.5, 0.8]], [["L", 0.5, 0.8, 0.8, 0.2]] ],
+    'W': [ [["L", 0.1, 0.2, 0.3, 0.8]], [["L", 0.3, 0.8, 0.5, 0.4]], [["L", 0.5, 0.4, 0.7, 0.8]], [["L", 0.7, 0.8, 0.9, 0.2]] ],
+    'X': [ [["L", 0.2, 0.2, 0.8, 0.8]], [["L", 0.8, 0.2, 0.2, 0.8]] ],
+    'Y': [ [["L", 0.2, 0.2, 0.5, 0.5]], [["L", 0.8, 0.2, 0.5, 0.5]], [["L", 0.5, 0.5, 0.5, 0.8]] ],
+    'Z': [ [["L", 0.2, 0.2, 0.8, 0.2]], [["L", 0.8, 0.2, 0.2, 0.8]], [["L", 0.2, 0.8, 0.8, 0.8]] ]
 };
 
 // ==========================================
@@ -101,8 +101,14 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
+// Capturar a cor real do tema assim que possível
+function capturarCorTema() {
+    let cor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
+    if(cor) corPrincipal = cor;
+}
+
 // ==========================================
-// 4. LÓGICA DE CAPA (TUTORIAL DA LETRA A)
+// 4. LÓGICA DE CAPA E ANIMAÇÃO TUTORIAL
 // ==========================================
 function tocarAudioInstrucoes() {
     somClique.currentTime = 0; somClique.play().catch(e=>console.log(e));
@@ -117,6 +123,7 @@ function tocarAudioInstrucoes() {
 
 function mostrarCapa() {
     if (jogoAtivo) return;
+    capturarCorTema();
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">Traça as Letras</h2>`;
     
     document.getElementById('game-content').innerHTML = `
@@ -146,14 +153,14 @@ function mostrarCapa() {
 function desenharPautas(context, w, h) {
     context.beginPath();
     context.lineWidth = 3; context.strokeStyle = "#b3d4ff"; 
-    context.moveTo(w*0.1, h*0.1); context.lineTo(w*0.9, h*0.1); 
-    context.moveTo(w*0.1, h*0.9); context.lineTo(w*0.9, h*0.9); 
+    context.moveTo(w*0.1, h*0.2); context.lineTo(w*0.9, h*0.2); // Topo real
+    context.moveTo(w*0.1, h*0.8); context.lineTo(w*0.9, h*0.8); // Fundo real
     context.stroke();
     
     context.beginPath();
     context.lineWidth = 2; context.strokeStyle = "#d1e5ff";
     context.setLineDash([15, 10]);
-    context.moveTo(w*0.1, h*0.5); context.lineTo(w*0.9, h*0.5); 
+    context.moveTo(w*0.1, h*0.5); context.lineTo(w*0.9, h*0.5); // Meio
     context.stroke();
     context.setLineDash([]);
 }
@@ -195,7 +202,7 @@ function iniciarSimulacaoAnimada() {
                 sStart.style.display = 'flex'; sStart.style.left = traco[0].x + "px"; sStart.style.top = traco[0].y + "px";
                 sEnd.style.display = 'flex'; sEnd.style.left = traco[traco.length-1].x + "px"; sEnd.style.top = traco[traco.length-1].y + "px";
                 
-                sCtx.beginPath(); sCtx.lineWidth = 18; sCtx.strokeStyle = "var(--primary-color)"; sCtx.lineCap = "round"; sCtx.lineJoin = "round";
+                sCtx.beginPath(); sCtx.lineWidth = 18; sCtx.strokeStyle = corPrincipal; sCtx.lineCap = "round"; sCtx.lineJoin = "round";
                 sCtx.moveTo(traco[0].x, traco[0].y);
                 hand.style.opacity = 1; hand.innerText = "👆";
             }
@@ -227,6 +234,7 @@ function iniciarSimulacaoAnimada() {
 // ==========================================
 function iniciarJogo() {
     clearTimeout(simuTimer); 
+    capturarCorTema(); // Garante que a cor foi extraída
     jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0; 
     totalRondas = 10; 
     ajudaEmCurso = false;
@@ -288,24 +296,21 @@ function atualizarPontos() {
         const ptFim = traco[traco.length - 1];
 
         startDot.style.display = 'flex';
-        startDot.style.left = ptInicio.x + "px";
-        startDot.style.top = ptInicio.y + "px";
+        startDot.style.left = ptInicio.x + "px"; startDot.style.top = ptInicio.y + "px";
         startDot.style.opacity = '1';
 
         endDot.style.display = 'flex';
-        endDot.style.left = ptFim.x + "px";
-        endDot.style.top = ptFim.y + "px";
+        endDot.style.left = ptFim.x + "px"; endDot.style.top = ptFim.y + "px";
         endDot.style.opacity = '1';
     } else {
-        startDot.style.display = 'none'; 
-        endDot.style.display = 'none'; 
+        startDot.style.display = 'none'; endDot.style.display = 'none'; 
     }
 }
 
 function gerarLetraTracos(letra, w, h) {
     const strokes = ALFABETO_VETORES[letra];
     let todosTracos = [];
-    const steps = 80; // Resolução por segmento
+    const steps = 80; 
 
     strokes.forEach(strokeCmds => {
         let pts = [];
@@ -332,7 +337,6 @@ function gerarLetraTracos(letra, w, h) {
                 }
             }
         });
-        
         todosTracos.push(pts);
     });
 
@@ -343,7 +347,7 @@ function desenharGuiasJogo(mostrarConcluido = false) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     desenharPautas(ctx, canvas.width, canvas.height);
     
-    // Fundo branco grosso para destacar a letra
+    // Fundo branco grosso (destaque)
     tracosLetra.forEach(traco => {
         ctx.beginPath(); ctx.lineWidth = 44; ctx.strokeStyle = "#ffffff"; ctx.lineCap = "round"; ctx.lineJoin = "round";
         ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
@@ -353,18 +357,18 @@ function desenharGuiasJogo(mostrarConcluido = false) {
         ctx.beginPath(); ctx.lineCap = "round"; ctx.lineJoin = "round";
         
         if (mostrarConcluido || index < tracoAtualIndex) {
-            // Traço JÁ FEITO (Mantém-se visível, sólido e com a cor principal!)
-            ctx.lineWidth = 18; ctx.strokeStyle = "var(--primary-color)"; ctx.setLineDash([]);
+            // TRAÇO CONCLUÍDO (Cor Principal Sólida e Visível!)
+            ctx.lineWidth = 18; ctx.strokeStyle = corPrincipal; ctx.setLineDash([]);
             ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
         } 
         else if (index === tracoAtualIndex) {
-            // Traço ATUAL (Tracejado escuro)
+            // TRAÇO ATUAL
             ctx.lineWidth = 14; ctx.strokeStyle = "#a0a0a0"; ctx.setLineDash([15, 15]);
             ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
             ctx.setLineDash([]);
         } 
         else {
-            // Traços FUTUROS (Tracejado claro)
+            // TRAÇOS FUTUROS
             ctx.lineWidth = 14; ctx.strokeStyle = "#e5e5e5"; ctx.setLineDash([15, 15]);
             ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
             ctx.setLineDash([]);
@@ -385,19 +389,17 @@ function startDrawing(e) {
     const pos = getClientOffset(e);
     const startPt = tracosLetra[tracoAtualIndex][0];
     
-    // Tem de começar perto da bola azul
     if (Math.hypot(pos.x - startPt.x, pos.y - startPt.y) > 60) return; 
 
     isDrawing = true; saiuDoCaminho = false;
     tracosLetra[tracoAtualIndex].forEach(p => p.hit = false); 
     posAtualX = pos.x; posAtualY = pos.y;
     
-    // Esconde ligeiramente as bolas para se ver a linha a ser desenhada
     document.getElementById('ponto-inicio').style.opacity = '0.2';
     document.getElementById('ponto-fim').style.opacity = '0.5';
     
     ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
-    ctx.lineWidth = 18; ctx.strokeStyle = "var(--primary-color)"; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.lineWidth = 18; ctx.strokeStyle = corPrincipal; ctx.lineCap = "round"; ctx.lineJoin = "round";
 }
 
 function draw(e) {
@@ -439,24 +441,20 @@ function avaliarJogada() {
     let trajetoAtual = tracosLetra[tracoAtualIndex];
     let ultimoPonto = trajetoAtual[trajetoAtual.length - 1];
     
-    // Avalia se, quando largou o dedo, estava em cima da bola verde (distância < 70)
     let distanciaFim = Math.hypot(ultimoPonto.x - posAtualX, ultimoPonto.y - posAtualY);
-    
     let pontosAtingidos = trajetoAtual.filter(p => p.hit).length;
     let accuracia = pontosAtingidos / trajetoAtual.length;
     
-    // SE CHEGOU À BOLA VERDE e fez o caminho certo
-    if (distanciaFim < 70 && accuracia >= 0.50 && !saiuDoCaminho) {
-        tracoAtualIndex++; // Avança para o próximo traço (etapa)
+    if (distanciaFim < 70 && accuracia >= 0.45 && !saiuDoCaminho) {
+        tracoAtualIndex++; 
         somClique.currentTime = 0; somClique.play().catch(e=>console.log(e));
         
         if (tracoAtualIndex >= tracosLetra.length) {
-            // ACABOU A LETRA TODA!
             jogoAtivo = false; certos++; 
             somAcerto.currentTime = 0; somAcerto.play().catch(e=>console.log(e));
             
-            atualizarPontos(); // Esconde as bolas
-            desenharGuiasJogo(true); // Desenha a letra final colorida
+            atualizarPontos(); 
+            desenharGuiasJogo(true); 
             
             const area = document.getElementById('area-desenho');
             area.classList.add('letra-sucesso'); 
@@ -466,23 +464,18 @@ function avaliarJogada() {
                 rondaAtual++; jogoAtivo = true; proximaRonda(); 
             }, 1800);
         } else {
-            // AINDA FALTAM TRAÇOS NA MESMA LETRA
-            atualizarPontos(); // Move a bola azul e verde para o traço novo
-            desenharGuiasJogo(); // O traço anterior passa a ficar visível sólido!
+            atualizarPontos(); 
+            desenharGuiasJogo(); 
         }
     } else {
-        // ERROU O TRAÇO ATUAL (limpa o ecrã e volta a pedir só este traço)
         erros++; 
         somErro.currentTime = 0; somErro.play().catch(e=>console.log(e));
-        trajetoAtual.forEach(p => p.hit = false); // Faz reset apenas ao traço atual
-        desenharGuiasJogo(); // Redesenha (mantendo os traços anteriores já feitos intactos)
+        trajetoAtual.forEach(p => p.hit = false); 
+        desenharGuiasJogo(); 
         Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
     }
 }
 
-// ==========================================
-// SISTEMA DE AJUDA ANIMADO (MOSTRA O CAMINHO)
-// ==========================================
 function darAjuda() {
     if (!jogoAtivo || ajudaEmCurso || tracoAtualIndex >= tracosLetra.length) return;
     ajudasUsadas++; 
@@ -506,21 +499,19 @@ function darAjuda() {
         }
         
         if (step === 0) {
-            ctx.beginPath(); ctx.lineWidth = 18; ctx.strokeStyle = "var(--primary-color)"; ctx.lineCap = "round"; ctx.lineJoin = "round";
+            ctx.beginPath(); ctx.lineWidth = 18; ctx.strokeStyle = corPrincipal; ctx.lineCap = "round"; ctx.lineJoin = "round";
             ctx.moveTo(trajetoAtual[0].x, trajetoAtual[0].y);
         }
 
         if (step < trajetoAtual.length) {
             const pt = trajetoAtual[step];
             hand.style.left = (pt.x - 22) + "px"; hand.style.top = (pt.y - 5) + "px";
-            
             if(step > 10) hand.innerText = "✊"; 
             
             ctx.lineTo(pt.x, pt.y); ctx.stroke();
             step += 4; 
             
             if (step >= trajetoAtual.length) step = trajetoAtual.length - 1; 
-            
             if (step < trajetoAtual.length - 1) {
                 setTimeout(animarAjuda, 10); 
             } else {
