@@ -122,7 +122,7 @@ const DADOS_JOGO = {
     // ==============================================
     // AQUI ESTÁ O CAMINHO CORRIGIDO PARA AS INSTRUÇÕES
     // ==============================================
-    somInstrucoes: "sons1ano/f1_jogo02pt.mp3", 
+    somInstrucoes: "sons1ano/f1_jogo03pt.mp3", 
     
     // A lista de itens mantêm-se por uma questão estrutural,
     // o novo motor visual do jogo.js gera as linhas automaticamente.
