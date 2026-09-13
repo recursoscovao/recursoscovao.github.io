@@ -71,7 +71,7 @@ const JOGO_CONFIG = {
     caminhoSons: "../../../sons/", 
 
     sons: {
-        acerto: "certo.mp3",
+        acerto: "acerto.mp3",
         erro: "erro.mp3",
         clique: "clique.mp3"
     },
