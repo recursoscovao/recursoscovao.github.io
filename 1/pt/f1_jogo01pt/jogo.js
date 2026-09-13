@@ -50,7 +50,6 @@ style.innerHTML = `
     .animating { animation: pulse 1s infinite alternate; }
     @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.3); } }
 
-    /* Cursor e Interação */
     canvas { position: absolute; top: 0; left: 0; z-index: 5; cursor: pointer; touch-action: none; }
     canvas:active { cursor: grabbing; }
 
@@ -112,16 +111,16 @@ function iniciarSimulacaoAnimada() {
     
     sCanvas.width = sArea.clientWidth; sCanvas.height = sArea.clientHeight;
     
-    const cRect = sArea.getBoundingClientRect();
-    const startEl = document.getElementById('simu-inicio').getBoundingClientRect();
-    const endEl = document.getElementById('simu-fim').getBoundingClientRect();
+    const startEl = document.getElementById('simu-inicio');
+    const endEl = document.getElementById('simu-fim');
     
-    const startX = startEl.left - cRect.left + (startEl.width / 2);
-    const startY = startEl.top - cRect.top + (startEl.height / 2);
-    const endX = endEl.left - cRect.left + 5;
-    const endY = endEl.top - cRect.top + (endEl.height / 2);
+    // CORREÇÃO DA ANIMAÇÃO: offsetLeft e offsetTop ignoram o "scale(0.8)" e centram perfeitamente
+    const startX = startEl.offsetLeft + (startEl.offsetWidth / 2);
+    const startY = startEl.offsetTop + (startEl.offsetHeight / 2);
+    const endX = endEl.offsetLeft;
+    const endY = endEl.offsetTop + (endEl.offsetHeight / 2);
 
-    const path = gerarPontosGrafismos("trapezio", startX, startY, endX, endY);
+    const path = gerarPontosGrafismos("quadrado", startX, startY, endX, endY);
     
     function desenhaFundo(ctx) {
         ctx.beginPath(); ctx.setLineDash([15, 15]); ctx.lineWidth = 6; ctx.strokeStyle = "#d0d0d0";
@@ -167,11 +166,9 @@ function iniciarJogo() {
     jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0; 
     totalRondas = 10; 
     
-    // 7 PADRÕES GEOMÉTRICOS EXCLUSIVOS (Linhas Retas, Ziguezagues e Cantos)
     const padroes = ["reta", "quadrado", "quadrado_inv", "ziguezague", "dente_vert", "dente_diag", "trapezio"];
     sequenciaNiveis = [];
     
-    // Cria 10 níveis misturando os padrões para não repetir a mesma sequência
     let deck = [...padroes, ...padroes]; 
     deck.sort(() => Math.random() - 0.5);
     for(let i=0; i<10; i++) sequenciaNiveis.push({ tipo: deck[i] });
@@ -197,13 +194,13 @@ function proximaRonda() {
 }
 
 function desenharGuiasJogo() {
-    // 1. Desenha um "corredor branco" largo para mostrar a zona de tolerância visualmente
+    // 1. Desenha o "tubo branco" largo (Mostra a tolerância visual)
     ctx.beginPath(); ctx.lineWidth = 40; ctx.strokeStyle = "#ffffff"; ctx.lineCap = "round"; ctx.lineJoin = "round";
     ctx.moveTo(pontosCaminho[0].x, pontosCaminho[0].y);
     pontosCaminho.forEach(pt => ctx.lineTo(pt.x, pt.y));
     ctx.stroke();
 
-    // 2. Desenha o tracejado principal
+    // 2. Desenha o tracejado principal por cima
     ctx.beginPath(); ctx.setLineDash([15, 15]); ctx.lineWidth = 6; ctx.strokeStyle = "#c0c0c0"; ctx.lineCap = "round"; ctx.lineJoin = "round";
     ctx.moveTo(pontosCaminho[0].x, pontosCaminho[0].y);
     pontosCaminho.forEach(pt => ctx.lineTo(pt.x, pt.y));
@@ -216,15 +213,14 @@ function configurarCanvas() {
     ctx = canvas.getContext('2d');
     canvas.width = container.clientWidth; canvas.height = container.clientHeight;
 
-    const cRect = container.getBoundingClientRect();
-    const startRect = document.getElementById('ponto-inicio').getBoundingClientRect();
-    const endRect = document.getElementById('ponto-fim').getBoundingClientRect();
+    const startEl = document.getElementById('ponto-inicio');
+    const endEl = document.getElementById('ponto-fim');
     
-    // Início perfeitamente ao centro da bola, Fim no limite da seta
-    const startX = startRect.left - cRect.left + (startRect.width / 2);
-    const startY = startRect.top - cRect.top + (startRect.height / 2);
-    posFinalX = endRect.left - cRect.left + 5; 
-    posFinalY = endRect.top - cRect.top + (endRect.height / 2);
+    // CENTRO EXATO DA BOLA E INÍCIO DA SETA (Usando offsetLeft para evitar bugs de ecrã)
+    const startX = startEl.offsetLeft + (startEl.offsetWidth / 2);
+    const startY = startEl.offsetTop + (startEl.offsetHeight / 2);
+    posFinalX = endEl.offsetLeft; 
+    posFinalY = endEl.offsetTop + (endEl.offsetHeight / 2);
 
     pontosCaminho = gerarPontosGrafismos(itemDestaque.tipo, startX, startY, posFinalX, posFinalY);
     
@@ -252,7 +248,7 @@ function gerarPontosGrafismos(tipo, sX, sY, eX, eY) {
     if (tipo === "reta") {
         nodes.push({x: eX, y: eY});
     } 
-    else if (tipo === "quadrado") { // Linha Cima-Baixo quadrada
+    else if (tipo === "quadrado") { 
         for(let i=0; i<ciclos; i++) {
             let bx = sX + (i * cw);
             nodes.push({x: bx, y: sY - h});
@@ -261,7 +257,7 @@ function gerarPontosGrafismos(tipo, sX, sY, eX, eY) {
             nodes.push({x: bx + cw, y: sY});
         }
     }
-    else if (tipo === "quadrado_inv") { // Linha Baixo-Cima quadrada
+    else if (tipo === "quadrado_inv") { 
         for(let i=0; i<ciclos; i++) {
             let bx = sX + (i * cw);
             nodes.push({x: bx, y: sY + h});
@@ -270,7 +266,7 @@ function gerarPontosGrafismos(tipo, sX, sY, eX, eY) {
             nodes.push({x: bx + cw, y: sY});
         }
     }
-    else if (tipo === "trapezio") { // Sobe diagonal, frente, desce diagonal, frente
+    else if (tipo === "trapezio") { 
         for(let i=0; i<ciclos; i++) {
             let bx = sX + (i * cw);
             nodes.push({x: bx + cw*0.25, y: sY - h});
@@ -278,20 +274,20 @@ function gerarPontosGrafismos(tipo, sX, sY, eX, eY) {
             nodes.push({x: bx + cw, y: sY});
         }
     }
-    else if (tipo === "ziguezague") { // Triângulos
+    else if (tipo === "ziguezague") { 
         let picos = 3; let zw = w / (picos * 2); 
         for(let i=1; i<=picos*2; i++) {
             nodes.push({x: sX + (i*zw), y: (i%2 !== 0) ? sY - h : sY});
         }
     }
-    else if (tipo === "dente_vert") { // Sobe vertical, desce diagonal (Serra 1)
+    else if (tipo === "dente_vert") { 
         for(let i=0; i<ciclos; i++) {
             let bx = sX + (i * cw);
             nodes.push({x: bx, y: sY - h});
             nodes.push({x: bx + cw, y: sY});
         }
     }
-    else if (tipo === "dente_diag") { // Sobe diagonal, desce vertical (Serra 2)
+    else if (tipo === "dente_diag") { 
         for(let i=0; i<ciclos; i++) {
             let bx = sX + (i * cw);
             nodes.push({x: bx + cw, y: sY - h});
@@ -301,7 +297,6 @@ function gerarPontosGrafismos(tipo, sX, sY, eX, eY) {
 
     nodes.push({x: eX, y: eY}); 
 
-    // Interpolação para Validação Precisa (Gera 150 pontos invisiveis de verificação)
     let pts = [];
     let totalDist = 0;
     let segDist = [];
@@ -340,10 +335,10 @@ function startDrawing(e) {
     if (!jogoAtivo) return;
     e.preventDefault();
     
-    // OBRIGA A COMEÇAR NO CENTRO DA BOLA (Tolerância aumentada para 45px para não falhar cliques rápidos)
+    // TOLERÂNCIA AUMENTADA para 50px - Facilita o clique inicial na bola!
     const pos = getClientOffset(e);
     const startPt = pontosCaminho[0];
-    if (Math.hypot(pos.x - startPt.x, pos.y - startPt.y) > 45) return; 
+    if (Math.hypot(pos.x - startPt.x, pos.y - startPt.y) > 50) return; 
 
     isDrawing = true; saiuDoCaminho = false;
     pontosCaminho.forEach(p => p.hit = false); 
@@ -371,7 +366,7 @@ function draw(e) {
             if(d < minDist) { minDist = d; closestIdx = i; }
         }
         
-        // CORREDOR MAIS LARGO (Tolerância de 45px = Menos Frustração)
+        // TOLERÂNCIA DO CORREDOR = 45px
         if (minDist > 45) {
             saiuDoCaminho = true; 
         } else if (closestIdx !== -1) {
@@ -391,13 +386,18 @@ function stopDrawing(e) {
 }
 
 function avaliarJogada() {
-    // Tolerância para largar a seta: 65px (Ajuda imenso se a criança tremer no fim)
+    // Tolerância GIGANTE para largar a seta: 80px 
     const distanciaFim = Math.hypot(posFinalX - posAtualX, posFinalY - posAtualY);
+    
     let pontosAtingidos = pontosCaminho.filter(p => p.hit).length;
     let accuracia = pontosAtingidos / pontosCaminho.length;
     
-    // REDUZIDO PARA 85% - Garante que se cortarem um cantinho sem querer, não chumba logo.
-    if (distanciaFim < 65 && accuracia >= 0.85 && !saiuDoCaminho) {
+    // ADAPTAÇÃO INTELIGENTE:
+    // Se for "reta", não exigimos precisão de preenchimento (porque o rato desliza depressa e falha pontos).
+    // Basta NÃO sair do caminho branco e chegar à seta.
+    let accuraciaNecessaria = (itemDestaque.tipo === "reta") ? 0.40 : 0.70;
+    
+    if (distanciaFim < 80 && accuracia >= accuraciaNecessaria && !saiuDoCaminho) {
         jogoAtivo = false; certos++; 
         somAcerto.currentTime = 0; somAcerto.play().catch(e=>console.log(e));
         
@@ -411,7 +411,7 @@ function avaliarJogada() {
         somErro.currentTime = 0; somErro.play().catch(e=>console.log(e));
         
         ctx.clearRect(0, 0, canvas.width, canvas.height); 
-        desenharGuiasJogo(); // Redesenha com o fundo branco largo
+        desenharGuiasJogo(); 
         Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
     }
 }
