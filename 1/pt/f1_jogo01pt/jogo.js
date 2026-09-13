@@ -15,6 +15,10 @@ let isDrawing = false;
 let posFinalX = 0, posFinalY = 0;
 let posAtualX = 0, posAtualY = 0;
 
+// Sistema de validação do traço
+let checkpoints = [];
+let pontosPassados = 0;
+
 // ==========================================
 // 2. CONFIGURAÇÃO VISUAL (CSS INJETADO)
 // ==========================================
@@ -43,7 +47,7 @@ style.innerHTML = `
     /* SETA DE DESTINO */
     .ponto-fim {
         font-size: 3.5rem; 
-        color: #d0d0d0; /* Fica verde quando ganha */
+        color: #d0d0d0;
         z-index: 10;
         transition: 0.3s;
     }
@@ -51,7 +55,15 @@ style.innerHTML = `
     .animating { animation: pulse 1s infinite alternate; }
     @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.3); } }
 
-    canvas { position: absolute; top: 0; left: 0; z-index: 5; cursor: crosshair; touch-action: none; }
+    /* MUDANÇA DE CURSOR PARA MÃO */
+    canvas { 
+        position: absolute; top: 0; left: 0; z-index: 5; 
+        cursor: pointer; /* Mãozinha a apontar */
+        touch-action: none; 
+    }
+    canvas:active {
+        cursor: grabbing; /* Mão fechada quando desenha */
+    }
 
     @media screen and (max-width: 500px) {
         .grafismo-area { height: 220px; padding: 0 20px; }
@@ -70,7 +82,7 @@ function tocarAudioInstrucoes() {
     if (audioInstrucoes) { audioInstrucoes.pause(); audioInstrucoes.currentTime = 0; }
     else { audioInstrucoes = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes); }
     audioInstrucoes.play().catch(() => {
-        const utter = new SpeechSynthesisUtterance("Começa na bola e arrasta o dedo pela linha até à seta.");
+        const utter = new SpeechSynthesisUtterance("Começa na bola e arrasta o dedo pela linha tracejada até à seta.");
         utter.lang = 'pt-PT'; window.speechSynthesis.speak(utter);
     });
 }
@@ -82,7 +94,7 @@ function mostrarCapa() {
         <div style="display:flex; flex-direction:column; align-items:center; width: 100%;">
             <div style="font-size: 4rem; color: var(--primary-color); margin-bottom: 15px;"><i class="fas fa-pencil-alt"></i></div>
             <p style="color:var(--text-grey); font-weight:800; text-align:center; font-size:1.1rem; max-width: 500px;">
-                Começa na bola colorida e segue a linha até à seta sem largar o dedo!
+                Começa na bola colorida e segue <b>em cima da linha</b> até à seta sem largar o dedo!
             </p>
         </div>
     `;
@@ -108,8 +120,6 @@ function proximaRonda() {
     
     Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
     const area = document.getElementById('game-content');
-    
-    // Pega as definições do nível atual (se é reta, curva, etc)
     itemDestaque = DADOS_JOGO.itens[rondaAtual - 1]; 
     
     area.innerHTML = `
@@ -145,13 +155,13 @@ function desenharGuia(tipo) {
     const startEl = document.getElementById('ponto-inicio');
     const endEl = document.getElementById('ponto-fim');
     
-    // Calcula o meio da bola de início
     const startX = startEl.offsetLeft + (startEl.offsetWidth / 2);
     const startY = canvas.height / 2;
-    
-    // Calcula o meio da seta de fim
     posFinalX = endEl.offsetLeft + (endEl.offsetWidth / 2);
     posFinalY = canvas.height / 2;
+
+    checkpoints = [];
+    pontosPassados = 0;
 
     ctx.beginPath();
     ctx.setLineDash([15, 15]); 
@@ -165,20 +175,43 @@ function desenharGuia(tipo) {
     
     if (tipo === "reta") {
         ctx.lineTo(posFinalX, posFinalY);
-    } else if (tipo === "curva") {
-        ctx.quadraticCurveTo(startX + (widthDist / 2), -50, posFinalX, posFinalY);
-    } else if (tipo === "ziguezague") {
+        // Cria 5 pontos de validação ao longo da reta
+        for(let i = 1; i <= 5; i++) {
+            checkpoints.push({ x: startX + (widthDist * (i/5)), y: startY });
+        }
+    } 
+    else if (tipo === "curva") {
+        let cpX = startX + widthDist / 2;
+        let cpY = startY - 120; // Ponto de controlo da curva
+        ctx.quadraticCurveTo(cpX, cpY, posFinalX, posFinalY);
+
+        // Cria 6 pontos de validação acompanhando a matemática da curva
+        for(let i = 1; i <= 6; i++) {
+            let t = i / 6;
+            let x = Math.pow(1-t, 2)*startX + 2*(1-t)*t*cpX + Math.pow(t, 2)*posFinalX;
+            let y = Math.pow(1-t, 2)*startY + 2*(1-t)*t*cpY + Math.pow(t, 2)*posFinalY;
+            checkpoints.push({ x, y });
+        }
+    } 
+    else if (tipo === "ziguezague") {
         const picos = 4;
         const espaco = widthDist / picos;
         for (let i = 1; i <= picos; i++) {
             let x = startX + (espaco * i);
-            let y = (i % 2 === 0) ? startY : startY - 80;
+            let y = (i % 2 === 0) ? startY : startY - 90;
             if (i === picos) y = posFinalY;
             ctx.lineTo(x, y);
+
+            // Grava pontos intermédios e picos (impede a criança de cortar caminho a direito)
+            let prevX = (i === 1) ? startX : startX + (espaco * (i-1));
+            let prevY = (i === 1) ? startY : ((i-1) % 2 === 0 ? startY : startY - 90);
+            
+            checkpoints.push({ x: prevX + (x - prevX)/2, y: prevY + (y - prevY)/2 }); // Meio da rampa
+            checkpoints.push({ x: x, y: y }); // O pico/vale
         }
     }
     ctx.stroke();
-    ctx.setLineDash([]); // Limpa o tracejado para o risco que a criança vai fazer
+    ctx.setLineDash([]); 
 }
 
 function getClientOffset(e) {
@@ -195,7 +228,7 @@ function startDrawing(e) {
     
     ctx.beginPath();
     ctx.moveTo(pos.x, pos.y);
-    ctx.lineWidth = 14; // Grossura do traço da criança
+    ctx.lineWidth = 14; 
     ctx.strokeStyle = "var(--primary-color)";
     ctx.lineCap = "round";
     ctx.lineJoin = "round";
@@ -210,6 +243,17 @@ function draw(e) {
     
     ctx.lineTo(pos.x, pos.y);
     ctx.stroke();
+
+    // VALIDAÇÃO DOS CHECKPOINTS EM TEMPO REAL
+    if (pontosPassados < checkpoints.length) {
+        let alvo = checkpoints[pontosPassados];
+        let distanciaAoPonto = Math.hypot(pos.x - alvo.x, pos.y - alvo.y);
+        
+        // Se o dedo passar a menos de 50px do ponto invisível, validamos e passamos ao próximo
+        if (distanciaAoPonto < 50) {
+            pontosPassados++;
+        }
+    }
 }
 
 function stopDrawing(e) {
@@ -220,28 +264,27 @@ function stopDrawing(e) {
 }
 
 function avaliarJogada() {
-    // Calcula se a criança largou o dedo perto da seta (tolerância de 70px)
-    const distancia = Math.hypot(posFinalX - posAtualX, posFinalY - posAtualY);
+    // 1. A criança chegou perto da seta do fim?
+    const distanciaFim = Math.hypot(posFinalX - posAtualX, posFinalY - posAtualY);
+    // 2. A criança seguiu a forma correta do traçado? (Permitimos que falhe apenas o último ponto)
+    const fezTracoCorreto = pontosPassados >= (checkpoints.length - 1);
     
-    if (distancia < 70) {
+    if (distanciaFim < 70 && fezTracoCorreto) {
         jogoAtivo = false; 
         certos++; 
         somAcerto.play();
         
-        // Pinta a seta de verde e faz a animação
         const endEl = document.getElementById('ponto-fim');
         endEl.style.color = "#8cc63f";
         endEl.classList.add('animating');
-        
-        // Coloca a borda da caixa verde
         document.getElementById('area-desenho').style.borderColor = "#8cc63f";
         
         setTimeout(() => { rondaAtual++; jogoAtivo = true; proximaRonda(); }, 1500);
     } else {
         erros++; 
         somErro.play();
-        ctx.clearRect(0, 0, canvas.width, canvas.height); // Apaga o traço que a criança fez
-        desenharGuia(itemDestaque.tipo); // Redesenha a linha tracejada
+        ctx.clearRect(0, 0, canvas.width, canvas.height); 
+        desenharGuia(itemDestaque.tipo); 
         Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
     }
 }
@@ -250,8 +293,6 @@ function darAjuda() {
     if (!jogoAtivo) return;
     ajudasUsadas++; 
     somClique.play();
-    
-    // Faz a seta piscar e aumentar
     const endEl = document.getElementById('ponto-fim');
     endEl.classList.add('animating');
     setTimeout(() => { endEl.classList.remove('animating'); }, 2000);
