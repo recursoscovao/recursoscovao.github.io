@@ -15,17 +15,18 @@ let isDrawing = false;
 let posFinalX = 0, posFinalY = 0;
 let posAtualX = 0, posAtualY = 0;
 
-// Sistema de validação do traço
-let checkpoints = [];
-let pontosPassados = 0;
+// Sistema de Validação Estrita (95%)
+let pontosCaminho = []; 
+let saiuDoCaminho = false;
+let simuTimer = null; // Para a animação da capa
 
 // ==========================================
 // 2. CONFIGURAÇÃO VISUAL (CSS INJETADO)
 // ==========================================
 const style = document.createElement('style');
 style.innerHTML = `
-    .btn-play-rect { flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.2s; }
-    .btn-audio-circle { width: 65px; height: 65px; cursor: pointer; flex-shrink: 0; }
+    .btn-play-rect { flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.2s; z-index: 100; }
+    .btn-audio-circle { width: 65px; height: 65px; cursor: pointer; flex-shrink: 0; z-index: 100; }
 
     .grafismo-area {
         position: relative; width: 100%; max-width: 800px; height: 300px;
@@ -34,36 +35,21 @@ style.innerHTML = `
         padding: 0 40px; overflow: hidden;
     }
 
-    /* BOLA DE INÍCIO */
+    /* BOLA E SETA - Com z-index superior para esconder o corte da linha */
     .ponto-inicio {
-        width: 35px; height: 35px; 
-        border-radius: 50%; 
-        background: var(--primary-color); 
-        border: 4px solid #fff; 
+        width: 35px; height: 35px; border-radius: 50%; 
+        background: var(--primary-color); border: 4px solid #fff; 
         box-shadow: 0 0 0 5px var(--primary-color), 0 4px 10px rgba(0,0,0,0.2); 
-        z-index: 10;
+        z-index: 10; position: relative;
     }
-
-    /* SETA DE DESTINO */
-    .ponto-fim {
-        font-size: 3.5rem; 
-        color: #d0d0d0;
-        z-index: 10;
-        transition: 0.3s;
-    }
+    .ponto-fim { font-size: 3.5rem; color: #d0d0d0; z-index: 10; position: relative; transition: 0.3s; }
 
     .animating { animation: pulse 1s infinite alternate; }
     @keyframes pulse { from { transform: scale(1); } to { transform: scale(1.3); } }
 
-    /* MUDANÇA DE CURSOR PARA MÃO */
-    canvas { 
-        position: absolute; top: 0; left: 0; z-index: 5; 
-        cursor: pointer; /* Mãozinha a apontar */
-        touch-action: none; 
-    }
-    canvas:active {
-        cursor: grabbing; /* Mão fechada quando desenha */
-    }
+    /* Mão a apontar e Mão a agarrar */
+    canvas { position: absolute; top: 0; left: 0; z-index: 5; cursor: pointer; touch-action: none; }
+    canvas:active { cursor: grabbing; }
 
     @media screen and (max-width: 500px) {
         .grafismo-area { height: 220px; padding: 0 20px; }
@@ -74,7 +60,7 @@ style.innerHTML = `
 document.head.appendChild(style);
 
 // ==========================================
-// 3. LÓGICA DE CAPA
+// 3. LÓGICA DE CAPA COM SIMULAÇÃO ANIMADA
 // ==========================================
 function tocarAudioInstrucoes() {
     somClique.pause(); somClique.currentTime = 0; somClique.play();
@@ -82,7 +68,7 @@ function tocarAudioInstrucoes() {
     if (audioInstrucoes) { audioInstrucoes.pause(); audioInstrucoes.currentTime = 0; }
     else { audioInstrucoes = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes); }
     audioInstrucoes.play().catch(() => {
-        const utter = new SpeechSynthesisUtterance("Começa na bola e arrasta o dedo pela linha tracejada até à seta.");
+        const utter = new SpeechSynthesisUtterance("Começa na bola e arrasta o dedo pela linha tracejada até à seta, sem sair do caminho!");
         utter.lang = 'pt-PT'; window.speechSynthesis.speak(utter);
     });
 }
@@ -90,26 +76,96 @@ function tocarAudioInstrucoes() {
 function mostrarCapa() {
     if (jogoAtivo) return;
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">${JOGO_CONFIG.nomeDoJogo}</h2>`;
+    
+    // Injeta a mini-área de simulação na capa
     document.getElementById('game-content').innerHTML = `
         <div style="display:flex; flex-direction:column; align-items:center; width: 100%;">
-            <div style="font-size: 4rem; color: var(--primary-color); margin-bottom: 15px;"><i class="fas fa-pencil-alt"></i></div>
-            <p style="color:var(--text-grey); font-weight:800; text-align:center; font-size:1.1rem; max-width: 500px;">
-                Começa na bola colorida e segue <b>em cima da linha</b> até à seta sem largar o dedo!
+            <div class="grafismo-area" id="simu-area" style="transform: scale(0.8); height: 220px; border-color: var(--primary-color); margin-bottom: -10px;">
+                <div class="ponto-inicio" id="simu-inicio"></div>
+                <canvas id="simu-canvas"></canvas>
+                <div class="ponto-fim" id="simu-fim"><i class="fas fa-arrow-right"></i></div>
+                <div id="simu-hand" style="position:absolute; font-size:3rem; z-index:100; pointer-events:none; filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3));">👆</div>
+            </div>
+            <p style="color:var(--text-grey); font-weight:800; text-align:center; font-size:1.1rem; max-width: 500px; padding: 0 15px;">
+                ${JOGO_CONFIG.descricao}
             </p>
         </div>
     `;
+    
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
     footer.innerHTML = `
         <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="btn-audio-circle" onclick="tocarAudioInstrucoes()"> 
         <button class="btn-play-rect" onclick="iniciarJogo()"><i class="fas fa-play"></i> JOGAR</button>
     `;
+
+    setTimeout(iniciarSimulacaoAnimada, 100);
+}
+
+function iniciarSimulacaoAnimada() {
+    const sCanvas = document.getElementById('simu-canvas');
+    if(!sCanvas) return;
+    const sCtx = sCanvas.getContext('2d');
+    const sArea = document.getElementById('simu-area');
+    
+    sCanvas.width = sArea.clientWidth; sCanvas.height = sArea.clientHeight;
+    
+    const startEl = document.getElementById('simu-inicio');
+    const endEl = document.getElementById('simu-fim');
+    const hand = document.getElementById('simu-hand');
+    
+    const startX = startEl.offsetLeft + (startEl.offsetWidth / 2);
+    const startY = sCanvas.height / 2;
+    const endX = endEl.offsetLeft + (endEl.offsetWidth / 2);
+    const endY = sCanvas.height / 2;
+
+    // Gera os pontos de uma curva matemática perfeita para a simulação
+    const path = gerarPontosMatematicos("curva", startX, startY, endX, endY);
+    
+    // Desenha o tracejado de fundo
+    sCtx.beginPath(); sCtx.setLineDash([15, 15]); sCtx.lineWidth = 6; sCtx.strokeStyle = "#d0d0d0";
+    sCtx.moveTo(path[0].x, path[0].y);
+    path.forEach(p => sCtx.lineTo(p.x, p.y));
+    sCtx.stroke(); sCtx.setLineDash([]);
+
+    let step = 0;
+    function animar() {
+        if (!document.getElementById('simu-canvas')) return; // Parar se mudou de ecrã
+        if (step === 0) {
+            sCtx.clearRect(0,0, sCanvas.width, sCanvas.height);
+            // Redesenha fundo
+            sCtx.beginPath(); sCtx.setLineDash([15, 15]); sCtx.lineWidth = 6; sCtx.strokeStyle = "#d0d0d0";
+            sCtx.moveTo(path[0].x, path[0].y); path.forEach(p => sCtx.lineTo(p.x, p.y)); sCtx.stroke(); sCtx.setLineDash([]);
+            
+            sCtx.beginPath(); sCtx.lineWidth = 14; sCtx.strokeStyle = "var(--primary-color)"; sCtx.lineCap = "round"; sCtx.lineJoin = "round";
+            sCtx.moveTo(path[0].x, path[0].y);
+            hand.style.opacity = 1; hand.innerText = "👆";
+        }
+
+        if (step < path.length) {
+            const pt = path[step];
+            hand.style.left = (pt.x - 15) + "px";
+            hand.style.top = (pt.y + 5) + "px";
+            
+            if(step > 5) hand.innerText = "✊"; // Fecha a mão ao desenhar
+            
+            sCtx.lineTo(pt.x, pt.y); sCtx.stroke();
+            step++;
+            simuTimer = setTimeout(animar, 30); // Velocidade do desenho
+        } else {
+            hand.style.opacity = 0;
+            step = 0;
+            simuTimer = setTimeout(animar, 1500); // Pausa e repete
+        }
+    }
+    animar();
 }
 
 // ==========================================
-// 4. LÓGICA DE JOGO (GRAFISMOS)
+// 4. LÓGICA DE JOGO PRINCIPAL
 // ==========================================
 function iniciarJogo() {
+    clearTimeout(simuTimer); // Para a animação da capa
     jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0; 
     totalRondas = DADOS_JOGO.itens.length; 
     proximaRonda();
@@ -136,22 +192,8 @@ function configurarCanvas() {
     const container = document.getElementById('area-desenho');
     canvas = document.getElementById('linhaCanvas');
     ctx = canvas.getContext('2d');
-    canvas.width = container.clientWidth;
-    canvas.height = container.clientHeight;
+    canvas.width = container.clientWidth; canvas.height = container.clientHeight;
 
-    desenharGuia(itemDestaque.tipo);
-
-    canvas.addEventListener('mousedown', startDrawing);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing);
-    canvas.addEventListener('mouseleave', stopDrawing);
-    
-    canvas.addEventListener('touchstart', startDrawing, {passive: false});
-    canvas.addEventListener('touchmove', draw, {passive: false});
-    canvas.addEventListener('touchend', stopDrawing);
-}
-
-function desenharGuia(tipo) {
     const startEl = document.getElementById('ponto-inicio');
     const endEl = document.getElementById('ponto-fim');
     
@@ -160,58 +202,52 @@ function desenharGuia(tipo) {
     posFinalX = endEl.offsetLeft + (endEl.offsetWidth / 2);
     posFinalY = canvas.height / 2;
 
-    checkpoints = [];
-    pontosPassados = 0;
-
-    ctx.beginPath();
-    ctx.setLineDash([15, 15]); 
-    ctx.lineWidth = 6;
-    ctx.strokeStyle = "#d0d0d0";
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
-    ctx.moveTo(startX, startY);
-
-    const widthDist = posFinalX - startX;
+    // 1. GERA OS PONTOS EXATOS DO CAMINHO
+    pontosCaminho = gerarPontosMatematicos(itemDestaque.tipo, startX, startY, posFinalX, posFinalY);
     
+    // 2. DESENHA A LINHA GUIA COM BASE NOS PONTOS (Garante que o visual = colisão)
+    ctx.beginPath(); ctx.setLineDash([15, 15]); ctx.lineWidth = 6; ctx.strokeStyle = "#d0d0d0"; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.moveTo(pontosCaminho[0].x, pontosCaminho[0].y);
+    pontosCaminho.forEach(pt => ctx.lineTo(pt.x, pt.y));
+    ctx.stroke(); ctx.setLineDash([]);
+
+    canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseleave', stopDrawing);
+    canvas.addEventListener('touchstart', startDrawing, {passive: false});
+    canvas.addEventListener('touchmove', draw, {passive: false});
+    canvas.addEventListener('touchend', stopDrawing);
+}
+
+// GERA O CORREDOR VIRTUAL DE ALTA PRECISÃO (100 PONTOS)
+function gerarPontosMatematicos(tipo, sX, sY, eX, eY) {
+    let pts = [];
+    const widthDist = eX - sX;
+    const steps = 100; 
+
     if (tipo === "reta") {
-        ctx.lineTo(posFinalX, posFinalY);
-        // Cria 5 pontos de validação ao longo da reta
-        for(let i = 1; i <= 5; i++) {
-            checkpoints.push({ x: startX + (widthDist * (i/5)), y: startY });
+        for(let i=0; i<=steps; i++) pts.push({ x: sX + widthDist*(i/steps), y: sY, hit: false });
+    } else if (tipo === "curva") {
+        let cpX = sX + widthDist/2; let cpY = sY - 140; // Curva alta
+        for(let i=0; i<=steps; i++) {
+            let t = i/steps;
+            let x = Math.pow(1-t, 2)*sX + 2*(1-t)*t*cpX + Math.pow(t, 2)*eX;
+            let y = Math.pow(1-t, 2)*sY + 2*(1-t)*t*cpY + Math.pow(t, 2)*eY;
+            pts.push({ x, y, hit: false });
         }
-    } 
-    else if (tipo === "curva") {
-        let cpX = startX + widthDist / 2;
-        let cpY = startY - 120; // Ponto de controlo da curva
-        ctx.quadraticCurveTo(cpX, cpY, posFinalX, posFinalY);
-
-        // Cria 6 pontos de validação acompanhando a matemática da curva
-        for(let i = 1; i <= 6; i++) {
-            let t = i / 6;
-            let x = Math.pow(1-t, 2)*startX + 2*(1-t)*t*cpX + Math.pow(t, 2)*posFinalX;
-            let y = Math.pow(1-t, 2)*startY + 2*(1-t)*t*cpY + Math.pow(t, 2)*posFinalY;
-            checkpoints.push({ x, y });
-        }
-    } 
-    else if (tipo === "ziguezague") {
-        const picos = 4;
-        const espaco = widthDist / picos;
-        for (let i = 1; i <= picos; i++) {
-            let x = startX + (espaco * i);
-            let y = (i % 2 === 0) ? startY : startY - 90;
-            if (i === picos) y = posFinalY;
-            ctx.lineTo(x, y);
-
-            // Grava pontos intermédios e picos (impede a criança de cortar caminho a direito)
-            let prevX = (i === 1) ? startX : startX + (espaco * (i-1));
-            let prevY = (i === 1) ? startY : ((i-1) % 2 === 0 ? startY : startY - 90);
-            
-            checkpoints.push({ x: prevX + (x - prevX)/2, y: prevY + (y - prevY)/2 }); // Meio da rampa
-            checkpoints.push({ x: x, y: y }); // O pico/vale
+    } else if (tipo === "ziguezague") {
+        const picos = 4; const espaco = widthDist / picos;
+        let cX = sX; let cY = sY;
+        for(let i=1; i<=picos; i++) {
+            let nX = sX + espaco * i; let nY = (i % 2 === 0) ? sY : sY - 100;
+            if(i === picos) nY = eY;
+            let segSteps = steps / picos;
+            for(let j=0; j<=segSteps; j++) {
+                pts.push({ x: cX + (nX - cX)*(j/segSteps), y: cY + (nY - cY)*(j/segSteps), hit: false });
+            }
+            cX = nX; cY = nY;
         }
     }
-    ctx.stroke();
-    ctx.setLineDash([]); 
+    return pts;
 }
 
 function getClientOffset(e) {
@@ -223,37 +259,52 @@ function getClientOffset(e) {
 function startDrawing(e) {
     if (!jogoAtivo) return;
     e.preventDefault();
-    isDrawing = true;
-    const pos = getClientOffset(e);
     
-    ctx.beginPath();
-    ctx.moveTo(pos.x, pos.y);
-    ctx.lineWidth = 14; 
-    ctx.strokeStyle = "var(--primary-color)";
-    ctx.lineCap = "round";
-    ctx.lineJoin = "round";
+    // Confirma se clicou MESMO na bolinha de início (Tolerância de 40px)
+    const pos = getClientOffset(e);
+    const startPt = pontosCaminho[0];
+    if (Math.hypot(pos.x - startPt.x, pos.y - startPt.y) > 40) {
+        return; // Ignora o clique se não for na bolinha
+    }
+
+    isDrawing = true; saiuDoCaminho = false;
+    pontosCaminho.forEach(p => p.hit = false); // Limpa as colisões anteriores
+    posAtualX = pos.x; posAtualY = pos.y;
+    
+    ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
+    ctx.lineWidth = 14; ctx.strokeStyle = "var(--primary-color)"; ctx.lineCap = "round"; ctx.lineJoin = "round";
 }
 
 function draw(e) {
     if (!isDrawing || !jogoAtivo) return;
     e.preventDefault();
     const pos = getClientOffset(e);
-    posAtualX = pos.x; 
-    posAtualY = pos.y;
     
-    ctx.lineTo(pos.x, pos.y);
-    ctx.stroke();
-
-    // VALIDAÇÃO DOS CHECKPOINTS EM TEMPO REAL
-    if (pontosPassados < checkpoints.length) {
-        let alvo = checkpoints[pontosPassados];
-        let distanciaAoPonto = Math.hypot(pos.x - alvo.x, pos.y - alvo.y);
+    // INTERPOLAÇÃO (Impede de batotar movendo o rato muito depressa)
+    let dist = Math.hypot(pos.x - posAtualX, pos.y - posAtualY);
+    let steps = Math.max(1, Math.floor(dist / 5)); // Verifica de 5 em 5 px
+    
+    for(let s = 1; s <= steps; s++) {
+        let chkX = posAtualX + (pos.x - posAtualX)*(s/steps);
+        let chkY = posAtualY + (pos.y - posAtualY)*(s/steps);
         
-        // Se o dedo passar a menos de 50px do ponto invisível, validamos e passamos ao próximo
-        if (distanciaAoPonto < 50) {
-            pontosPassados++;
+        let minDist = Infinity; let closestIdx = -1;
+        // Procura o ponto da linha mais próximo
+        for(let i=0; i<pontosCaminho.length; i++) {
+            let d = Math.hypot(chkX - pontosCaminho[i].x, chkY - pontosCaminho[i].y);
+            if(d < minDist) { minDist = d; closestIdx = i; }
+        }
+        
+        // Tolerância Rigorosa (35px de raio = espessura do dedo)
+        if (minDist > 35) {
+            saiuDoCaminho = true; 
+        } else if (closestIdx !== -1) {
+            pontosCaminho[closestIdx].hit = true; // Marca que passou por aqui
         }
     }
+
+    posAtualX = pos.x; posAtualY = pos.y;
+    ctx.lineTo(pos.x, pos.y); ctx.stroke();
 }
 
 function stopDrawing(e) {
@@ -264,35 +315,33 @@ function stopDrawing(e) {
 }
 
 function avaliarJogada() {
-    // 1. A criança chegou perto da seta do fim?
+    // 1. Chegou ao fim da linha? (Raio de 60px na seta final)
     const distanciaFim = Math.hypot(posFinalX - posAtualX, posFinalY - posAtualY);
-    // 2. A criança seguiu a forma correta do traçado? (Permitimos que falhe apenas o último ponto)
-    const fezTracoCorreto = pontosPassados >= (checkpoints.length - 1);
     
-    if (distanciaFim < 70 && fezTracoCorreto) {
-        jogoAtivo = false; 
-        certos++; 
-        somAcerto.play();
-        
+    // 2. Preencheu pelo menos 90% da linha original sem tentar cortar caminho a direito?
+    let pontosAtingidos = pontosCaminho.filter(p => p.hit).length;
+    let accuracia = pontosAtingidos / pontosCaminho.length;
+    
+    if (distanciaFim < 60 && accuracia >= 0.90 && !saiuDoCaminho) {
+        jogoAtivo = false; certos++; somAcerto.play();
         const endEl = document.getElementById('ponto-fim');
-        endEl.style.color = "#8cc63f";
-        endEl.classList.add('animating');
+        endEl.style.color = "#8cc63f"; endEl.classList.add('animating');
         document.getElementById('area-desenho').style.borderColor = "#8cc63f";
-        
         setTimeout(() => { rondaAtual++; jogoAtivo = true; proximaRonda(); }, 1500);
     } else {
-        erros++; 
-        somErro.play();
+        erros++; somErro.play();
+        // APAGA O RISCO FEITO E DESENHA SÓ O GUIA DE NOVO
         ctx.clearRect(0, 0, canvas.width, canvas.height); 
-        desenharGuia(itemDestaque.tipo); 
+        ctx.beginPath(); ctx.setLineDash([15, 15]); ctx.lineWidth = 6; ctx.strokeStyle = "#d0d0d0";
+        ctx.moveTo(pontosCaminho[0].x, pontosCaminho[0].y); pontosCaminho.forEach(p => ctx.lineTo(p.x, p.y));
+        ctx.stroke(); ctx.setLineDash([]);
         Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
     }
 }
 
 function darAjuda() {
     if (!jogoAtivo) return;
-    ajudasUsadas++; 
-    somClique.play();
+    ajudasUsadas++; somClique.play();
     const endEl = document.getElementById('ponto-fim');
     endEl.classList.add('animating');
     setTimeout(() => { endEl.classList.remove('animating'); }, 2000);
