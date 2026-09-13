@@ -41,12 +41,10 @@ const ALFABETO_VETORES = {
     'L': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["L", 0.3, 0.8, 0.7, 0.8]] ],
     'M': [ [["L", 0.2, 0.8, 0.2, 0.2]], [["L", 0.2, 0.2, 0.5, 0.5]], [["L", 0.5, 0.5, 0.8, 0.2]], [["L", 0.8, 0.2, 0.8, 0.8]] ],
     'N': [ [["L", 0.2, 0.8, 0.2, 0.2]], [["L", 0.2, 0.2, 0.8, 0.8]], [["L", 0.8, 0.8, 0.8, 0.2]] ],
-    // O e Q: sweep quase completo (270 a 280) para o fim não sobrepor o início perfeitamente
     'O': [ [["A", 0.5, 0.5, 0.3, 270, 280, true]] ],
     'P': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["A", 0.3, 0.35, 0.15, 270, 90, false]] ],
     'Q': [ [["A", 0.5, 0.5, 0.3, 270, 280, true]], [["L", 0.5, 0.5, 0.8, 0.8]] ],
     'R': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["A", 0.3, 0.35, 0.15, 270, 90, false]], [["L", 0.45, 0.5, 0.7, 0.8]] ],
-    // S contínuo perfeito: curva de cima liga perfeitamente à curva de baixo
     'S': [ [["A", 0.5, 0.35, 0.15, 330, 90, true], ["A", 0.5, 0.65, 0.15, 270, 150, false]] ],
     'T': [ [["L", 0.5, 0.2, 0.5, 0.8]], [["L", 0.2, 0.2, 0.8, 0.2]] ],
     'U': [ [["L", 0.3, 0.2, 0.3, 0.65], ["A", 0.5, 0.65, 0.2, 180, 0, true], ["L", 0.7, 0.65, 0.7, 0.2]] ],
@@ -116,7 +114,7 @@ function tocarAudioInstrucoes() {
 
 function mostrarCapa() {
     if (jogoAtivo) return;
-    lerCorDoTema(); // Captura a cor para o canvas usar
+    lerCorDoTema(); 
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">Traça as Letras</h2>`;
     
     document.getElementById('game-content').innerHTML = `
@@ -143,17 +141,25 @@ function mostrarCapa() {
     setTimeout(iniciarSimulacaoAnimada, 100);
 }
 
+// DESENHA PAUTAS PERFEITAMENTE PROPORCIONAIS
 function desenharPautas(context, w, h) {
+    let size = Math.min(w, h);
+    let offsetY = (h - size) / 2;
+
+    let yTop = offsetY + 0.2 * size;
+    let yBot = offsetY + 0.8 * size;
+    let yMid = offsetY + 0.5 * size;
+
     context.beginPath();
     context.lineWidth = 3; context.strokeStyle = "#b3d4ff"; 
-    context.moveTo(w*0.1, h*0.2); context.lineTo(w*0.9, h*0.2); 
-    context.moveTo(w*0.1, h*0.8); context.lineTo(w*0.9, h*0.8); 
+    context.moveTo(w*0.05, yTop); context.lineTo(w*0.95, yTop); 
+    context.moveTo(w*0.05, yBot); context.lineTo(w*0.95, yBot); 
     context.stroke();
     
     context.beginPath();
     context.lineWidth = 2; context.strokeStyle = "#d1e5ff";
     context.setLineDash([15, 10]);
-    context.moveTo(w*0.1, h*0.5); context.lineTo(w*0.9, h*0.5); 
+    context.moveTo(w*0.05, yMid); context.lineTo(w*0.95, yMid); 
     context.stroke();
     context.setLineDash([]);
 }
@@ -227,7 +233,7 @@ function iniciarSimulacaoAnimada() {
 // ==========================================
 function iniciarJogo() {
     clearTimeout(simuTimer); 
-    lerCorDoTema(); // Garante a cor atualizada antes do jogo começar
+    lerCorDoTema(); 
     jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0; 
     totalRondas = 10; 
     ajudaEmCurso = false;
@@ -300,11 +306,18 @@ function atualizarPontos() {
     }
 }
 
-// Motor Matemático Corrigido de Geração de Linhas e Arcos
+// ==========================================
+// MOTOR MATEMÁTICO COM PROPORÇÃO QUADRADA
+// ==========================================
 function gerarLetraTracos(letra, w, h) {
     const strokes = ALFABETO_VETORES[letra];
     let todosTracos = [];
     const steps = 80; 
+
+    // Garante que a letra é perfeitamente proporcional (não estica)
+    let size = Math.min(w, h);
+    let offsetX = (w - size) / 2;
+    let offsetY = (h - size) / 2;
 
     strokes.forEach(strokeCmds => {
         let pts = [];
@@ -315,7 +328,11 @@ function gerarLetraTracos(letra, w, h) {
             if (tipo === "L") {
                 let [_, x1, y1, x2, y2] = cmd;
                 for(let i=0; i<=steps; i++){
-                    pts.push({ x: (x1 + (x2-x1)*(i/steps)) * w, y: (y1 + (y2-y1)*(i/steps)) * h, hit: false });
+                    pts.push({ 
+                        x: offsetX + (x1 + (x2-x1)*(i/steps)) * size, 
+                        y: offsetY + (y1 + (y2-y1)*(i/steps)) * size, 
+                        hit: false 
+                    });
                 }
             } 
             else if (tipo === "A") {
@@ -323,7 +340,6 @@ function gerarLetraTracos(letra, w, h) {
                 let rad1 = a1 * Math.PI/180; 
                 let rad2 = a2 * Math.PI/180;
                 
-                // Normalização das voltas dos ângulos (Impede saltos em O, Q, S)
                 if (anti) {
                     while (rad2 >= rad1) rad2 -= Math.PI * 2;
                 } else {
@@ -332,7 +348,11 @@ function gerarLetraTracos(letra, w, h) {
 
                 for(let i=0; i<=steps; i++){
                     let ang = rad1 + (rad2-rad1)*(i/steps);
-                    pts.push({ x: (cx + Math.cos(ang)*r) * w, y: (cy + Math.sin(ang)*r) * h, hit: false });
+                    pts.push({ 
+                        x: offsetX + (cx + Math.cos(ang)*r) * size, 
+                        y: offsetY + (cy + Math.sin(ang)*r) * size, 
+                        hit: false 
+                    });
                 }
             }
         });
@@ -346,7 +366,7 @@ function desenharGuiasJogo(mostrarConcluido = false) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     desenharPautas(ctx, canvas.width, canvas.height);
     
-    // Fundo branco grosso de guia
+    // Fundo branco grosso (destaque)
     tracosLetra.forEach(traco => {
         ctx.beginPath(); ctx.lineWidth = 44; ctx.strokeStyle = "#ffffff"; ctx.lineCap = "round"; ctx.lineJoin = "round";
         ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
@@ -356,18 +376,18 @@ function desenharGuiasJogo(mostrarConcluido = false) {
         ctx.beginPath(); ctx.lineCap = "round"; ctx.lineJoin = "round";
         
         if (mostrarConcluido || index < tracoAtualIndex) {
-            // TRAÇOS JÁ CONCLUÍDOS (Usa a cor do tema e ficam sempre visíveis!)
+            // TRAÇOS JÁ CONCLUÍDOS (Cor Principal Sólida e Visível!)
             ctx.lineWidth = 18; ctx.strokeStyle = corTemaAtual; ctx.setLineDash([]);
             ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
         } 
         else if (index === tracoAtualIndex) {
-            // TRAÇO ATUAL (Espera a criança desenhar)
+            // TRAÇO ATUAL (Tracejado)
             ctx.lineWidth = 14; ctx.strokeStyle = "#a0a0a0"; ctx.setLineDash([15, 15]);
             ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
             ctx.setLineDash([]);
         } 
         else {
-            // TRAÇOS FUTUROS
+            // TRAÇOS FUTUROS (Mais claros)
             ctx.lineWidth = 14; ctx.strokeStyle = "#e5e5e5"; ctx.setLineDash([15, 15]);
             ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
             ctx.setLineDash([]);
@@ -397,7 +417,6 @@ function startDrawing(e) {
     document.getElementById('ponto-inicio').style.opacity = '0.2';
     document.getElementById('ponto-fim').style.opacity = '0.5';
     
-    // Desenha com a cor sólida real logo que o dedo toca!
     ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
     ctx.lineWidth = 18; ctx.strokeStyle = corTemaAtual; ctx.lineCap = "round"; ctx.lineJoin = "round";
 }
