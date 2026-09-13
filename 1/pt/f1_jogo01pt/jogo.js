@@ -15,7 +15,6 @@ let isDrawing = false;
 let posFinalX = 0, posFinalY = 0;
 let posAtualX = 0, posAtualY = 0;
 
-// Sistema de Validação Estrita e Geração Aleatória
 let pontosCaminho = []; 
 let saiuDoCaminho = false;
 let simuTimer = null; 
@@ -32,9 +31,14 @@ style.innerHTML = `
     .grafismo-area {
         position: relative; width: 100%; max-width: 800px; height: 300px;
         background: #fdfdfd; border: 4px dashed #e0e0e0; border-radius: 30px;
-        margin: 0 auto; display: flex; justify-content: space-between; align-items: center;
+        margin: 0 auto; display: flex; justify-content: space-between; 
         padding: 0 40px; overflow: hidden;
     }
+
+    /* CLASSES DE POSIÇÃO PARA CRIAR AS DIAGONAIS */
+    .pos-top { align-self: flex-start; margin-top: 30px; }
+    .pos-center { align-self: center; }
+    .pos-bottom { align-self: flex-end; margin-bottom: 30px; }
 
     .ponto-inicio {
         width: 35px; height: 35px; border-radius: 50%; 
@@ -42,9 +46,10 @@ style.innerHTML = `
         box-shadow: 0 0 0 5px var(--primary-color), 0 4px 10px rgba(0,0,0,0.2); 
         z-index: 10; position: relative; flex-shrink: 0;
     }
+    
     .ponto-fim { 
         font-size: 3.5rem; color: #d0d0d0; z-index: 10; position: relative; 
-        transition: 0.3s; flex-shrink: 0; 
+        transition: 0.3s; flex-shrink: 0; display: flex; align-items: center; justify-content: center;
     }
 
     .animating { animation: pulse 1s infinite alternate; }
@@ -57,6 +62,8 @@ style.innerHTML = `
         .grafismo-area { height: 220px; padding: 0 20px; }
         .ponto-inicio { width: 25px; height: 25px; }
         .ponto-fim { font-size: 2.5rem; }
+        .pos-top { margin-top: 15px; }
+        .pos-bottom { margin-bottom: 15px; }
     }
 `;
 document.head.appendChild(style);
@@ -70,7 +77,7 @@ function tocarAudioInstrucoes() {
     if (audioInstrucoes) { audioInstrucoes.pause(); audioInstrucoes.currentTime = 0; }
     else { audioInstrucoes = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes); }
     audioInstrucoes.play().catch(() => {
-        const utter = new SpeechSynthesisUtterance("Começa na bola e arrasta o dedo pela linha tracejada até à seta, sem sair do caminho!");
+        const utter = new SpeechSynthesisUtterance("Começa na bola e arrasta o dedo pela linha até à seta, sem sair do caminho!");
         utter.lang = 'pt-PT'; window.speechSynthesis.speak(utter);
     });
 }
@@ -82,9 +89,9 @@ function mostrarCapa() {
     document.getElementById('game-content').innerHTML = `
         <div style="display:flex; flex-direction:column; align-items:center; width: 100%;">
             <div class="grafismo-area" id="simu-area" style="transform: scale(0.8); height: 220px; border-color: var(--primary-color); margin-bottom: -10px;">
-                <div class="ponto-inicio" id="simu-inicio"></div>
+                <div class="ponto-inicio pos-bottom" id="simu-inicio"></div>
                 <canvas id="simu-canvas"></canvas>
-                <div class="ponto-fim" id="simu-fim"><i class="fas fa-arrow-right"></i></div>
+                <div class="ponto-fim pos-top" id="simu-fim"><i class="fas fa-arrow-right"></i></div>
                 <div id="simu-hand" style="position:absolute; font-size:3rem; z-index:100; pointer-events:none; filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3));">👆</div>
             </div>
             <p style="color:var(--text-grey); font-weight:800; text-align:center; font-size:1.1rem; max-width: 500px; padding: 0 15px;">
@@ -115,12 +122,13 @@ function iniciarSimulacaoAnimada() {
     const startEl = document.getElementById('simu-inicio').getBoundingClientRect();
     const endEl = document.getElementById('simu-fim').getBoundingClientRect();
     
+    // Calcula Centros da Simulação
     const startX = startEl.left - cRect.left + (startEl.width / 2);
     const startY = startEl.top - cRect.top + (startEl.height / 2);
-    const endX = endEl.left - cRect.left + (endEl.width / 2);
+    const endX = endEl.left - cRect.left;
     const endY = endEl.top - cRect.top + (endEl.height / 2);
 
-    const path = gerarPontosMatematicos("onda", startX, startY, endX, endY);
+    const path = gerarPontosLinhaReta(startX, startY, endX, endY);
     
     sCtx.beginPath(); sCtx.setLineDash([15, 15]); sCtx.lineWidth = 6; sCtx.strokeStyle = "#d0d0d0";
     sCtx.moveTo(path[0].x, path[0].y); path.forEach(p => sCtx.lineTo(p.x, p.y)); sCtx.stroke(); sCtx.setLineDash([]);
@@ -146,7 +154,7 @@ function iniciarSimulacaoAnimada() {
             
             sCtx.lineTo(pt.x, pt.y); sCtx.stroke();
             step++;
-            simuTimer = setTimeout(animar, 25); 
+            simuTimer = setTimeout(animar, 15); // Rápido e suave
         } else {
             hand.style.opacity = 0; step = 0;
             simuTimer = setTimeout(animar, 1500); 
@@ -163,14 +171,21 @@ function iniciarJogo() {
     jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0; 
     totalRondas = 10; 
     
-    // GERA SEQUÊNCIA DE 10 NÍVEIS ALEATÓRIOS E VARIADOS
-    const tiposDisponiveis = ["reta", "curva", "curva_baixo", "ziguezague", "onda"];
+    // GERAÇÃO DE MÚLTIPLOS PADRÕES DE LINHAS RETAS (DIAGONAIS, HORIZONTAIS)
+    const basePontoA = ["pos-top", "pos-center", "pos-bottom"];
+    const basePontoB = ["pos-top", "pos-center", "pos-bottom"];
+    
     sequenciaNiveis = [];
     
-    // Garante que todos os 5 tipos aparecem 2 vezes cada (total 10) e baralha
-    let deck = [...tiposDisponiveis, ...tiposDisponiveis];
+    // Cria todas as 9 combinações possíveis e baralha
+    let deck = [];
+    basePontoA.forEach(a => {
+        basePontoB.forEach(b => { deck.push({ posIni: a, posFim: b }); });
+    });
+    
+    // Baralha o deck e tira as primeiras 10 rondas (repete 1 aleatória para dar 10)
     deck.sort(() => Math.random() - 0.5);
-    sequenciaNiveis = deck.map(t => ({ tipo: t }));
+    sequenciaNiveis = [...deck, deck[0]]; 
 
     proximaRonda();
 }
@@ -184,12 +199,13 @@ function proximaRonda() {
     
     area.innerHTML = `
         <div class="grafismo-area" id="area-desenho">
-            <div class="ponto-inicio" id="ponto-inicio"></div>
+            <div class="ponto-inicio ${itemDestaque.posIni}" id="ponto-inicio"></div>
             <canvas id="linhaCanvas"></canvas>
-            <div class="ponto-fim" id="ponto-fim"><i class="fas fa-arrow-right"></i></div>
+            <div class="ponto-fim ${itemDestaque.posFim}" id="ponto-fim"><i class="fas fa-arrow-right"></i></div>
         </div>
     `;
-    setTimeout(configurarCanvas, 100); 
+    // Dá 150ms para o CSS posicionar os itens flex antes de medir com o Canvas
+    setTimeout(configurarCanvas, 150); 
 }
 
 function configurarCanvas() {
@@ -198,17 +214,19 @@ function configurarCanvas() {
     ctx = canvas.getContext('2d');
     canvas.width = container.clientWidth; canvas.height = container.clientHeight;
 
-    // CÁLCULO MILIMÉTRICO DO CENTRO DA BOLA E SETA
+    // CÁLCULO MILIMÉTRICO (Começa no centro da bola, acaba no inicio da seta)
     const cRect = container.getBoundingClientRect();
     const startRect = document.getElementById('ponto-inicio').getBoundingClientRect();
     const endRect = document.getElementById('ponto-fim').getBoundingClientRect();
     
     const startX = startRect.left - cRect.left + (startRect.width / 2);
     const startY = startRect.top - cRect.top + (startRect.height / 2);
-    posFinalX = endRect.left - cRect.left + (endRect.width / 2);
+    
+    // O final é exatamente o ponto esquerdo (left) da "caixa" da seta, com +5px para encostar ao icone
+    posFinalX = endRect.left - cRect.left + 5; 
     posFinalY = endRect.top - cRect.top + (endRect.height / 2);
 
-    pontosCaminho = gerarPontosMatematicos(itemDestaque.tipo, startX, startY, posFinalX, posFinalY);
+    pontosCaminho = gerarPontosLinhaReta(startX, startY, posFinalX, posFinalY);
     
     ctx.beginPath(); ctx.setLineDash([15, 15]); ctx.lineWidth = 6; ctx.strokeStyle = "#d0d0d0"; ctx.lineCap = "round"; ctx.lineJoin = "round";
     ctx.moveTo(pontosCaminho[0].x, pontosCaminho[0].y);
@@ -222,52 +240,16 @@ function configurarCanvas() {
     canvas.addEventListener('touchend', stopDrawing);
 }
 
-// GERA O CORREDOR VIRTUAL DE ALTA PRECISÃO (100 PONTOS) - AGORA COM 5 VARIANTES
-function gerarPontosMatematicos(tipo, sX, sY, eX, eY) {
+// GERA OS PONTOS APENAS PARA LINHAS RETAS
+function gerarPontosLinhaReta(sX, sY, eX, eY) {
     let pts = [];
-    const widthDist = eX - sX;
-    const steps = 100; 
-
-    if (tipo === "reta") {
-        for(let i=0; i<=steps; i++) pts.push({ x: sX + widthDist*(i/steps), y: sY, hit: false });
-    } 
-    else if (tipo === "curva") { // Arco por cima
-        let cpX = sX + widthDist/2; let cpY = sY - 140; 
-        for(let i=0; i<=steps; i++) {
-            let t = i/steps;
-            let x = Math.pow(1-t, 2)*sX + 2*(1-t)*t*cpX + Math.pow(t, 2)*eX;
-            let y = Math.pow(1-t, 2)*sY + 2*(1-t)*t*cpY + Math.pow(t, 2)*eY;
-            pts.push({ x, y, hit: false });
-        }
-    } 
-    else if (tipo === "curva_baixo") { // Arco por baixo
-        let cpX = sX + widthDist/2; let cpY = sY + 140; 
-        for(let i=0; i<=steps; i++) {
-            let t = i/steps;
-            let x = Math.pow(1-t, 2)*sX + 2*(1-t)*t*cpX + Math.pow(t, 2)*eX;
-            let y = Math.pow(1-t, 2)*sY + 2*(1-t)*t*cpY + Math.pow(t, 2)*eY;
-            pts.push({ x, y, hit: false });
-        }
-    }
-    else if (tipo === "onda") { // Sinuoso tipo cobra (2 ondas)
-        for(let i=0; i<=steps; i++) {
-            let x = sX + widthDist*(i/steps);
-            let y = sY + Math.sin((i/steps) * Math.PI * 4) * 60; // 4 * PI = 2 ondas completas
-            pts.push({ x, y, hit: false });
-        }
-    }
-    else if (tipo === "ziguezague") { // Montanhas
-        const picos = 4; const espaco = widthDist / picos;
-        let cX = sX; let cY = sY;
-        for(let i=1; i<=picos; i++) {
-            let nX = sX + espaco * i; let nY = (i % 2 === 0) ? sY : sY - 90;
-            if(i === picos) nY = eY;
-            let segSteps = steps / picos;
-            for(let j=0; j<=segSteps; j++) {
-                pts.push({ x: cX + (nX - cX)*(j/segSteps), y: cY + (nY - cY)*(j/segSteps), hit: false });
-            }
-            cX = nX; cY = nY;
-        }
+    const steps = 100; // Divide a linha em 100 pontos minúsculos de verificação
+    for(let i=0; i<=steps; i++) {
+        pts.push({ 
+            x: sX + (eX - sX) * (i/steps), 
+            y: sY + (eY - sY) * (i/steps), 
+            hit: false 
+        });
     }
     return pts;
 }
@@ -282,10 +264,10 @@ function startDrawing(e) {
     if (!jogoAtivo) return;
     e.preventDefault();
     
-    // OBRIGA A COMEÇAR MESMO NA BOLA (Tolerância de 40px)
+    // OBRIGA A COMEÇAR NO CENTRO DA BOLA (Tolerância de 35px)
     const pos = getClientOffset(e);
     const startPt = pontosCaminho[0];
-    if (Math.hypot(pos.x - startPt.x, pos.y - startPt.y) > 40) return; 
+    if (Math.hypot(pos.x - startPt.x, pos.y - startPt.y) > 35) return; 
 
     isDrawing = true; saiuDoCaminho = false;
     pontosCaminho.forEach(p => p.hit = false); 
@@ -300,7 +282,7 @@ function draw(e) {
     e.preventDefault();
     const pos = getClientOffset(e);
     
-    // Interpolation para não enganar o sistema se o rato andar muito rápido
+    // Interpolation (verifica pontos intermédios caso o rato se mova muito depressa)
     let dist = Math.hypot(pos.x - posAtualX, pos.y - posAtualY);
     let steps = Math.max(1, Math.floor(dist / 5)); 
     
@@ -314,8 +296,8 @@ function draw(e) {
             if(d < minDist) { minDist = d; closestIdx = i; }
         }
         
-        // Tolerância (40px) - se desviar muito dá erro no fim
-        if (minDist > 40) {
+        // Se a criança se afastar mais de 35px da linha central traçada -> INVALIDEZ
+        if (minDist > 35) {
             saiuDoCaminho = true; 
         } else if (closestIdx !== -1) {
             pontosCaminho[closestIdx].hit = true; 
@@ -334,12 +316,13 @@ function stopDrawing(e) {
 }
 
 function avaliarJogada() {
+    // Tolerância para soltar o rato de 50px do inicio da seta
     const distanciaFim = Math.hypot(posFinalX - posAtualX, posFinalY - posAtualY);
     let pontosAtingidos = pontosCaminho.filter(p => p.hit).length;
     let accuracia = pontosAtingidos / pontosCaminho.length;
     
-    // TEM DE ACERTAR NO FIM, PREENCHER 90% DO CAMINHO, E NÃO SAIR DO TRAÇO
-    if (distanciaFim < 60 && accuracia >= 0.90 && !saiuDoCaminho) {
+    // VALIDAÇÃO: Chegou ao fim E cobriu 90% da linha E não se desviou para fora
+    if (distanciaFim < 50 && accuracia >= 0.90 && !saiuDoCaminho) {
         jogoAtivo = false; certos++; somAcerto.play();
         const endEl = document.getElementById('ponto-fim');
         endEl.style.color = "#8cc63f"; endEl.classList.add('animating');
