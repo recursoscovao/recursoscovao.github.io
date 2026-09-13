@@ -61,13 +61,13 @@ const BIBLIOTECA_CONTEUDO = {
 // ==========================================
 const JOGO_CONFIG = {
     nomeDoJogo: "Traça o Caminho",
-    descricao: "Usa o teu dedo ou rato para ligar os animais seguindo o caminho tracejado!",
+    descricao: "Usa o teu dedo ou rato para seguir o caminho tracejado!",
     
     areaAtiva: "portugues",   
     anoAtivo: "ano1",    
 
     caminhoIconsMenu: "../../../icons/", 
-    caminhoIconsJogos: "../../../icons/ic_jogos_1ano/", // <-- CORRIGIDO AQUI!
+    caminhoIconsJogos: "../../../icons/ic_jogos_1ano/", 
     caminhoSons: "../../../sons/", 
 
     sons: {
@@ -87,15 +87,15 @@ const JOGO_CONFIG = {
     ],
 
     instrucoes: {
-        objetivo: "Usa o rato ou o dedo para desenhar uma linha desde o animal da esquerda até ao animal da direita, sem largar!",
+        objetivo: "Usa o rato ou o dedo para desenhar uma linha sem largar!",
         comoJogar: [
-            "Toca no animal da esquerda para começar.",
+            "Toca na bola colorida para começar.",
             "Sem levantar o dedo, segue a linha tracejada.",
-            "Chega até ao animal da direita para ganhares a ronda."
+            "Chega até à seta para ganhares a ronda."
         ],
         regras: [
-            "Tens de chegar perto da imagem de destino.",
-            "Se largares antes do fim, tens de tentar de novo!"
+            "Tens de chegar à seta.",
+            "Se largares ou saíres muito fora da linha, tens de tentar de novo!"
         ],
         dicas: "Vai devagar para não saíres muito fora da linha!",
         desenvolvimento: [
@@ -118,8 +118,14 @@ const JOGO_CONFIG = {
 // ==========================================
 const DADOS_JOGO = {
     caminhoImagens: "../../../img/animaisdomesticos/", 
+    
+    // ==============================================
+    // AQUI ESTÁ O CAMINHO CORRIGIDO PARA AS INSTRUÇÕES
+    // ==============================================
     somInstrucoes: "sons1ano/f1_jogo01pt.mp3", 
     
+    // A lista de itens mantêm-se por uma questão estrutural,
+    // o novo motor visual do jogo.js gera as linhas automaticamente.
     itens: [
         { id: 1,  imgA: "galinha.png", imgB: "pintainho.png", tipo: "reta" },       
         { id: 2,  imgA: "pato.png",    imgB: "patinho.png",   tipo: "curva" },      
