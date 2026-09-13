@@ -6,27 +6,9 @@ let rondaAtual = 0, totalRondas = 10, certos = 0, erros = 0, ajudasUsadas = 0;
 let itemDestaque = null;
 let audioInstrucoes = null;
 
-// Sistema de áudio sintético robusto para evitar erros de caminhos em falta
-const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-function playTone(freq, type, duration) {
-    try {
-        if (audioCtx.state === 'suspended') audioCtx.resume();
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = type;
-        osc.frequency.setValueAtTime(freq, audioCtx.currentTime);
-        gain.gain.setValueAtTime(0.1, audioCtx.currentTime);
-        gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + duration);
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        osc.start();
-        osc.stop(audioCtx.currentTime + duration);
-    } catch(e) {}
-}
-
-const somAcerto = { play: () => playTone(587.33, 'sine', 0.4) };
-const somErro = { play: () => playTone(220, 'sawtooth', 0.3) };
-const somClique = { play: () => playTone(440, 'sine', 0.1) };
+const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.acerto);
+const somErro = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.erro);
+const somClique = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.clique);
 
 let canvas, ctx, corTemaAtual = "#5EA2E6"; 
 let isDrawing = false;
@@ -77,7 +59,7 @@ const ALFABETO_VETORES = {
 const style = document.createElement('style');
 style.innerHTML = `
     .btn-play-rect { flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); transition: 0.2s; z-index: 100; }
-    .btn-audio-circle { width: 65px; height: 65px; cursor: pointer; flex-shrink: 0; z-index: 100; display: flex; align-items: center; justify-content: center; background: #edf2f7; border-radius: 50%; }
+    .btn-audio-circle { width: 65px; height: 65px; cursor: pointer; flex-shrink: 0; z-index: 100; }
 
     .grafismo-area {
         position: relative; width: 100%; max-width: 500px; height: 350px;
@@ -90,7 +72,6 @@ style.innerHTML = `
         position: absolute; width: 36px; height: 36px; border-radius: 50%; 
         border: 5px solid #fff; z-index: 10; 
         transform: translate(-50%, -50%); transition: opacity 0.2s ease;
-        pointer-events: none;
     }
     .ponto-inicio { background: var(--primary-color); box-shadow: 0 0 0 3px var(--primary-color), 0 4px 10px rgba(0,0,0,0.3); }
     .ponto-fim { background: #8cc63f; box-shadow: 0 0 0 3px #8cc63f, 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; }
@@ -119,10 +100,14 @@ function lerCorDoTema() {
 // 4. LÓGICA DE CAPA (TUTORIAL DA LETRA A)
 // ==========================================
 function tocarAudioInstrucoes() {
-    somClique.play();
+    somClique.currentTime = 0; somClique.play().catch(e=>console.log(e));
     if (window.speechSynthesis) window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance("Começa exatamente na bola azul e escorrega o dedo até ao meio da bola verde!");
-    utter.lang = 'pt-PT'; window.speechSynthesis.speak(utter);
+    if (audioInstrucoes) { audioInstrucoes.pause(); audioInstrucoes.currentTime = 0; }
+    else { audioInstrucoes = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes); }
+    audioInstrucoes.play().catch(() => {
+        const utter = new SpeechSynthesisUtterance("Começa exatamente na bola azul e escorrega o dedo até ao meio da bola verde!");
+        utter.lang = 'pt-PT'; window.speechSynthesis.speak(utter);
+    });
 }
 
 function mostrarCapa() {
@@ -147,7 +132,7 @@ function mostrarCapa() {
     const footer = document.getElementById('shell-footer-content');
     footer.style.display = "flex";
     footer.innerHTML = `
-        <div class="btn-audio-circle" onclick="tocarAudioInstrucoes()"><i class="fas fa-volume-up" style="color:var(--primary-color); font-size:1.5rem;"></i></div> 
+        <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="btn-audio-circle" onclick="tocarAudioInstrucoes()"> 
         <button class="btn-play-rect" onclick="iniciarJogo()"><i class="fas fa-play"></i> JOGAR</button>
     `;
 
@@ -267,15 +252,11 @@ function configurarCanvas() {
     
     atualizarPontos(); desenharGuiasJogo();
 
-    canvas.addEventListener('mousedown', startDrawing); 
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDrawing); 
-    canvas.addEventListener('mouseleave', stopDrawing);
-    
+    canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw);
+    canvas.addEventListener('mouseup', stopDrawing); canvas.addEventListener('mouseleave', stopDrawing);
     canvas.addEventListener('touchstart', startDrawing, {passive: false});
     canvas.addEventListener('touchmove', draw, {passive: false});
-    canvas.addEventListener('touchend', stopDrawing, {passive: false});
-    canvas.addEventListener('touchcancel', stopDrawing, {passive: false});
+    canvas.addEventListener('touchend', stopDrawing);
 }
 
 function atualizarPontos() {
@@ -359,17 +340,12 @@ function desenharGuiasJogo(mostrarConcluido = false) {
 
 function getClientOffset(e) {
     const rect = canvas.getBoundingClientRect();
-    if (e.touches && e.touches.length > 0) {
-        return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
-    }
-    if (e.changedTouches && e.changedTouches.length > 0) {
-        return { x: e.changedTouches[0].clientX - rect.left, y: e.changedTouches[0].clientY - rect.top };
-    }
+    if (e.touches) return { x: e.touches[0].clientX - rect.left, y: e.touches[0].clientY - rect.top };
     return { x: e.clientX - rect.left, y: e.clientY - rect.top };
 }
 
 // ==========================================
-// MOTOR DE TOQUE RIGOROSO (ÍMAN)
+// MOTOR DE TOQUE RIGOROSO (ÍMAN) & VERIFICAÇÃO DE LINHA
 // ==========================================
 function startDrawing(e) {
     if (!jogoAtivo || ajudaEmCurso || tracoAtualIndex >= tracosLetra.length) return; 
@@ -378,13 +354,12 @@ function startDrawing(e) {
     const pos = getClientOffset(e);
     const startPt = tracosLetra[tracoAtualIndex][0];
     
-    // TEM DE TOCAR DENTRO DA BOLA AZUL (Tolerância de 45px para facilitar em touch)
-    if (Math.hypot(pos.x - startPt.x, pos.y - startPt.y) > 45) return; 
+    // VERIFICAÇÃO RIGOROSA: Têm de começar no ponto de partida da linha atual
+    if (Math.hypot(pos.x - startPt.x, pos.y - startPt.y) > 35) return; 
 
     isDrawing = true; saiuDoCaminho = false;
     tracosLetra[tracoAtualIndex].forEach(p => p.hit = false); 
     
-    // SNAP (cola a linha ao centro da bola azul)
     posAtualX = startPt.x; posAtualY = startPt.y;
     
     document.getElementById('ponto-inicio').style.opacity = '0.2';
@@ -412,20 +387,21 @@ function draw(e) {
             let d = Math.hypot(chkX - trajetoAtual[i].x, chkY - trajetoAtual[i].y);
             if(d < minDist) { minDist = d; closestIdx = i; }
         }
-        if (minDist > 75) saiuDoCaminho = true; 
+        // VERIFICAÇÃO CONTÍNUA DA LIGAÇÃO: Se se afastar demasiado da linha atual, sinaliza desvio
+        if (minDist > 70) saiuDoCaminho = true; 
         else if (closestIdx !== -1) trajetoAtual[closestIdx].hit = true; 
     }
     
     posAtualX = pos.x; posAtualY = pos.y;
     ctx.lineTo(pos.x, pos.y); ctx.stroke();
 
-    // AUTO-COMPLETAR SE CHEGAR AO CENTRO DA BOLA VERDE DURANTE O MOVIMENTO
+    // VERIFICAÇÃO DE CONCLUSÃO DO TRAÇO: Se chegar próximo do ponto final da linha atual
     let ptFim = trajetoAtual[trajetoAtual.length - 1];
     let distAteFim = Math.hypot(ptFim.x - pos.x, ptFim.y - pos.y);
     
-    if (distAteFim <= 40) { 
+    if (distAteFim <= 35) { 
         let accuracia = trajetoAtual.filter(p => p.hit).length / trajetoAtual.length;
-        if (accuracia >= 0.35 && !saiuDoCaminho) {
+        if (accuracia >= 0.40 && !saiuDoCaminho) {
             ctx.lineTo(ptFim.x, ptFim.y); ctx.stroke();
             posAtualX = ptFim.x; posAtualY = ptFim.y;
             stopDrawing(e); 
@@ -435,7 +411,6 @@ function draw(e) {
 
 function stopDrawing(e) {
     if (!isDrawing || ajudaEmCurso) return;
-    if (e) e.preventDefault();
     isDrawing = false; ctx.closePath();
     document.getElementById('ponto-inicio').style.opacity = '1';
     document.getElementById('ponto-fim').style.opacity = '1';
@@ -446,16 +421,17 @@ function avaliarJogada() {
     let trajetoAtual = tracosLetra[tracoAtualIndex];
     let ptFim = trajetoAtual[trajetoAtual.length - 1];
     
+    // VERIFICAÇÃO FINAL DA LIGAÇÃO DA LINHA
     let distanciaFim = Math.hypot(ptFim.x - posAtualX, ptFim.y - posAtualY);
     let accuracia = trajetoAtual.filter(p => p.hit).length / trajetoAtual.length;
     
-    if (distanciaFim <= 45 && accuracia >= 0.35 && !saiuDoCaminho) {
+    if (distanciaFim <= 40 && accuracia >= 0.40 && !saiuDoCaminho) {
         tracoAtualIndex++; 
-        somClique.play();
+        somClique.currentTime = 0; somClique.play().catch(e=>console.log(e));
         
         if (tracoAtualIndex >= tracosLetra.length) {
             jogoAtivo = false; certos++; 
-            somAcerto.play();
+            somAcerto.currentTime = 0; somAcerto.play().catch(e=>console.log(e));
             atualizarPontos(); desenharGuiasJogo(true); 
             
             const area = document.getElementById('area-desenho');
@@ -465,14 +441,14 @@ function avaliarJogada() {
             atualizarPontos(); desenharGuiasJogo(); 
         }
     } else {
-        erros++; somErro.play();
+        erros++; somErro.currentTime = 0; somErro.play().catch(e=>console.log(e));
         trajetoAtual.forEach(p => p.hit = false); desenharGuiasJogo(); Engine.showStatusBar(rondaAtual, totalRondas, certos, erros);
     }
 }
 
 function darAjuda() {
     if (!jogoAtivo || ajudaEmCurso || tracoAtualIndex >= tracosLetra.length) return;
-    ajudasUsadas++; somClique.play();
+    ajudasUsadas++; somClique.currentTime = 0; somClique.play().catch(e=>console.log(e));
     ajudaEmCurso = true; isDrawing = false; 
     document.getElementById('ponto-inicio').style.opacity = '0'; document.getElementById('ponto-fim').style.opacity = '0';
     desenharGuiasJogo();
@@ -514,6 +490,6 @@ function darAjuda() {
 function finalizarJogo() {
     jogoAtivo = false;
     if(audioInstrucoes) audioInstrucoes.pause();
-    const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max) || JOGO_CONFIG.relatorios[0];
+    const rel = JOGO_CONFIG.relatorios.find(r => certos >= r.min && certos <= r.max);
     Engine.showResults(certos, erros, ajudasUsadas, rel);
 }
