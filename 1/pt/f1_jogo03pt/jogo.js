@@ -77,6 +77,14 @@ style.innerHTML = `
         z-index: 10; transform: translate(-50%, -50%); transition: 0.3s ease;
     }
 
+    .ponto-fim {
+        position: absolute; width: 34px; height: 34px; border-radius: 50%; 
+        background: #8cc63f; border: 5px solid #fff; 
+        box-shadow: 0 0 0 3px #8cc63f, 0 4px 10px rgba(0,0,0,0.3); 
+        z-index: 10; transform: translate(-50%, -50%); transition: 0.3s ease;
+        display: flex; align-items: center; justify-content: center; color: white;
+    }
+
     .animating { animation: pulse 1s infinite alternate; }
     @keyframes pulse { from { transform: translate(-50%, -50%) scale(1); } to { transform: translate(-50%, -50%) scale(1.2); } }
 
@@ -101,7 +109,7 @@ function tocarAudioInstrucoes() {
     if (audioInstrucoes) { audioInstrucoes.pause(); audioInstrucoes.currentTime = 0; }
     else { audioInstrucoes = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes); }
     audioInstrucoes.play().catch(() => {
-        const utter = new SpeechSynthesisUtterance("Começa na bolinha e desenha as letras pelas linhas!");
+        const utter = new SpeechSynthesisUtterance("Começa na bola azul e arrasta o dedo até à bola verde com a estrela!");
         utter.lang = 'pt-PT'; window.speechSynthesis.speak(utter);
     });
 }
@@ -114,11 +122,12 @@ function mostrarCapa() {
         <div style="display:flex; flex-direction:column; align-items:center; width: 100%;">
             <div class="grafismo-area" id="simu-area" style="transform: scale(0.8); height: 280px; border-color: var(--primary-color); margin-bottom: -10px;">
                 <div class="ponto-inicio" id="simu-inicio" style="display:none;"></div>
+                <div class="ponto-fim" id="simu-fim" style="display:none;"><i class="fas fa-star" style="font-size:12px;"></i></div>
                 <canvas id="simu-canvas"></canvas>
                 <div id="simu-hand" style="position:absolute; font-size:3rem; z-index:100; pointer-events:none; filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3)); transition: opacity 0.3s;">👆</div>
             </div>
             <p style="color:var(--text-grey); font-weight:800; text-align:center; font-size:1.1rem; max-width: 500px; padding: 0 15px;">
-                Toca na bola e segue a direção das setas!
+                Vai da bola azul à bola verde!
             </p>
         </div>
     `;
@@ -136,18 +145,14 @@ function mostrarCapa() {
 function desenharPautas(context, w, h) {
     context.beginPath();
     context.lineWidth = 3; context.strokeStyle = "#b3d4ff"; // Azul claro (tipo caderno)
-    
-    // Linha de cima
-    context.moveTo(w*0.1, h*0.1); context.lineTo(w*0.9, h*0.1);
-    // Linha de baixo
-    context.moveTo(w*0.1, h*0.9); context.lineTo(w*0.9, h*0.9);
+    context.moveTo(w*0.1, h*0.1); context.lineTo(w*0.9, h*0.1); // Linha de cima
+    context.moveTo(w*0.1, h*0.9); context.lineTo(w*0.9, h*0.9); // Linha de baixo
     context.stroke();
     
-    // Linha do meio tracejada
     context.beginPath();
     context.lineWidth = 2; context.strokeStyle = "#d1e5ff";
     context.setLineDash([15, 10]);
-    context.moveTo(w*0.1, h*0.5); context.lineTo(w*0.9, h*0.5);
+    context.moveTo(w*0.1, h*0.5); context.lineTo(w*0.9, h*0.5); // Linha do meio tracejada
     context.stroke();
     context.setLineDash([]);
 }
@@ -162,6 +167,8 @@ function iniciarSimulacaoAnimada() {
     
     const paths = gerarLetraTracos('A', sCanvas.width, sCanvas.height);
     const hand = document.getElementById('simu-hand');
+    const sStart = document.getElementById('simu-inicio');
+    const sEnd = document.getElementById('simu-fim');
     
     let currentS = 0; let step = 0;
 
@@ -184,6 +191,10 @@ function iniciarSimulacaoAnimada() {
             const traco = paths[currentS];
             
             if (step === 0) {
+                // Posiciona bolas da simulação
+                sStart.style.display = 'flex'; sStart.style.left = traco[0].x + "px"; sStart.style.top = traco[0].y + "px";
+                sEnd.style.display = 'flex'; sEnd.style.left = traco[traco.length-1].x + "px"; sEnd.style.top = traco[traco.length-1].y + "px";
+                
                 sCtx.beginPath(); sCtx.lineWidth = 18; sCtx.strokeStyle = "var(--primary-color)"; sCtx.lineCap = "round"; sCtx.lineJoin = "round";
                 sCtx.moveTo(traco[0].x, traco[0].y);
                 hand.style.opacity = 1; hand.innerText = "👆";
@@ -204,6 +215,7 @@ function iniciarSimulacaoAnimada() {
             }
         } else {
             hand.style.opacity = 0; currentS = 0; step = 0;
+            sStart.style.display = 'none'; sEnd.style.display = 'none';
             simuTimer = setTimeout(animar, 1500); 
         }
     }
@@ -239,6 +251,7 @@ function proximaRonda() {
         <h3 style="color: var(--text-grey); margin-bottom: 10px; font-weight: 900; text-transform: uppercase;">Letra ${itemDestaque.letra}</h3>
         <div class="grafismo-area" id="area-desenho">
             <div class="ponto-inicio animating" id="ponto-inicio"></div>
+            <div class="ponto-fim" id="ponto-fim"><i class="fas fa-star" style="font-size:12px;"></i></div>
             <canvas id="linhaCanvas"></canvas>
             <div id="game-hand" style="position:absolute; font-size:3rem; z-index:100; pointer-events:none; opacity:0; filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3)); transition: opacity 0.3s;">👆</div>
         </div>
@@ -255,7 +268,7 @@ function configurarCanvas() {
     tracosLetra = gerarLetraTracos(itemDestaque.letra, canvas.width, canvas.height);
     tracoAtualIndex = 0;
     
-    atualizarPontoInicio();
+    atualizarPontos();
     desenharGuiasJogo();
 
     canvas.addEventListener('mousedown', startDrawing); canvas.addEventListener('mousemove', draw);
@@ -265,14 +278,27 @@ function configurarCanvas() {
     canvas.addEventListener('touchend', stopDrawing);
 }
 
-function atualizarPontoInicio() {
-    const dot = document.getElementById('ponto-inicio');
+// Atualiza a posição da bola azul (início) e verde (fim)
+function atualizarPontos() {
+    const startDot = document.getElementById('ponto-inicio');
+    const endDot = document.getElementById('ponto-fim');
+
     if (tracoAtualIndex < tracosLetra.length) {
-        dot.style.display = 'block';
-        dot.style.left = tracosLetra[tracoAtualIndex][0].x + "px";
-        dot.style.top = tracosLetra[tracoAtualIndex][0].y + "px";
+        const traco = tracosLetra[tracoAtualIndex];
+        const ptInicio = traco[0];
+        const ptFim = traco[traco.length - 1];
+
+        startDot.style.display = 'flex';
+        startDot.style.left = ptInicio.x + "px";
+        startDot.style.top = ptInicio.y + "px";
+        startDot.style.opacity = '1';
+
+        endDot.style.display = 'flex';
+        endDot.style.left = ptFim.x + "px";
+        endDot.style.top = ptFim.y + "px";
     } else {
-        dot.style.display = 'none'; 
+        startDot.style.display = 'none'; 
+        endDot.style.display = 'none'; 
     }
 }
 
@@ -309,20 +335,6 @@ function gerarLetraTracos(letra, w, h) {
     return todosTracos;
 }
 
-// FUNÇÃO PARA DESENHAR UMA SETA NO FINAL DO TRAÇO
-function desenharSeta(ctx, p1, p2) {
-    const angulo = Math.atan2(p2.y - p1.y, p2.x - p1.x);
-    const tamanho = 20;
-    
-    ctx.beginPath();
-    ctx.moveTo(p2.x, p2.y);
-    ctx.lineTo(p2.x - tamanho * Math.cos(angulo - Math.PI / 6), p2.y - tamanho * Math.sin(angulo - Math.PI / 6));
-    ctx.lineTo(p2.x - tamanho * Math.cos(angulo + Math.PI / 6), p2.y - tamanho * Math.sin(angulo + Math.PI / 6));
-    ctx.lineTo(p2.x, p2.y);
-    ctx.fillStyle = "#a0a0a0";
-    ctx.fill();
-}
-
 function desenharGuiasJogo(mostrarConcluido = false) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     desenharPautas(ctx, canvas.width, canvas.height);
@@ -337,23 +349,18 @@ function desenharGuiasJogo(mostrarConcluido = false) {
         ctx.beginPath(); ctx.lineCap = "round"; ctx.lineJoin = "round";
         
         if (mostrarConcluido || index < tracoAtualIndex) {
-            // Letra terminada ou traço concluído (Cor do Tema)
+            // Letra terminada ou traço concluído (Cor do Tema contínua)
             ctx.lineWidth = 18; ctx.strokeStyle = "var(--primary-color)"; ctx.setLineDash([]);
             ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
         } 
         else if (index === tracoAtualIndex) {
-            // Traço atual a fazer
+            // Traço atual a fazer (Tracejado escuro)
             ctx.lineWidth = 14; ctx.strokeStyle = "#a0a0a0"; ctx.setLineDash([15, 15]);
             ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
             ctx.setLineDash([]);
-            
-            // Desenha a SETA de direção no fim do traço atual
-            let p1 = traco[traco.length - 15]; // Pega um ponto um bocadinho antes do fim
-            let p2 = traco[traco.length - 1];
-            desenharSeta(ctx, p1, p2);
         } 
         else {
-            // Traços futuros
+            // Traços futuros (Tracejado claro)
             ctx.lineWidth = 14; ctx.strokeStyle = "#e5e5e5"; ctx.setLineDash([15, 15]);
             ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
             ctx.setLineDash([]);
@@ -374,13 +381,15 @@ function startDrawing(e) {
     const pos = getClientOffset(e);
     const startPt = tracosLetra[tracoAtualIndex][0];
     
-    if (Math.hypot(pos.x - startPt.x, pos.y - startPt.y) > 50) return; 
+    // Tem de começar perto da bola azul
+    if (Math.hypot(pos.x - startPt.x, pos.y - startPt.y) > 60) return; 
 
     isDrawing = true; saiuDoCaminho = false;
     tracosLetra[tracoAtualIndex].forEach(p => p.hit = false); 
     posAtualX = pos.x; posAtualY = pos.y;
     
-    document.getElementById('ponto-inicio').style.opacity = '0';
+    // Esconde ligeiramente a bola azul para se ver a linha a ser desenhada
+    document.getElementById('ponto-inicio').style.opacity = '0.3';
     
     ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
     ctx.lineWidth = 18; ctx.strokeStyle = "var(--primary-color)"; ctx.lineCap = "round"; ctx.lineJoin = "round";
@@ -405,7 +414,6 @@ function draw(e) {
             if(d < minDist) { minDist = d; closestIdx = i; }
         }
         
-        // Mais tolerância (60) para não frustrar a criança
         if (minDist > 60) saiuDoCaminho = true; 
         else if (closestIdx !== -1) trajetoAtual[closestIdx].hit = true; 
     }
@@ -424,34 +432,40 @@ function stopDrawing(e) {
 function avaliarJogada() {
     let trajetoAtual = tracosLetra[tracoAtualIndex];
     let ultimoPonto = trajetoAtual[trajetoAtual.length - 1];
+    
+    // Calcula a distância do dedo à bola verde no momento em que levanta o dedo
     let distanciaFim = Math.hypot(ultimoPonto.x - posAtualX, ultimoPonto.y - posAtualY);
     
     let pontosAtingidos = trajetoAtual.filter(p => p.hit).length;
     let accuracia = pontosAtingidos / trajetoAtual.length;
     
+    // Se chegou à bola verde (distância < 60) e fez pelo menos 50% do traço sem sair da linha
     if (distanciaFim < 60 && accuracia >= 0.50 && !saiuDoCaminho) {
         tracoAtualIndex++;
         somClique.currentTime = 0; somClique.play().catch(e=>console.log(e));
         
         if (tracoAtualIndex >= tracosLetra.length) {
+            // Fez todos os traços!
             jogoAtivo = false; certos++; 
             somAcerto.currentTime = 0; somAcerto.play().catch(e=>console.log(e));
             
-            atualizarPontoInicio();
-            desenharGuiasJogo(true); // Desenha a letra toda colorida
+            atualizarPontos();
+            desenharGuiasJogo(true); 
             
             const area = document.getElementById('area-desenho');
-            area.classList.add('letra-sucesso'); // Animação de POP
+            area.classList.add('letra-sucesso'); 
             
             setTimeout(() => { 
                 area.classList.remove('letra-sucesso');
                 rondaAtual++; jogoAtivo = true; proximaRonda(); 
             }, 1800);
         } else {
-            atualizarPontoInicio();
+            // Prepara a bola azul e verde para o traço seguinte da mesma letra
+            atualizarPontos();
             desenharGuiasJogo();
         }
     } else {
+        // Errou, limpa e tenta de novo o mesmo traço
         erros++; 
         somErro.currentTime = 0; somErro.play().catch(e=>console.log(e));
         trajetoAtual.forEach(p => p.hit = false);
