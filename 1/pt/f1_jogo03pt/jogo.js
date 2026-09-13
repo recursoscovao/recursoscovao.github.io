@@ -10,7 +10,7 @@ const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.acerto);
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.erro);
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.clique);
 
-let canvas, ctx, corPrincipal = "#5EA2E6"; // Guardará a cor correta do Tema
+let canvas, ctx, corTemaAtual = "#5EA2E6"; 
 let isDrawing = false;
 let ajudaEmCurso = false; 
 let posAtualX = 0, posAtualY = 0;
@@ -22,33 +22,34 @@ let simuTimer = null;
 let sequenciaNiveis = [];
 
 // ==========================================
-// 2. DICIONÁRIO ALFABETO (BASEADO NO MANUSCRIPT)
-// L = Linha (x1, y1, x2, y2)
-// A = Arco (cx, cy, raio, angulo_inicio, angulo_fim, anti_horario)
-// Grelha: Topo(0.2), Meio(0.5), Fundo(0.8). Esquerda(0.2), Direita(0.8)
+// 2. DICIONÁRIO ALFABETO MANUSCRIPT CORRIGIDO
+// L = Linha reta (x1, y1, x2, y2)
+// A = Arco (centroX, centroY, raio, angulo_inicio, angulo_fim, sentido_inverso)
 // ==========================================
 const ALFABETO_VETORES = {
     'A': [ [["L", 0.5, 0.2, 0.2, 0.8]], [["L", 0.5, 0.2, 0.8, 0.8]], [["L", 0.35, 0.5, 0.65, 0.5]] ],
     'B': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["A", 0.3, 0.35, 0.15, 270, 90, false]], [["A", 0.3, 0.65, 0.15, 270, 90, false]] ],
-    'C': [ [["A", 0.55, 0.5, 0.3, 290, 70, true]] ],
+    'C': [ [["A", 0.55, 0.5, 0.3, 330, 45, true]] ],
     'D': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["A", 0.3, 0.5, 0.3, 270, 90, false]] ],
     'E': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["L", 0.3, 0.2, 0.7, 0.2]], [["L", 0.3, 0.5, 0.6, 0.5]], [["L", 0.3, 0.8, 0.7, 0.8]] ],
     'F': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["L", 0.3, 0.2, 0.7, 0.2]], [["L", 0.3, 0.5, 0.6, 0.5]] ],
-    'G': [ [["A", 0.6, 0.5, 0.3, 290, 90, true], ["L", 0.6, 0.8, 0.6, 0.5], ["L", 0.6, 0.5, 0.45, 0.5]] ], 
+    'G': [ [["A", 0.55, 0.5, 0.3, 330, 0, true], ["L", 0.85, 0.5, 0.6, 0.5]] ],
     'H': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["L", 0.7, 0.2, 0.7, 0.8]], [["L", 0.3, 0.5, 0.7, 0.5]] ],
     'I': [ [["L", 0.5, 0.2, 0.5, 0.8]] ],
-    'J': [ [["L", 0.65, 0.2, 0.65, 0.65], ["A", 0.5, 0.65, 0.15, 0, 180, false]] ], 
+    'J': [ [["L", 0.65, 0.2, 0.65, 0.65], ["A", 0.5, 0.65, 0.15, 0, 180, false]] ],
     'K': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["L", 0.7, 0.2, 0.3, 0.5]], [["L", 0.3, 0.5, 0.7, 0.8]] ],
     'L': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["L", 0.3, 0.8, 0.7, 0.8]] ],
-    'M': [ [["L", 0.2, 0.2, 0.2, 0.8]], [["L", 0.2, 0.2, 0.5, 0.8]], [["L", 0.5, 0.8, 0.8, 0.2]], [["L", 0.8, 0.2, 0.8, 0.8]] ], // Como na imagem!
-    'N': [ [["L", 0.2, 0.2, 0.2, 0.8]], [["L", 0.2, 0.2, 0.8, 0.8]], [["L", 0.8, 0.2, 0.8, 0.8]] ], // Último traço para baixo!
-    'O': [ [["A", 0.5, 0.5, 0.3, 270, 269.9, true]] ], 
+    'M': [ [["L", 0.2, 0.8, 0.2, 0.2]], [["L", 0.2, 0.2, 0.5, 0.5]], [["L", 0.5, 0.5, 0.8, 0.2]], [["L", 0.8, 0.2, 0.8, 0.8]] ],
+    'N': [ [["L", 0.2, 0.8, 0.2, 0.2]], [["L", 0.2, 0.2, 0.8, 0.8]], [["L", 0.8, 0.8, 0.8, 0.2]] ],
+    // O e Q: sweep quase completo (270 a 280) para o fim não sobrepor o início perfeitamente
+    'O': [ [["A", 0.5, 0.5, 0.3, 270, 280, true]] ],
     'P': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["A", 0.3, 0.35, 0.15, 270, 90, false]] ],
-    'Q': [ [["A", 0.5, 0.5, 0.3, 270, 269.9, true]], [["L", 0.55, 0.55, 0.8, 0.8]] ],
+    'Q': [ [["A", 0.5, 0.5, 0.3, 270, 280, true]], [["L", 0.5, 0.5, 0.8, 0.8]] ],
     'R': [ [["L", 0.3, 0.2, 0.3, 0.8]], [["A", 0.3, 0.35, 0.15, 270, 90, false]], [["L", 0.45, 0.5, 0.7, 0.8]] ],
-    'S': [ [["A", 0.5, 0.35, 0.15, 60, 270, true], ["A", 0.5, 0.65, 0.15, 270, 120, false]] ], 
+    // S contínuo perfeito: curva de cima liga perfeitamente à curva de baixo
+    'S': [ [["A", 0.5, 0.35, 0.15, 330, 90, true], ["A", 0.5, 0.65, 0.15, 270, 150, false]] ],
     'T': [ [["L", 0.5, 0.2, 0.5, 0.8]], [["L", 0.2, 0.2, 0.8, 0.2]] ],
-    'U': [ [["L", 0.2, 0.2, 0.2, 0.65], ["A", 0.5, 0.65, 0.3, 180, 0, true], ["L", 0.8, 0.65, 0.8, 0.2]] ],
+    'U': [ [["L", 0.3, 0.2, 0.3, 0.65], ["A", 0.5, 0.65, 0.2, 180, 0, true], ["L", 0.7, 0.65, 0.7, 0.2]] ],
     'V': [ [["L", 0.2, 0.2, 0.5, 0.8]], [["L", 0.5, 0.8, 0.8, 0.2]] ],
     'W': [ [["L", 0.1, 0.2, 0.3, 0.8]], [["L", 0.3, 0.8, 0.5, 0.4]], [["L", 0.5, 0.4, 0.7, 0.8]], [["L", 0.7, 0.8, 0.9, 0.2]] ],
     'X': [ [["L", 0.2, 0.2, 0.8, 0.8]], [["L", 0.8, 0.2, 0.2, 0.8]] ],
@@ -71,20 +72,13 @@ style.innerHTML = `
         overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
     }
 
-    .ponto-inicio {
+    .ponto-inicio, .ponto-fim {
         position: absolute; width: 36px; height: 36px; border-radius: 50%; 
-        background: var(--primary-color); border: 5px solid #fff; 
-        box-shadow: 0 0 0 3px var(--primary-color), 0 4px 10px rgba(0,0,0,0.3); 
-        z-index: 10; transform: translate(-50%, -50%); transition: opacity 0.2s ease;
+        border: 5px solid #fff; z-index: 10; 
+        transform: translate(-50%, -50%); transition: opacity 0.2s ease;
     }
-
-    .ponto-fim {
-        position: absolute; width: 36px; height: 36px; border-radius: 50%; 
-        background: #8cc63f; border: 5px solid #fff; 
-        box-shadow: 0 0 0 3px #8cc63f, 0 4px 10px rgba(0,0,0,0.3); 
-        z-index: 10; transform: translate(-50%, -50%); transition: opacity 0.2s ease;
-        display: flex; align-items: center; justify-content: center; color: white;
-    }
+    .ponto-inicio { background: var(--primary-color); box-shadow: 0 0 0 3px var(--primary-color), 0 4px 10px rgba(0,0,0,0.3); }
+    .ponto-fim { background: #8cc63f; box-shadow: 0 0 0 3px #8cc63f, 0 4px 10px rgba(0,0,0,0.3); display: flex; align-items: center; justify-content: center; color: white; }
 
     .animating { animation: pulse 1s infinite alternate; }
     @keyframes pulse { from { transform: translate(-50%, -50%) scale(1); } to { transform: translate(-50%, -50%) scale(1.15); } }
@@ -101,14 +95,13 @@ style.innerHTML = `
 `;
 document.head.appendChild(style);
 
-// Capturar a cor real do tema assim que possível
-function capturarCorTema() {
+function lerCorDoTema() {
     let cor = getComputedStyle(document.documentElement).getPropertyValue('--primary-color').trim();
-    if(cor) corPrincipal = cor;
+    if (cor) corTemaAtual = cor;
 }
 
 // ==========================================
-// 4. LÓGICA DE CAPA E ANIMAÇÃO TUTORIAL
+// 4. LÓGICA DE CAPA (TUTORIAL DA LETRA A)
 // ==========================================
 function tocarAudioInstrucoes() {
     somClique.currentTime = 0; somClique.play().catch(e=>console.log(e));
@@ -116,14 +109,14 @@ function tocarAudioInstrucoes() {
     if (audioInstrucoes) { audioInstrucoes.pause(); audioInstrucoes.currentTime = 0; }
     else { audioInstrucoes = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes); }
     audioInstrucoes.play().catch(() => {
-        const utter = new SpeechSynthesisUtterance("Começa na bola azul e desenha até chegares à bola verde!");
+        const utter = new SpeechSynthesisUtterance("Começa na bola azul e arrasta o dedo até chegares à bola verde!");
         utter.lang = 'pt-PT'; window.speechSynthesis.speak(utter);
     });
 }
 
 function mostrarCapa() {
     if (jogoAtivo) return;
-    capturarCorTema();
+    lerCorDoTema(); // Captura a cor para o canvas usar
     document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">Traça as Letras</h2>`;
     
     document.getElementById('game-content').innerHTML = `
@@ -153,14 +146,14 @@ function mostrarCapa() {
 function desenharPautas(context, w, h) {
     context.beginPath();
     context.lineWidth = 3; context.strokeStyle = "#b3d4ff"; 
-    context.moveTo(w*0.1, h*0.2); context.lineTo(w*0.9, h*0.2); // Topo real
-    context.moveTo(w*0.1, h*0.8); context.lineTo(w*0.9, h*0.8); // Fundo real
+    context.moveTo(w*0.1, h*0.2); context.lineTo(w*0.9, h*0.2); 
+    context.moveTo(w*0.1, h*0.8); context.lineTo(w*0.9, h*0.8); 
     context.stroke();
     
     context.beginPath();
     context.lineWidth = 2; context.strokeStyle = "#d1e5ff";
     context.setLineDash([15, 10]);
-    context.moveTo(w*0.1, h*0.5); context.lineTo(w*0.9, h*0.5); // Meio
+    context.moveTo(w*0.1, h*0.5); context.lineTo(w*0.9, h*0.5); 
     context.stroke();
     context.setLineDash([]);
 }
@@ -202,7 +195,7 @@ function iniciarSimulacaoAnimada() {
                 sStart.style.display = 'flex'; sStart.style.left = traco[0].x + "px"; sStart.style.top = traco[0].y + "px";
                 sEnd.style.display = 'flex'; sEnd.style.left = traco[traco.length-1].x + "px"; sEnd.style.top = traco[traco.length-1].y + "px";
                 
-                sCtx.beginPath(); sCtx.lineWidth = 18; sCtx.strokeStyle = corPrincipal; sCtx.lineCap = "round"; sCtx.lineJoin = "round";
+                sCtx.beginPath(); sCtx.lineWidth = 18; sCtx.strokeStyle = corTemaAtual; sCtx.lineCap = "round"; sCtx.lineJoin = "round";
                 sCtx.moveTo(traco[0].x, traco[0].y);
                 hand.style.opacity = 1; hand.innerText = "👆";
             }
@@ -234,7 +227,7 @@ function iniciarSimulacaoAnimada() {
 // ==========================================
 function iniciarJogo() {
     clearTimeout(simuTimer); 
-    capturarCorTema(); // Garante que a cor foi extraída
+    lerCorDoTema(); // Garante a cor atualizada antes do jogo começar
     jogoAtivo = true; rondaAtual = 1; certos = 0; erros = 0; ajudasUsadas = 0; 
     totalRondas = 10; 
     ajudaEmCurso = false;
@@ -307,6 +300,7 @@ function atualizarPontos() {
     }
 }
 
+// Motor Matemático Corrigido de Geração de Linhas e Arcos
 function gerarLetraTracos(letra, w, h) {
     const strokes = ALFABETO_VETORES[letra];
     let todosTracos = [];
@@ -326,10 +320,15 @@ function gerarLetraTracos(letra, w, h) {
             } 
             else if (tipo === "A") {
                 let [_, cx, cy, r, a1, a2, anti] = cmd;
-                let rad1 = a1 * Math.PI/180; let rad2 = a2 * Math.PI/180;
+                let rad1 = a1 * Math.PI/180; 
+                let rad2 = a2 * Math.PI/180;
                 
-                if(anti && rad2 > rad1) rad2 -= Math.PI*2;
-                if(!anti && rad2 < rad1) rad2 += Math.PI*2;
+                // Normalização das voltas dos ângulos (Impede saltos em O, Q, S)
+                if (anti) {
+                    while (rad2 >= rad1) rad2 -= Math.PI * 2;
+                } else {
+                    while (rad2 <= rad1) rad2 += Math.PI * 2;
+                }
 
                 for(let i=0; i<=steps; i++){
                     let ang = rad1 + (rad2-rad1)*(i/steps);
@@ -347,7 +346,7 @@ function desenharGuiasJogo(mostrarConcluido = false) {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     desenharPautas(ctx, canvas.width, canvas.height);
     
-    // Fundo branco grosso (destaque)
+    // Fundo branco grosso de guia
     tracosLetra.forEach(traco => {
         ctx.beginPath(); ctx.lineWidth = 44; ctx.strokeStyle = "#ffffff"; ctx.lineCap = "round"; ctx.lineJoin = "round";
         ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
@@ -357,12 +356,12 @@ function desenharGuiasJogo(mostrarConcluido = false) {
         ctx.beginPath(); ctx.lineCap = "round"; ctx.lineJoin = "round";
         
         if (mostrarConcluido || index < tracoAtualIndex) {
-            // TRAÇO CONCLUÍDO (Cor Principal Sólida e Visível!)
-            ctx.lineWidth = 18; ctx.strokeStyle = corPrincipal; ctx.setLineDash([]);
+            // TRAÇOS JÁ CONCLUÍDOS (Usa a cor do tema e ficam sempre visíveis!)
+            ctx.lineWidth = 18; ctx.strokeStyle = corTemaAtual; ctx.setLineDash([]);
             ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
         } 
         else if (index === tracoAtualIndex) {
-            // TRAÇO ATUAL
+            // TRAÇO ATUAL (Espera a criança desenhar)
             ctx.lineWidth = 14; ctx.strokeStyle = "#a0a0a0"; ctx.setLineDash([15, 15]);
             ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
             ctx.setLineDash([]);
@@ -398,8 +397,9 @@ function startDrawing(e) {
     document.getElementById('ponto-inicio').style.opacity = '0.2';
     document.getElementById('ponto-fim').style.opacity = '0.5';
     
+    // Desenha com a cor sólida real logo que o dedo toca!
     ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
-    ctx.lineWidth = 18; ctx.strokeStyle = corPrincipal; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.lineWidth = 18; ctx.strokeStyle = corTemaAtual; ctx.lineCap = "round"; ctx.lineJoin = "round";
 }
 
 function draw(e) {
@@ -499,7 +499,7 @@ function darAjuda() {
         }
         
         if (step === 0) {
-            ctx.beginPath(); ctx.lineWidth = 18; ctx.strokeStyle = corPrincipal; ctx.lineCap = "round"; ctx.lineJoin = "round";
+            ctx.beginPath(); ctx.lineWidth = 18; ctx.strokeStyle = corTemaAtual; ctx.lineCap = "round"; ctx.lineJoin = "round";
             ctx.moveTo(trajetoAtual[0].x, trajetoAtual[0].y);
         }
 
