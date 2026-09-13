@@ -64,7 +64,7 @@ const JOGO_CONFIG = {
             jogos: [
                 { nome: "Grafismos", desc: "Liga as linhas retas", icon: "f1_jogo01pt.png", link: "f1_jogo01pt/", cor: "#C2185B" },
                 { nome: "Grafismos", desc: "Liga as linhas curvas", icon: "f1_jogo02pt.png", link: "f1_jogo02pt/", cor: "#D32F2F" },
-                { nome: "Grafismos das Letras", desc: "Desenha as letras", icon: "f1_jogo03pt.png", link: "f1_jogo02pt/", cor: "#E64A19" },
+                { nome: "Grafismos das Letras", desc: "Desenha as letras", icon: "f1_jogo03pt.png", link: "f1_jogo03pt/", cor: "#E64A19" },
                 { nome: "Estoura-Balão", desc: "Estoure desenhos correspondentes.", icon: "balao.png", link: "balao/", cor: "#C2185B" },
                 { nome: "Letra Inicial", desc: "Qual é a primeira letra desse desenho?", icon: "lapis.png", link: "letra-in/", cor: "#D32F2F" },
                 { nome: "Toupeira das Letras", desc: "Bata nas toupeiras corretas.", icon: "rato.png", link: "toupeira/", cor: "#E64A19" }
