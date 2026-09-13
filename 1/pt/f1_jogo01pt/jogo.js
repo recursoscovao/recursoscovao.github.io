@@ -12,7 +12,7 @@ const somClique = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.clique);
 
 let canvas, ctx;
 let isDrawing = false;
-let ajudaEmCurso = false; // NOVO: Impede a criança de desenhar enquanto vê a ajuda
+let ajudaEmCurso = false; 
 let posFinalX = 0, posFinalY = 0;
 let posAtualX = 0, posAtualY = 0;
 
@@ -112,14 +112,14 @@ function iniciarSimulacaoAnimada() {
     
     sCanvas.width = sArea.clientWidth; sCanvas.height = sArea.clientHeight;
     
-    const cRect = sArea.getBoundingClientRect();
-    const startEl = document.getElementById('simu-inicio').getBoundingClientRect();
-    const endEl = document.getElementById('simu-fim').getBoundingClientRect();
+    const startEl = document.getElementById('simu-inicio');
+    const endEl = document.getElementById('simu-fim');
     
-    const startX = startEl.left - cRect.left + (startEl.width / 2);
-    const startY = startEl.top - cRect.top + (startEl.height / 2);
-    const endX = endEl.left - cRect.left + 5;
-    const endY = endEl.top - cRect.top + (endEl.height / 2);
+    // MATEMÁTICA PERFEITA: Altura a dividir por 2 garante centro absoluto
+    const startX = startEl.offsetLeft + (startEl.offsetWidth / 2);
+    const startY = sCanvas.height / 2; 
+    const endX = endEl.offsetLeft + 5;
+    const endY = sCanvas.height / 2;
 
     const path = gerarPontosGrafismos("trapezio", startX, startY, endX, endY);
     
@@ -145,7 +145,10 @@ function iniciarSimulacaoAnimada() {
 
         if (step < path.length) {
             const pt = path[step];
-            hand.style.left = (pt.x - 15) + "px"; hand.style.top = (pt.y + 5) + "px";
+            // Ajuste do Dedo para bater exatamente no risco
+            hand.style.left = (pt.x - 22) + "px"; 
+            hand.style.top = (pt.y - 5) + "px"; 
+            
             if(step > 5) hand.innerText = "✊"; 
             
             sCtx.lineTo(pt.x, pt.y); sCtx.stroke();
@@ -215,14 +218,14 @@ function configurarCanvas() {
     ctx = canvas.getContext('2d');
     canvas.width = container.clientWidth; canvas.height = container.clientHeight;
 
-    const cRect = container.getBoundingClientRect();
-    const startRect = document.getElementById('ponto-inicio').getBoundingClientRect();
-    const endRect = document.getElementById('ponto-fim').getBoundingClientRect();
+    const startEl = document.getElementById('ponto-inicio');
+    const endEl = document.getElementById('ponto-fim');
     
-    const startX = startRect.left - cRect.left + (startRect.width / 2);
-    const startY = startRect.top - cRect.top + (startRect.height / 2);
-    posFinalX = endRect.left - cRect.left + 5; 
-    posFinalY = endRect.top - cRect.top + (endRect.height / 2);
+    // MATEMÁTICA PERFEITA NO JOGO TAMBÉM
+    const startX = startEl.offsetLeft + (startEl.offsetWidth / 2);
+    const startY = canvas.height / 2;
+    posFinalX = endEl.offsetLeft + 5; 
+    posFinalY = canvas.height / 2;
 
     pontosCaminho = gerarPontosGrafismos(itemDestaque.tipo, startX, startY, posFinalX, posFinalY);
     
@@ -312,7 +315,7 @@ function getClientOffset(e) {
 }
 
 function startDrawing(e) {
-    if (!jogoAtivo || ajudaEmCurso) return; // Se a ajuda estiver a dar, ignora toques
+    if (!jogoAtivo || ajudaEmCurso) return; 
     e.preventDefault();
     
     const pos = getClientOffset(e);
@@ -391,9 +394,8 @@ function darAjuda() {
     somClique.currentTime = 0; somClique.play().catch(e=>console.log(e));
     
     ajudaEmCurso = true;
-    isDrawing = false; // Cancela se a criança estiver a desenhar
+    isDrawing = false; 
     
-    // Limpa o canvas e repõe os tracejados
     ctx.clearRect(0, 0, canvas.width, canvas.height);
     desenharGuiasJogo();
     
@@ -418,32 +420,31 @@ function darAjuda() {
 
         if (step < pontosCaminho.length) {
             const pt = pontosCaminho[step];
-            hand.style.left = (pt.x - 15) + "px"; 
-            hand.style.top = (pt.y + 5) + "px";
+            // Ajuste do Dedo na Ajuda também
+            hand.style.left = (pt.x - 22) + "px"; 
+            hand.style.top = (pt.y - 5) + "px";
             
-            if(step > 5) hand.innerText = "✊"; // Muda para agarrar
+            if(step > 5) hand.innerText = "✊"; 
             
             ctx.lineTo(pt.x, pt.y); 
             ctx.stroke();
             
-            step += 2; // Velocidade da animação (avança de 2 em 2 pontos)
+            step += 2; 
             
-            if (step >= pontosCaminho.length) step = pontosCaminho.length - 1; // Garante que toca no último
+            if (step >= pontosCaminho.length) step = pontosCaminho.length - 1; 
             
             if (step < pontosCaminho.length - 1) {
                 setTimeout(animarAjuda, 12); 
             } else {
-                // Chegou ao fim
                 const lastPt = pontosCaminho[pontosCaminho.length - 1];
-                hand.style.left = (lastPt.x - 15) + "px"; hand.style.top = (lastPt.y + 5) + "px";
+                hand.style.left = (lastPt.x - 22) + "px"; hand.style.top = (lastPt.y - 5) + "px";
                 ctx.lineTo(lastPt.x, lastPt.y); ctx.stroke();
                 
-                // Pausa meio segundo para a criança ver a linha, depois apaga
                 setTimeout(() => {
                     hand.style.opacity = 0;
                     ctx.clearRect(0, 0, canvas.width, canvas.height);
                     desenharGuiasJogo();
-                    ajudaEmCurso = false; // Liberta o jogo para a criança tentar
+                    ajudaEmCurso = false; 
                 }, 800);
             }
         }
