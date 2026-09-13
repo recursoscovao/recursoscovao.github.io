@@ -15,25 +15,25 @@ let isDrawing = false;
 let ajudaEmCurso = false; 
 let posAtualX = 0, posAtualY = 0;
 
-let tracosLetra = []; // Array de traços. Cada traço é um array de pontos
-let tracoAtualIndex = 0; // Qual traço a criança está a desenhar agora
+let tracosLetra = []; 
+let tracoAtualIndex = 0; 
 let saiuDoCaminho = false;
 let simuTimer = null; 
 let sequenciaNiveis = [];
 
 // ==========================================
-// 2. DICIONÁRIO DO ALFABETO (VETORES)
+// 2. DICIONÁRIO DO ALFABETO PEDAGÓGICO
 // L = Linha (x1, y1, x2, y2)
-// A = Arco (cx, cy, raio, angulo_inicio, angulo_fim, sentido_inverso)
+// A = Arco (cx, cy, raio, ang_inicio, ang_fim, sentido_inverso)
 // ==========================================
 const ALFABETO_VETORES = {
-    'A': [["L", 0.5, 0.1, 0.2, 0.9], ["L", 0.5, 0.1, 0.8, 0.9], ["L", 0.35, 0.6, 0.65, 0.6]],
+    'A': [["L", 0.5, 0.1, 0.2, 0.9], ["L", 0.5, 0.1, 0.8, 0.9], ["L", 0.35, 0.5, 0.65, 0.5]],
     'B': [["L", 0.3, 0.1, 0.3, 0.9], ["A", 0.3, 0.3, 0.2, 270, 90, false], ["A", 0.3, 0.7, 0.2, 270, 90, false]],
-    'C': [["A", 0.6, 0.5, 0.4, 300, 60, true]], // true = anti-horário (desenha para a esquerda)
+    'C': [["A", 0.6, 0.5, 0.4, 300, 60, true]],
     'D': [["L", 0.3, 0.1, 0.3, 0.9], ["A", 0.3, 0.5, 0.4, 270, 90, false]],
     'E': [["L", 0.3, 0.1, 0.3, 0.9], ["L", 0.3, 0.1, 0.7, 0.1], ["L", 0.3, 0.5, 0.6, 0.5], ["L", 0.3, 0.9, 0.7, 0.9]],
     'F': [["L", 0.3, 0.1, 0.3, 0.9], ["L", 0.3, 0.1, 0.7, 0.1], ["L", 0.3, 0.5, 0.6, 0.5]],
-    'G': [["A", 0.6, 0.5, 0.4, 300, 45, true], ["L", 0.9, 0.78, 0.9, 0.5], ["L", 0.9, 0.5, 0.6, 0.5]],
+    'G': [["A", 0.6, 0.5, 0.4, 310, 45, true], ["L", 0.9, 0.78, 0.9, 0.5], ["L", 0.9, 0.5, 0.6, 0.5]],
     'H': [["L", 0.3, 0.1, 0.3, 0.9], ["L", 0.7, 0.1, 0.7, 0.9], ["L", 0.3, 0.5, 0.7, 0.5]],
     'I': [["L", 0.5, 0.1, 0.5, 0.9]],
     'J': [["L", 0.7, 0.1, 0.7, 0.7], ["A", 0.5, 0.7, 0.2, 0, 180, false]],
@@ -41,7 +41,7 @@ const ALFABETO_VETORES = {
     'L': [["L", 0.3, 0.1, 0.3, 0.9], ["L", 0.3, 0.9, 0.7, 0.9]],
     'M': [["L", 0.2, 0.9, 0.2, 0.1], ["L", 0.2, 0.1, 0.5, 0.5], ["L", 0.5, 0.5, 0.8, 0.1], ["L", 0.8, 0.1, 0.8, 0.9]],
     'N': [["L", 0.2, 0.9, 0.2, 0.1], ["L", 0.2, 0.1, 0.8, 0.9], ["L", 0.8, 0.9, 0.8, 0.1]],
-    'O': [["A", 0.5, 0.5, 0.4, 270, 269, true]], // Círculo completo (quase 360)
+    'O': [["A", 0.5, 0.5, 0.4, 270, 269, true]], 
     'P': [["L", 0.3, 0.1, 0.3, 0.9], ["A", 0.3, 0.3, 0.2, 270, 90, false]],
     'Q': [["A", 0.5, 0.5, 0.4, 270, 269, true], ["L", 0.6, 0.6, 0.9, 0.9]],
     'R': [["L", 0.3, 0.1, 0.3, 0.9], ["A", 0.3, 0.3, 0.2, 270, 90, false], ["L", 0.4, 0.5, 0.7, 0.9]],
@@ -65,20 +65,27 @@ style.innerHTML = `
 
     .grafismo-area {
         position: relative; width: 100%; max-width: 500px; height: 350px;
-        background: #fdfdfd; border: 4px dashed #e0e0e0; border-radius: 30px;
+        background: #fffdf5; border: 4px solid #e0e0e0; border-radius: 20px;
         margin: 0 auto; display: flex; justify-content: center; align-items: center;
-        overflow: hidden;
+        overflow: hidden; box-shadow: inset 0 0 20px rgba(0,0,0,0.02);
     }
 
     .ponto-inicio {
-        position: absolute; width: 30px; height: 30px; border-radius: 50%; 
-        background: var(--primary-color); border: 4px solid #fff; 
-        box-shadow: 0 0 0 4px var(--primary-color), 0 4px 10px rgba(0,0,0,0.2); 
+        position: absolute; width: 34px; height: 34px; border-radius: 50%; 
+        background: var(--primary-color); border: 5px solid #fff; 
+        box-shadow: 0 0 0 3px var(--primary-color), 0 4px 10px rgba(0,0,0,0.3); 
         z-index: 10; transform: translate(-50%, -50%); transition: 0.3s ease;
     }
 
     .animating { animation: pulse 1s infinite alternate; }
-    @keyframes pulse { from { transform: translate(-50%, -50%) scale(1); } to { transform: translate(-50%, -50%) scale(1.3); } }
+    @keyframes pulse { from { transform: translate(-50%, -50%) scale(1); } to { transform: translate(-50%, -50%) scale(1.2); } }
+
+    .letra-sucesso { animation: popSuccess 0.8s ease forwards; }
+    @keyframes popSuccess { 
+        0% { transform: scale(1); } 
+        50% { transform: scale(1.15); filter: drop-shadow(0 0 15px var(--primary-color)); } 
+        100% { transform: scale(1); } 
+    }
 
     canvas { position: absolute; top: 0; left: 0; width: 100%; height: 100%; z-index: 5; cursor: pointer; touch-action: none; }
     canvas:active { cursor: grabbing; }
@@ -94,7 +101,7 @@ function tocarAudioInstrucoes() {
     if (audioInstrucoes) { audioInstrucoes.pause(); audioInstrucoes.currentTime = 0; }
     else { audioInstrucoes = new Audio(JOGO_CONFIG.caminhoSons + DADOS_JOGO.somInstrucoes); }
     audioInstrucoes.play().catch(() => {
-        const utter = new SpeechSynthesisUtterance("Começa na bolinha azul e desenha todas as partes da letra!");
+        const utter = new SpeechSynthesisUtterance("Começa na bolinha e desenha as letras pelas linhas!");
         utter.lang = 'pt-PT'; window.speechSynthesis.speak(utter);
     });
 }
@@ -111,7 +118,7 @@ function mostrarCapa() {
                 <div id="simu-hand" style="position:absolute; font-size:3rem; z-index:100; pointer-events:none; filter: drop-shadow(2px 4px 4px rgba(0,0,0,0.3)); transition: opacity 0.3s;">👆</div>
             </div>
             <p style="color:var(--text-grey); font-weight:800; text-align:center; font-size:1.1rem; max-width: 500px; padding: 0 15px;">
-                Toca na bola azul e desenha as letras passo a passo!
+                Toca na bola e segue a direção das setas!
             </p>
         </div>
     `;
@@ -126,6 +133,25 @@ function mostrarCapa() {
     setTimeout(iniciarSimulacaoAnimada, 100);
 }
 
+function desenharPautas(context, w, h) {
+    context.beginPath();
+    context.lineWidth = 3; context.strokeStyle = "#b3d4ff"; // Azul claro (tipo caderno)
+    
+    // Linha de cima
+    context.moveTo(w*0.1, h*0.1); context.lineTo(w*0.9, h*0.1);
+    // Linha de baixo
+    context.moveTo(w*0.1, h*0.9); context.lineTo(w*0.9, h*0.9);
+    context.stroke();
+    
+    // Linha do meio tracejada
+    context.beginPath();
+    context.lineWidth = 2; context.strokeStyle = "#d1e5ff";
+    context.setLineDash([15, 10]);
+    context.moveTo(w*0.1, h*0.5); context.lineTo(w*0.9, h*0.5);
+    context.stroke();
+    context.setLineDash([]);
+}
+
 function iniciarSimulacaoAnimada() {
     const sCanvas = document.getElementById('simu-canvas');
     if(!sCanvas) return;
@@ -134,19 +160,9 @@ function iniciarSimulacaoAnimada() {
     
     sCanvas.width = sArea.clientWidth; sCanvas.height = sArea.clientHeight;
     
-    // Gera a letra "A" para o tutorial
     const paths = gerarLetraTracos('A', sCanvas.width, sCanvas.height);
     const hand = document.getElementById('simu-hand');
     
-    function desenhaFundo(ctx) {
-        paths.forEach(stroke => {
-            ctx.beginPath(); ctx.setLineDash([12, 12]); ctx.lineWidth = 10; ctx.strokeStyle = "#e0e0e0"; ctx.lineCap = "round"; ctx.lineJoin = "round";
-            ctx.moveTo(stroke[0].x, stroke[0].y);
-            stroke.forEach(p => ctx.lineTo(p.x, p.y));
-            ctx.stroke(); ctx.setLineDash([]);
-        });
-    }
-
     let currentS = 0; let step = 0;
 
     function animar() {
@@ -154,14 +170,21 @@ function iniciarSimulacaoAnimada() {
         
         if (step === 0 && currentS === 0) {
             sCtx.clearRect(0,0, sCanvas.width, sCanvas.height);
-            desenhaFundo(sCtx);
+            desenharPautas(sCtx, sCanvas.width, sCanvas.height);
+            
+            paths.forEach(stroke => {
+                sCtx.beginPath(); sCtx.setLineDash([12, 12]); sCtx.lineWidth = 14; sCtx.strokeStyle = "#e0e0e0"; sCtx.lineCap = "round"; sCtx.lineJoin = "round";
+                sCtx.moveTo(stroke[0].x, stroke[0].y);
+                stroke.forEach(p => sCtx.lineTo(p.x, p.y));
+                sCtx.stroke(); sCtx.setLineDash([]);
+            });
         }
 
         if (currentS < paths.length) {
             const traco = paths[currentS];
             
             if (step === 0) {
-                sCtx.beginPath(); sCtx.lineWidth = 14; sCtx.strokeStyle = "var(--primary-color)"; sCtx.lineCap = "round"; sCtx.lineJoin = "round";
+                sCtx.beginPath(); sCtx.lineWidth = 18; sCtx.strokeStyle = "var(--primary-color)"; sCtx.lineCap = "round"; sCtx.lineJoin = "round";
                 sCtx.moveTo(traco[0].x, traco[0].y);
                 hand.style.opacity = 1; hand.innerText = "👆";
             }
@@ -172,12 +195,12 @@ function iniciarSimulacaoAnimada() {
                 if(step > 5) hand.innerText = "✊"; 
                 
                 sCtx.lineTo(pt.x, pt.y); sCtx.stroke();
-                step += 3; // Velocidade da mão
+                step += 3; 
                 simuTimer = setTimeout(animar, 15); 
             } else {
                 hand.innerText = "👆";
                 step = 0; currentS++;
-                simuTimer = setTimeout(animar, 400); // Pausa entre traços
+                simuTimer = setTimeout(animar, 400); 
             }
         } else {
             hand.style.opacity = 0; currentS = 0; step = 0;
@@ -196,7 +219,6 @@ function iniciarJogo() {
     totalRondas = 10; 
     ajudaEmCurso = false;
     
-    // Escolhe 10 letras aleatórias
     const todasLetras = Object.keys(ALFABETO_VETORES);
     sequenciaNiveis = [];
     todasLetras.sort(() => Math.random() - 0.5); 
@@ -250,17 +272,14 @@ function atualizarPontoInicio() {
         dot.style.left = tracosLetra[tracoAtualIndex][0].x + "px";
         dot.style.top = tracosLetra[tracoAtualIndex][0].y + "px";
     } else {
-        dot.style.display = 'none'; // Letra concluída
+        dot.style.display = 'none'; 
     }
 }
 
-// ==========================================
-// GERADOR DE TRAÇOS DE LETRAS
-// ==========================================
 function gerarLetraTracos(letra, w, h) {
     const comandos = ALFABETO_VETORES[letra];
     let todosTracos = [];
-    const steps = 150; // Resolução dos traços
+    const steps = 150; 
 
     comandos.forEach(cmd => {
         let tipo = cmd[0];
@@ -269,29 +288,19 @@ function gerarLetraTracos(letra, w, h) {
         if (tipo === "L") {
             let [_, x1, y1, x2, y2] = cmd;
             for(let i=0; i<=steps; i++){
-                pts.push({ 
-                    x: (x1 + (x2-x1)*(i/steps)) * w, 
-                    y: (y1 + (y2-y1)*(i/steps)) * h, 
-                    hit: false 
-                });
+                pts.push({ x: (x1 + (x2-x1)*(i/steps)) * w, y: (y1 + (y2-y1)*(i/steps)) * h, hit: false });
             }
         } 
         else if (tipo === "A") {
             let [_, cx, cy, r, a1, a2, anti] = cmd;
-            let rad1 = a1 * Math.PI/180;
-            let rad2 = a2 * Math.PI/180;
+            let rad1 = a1 * Math.PI/180; let rad2 = a2 * Math.PI/180;
             
-            // Ajuste trigonométrico de ângulos
             if(anti && rad2 > rad1) rad2 -= Math.PI*2;
             if(!anti && rad2 < rad1) rad2 += Math.PI*2;
 
             for(let i=0; i<=steps; i++){
                 let ang = rad1 + (rad2-rad1)*(i/steps);
-                pts.push({ 
-                    x: (cx + Math.cos(ang)*r) * w, 
-                    y: (cy + Math.sin(ang)*r) * h, 
-                    hit: false 
-                });
+                pts.push({ x: (cx + Math.cos(ang)*r) * w, y: (cy + Math.sin(ang)*r) * h, hit: false });
             }
         }
         todosTracos.push(pts);
@@ -300,32 +309,55 @@ function gerarLetraTracos(letra, w, h) {
     return todosTracos;
 }
 
-function desenharGuiasJogo() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+// FUNÇÃO PARA DESENHAR UMA SETA NO FINAL DO TRAÇO
+function desenharSeta(ctx, p1, p2) {
+    const angulo = Math.atan2(p2.y - p1.y, p2.x - p1.x);
+    const tamanho = 20;
     
-    // Fundo branco grosso de todas as linhas
+    ctx.beginPath();
+    ctx.moveTo(p2.x, p2.y);
+    ctx.lineTo(p2.x - tamanho * Math.cos(angulo - Math.PI / 6), p2.y - tamanho * Math.sin(angulo - Math.PI / 6));
+    ctx.lineTo(p2.x - tamanho * Math.cos(angulo + Math.PI / 6), p2.y - tamanho * Math.sin(angulo + Math.PI / 6));
+    ctx.lineTo(p2.x, p2.y);
+    ctx.fillStyle = "#a0a0a0";
+    ctx.fill();
+}
+
+function desenharGuiasJogo(mostrarConcluido = false) {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    desenharPautas(ctx, canvas.width, canvas.height);
+    
+    // Fundo branco grosso
     tracosLetra.forEach(traco => {
-        ctx.beginPath(); ctx.lineWidth = 40; ctx.strokeStyle = "#ffffff"; ctx.lineCap = "round"; ctx.lineJoin = "round";
+        ctx.beginPath(); ctx.lineWidth = 44; ctx.strokeStyle = "#ffffff"; ctx.lineCap = "round"; ctx.lineJoin = "round";
         ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
     });
 
-    // Tracejado
     tracosLetra.forEach((traco, index) => {
         ctx.beginPath(); ctx.lineCap = "round"; ctx.lineJoin = "round";
         
-        if (index < tracoAtualIndex) {
-            // Traço já feito (Verde contínuo)
-            ctx.lineWidth = 14; ctx.strokeStyle = "#8cc63f"; ctx.setLineDash([]);
-        } else if (index === tracoAtualIndex) {
-            // Traço atual (Cinzento tracejado escuro)
-            ctx.lineWidth = 10; ctx.strokeStyle = "#a0a0a0"; ctx.setLineDash([12, 12]);
-        } else {
-            // Traços futuros (Cinzento tracejado muito claro)
-            ctx.lineWidth = 10; ctx.strokeStyle = "#e5e5e5"; ctx.setLineDash([12, 12]);
+        if (mostrarConcluido || index < tracoAtualIndex) {
+            // Letra terminada ou traço concluído (Cor do Tema)
+            ctx.lineWidth = 18; ctx.strokeStyle = "var(--primary-color)"; ctx.setLineDash([]);
+            ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
+        } 
+        else if (index === tracoAtualIndex) {
+            // Traço atual a fazer
+            ctx.lineWidth = 14; ctx.strokeStyle = "#a0a0a0"; ctx.setLineDash([15, 15]);
+            ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
+            ctx.setLineDash([]);
+            
+            // Desenha a SETA de direção no fim do traço atual
+            let p1 = traco[traco.length - 15]; // Pega um ponto um bocadinho antes do fim
+            let p2 = traco[traco.length - 1];
+            desenharSeta(ctx, p1, p2);
+        } 
+        else {
+            // Traços futuros
+            ctx.lineWidth = 14; ctx.strokeStyle = "#e5e5e5"; ctx.setLineDash([15, 15]);
+            ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
+            ctx.setLineDash([]);
         }
-        
-        ctx.moveTo(traco[0].x, traco[0].y); traco.forEach(pt => ctx.lineTo(pt.x, pt.y)); ctx.stroke();
-        ctx.setLineDash([]);
     });
 }
 
@@ -342,18 +374,16 @@ function startDrawing(e) {
     const pos = getClientOffset(e);
     const startPt = tracosLetra[tracoAtualIndex][0];
     
-    // Verifica se tocou na bolinha do traço atual
-    if (Math.hypot(pos.x - startPt.x, pos.y - startPt.y) > 40) return; 
+    if (Math.hypot(pos.x - startPt.x, pos.y - startPt.y) > 50) return; 
 
     isDrawing = true; saiuDoCaminho = false;
     tracosLetra[tracoAtualIndex].forEach(p => p.hit = false); 
     posAtualX = pos.x; posAtualY = pos.y;
     
-    // Esconde a bolinha enquanto desenha
     document.getElementById('ponto-inicio').style.opacity = '0';
     
     ctx.beginPath(); ctx.moveTo(pos.x, pos.y);
-    ctx.lineWidth = 14; ctx.strokeStyle = "var(--primary-color)"; ctx.lineCap = "round"; ctx.lineJoin = "round";
+    ctx.lineWidth = 18; ctx.strokeStyle = "var(--primary-color)"; ctx.lineCap = "round"; ctx.lineJoin = "round";
 }
 
 function draw(e) {
@@ -375,7 +405,8 @@ function draw(e) {
             if(d < minDist) { minDist = d; closestIdx = i; }
         }
         
-        if (minDist > 45) saiuDoCaminho = true; 
+        // Mais tolerância (60) para não frustrar a criança
+        if (minDist > 60) saiuDoCaminho = true; 
         else if (closestIdx !== -1) trajetoAtual[closestIdx].hit = true; 
     }
     posAtualX = pos.x; posAtualY = pos.y;
@@ -398,31 +429,29 @@ function avaliarJogada() {
     let pontosAtingidos = trajetoAtual.filter(p => p.hit).length;
     let accuracia = pontosAtingidos / trajetoAtual.length;
     
-    if (distanciaFim < 50 && accuracia >= 0.50 && !saiuDoCaminho) {
-        // Acertou o traço atual!
+    if (distanciaFim < 60 && accuracia >= 0.50 && !saiuDoCaminho) {
         tracoAtualIndex++;
         somClique.currentTime = 0; somClique.play().catch(e=>console.log(e));
         
         if (tracoAtualIndex >= tracosLetra.length) {
-            // Terminou a letra toda!
             jogoAtivo = false; certos++; 
             somAcerto.currentTime = 0; somAcerto.play().catch(e=>console.log(e));
             
             atualizarPontoInicio();
-            desenharGuiasJogo();
-            document.getElementById('area-desenho').style.borderColor = "#8cc63f";
+            desenharGuiasJogo(true); // Desenha a letra toda colorida
+            
+            const area = document.getElementById('area-desenho');
+            area.classList.add('letra-sucesso'); // Animação de POP
             
             setTimeout(() => { 
-                document.getElementById('area-desenho').style.borderColor = "#e0e0e0";
+                area.classList.remove('letra-sucesso');
                 rondaAtual++; jogoAtivo = true; proximaRonda(); 
-            }, 1200);
+            }, 1800);
         } else {
-            // Faltam traços, prepara o próximo
             atualizarPontoInicio();
             desenharGuiasJogo();
         }
     } else {
-        // Errou o traço, limpa e tenta de novo
         erros++; 
         somErro.currentTime = 0; somErro.play().catch(e=>console.log(e));
         trajetoAtual.forEach(p => p.hit = false);
@@ -456,7 +485,7 @@ function darAjuda() {
         }
         
         if (step === 0) {
-            ctx.beginPath(); ctx.lineWidth = 14; ctx.strokeStyle = "var(--primary-color)"; ctx.lineCap = "round"; ctx.lineJoin = "round";
+            ctx.beginPath(); ctx.lineWidth = 18; ctx.strokeStyle = "var(--primary-color)"; ctx.lineCap = "round"; ctx.lineJoin = "round";
             ctx.moveTo(trajetoAtual[0].x, trajetoAtual[0].y);
         }
 
@@ -481,7 +510,7 @@ function darAjuda() {
                 setTimeout(() => {
                     hand.style.opacity = 0;
                     document.getElementById('ponto-inicio').style.opacity = '1';
-                    desenharGuiasJogo(); // Limpa o desenho falso
+                    desenharGuiasJogo(); 
                     ajudaEmCurso = false; 
                 }, 800);
             }
