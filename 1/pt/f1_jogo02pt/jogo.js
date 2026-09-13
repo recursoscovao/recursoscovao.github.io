@@ -169,12 +169,16 @@ function iniciarJogo() {
     totalRondas = 10; 
     ajudaEmCurso = false;
     
-    // Apenas tipos de linhas curvas!
-    const padroes = ["onda", "lacos", "montanha", "onda_larga", "arcos_baixo"];
+    // 10 padrões únicos, todos curvos!
+    const padroes = [
+        "onda", "onda_larga", "onda_assimetrica", "onda_crescente", 
+        "lacos", "lacos_duplos", "molas", 
+        "montanha", "arcos_baixo", "castelo_curvo"
+    ];
     sequenciaNiveis = [];
     
-    let deck = [...padroes, ...padroes]; 
-    deck.sort(() => Math.random() - 0.5);
+    let deck = [...padroes]; 
+    deck.sort(() => Math.random() - 0.5); // Baralha os 10 padrões
     for(let i=0; i<10; i++) sequenciaNiveis.push({ tipo: deck[i] });
 
     proximaRonda();
@@ -242,8 +246,8 @@ function configurarCanvas() {
 function gerarPontosGrafismos(tipo, sX, sY, eX, eY) {
     let pts = [];
     const w = eX - sX;
-    const h = 70; 
-    const steps = 200; 
+    const h = 75; // Altura máxima
+    const steps = 250; // Resolução alta para curvas perfeitinhas
     
     let ciclos = 3;
 
@@ -260,21 +264,50 @@ function gerarPontosGrafismos(tipo, sX, sY, eX, eY) {
         else if (tipo === "onda_larga") {
             currY = sY - (Math.sin(prog * Math.PI * 2 * 1.5) * h);
         }
+        else if (tipo === "onda_assimetrica") {
+            // Mistura de duas ondas cria um efeito tipo barbatana
+            currY = sY - (Math.sin(t) + 0.5 * Math.sin(2 * t)) * (h * 0.65);
+        }
+        else if (tipo === "onda_crescente") {
+            // A amplitude vai aumentando à medida que avança
+            let amp = 10 + prog * (h - 10);
+            currY = sY - Math.sin(prog * Math.PI * 2 * 4) * amp;
+        }
         else if (tipo === "lacos") {
             let radius = h * 0.7;
             currX = sX + w * prog - Math.sin(t) * radius;
             currY = sY - Math.cos(t) * radius + radius; 
         }
+        else if (tipo === "lacos_duplos") {
+            // Cria um formato tipo "8" deitado ao longo do percurso
+            let radius3 = h * 0.6;
+            currX = sX + w * prog - Math.sin(t) * radius3 * 0.4; 
+            currY = sY - Math.sin(t * 2) * radius3; 
+        }
+        else if (tipo === "molas") {
+            // Mola apertada (6 ciclos)
+            let tMola = prog * Math.PI * 2 * 6;
+            let radius2 = h * 0.45;
+            currX = sX + w * prog - Math.sin(tMola) * radius2;
+            currY = sY - Math.cos(tMola) * radius2;
+        }
         else if (tipo === "montanha") {
+            // O valor absoluto do seno cria pontas aguçadas em baixo e curvas em cima
             currY = sY - (Math.abs(Math.sin(prog * Math.PI * ciclos)) * h);
         }
         else if (tipo === "arcos_baixo") {
+            // Inverso da montanha
             currY = sY + (Math.abs(Math.sin(prog * Math.PI * ciclos)) * h);
+        }
+        else if (tipo === "castelo_curvo") {
+            // Mistura de curvas para fazer um padrão parecido com ameias de um castelo muito suaves
+            currY = sY - (Math.sin(t) + (1/3)*Math.sin(3*t) + (1/5)*Math.sin(5*t)) * (h * 0.8);
         }
 
         pts.push({ x: currX, y: currY, hit: false });
     }
 
+    // Força o encaixe perfeito no início e no fim
     pts[0].x = sX; pts[0].y = sY;
     pts[pts.length-1].x = eX; pts[pts.length-1].y = eY;
 
