@@ -117,5 +117,5 @@ const JOGO_CONFIG = {
 
 const DADOS_JOGO = {
     titulo: "Completa a Palavra",
-    somInstrucoes: "sons1ano/f1_jogo03pt.mp3"
+    somInstrucoes: "sons1ano/f1_jogo04pt.mp3"
 };
