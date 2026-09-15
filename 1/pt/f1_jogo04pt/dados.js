@@ -57,11 +57,11 @@ const BIBLIOTECA_CONTEUDO = {
 };
 
 // ==========================================
-// 3. CONFIGURAÇÃO DO JOGO ATUAL (GRAFISMOS)
+// 3. CONFIGURAÇÃO DO JOGO ATUAL
 // ==========================================
 const JOGO_CONFIG = {
-    nomeDoJogo: "Traça o Caminho",
-    descricao: "Usa o teu dedo ou rato para seguir o caminho tracejado!",
+    nomeDoJogo: "Completa a Palavra",
+    descricao: "Arrasta ou clica na letra correta para completar a palavra!",
     
     areaAtiva: "portugues",   
     anoAtivo: "ano1",    
@@ -69,6 +69,7 @@ const JOGO_CONFIG = {
     caminhoIconsMenu: "../../../icons/", 
     caminhoIconsJogos: "../../../icons/ic_jogos_1ano/", 
     caminhoSons: "../../../sons/", 
+    caminhoImg: "../../../img/animaisdomesticos/",
 
     sons: {
         acerto: "acerto.mp3",
@@ -86,56 +87,35 @@ const JOGO_CONFIG = {
         { id: "voltar", label: "Voltar",       icon: "AUTO",        link: "javascript:history.back()" } 
     ],
 
-    instrucoes: {
-        objetivo: "Usa o rato ou o dedo para desenhar uma linha sem largar!",
-        comoJogar: [
-            "Toca na bola colorida para começar.",
-            "Sem levantar o dedo, segue a linha tracejada.",
-            "Chega até à seta para ganhares a ronda."
-        ],
-        regras: [
-            "Tens de chegar à seta.",
-            "Se largares ou saíres muito fora da linha, tens de tentar de novo!"
-        ],
-        dicas: "Vai devagar para não saíres muito fora da linha!",
-        desenvolvimento: [
-            "Coordenação óculo-manual",
-            "Motricidade fina",
-            "Controlo do traço"
-        ]
-    },
-
     relatorios: [
-        { min: 9, max: 10, titulo: "Mão Firme!",        img: "taca_1.png" },
-        { min: 7, max: 8,  titulo: "Muito bem!",        img: "taca_2.png" },
-        { min: 5, max: 6,  titulo: "Quase lá!",         img: "taca_3.png" },
-        { min: 0, max: 4,  titulo: "Vamos treinar!",    img: "taca_4.png" }
-    ]
+        { min: 9, max: 10, titulo: "Fantástico! És um Mestre!", img: "taca_1.png" },
+        { min: 7, max: 8,  titulo: "Excelente trabalho!",      img: "taca_2.png" },
+        { min: 5, max: 6,  titulo: "Quase lá!",              img: "taca_3.png" },
+        { min: 0, max: 4,  titulo: "Vamos treinar!",           img: "taca_4.png" }
+    ],
+
+    categorias: {
+        animais: {
+            nome: "Animais",
+            exemplo: "Gato",
+            exemploImg: "gato.png",
+            itens: [
+                { nome: "Gato", img: "gato.png" },
+                { nome: "Pato", img: "pato.png" },
+                { nome: "Cão", img: "cao.png" },
+                { nome: "Vaca", img: "vaca.png" },
+                { nome: "Galinha", img: "galinha.png" },
+                { nome: "Cavalo", img: "cavalo.png" },
+                { nome: "Porco", img: "porco.png" },
+                { nome: "Coelho", img: "coelho.png" },
+                { nome: "Ovelha", img: "ovelha.png" },
+                { nome: "Cabra", img: "cabra.png" }
+            ]
+        }
+    }
 };
 
-// ==========================================
-// 4. DADOS DO CONTEÚDO DO JOGO
-// ==========================================
 const DADOS_JOGO = {
-    caminhoImagens: "../../../img/animaisdomesticos/", 
-    
-    // ==============================================
-    // AQUI ESTÁ O CAMINHO CORRIGIDO PARA AS INSTRUÇÕES
-    // ==============================================
-    somInstrucoes: "sons1ano/f1_jogo03pt.mp3", 
-    
-    // A lista de itens mantêm-se por uma questão estrutural,
-    // o novo motor visual do jogo.js gera as linhas automaticamente.
-    itens: [
-        { id: 1,  imgA: "galinha.png", imgB: "pintainho.png", tipo: "reta" },       
-        { id: 2,  imgA: "pato.png",    imgB: "patinho.png",   tipo: "curva" },      
-        { id: 3,  imgA: "cao.png",     imgB: "cao1.png",      tipo: "ziguezague" }, 
-        { id: 4,  imgA: "gato.png",    imgB: "gato1.png",     tipo: "reta" },       
-        { id: 5,  imgA: "vaca.png",    imgB: "boi.png",       tipo: "curva" },
-        { id: 6,  imgA: "cabra.png",   imgB: "ovelha.png",    tipo: "ziguezague" },
-        { id: 7,  imgA: "cavalo.png",  imgB: "burro.png",     tipo: "reta" },
-        { id: 8,  imgA: "porco.png",   imgB: "galo.png",      tipo: "curva" },
-        { id: 9,  imgA: "peru.png",    imgB: "galinha.png",   tipo: "ziguezague" },
-        { id: 10, imgA: "coelho.png",  imgB: "gato.png",      tipo: "reta" }
-    ]
+    titulo: "Completa a Palavra",
+    somInstrucoes: "sons1ano/f1_jogo03pt.mp3"
 };
