@@ -1,1 +1,271 @@
+// ==========================================
+// 1. ESTADO GLOBAL E SONS
+// ==========================================
+let itensAtuais = [];
+let indiceAtual = 0;
+let acertos = 0;
+let erros = 0;
+let ajudasUsadas = 0;
+let tempoInicio;
+let intervaloTimer;
+let pecaSendoArrastada = null;
+let touchStartX = 0, touchStartY = 0;
 
+const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.acerto);
+const somErro = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.erro);
+const somClique = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.clique);
+
+// ==========================================
+// 2. LÓGICA DE CAPA E INTRODUÇÃO
+// ==========================================
+function mostrarCapa() {
+    lerCorDoTema();
+    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">Completa a Palavra</h2>`;
+    
+    // Seleciona a primeira categoria por defeito se existir
+    const catKeys = Object.keys(JOGO_CONFIG.categorias);
+    const primeiraCatKey = catKeys.length > 0 ? catKeys[0] : null;
+    
+    document.getElementById('game-content').innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; width: 100%; gap: 15px;" id="intro-animation-container">
+            <!-- Renderizado dinamicamente -->
+        </div>
+        <p style="color:var(--text-grey); font-weight:800; text-align:center; font-size:1.1rem; max-width: 500px; padding: 0 15px; margin-top: 15px;">
+            Arrasta ou clica na letra correta para completar a palavra!
+        </p>
+    `;
+
+    if (primeiraCatKey) {
+        selecionarCategoria(primeiraCatKey);
+    }
+    
+    const footer = document.getElementById('shell-footer-content');
+    footer.style.display = "flex";
+    footer.innerHTML = `
+        <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="btn-audio-circle" onclick="tocarAudioInstrucoes()" style="width: 65px; height: 65px; cursor: pointer; flex-shrink: 0; z-index: 100;"> 
+        <button class="btn-play-rect" onclick="iniciarJogo()" style="flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"><i class="fas fa-play"></i> JOGAR</button>
+    `;
+}
+
+function lerCorDoTema() {
+    // Garante compatibilidade caso a cor primária precise de ser lida do tema
+}
+
+function tocarAudioInstrucoes() {
+    somClique.currentTime = 0;
+    somClique.play().catch(e => console.log(e));
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
+    const utter = new SpeechSynthesisUtterance("Escolhe a letra correta para completar o nome do animal!");
+    utter.lang = 'pt-PT';
+    window.speechSynthesis.speak(utter);
+}
+
+function selecionarCategoria(key) {
+    if (!JOGO_CONFIG.categorias || !JOGO_CONFIG.categorias[key]) return;
+    const cat = JOGO_CONFIG.categorias[key];
+    itensAtuais = [...cat.itens].sort(() => Math.random() - 0.5).slice(0, 10);
+    const containerIntro = document.getElementById('intro-animation-container');
+    if (!containerIntro) return;
+
+    containerIntro.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; gap:15px;">
+            <img src="${JOGO_CONFIG.caminhoImg}${cat.exemploImg}" style="height:90px; object-fit:contain;">
+            <div style="display:flex; align-items:center; gap:8px; font-size:32px; font-weight:900; color:var(--primary-color);">
+                <div style="width:50px; height:60px; border:3px dashed var(--primary-color); border-radius:12px; position:relative; background:#fff;">
+                    <div style="width:50px; height:60px; background:white; border:3px solid var(--primary-color); border-radius:12px; display:flex; align-items:center; justify-content:center; position:absolute; top:-3px; left:-3px; animation: demoIn 2s infinite;">${cat.exemplo[0]}</div>
+                </div>
+                <span>${cat.exemplo.substring(1)}</span>
+            </div>
+        </div>
+        <style>@keyframes demoIn { 0%, 20% { transform: translateY(25px); opacity: 0; } 50%, 80% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(0); opacity: 0; } }</style>`;
+}
+
+// ==========================================
+// 3. LÓGICA DE JOGO PRINCIPAL
+// ==========================================
+function iniciarJogo() {
+    indiceAtual = 0;
+    acertos = 0;
+    erros = 0;
+    ajudasUsadas = 0;
+    iniciarTimer();
+    proximaRodada();
+}
+
+function iniciarTimer() {
+    clearInterval(intervaloTimer);
+    tempoInicio = Date.now();
+}
+
+function proximaRodada() {
+    if (indiceAtual >= itensAtuais.length) { 
+        finalizarJogo(); 
+        return; 
+    }
+    
+    // Atualiza a barra de estado topo utilizando a estrutura do teu index.html
+    Engine.showStatusBar(indiceAtual + 1, itensAtuais.length, acertos, erros);
+    montarInterface(itensAtuais[indiceAtual]);
+}
+
+function montarInterface(item) {
+    const container = document.getElementById('game-content');
+    const isMobile = window.innerWidth < 600;
+    const correta = item.nome[0].toUpperCase();
+    const resto = item.nome.substring(1);
+    
+    let fontSizePalavra = isMobile ? (resto.length > 8 ? '28px' : '36px') : '48px';
+
+    const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÃÕÇ";
+    const opcoes = [correta, ...alfabeto.replace(correta, "").split("").sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random());
+
+    container.innerHTML = `
+        <div style="display:flex; flex-direction:column; align-items:center; width:100%; height:100%; justify-content:space-around; padding:10px 0;">
+            <div style="background:white; padding:15px; border-radius:25px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); display:flex; align-items:center; justify-content:center;">
+                <img src="${JOGO_CONFIG.caminhoImg}${item.img}" style="max-height:${isMobile ? '130px' : '190px'}; max-width:80vw; object-fit:contain;" alt="${item.nome}">
+            </div>
+
+            <div style="display:flex; align-items:center; gap:10px; margin: 15px 0; width:100%; justify-content:center;">
+                <div id="target-letter" class="slot" ondrop="drop(event)" ondragover="allowDrop(event)" 
+                     style="width:65px; height:75px; border:4px dashed var(--primary-color); border-radius:15px; display:flex; align-items:center; justify-content:center; font-size:40px; font-weight:900; color:var(--primary-color); flex-shrink:0; background:#fff;"></div>
+                <div style="font-size:${fontSizePalavra}; font-weight:900; color:#445; letter-spacing:2px; white-space:nowrap; overflow:hidden;">${resto}</div>
+            </div>
+
+            <div id="options-grid" style="display:grid; grid-template-columns:repeat(4, 1fr); gap:12px; width:100%; max-width:400px; padding: 0 10px;"></div>
+        </div>`;
+
+    const grid = document.getElementById('options-grid');
+    opcoes.forEach(l => grid.appendChild(criarBotaoLetra(l, correta)));
+}
+
+function criarBotaoLetra(letra, correta) {
+    const div = document.createElement('div');
+    div.className = 'silaba-btn';
+    div.innerText = letra;
+    div.draggable = true;
+    div.id = 'L-' + Math.random().toString(36).substr(2, 5);
+
+    Object.assign(div.style, {
+        height: '70px', background: 'white', color: 'var(--primary-color)',
+        border: '3px solid var(--primary-color)', borderRadius: '15px', display: 'flex',
+        alignItems: 'center', justifyContent: 'center', fontSize: '30px', fontWeight: '900',
+        cursor: 'grab', boxShadow: '0 4px 0 rgba(0,0,0,0.1)', userSelect: 'none', touchAction: 'none'
+    });
+
+    // --- EVENTOS MOBILE (Toque + Arrastar) ---
+    div.ontouchstart = function(e) {
+        const t = e.touches[0];
+        touchStartX = t.clientX; touchStartY = t.clientY;
+        pecaSendoArrastada = this;
+        const r = this.getBoundingClientRect();
+        this.dataset.ox = t.clientX - r.left;
+        this.dataset.oy = t.clientY - r.top;
+        this.style.zIndex = "1000";
+    };
+
+    div.ontouchmove = function(e) {
+        if (!pecaSendoArrastada) return;
+        const t = e.touches[0];
+        this.style.position = 'fixed';
+        this.style.pointerEvents = 'none';
+        this.style.left = (t.clientX - this.dataset.ox) + 'px';
+        this.style.top = (t.clientY - this.dataset.oy) + 'px';
+    };
+
+    div.ontouchend = function(e) {
+        if (!pecaSendoArrastada) return;
+        const t = e.changedTouches[0];
+        const dist = Math.hypot(t.clientX - touchStartX, t.clientY - touchStartY);
+        
+        this.style.pointerEvents = 'auto';
+        const elemAbaixo = document.elementFromPoint(t.clientX, t.clientY);
+        const slot = elemAbaixo ? elemAbaixo.closest('.slot') : null;
+
+        if (dist < 12 || slot) {
+            verificar(letra, correta);
+        }
+
+        this.style.position = 'relative';
+        this.style.left = '0'; this.style.top = '0';
+        pecaSenedoArrastada = null;
+        pecaSendoArrastada = null;
+    };
+
+    // --- EVENTOS PC (Clique + Drag nativo) ---
+    div.onclick = function(e) {
+        if (e.pointerType === 'touch') return;
+        verificar(letra, correta);
+    };
+
+    div.ondragstart = function(e) {
+        pecaSendoArrastada = this;
+        e.dataTransfer.setData("text", letra);
+    };
+
+    return div;
+}
+
+function verificar(escolhida, correta) {
+    const slot = document.getElementById('target-letter');
+    if (!slot || slot.innerText !== "") return; 
+
+    const gameContent = document.getElementById('game-content');
+    if (gameContent) gameContent.style.pointerEvents = 'none';
+    
+    slot.innerText = escolhida;
+    slot.style.borderStyle = 'solid';
+    
+    const acerto = escolhida === correta;
+    const cor = acerto ? '#8cc63f' : '#ff5a5f';
+    
+    slot.style.backgroundColor = cor;
+    slot.style.borderColor = cor;
+    slot.style.color = 'white';
+
+    if (acerto) { 
+        acertos++; 
+        somAcerto.currentTime = 0; 
+        somAcerto.play().catch(e=>console.log(e)); 
+    } else { 
+        erros++; 
+        somErro.currentTime = 0; 
+        somErro.play().catch(e=>console.log(e)); 
+    }
+
+    setTimeout(() => {
+        if (gameContent) gameContent.style.pointerEvents = 'all';
+        indiceAtual++;
+        proximaRodada();
+    }, 1200);
+}
+
+// LÓGICA DRAG PC
+window.allowDrop = (e) => e.preventDefault();
+window.drop = function(e) {
+    e.preventDefault();
+    const letra = e.dataTransfer.getData("text");
+    const correta = itensAtuais[indiceAtual].nome[0].toUpperCase();
+    verificar(letra, correta);
+};
+
+function darAjuda() {
+    ajudasUsadas++;
+    somClique.currentTime = 0; 
+    somClique.play().catch(e=>console.log(e));
+    const correta = itensAtuais[indiceAtual].nome[0].toUpperCase();
+    
+    const slot = document.getElementById('target-letter');
+    if (slot && slot.innerText === "") {
+        slot.innerText = correta;
+        slot.style.backgroundColor = '#5EA2E6';
+        slot.style.borderColor = '#5EA2E6';
+        slot.style.color = 'white';
+        slot.style.borderStyle = 'solid';
+    }
+}
+
+function finalizarJogo() {
+    if (window.audioInstrucoes) window.audioInstrucoes.pause();
+    const rel = JOGO_CONFIG.relatorios.find(r => acertos >= r.min && acertos <= r.max) || JOGO_CONFIG.relatorios[0];
+    Engine.showResults(acertos, erros, ajudasUsadas, rel);
+}
