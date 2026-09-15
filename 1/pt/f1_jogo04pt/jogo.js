@@ -15,6 +15,9 @@ const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.acerto);
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.erro);
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.clique);
 
+// Caminho correto das instruções do jogo baseadas no diretório sons/sons1ano/f1_jogo04pt.mp3
+const somInstrucoes = new Audio('../../../sons/sons1ano/f1_jogo04pt.mp3');
+
 // ==========================================
 // 2. LÓGICA DE CAPA E INTRODUÇÃO
 // ==========================================
@@ -54,9 +57,15 @@ function tocarAudioInstrucoes() {
     somClique.currentTime = 0;
     somClique.play().catch(e => console.log(e));
     if (window.speechSynthesis) window.speechSynthesis.cancel();
-    const utter = new SpeechSynthesisUtterance("Escolhe a letra correta para completar o nome do animal!");
-    utter.lang = 'pt-PT';
-    window.speechSynthesis.speak(utter);
+    
+    // Tenta reproduzir o áudio dedicado do repositório (sons/sons1ano/f1_jogo04pt.mp3)
+    somInstrucoes.currentTime = 0;
+    somInstrucoes.play().catch(e => {
+        console.log("Áudio local não encontrado, a utilizar SpeechSynthesis.", e);
+        const utter = new SpeechSynthesisUtterance("Escolhe a letra correta para completar o nome do animal!");
+        utter.lang = 'pt-PT';
+        window.speechSynthesis.speak(utter);
+    });
 }
 
 function selecionarCategoria(key) {
@@ -69,7 +78,7 @@ function selecionarCategoria(key) {
     containerIntro.innerHTML = `
         <div style="display:flex; flex-direction:column; align-items:center; gap:15px;">
             <div style="height:140px; display:flex; align-items:center; justify-content:center;">
-                <img src="${JOGO_CONFIG.caminhoImg}${cat.exemploImg}" style="max-height:130px; width:auto; object-fit:contain;">
+                <img src="${JOGO_CONFIG.caminhoImg}${cat.exemploImg}" style="height:130px; width:auto; object-fit:contain;">
             </div>
             <div style="display:flex; align-items:center; gap:8px; font-size:32px; font-weight:900; color:var(--primary-color);">
                 <div style="width:50px; height:60px; border:3px dashed var(--primary-color); border-radius:12px; position:relative; background:#fff;">
@@ -108,7 +117,7 @@ function proximaRodada() {
     
     const container = document.getElementById('game-content');
     
-    // Efeito de desvanecimento (fade out)
+    // Efeito de desvanecimento (fade out suave entre imagens e perguntas)
     container.style.transition = "opacity 0.25s ease";
     container.style.opacity = "0";
     
@@ -133,7 +142,7 @@ function montarInterface(item) {
     container.innerHTML = `
         <div style="display:flex; flex-direction:column; align-items:center; width:100%; height:100%; justify-content:space-around; padding:10px 0;">
             <div style="background:white; padding:15px; border-radius:25px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); display:flex; align-items:center; justify-content:center; width: 190px; height: 180px;">
-                <img src="${JOGO_CONFIG.caminhoImg}${item.img}" style="max-height:140px; max-width:100%; object-fit:contain;" alt="${item.nome}">
+                <img src="${JOGO_CONFIG.caminhoImg}${item.img}" style="height:130px; width:auto; object-fit:contain;" alt="${item.nome}">
             </div>
 
             <div style="display:flex; align-items:center; gap:10px; margin: 15px 0; width:100%; justify-content:center;">
@@ -165,12 +174,13 @@ function criarBotaoLetra(letra, correta) {
         transition: 'transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease'
     });
 
-    // Efeitos visuais modernos ao passar o rato (Hover)
+    // Efeitos visuais interativos (Hover com cursor em mão/pointer)
     div.onmouseenter = function() {
         if (!pecaSendoArrastada) {
             this.style.transform = 'translateY(-3px)';
             this.style.boxShadow = '0 8px 15px rgba(0,0,0,0.12)';
             this.style.backgroundColor = '#f7fbff';
+            this.style.cursor = 'pointer';
         }
     };
     div.onmouseleave = function() {
@@ -284,7 +294,7 @@ function darAjuda() {
     somClique.play().catch(e=>console.log(e));
     const correta = itensAtuais[indiceAtual].nome[0].toUpperCase();
     
-    // Procura o botão que contém a letra correta e faz-lo piscar
+    // Procura o botão que contém a letra correta e faz-lo piscar em destaque permitindo seleccioná-lo
     const botoes = document.querySelectorAll('.letra-opcao');
     botoes.forEach(btn => {
         if (btn.dataset.letra === correta) {
@@ -307,4 +317,3 @@ function finalizarJogo() {
     if (window.audioInstrucoes) window.audioInstrucoes.pause();
     const rel = JOGO_CONFIG.relatorios.find(r => acertos >= r.min && acertos <= r.max) || JOGO_CONFIG.relatorios[0];
     Engine.showResults(acertos, erros, ajudasUsadas, rel);
-}
