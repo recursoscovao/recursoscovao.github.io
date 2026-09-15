@@ -15,50 +15,57 @@ const somAcerto = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.acerto);
 const somErro = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.erro);
 const somClique = new Audio(JOGO_CONFIG.caminhoSons + JOGO_CONFIG.sons.clique);
 
-// Caminho correto das instruções do jogo baseadas no diretório sons/sons1ano/f1_jogo04pt.mp3
-const somInstrucoes = new Audio('../../../sons/sons1ano/f1_jogo04pt.mp3');
+// Caminho de áudio das instruções vindo de DADOS_JOGO
+const somInstrucoes = new Audio(JOGO_CONFIG.caminhoSons + (DADOS_JOGO.somInstrucoes || 'sons1ano/f1_jogo04pt.mp3'));
 
 // ==========================================
 // 2. LÓGICA DE CAPA E INTRODUÇÃO
 // ==========================================
-function mostrarCapa() {
+window.mostrarCapa = function() {
     lerCorDoTema();
-    document.getElementById('shell-header-content').innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">Completa a Palavra</h2>`;
+    const headerContent = document.getElementById('shell-header-content');
+    if (headerContent) {
+        headerContent.innerHTML = `<h2 style="color:var(--primary-color); font-weight:900; text-transform:uppercase;">${DADOS_JOGO.titulo || JOGO_CONFIG.nomeDoJogo}</h2>`;
+    }
     
     const catKeys = Object.keys(JOGO_CONFIG.categorias);
     const primeiraCatKey = catKeys.length > 0 ? catKeys[0] : null;
     
-    document.getElementById('game-content').innerHTML = `
-        <div style="display:flex; flex-direction:column; align-items:center; width: 100%; gap: 15px;" id="intro-animation-container">
-            <!-- Renderizado dinamicamente -->
-        </div>
-        <p style="color:var(--text-grey); font-weight:800; text-align:center; font-size:1.1rem; max-width: 500px; padding: 0 15px; margin-top: 15px;">
-            Arrasta ou clica na letra correta para completar a palavra!
-        </p>
-    `;
+    const gameContent = document.getElementById('game-content');
+    if (gameContent) {
+        gameContent.innerHTML = `
+            <div style="display:flex; flex-direction:column; align-items:center; width: 100%; gap: 15px;" id="intro-animation-container">
+                <!-- Renderizado dinamicamente -->
+            </div>
+            <p style="color:var(--text-grey, #5d7082); font-weight:800; text-align:center; font-size:1.1rem; max-width: 500px; padding: 0 15px; margin-top: 15px;">
+                ${JOGO_CONFIG.descricao}
+            </p>
+        `;
+    }
 
     if (primeiraCatKey) {
         selecionarCategoria(primeiraCatKey);
     }
     
     const footer = document.getElementById('shell-footer-content');
-    footer.style.display = "flex";
-    footer.innerHTML = `
-        <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="btn-audio-circle" onclick="tocarAudioInstrucoes()" style="width: 65px; height: 65px; cursor: pointer; flex-shrink: 0; z-index: 100;"> 
-        <button class="btn-play-rect" onclick="iniciarJogo()" style="flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"><i class="fas fa-play"></i> JOGAR</button>
-    `;
-}
+    if (footer) {
+        footer.style.display = "flex";
+        footer.innerHTML = `
+            <img src="${JOGO_CONFIG.caminhoIconsMenu}audio.png" class="btn-audio-circle" onclick="tocarAudioInstrucoes()" style="width: 65px; height: 65px; cursor: pointer; flex-shrink: 0; z-index: 100;"> 
+            <button class="btn-play-rect" onclick="iniciarJogo()" style="flex: 1; height: 65px; border-radius: 35px; background: var(--primary-color); color: white; border: none; font-size: 1.5rem; font-weight: 900; text-transform: uppercase; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 15px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);"><i class="fas fa-play"></i> JOGAR</button>
+        `;
+    }
+};
 
 function lerCorDoTema() {
     // Compatibilidade de temas
 }
 
-function tocarAudioInstrucoes() {
+window.tocarAudioInstrucoes = function() {
     somClique.currentTime = 0;
     somClique.play().catch(e => console.log(e));
     if (window.speechSynthesis) window.speechSynthesis.cancel();
     
-    // Tenta reproduzir o áudio dedicado do repositório (sons/sons1ano/f1_jogo04pt.mp3)
     somInstrucoes.currentTime = 0;
     somInstrucoes.play().catch(e => {
         console.log("Áudio local não encontrado, a utilizar SpeechSynthesis.", e);
@@ -66,9 +73,9 @@ function tocarAudioInstrucoes() {
         utter.lang = 'pt-PT';
         window.speechSynthesis.speak(utter);
     });
-}
+};
 
-function selecionarCategoria(key) {
+window.selecionarCategoria = function(key) {
     if (!JOGO_CONFIG.categorias || !JOGO_CONFIG.categorias[key]) return;
     const cat = JOGO_CONFIG.categorias[key];
     itensAtuais = [...cat.itens].sort(() => Math.random() - 0.5).slice(0, 10);
@@ -88,19 +95,19 @@ function selecionarCategoria(key) {
             </div>
         </div>
         <style>@keyframes demoIn { 0%, 20% { transform: translateY(25px); opacity: 0; } 50%, 80% { transform: translateY(0); opacity: 1; } 100% { transform: translateY(0); opacity: 0; } }</style>`;
-}
+};
 
 // ==========================================
 // 3. LÓGICA DE JOGO PRINCIPAL
 // ==========================================
-function iniciarJogo() {
+window.iniciarJogo = function() {
     indiceAtual = 0;
     acertos = 0;
     erros = 0;
     ajudasUsadas = 0;
     iniciarTimer();
     proximaRodada();
-}
+};
 
 function iniciarTimer() {
     clearInterval(intervaloTimer);
@@ -113,23 +120,26 @@ function proximaRodada() {
         return; 
     }
     
-    Engine.showStatusBar(indiceAtual + 1, itensAtuais.length, acertos, erros);
+    if (typeof Engine !== 'undefined' && Engine.showStatusBar) {
+        Engine.showStatusBar(indiceAtual + 1, itensAtuais.length, acertos, erros);
+    }
     
     const container = document.getElementById('game-content');
+    if (!container) return;
     
-    // Efeito de desvanecimento (fade out suave entre imagens e perguntas)
     container.style.transition = "opacity 0.25s ease";
     container.style.opacity = "0";
     
     setTimeout(() => {
         montarInterface(itensAtuais[indiceAtual]);
-        // Efeito de desvanecimento (fade in) para a nova rodada
         container.style.opacity = "1";
     }, 250);
 }
 
 function montarInterface(item) {
     const container = document.getElementById('game-content');
+    if (!container) return;
+    
     const isMobile = window.innerWidth < 600;
     const correta = item.nome[0].toUpperCase();
     const resto = item.nome.substring(1);
@@ -174,7 +184,6 @@ function criarBotaoLetra(letra, correta) {
         transition: 'transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease'
     });
 
-    // Efeitos visuais interativos (Hover com cursor em mão/pointer)
     div.onmouseenter = function() {
         if (!pecaSendoArrastada) {
             this.style.transform = 'translateY(-3px)';
@@ -191,7 +200,6 @@ function criarBotaoLetra(letra, correta) {
         }
     };
 
-    // --- EVENTOS MOBILE (Toque + Arrastar) ---
     div.ontouchstart = function(e) {
         const t = e.touches[0];
         touchStartX = t.clientX; touchStartY = t.clientY;
@@ -231,7 +239,6 @@ function criarBotaoLetra(letra, correta) {
         pecaSendoArrastada = null;
     };
 
-    // --- EVENTOS PC (Clique + Drag nativo) ---
     div.onclick = function(e) {
         if (e.pointerType === 'touch') return;
         verificar(letra, correta);
@@ -279,7 +286,6 @@ function verificar(escolhida, correta) {
     }, 1200);
 }
 
-// LÓGICA DRAG PC
 window.allowDrop = (e) => e.preventDefault();
 window.drop = function(e) {
     e.preventDefault();
@@ -288,13 +294,12 @@ window.drop = function(e) {
     verificar(letra, correta);
 };
 
-function darAjuda() {
+window.darAjuda = function() {
     ajudasUsadas++;
     somClique.currentTime = 0; 
     somClique.play().catch(e=>console.log(e));
     const correta = itensAtuais[indiceAtual].nome[0].toUpperCase();
     
-    // Procura o botão que contém a letra correta e faz-lo piscar em destaque permitindo seleccioná-lo
     const botoes = document.querySelectorAll('.letra-opcao');
     botoes.forEach(btn => {
         if (btn.dataset.letra === correta) {
@@ -304,16 +309,18 @@ function darAjuda() {
         }
     });
 
-    // Injeta a regra CSS para a animação de piscar se não existir
     if (!document.getElementById('hint-animation-style')) {
         const style = document.createElement('style');
         style.id = 'hint-animation-style';
         style.innerHTML = `@keyframes piscarBotao { 0% { transform: scale(1); background-color: white; } 100% { transform: scale(1.12); background-color: #fff9d6; } }`;
         document.head.appendChild(style);
     }
-}
+};
 
 function finalizarJogo() {
-    if (window.audioInstrucoes) window.audioInstrucoes.pause();
+    if (window.speechSynthesis) window.speechSynthesis.cancel();
     const rel = JOGO_CONFIG.relatorios.find(r => acertos >= r.min && acertos <= r.max) || JOGO_CONFIG.relatorios[0];
-    Engine.showResults(acertos, erros, ajudasUsadas, rel);
+    if (typeof Engine !== 'undefined' && Engine.showResults) {
+        Engine.showResults(acertos, erros, ajudasUsadas, rel);
+    }
+}
