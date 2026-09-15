@@ -68,7 +68,9 @@ function selecionarCategoria(key) {
 
     containerIntro.innerHTML = `
         <div style="display:flex; flex-direction:column; align-items:center; gap:15px;">
-            <img src="${JOGO_CONFIG.caminhoImg}${cat.exemploImg}" style="height:150px; width:150px; object-fit:contain;">
+            <div style="height:140px; display:flex; align-items:center; justify-content:center;">
+                <img src="${JOGO_CONFIG.caminhoImg}${cat.exemploImg}" style="max-height:130px; width:auto; object-fit:contain;">
+            </div>
             <div style="display:flex; align-items:center; gap:8px; font-size:32px; font-weight:900; color:var(--primary-color);">
                 <div style="width:50px; height:60px; border:3px dashed var(--primary-color); border-radius:12px; position:relative; background:#fff;">
                     <div style="width:50px; height:60px; background:white; border:3px solid var(--primary-color); border-radius:12px; display:flex; align-items:center; justify-content:center; position:absolute; top:-3px; left:-3px; animation: demoIn 2s infinite;">${cat.exemplo[0]}</div>
@@ -106,15 +108,15 @@ function proximaRodada() {
     
     const container = document.getElementById('game-content');
     
-    // Efeito de desvanecimento (fade out) antes de mudar o conteúdo
-    container.style.transition = "opacity 0.3s ease";
+    // Efeito de desvanecimento (fade out)
+    container.style.transition = "opacity 0.25s ease";
     container.style.opacity = "0";
     
     setTimeout(() => {
         montarInterface(itensAtuais[indiceAtual]);
         // Efeito de desvanecimento (fade in) para a nova rodada
         container.style.opacity = "1";
-    }, 300);
+    }, 250);
 }
 
 function montarInterface(item) {
@@ -124,15 +126,14 @@ function montarInterface(item) {
     const resto = item.nome.substring(1);
     
     let fontSizePalavra = isMobile ? (resto.length > 8 ? '28px' : '36px') : '48px';
-    const alturaImagem = isMobile ? '130px' : '170px';
 
     const alfabeto = "ABCDEFGHIJKLMNOPQRSTUVWXYZÁÉÍÓÚÃÕÇ";
     const opcoes = [correta, ...alfabeto.replace(correta, "").split("").sort(() => 0.5 - Math.random()).slice(0, 3)].sort(() => 0.5 - Math.random());
 
     container.innerHTML = `
         <div style="display:flex; flex-direction:column; align-items:center; width:100%; height:100%; justify-content:space-around; padding:10px 0;">
-            <div style="background:white; padding:15px; border-radius:25px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); display:flex; align-items:center; justify-content:center; width: 190px; height: 190px;">
-                <img src="${JOGO_CONFIG.caminhoImg}${item.img}" style="height:${alturaImagem}; max-width:100%; object-fit:contain;" alt="${item.nome}">
+            <div style="background:white; padding:15px; border-radius:25px; box-shadow: 0 6px 15px rgba(0,0,0,0.05); display:flex; align-items:center; justify-content:center; width: 190px; height: 180px;">
+                <img src="${JOGO_CONFIG.caminhoImg}${item.img}" style="max-height:140px; max-width:100%; object-fit:contain;" alt="${item.nome}">
             </div>
 
             <div style="display:flex; align-items:center; gap:10px; margin: 15px 0; width:100%; justify-content:center;">
@@ -160,9 +161,25 @@ function criarBotaoLetra(letra, correta) {
         height: '70px', background: 'white', color: 'var(--primary-color)',
         border: '3px solid var(--primary-color)', borderRadius: '15px', display: 'flex',
         alignItems: 'center', justifyContent: 'center', fontSize: '30px', fontWeight: '900',
-        cursor: 'grab', boxShadow: '0 4px 0 rgba(0,0,0,0.1)', userSelect: 'none', touchAction: 'none',
-        transition: 'all 0.2s ease'
+        cursor: 'pointer', boxShadow: '0 5px 0 rgba(0,0,0,0.1)', userSelect: 'none', touchAction: 'none',
+        transition: 'transform 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease'
     });
+
+    // Efeitos visuais modernos ao passar o rato (Hover)
+    div.onmouseenter = function() {
+        if (!pecaSendoArrastada) {
+            this.style.transform = 'translateY(-3px)';
+            this.style.boxShadow = '0 8px 15px rgba(0,0,0,0.12)';
+            this.style.backgroundColor = '#f7fbff';
+        }
+    };
+    div.onmouseleave = function() {
+        if (!pecaSendoArrastada) {
+            this.style.transform = 'translateY(0)';
+            this.style.boxShadow = '0 5px 0 rgba(0,0,0,0.1)';
+            this.style.backgroundColor = 'white';
+        }
+    };
 
     // --- EVENTOS MOBILE (Toque + Arrastar) ---
     div.ontouchstart = function(e) {
@@ -173,6 +190,7 @@ function criarBotaoLetra(letra, correta) {
         this.dataset.ox = t.clientX - r.left;
         this.dataset.oy = t.clientY - r.top;
         this.style.zIndex = "1000";
+        this.style.transform = 'scale(1.05)';
     };
 
     div.ontouchmove = function(e) {
@@ -199,6 +217,7 @@ function criarBotaoLetra(letra, correta) {
 
         this.style.position = 'relative';
         this.style.left = '0'; this.style.top = '0';
+        this.style.transform = 'scale(1)';
         pecaSendoArrastada = null;
     };
 
