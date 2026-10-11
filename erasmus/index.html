@@ -1,1 +1,370 @@
+<!DOCTYPE html>
+<html lang="pt-PT">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quiz Intergeracional - Erasmus Days 2026</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Nunito', sans-serif;
+      background: linear-gradient(135deg, #FFF9E6 0%, #E6F4FF 100%);
+      color: #333;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .container {
+      width: 100%;
+      max-width: 800px;
+      background: #FFFFFF;
+      border-radius: 28px;
+      box-shadow: 0 12px 35px rgba(0,0,0,0.12);
+      padding: 30px;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      border: 4px solid #666699;
+    }
+    .header-info {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 20px;
+      font-weight: 800;
+      color: #666699;
+      font-size: 0.95rem;
+    }
+    .btn-inicio {
+      background: #666699;
+      color: white;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 15px;
+      cursor: pointer;
+      font-weight: 900;
+      font-size: 0.85rem;
+      box-shadow: 0 3px 8px rgba(102,102,153,0.3);
+      transition: transform 0.1s;
+    }
+    .btn-inicio:active { transform: scale(0.95); }
+    
+    h1 { color: #262638; font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 900; margin-bottom: 12px; }
+    h2 { color: #666699; font-size: clamp(1.2rem, 2vw, 1.5rem); font-weight: 900; margin-bottom: 20px; }
+    p { font-size: 1.05rem; line-height: 1.5; color: #555; margin-bottom: 20px; font-weight: 700; }
+    
+    .card-regras {
+      background: #F8F9FA;
+      border-left: 6px solid #8cc63f;
+      padding: 15px 20px;
+      border-radius: 12px;
+      text-align: left;
+      margin-bottom: 25px;
+    }
+    .card-regras ol { padding-left: 20px; font-weight: 700; color: #444; }
+    .card-regras li { margin-bottom: 8px; }
 
+    .btn-acao {
+      background: #8cc63f;
+      color: white;
+      border: none;
+      padding: 14px 32px;
+      border-radius: 30px;
+      font-size: 1.2rem;
+      font-weight: 900;
+      cursor: pointer;
+      box-shadow: 0 5px 15px rgba(140,198,63,0.4);
+      transition: transform 0.15s, background 0.2s;
+      text-transform: uppercase;
+      margin-top: 10px;
+    }
+    .btn-acao:hover { background: #7ab335; }
+    .btn-acao:active { transform: scale(0.96); }
+
+    .opcoes-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .btn-opcao {
+      background: #F3F3F8;
+      border: 2px solid #D1D1E0;
+      padding: 14px 20px;
+      border-radius: 16px;
+      font-size: 1.05rem;
+      font-weight: 800;
+      color: #262638;
+      text-align: left;
+      cursor: pointer;
+      transition: all 0.2s;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .btn-opcao:hover {
+      background: #E6E6F2;
+      border-color: #666699;
+      transform: translateX(4px);
+    }
+    .btn-opcao.correto {
+      background: #E8F5E9 !important;
+      border-color: #8cc63f !important;
+      color: #2e7d32 !important;
+    }
+    .btn-opcao.errado {
+      background: #FFEBEE !important;
+      border-color: #ff5a5f !important;
+      color: #c62828 !important;
+    }
+
+    .feedback-box {
+      margin-top: 20px;
+      padding: 20px;
+      border-radius: 16px;
+      font-weight: 800;
+      display: none;
+      animation: popIn 0.3s ease;
+    }
+    .feedback-box.sucesso { background: #E8F5E9; color: #2e7d32; border: 2px solid #8cc63f; }
+    .feedback-box.erro { background: #FFEBEE; color: #c62828; border: 2px solid #ff5a5f; }
+    
+    @keyframes popIn {
+      0% { transform: scale(0.9); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .footer-escola {
+      margin-top: 25px;
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #888;
+      border-top: 1px solid #eee;
+      padding-top: 12px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="container" id="app-container">
+    <!-- Conteúdo dinâmico injetado via JavaScript -->
+  </div>
+
+  <script>
+    const quizData = [
+      {
+        pergunta: "Qual é uma das principais finalidades do programa Erasmus+?",
+        opcoes: [
+          { texto: "A. Promover aprendizagem, mobilidade e cooperação na Europa", correto: true },
+          { texto: "B. Organizar apenas competições desportivas profissionais", correto: false },
+          { texto: "C. Substituir as escolas nacionais por escolas europeias", correto: false },
+          { texto: "D. Financiar exclusivamente viagens turísticas", correto: false }
+        ],
+        explicacao: "O Erasmus+ apoia aprendizagem, mobilidade, cooperação e partilha entre pessoas e organizações europeias."
+      },
+      {
+        pergunta: "Quantas estrelas existem na bandeira da União Europeia?",
+        opcoes: [
+          { texto: "A. 10", correto: false },
+          { texto: "B. 12", correto: true },
+          { texto: "C. 27", correto: false },
+          { texto: "D. 30", correto: false }
+        ],
+        explicacao: "A bandeira europeia tem 12 estrelas douradas em círculo. Este número é simbólico e não muda com o número de países."
+      },
+      {
+        pergunta: "O que significa aprendizagem intergeracional?",
+        opcoes: [
+          { texto: "A. Pessoas de diferentes idades aprenderem umas com as outras", correto: true },
+          { texto: "B. Crianças aprenderem apenas com outras crianças", correto: false },
+          { texto: "C. Adultos estudarem sempre sozinhos", correto: false },
+          { texto: "D. Separar jovens e adultos durante as atividades", correto: false }
+        ],
+        explicacao: "A aprendizagem intergeracional acontece quando crianças, jovens e adultos partilham saberes, experiências e competências[cite: 16]."
+      },
+      {
+        pergunta: "Nos jogos dos Erasmus Days, porque é importante convidar adultos da comunidade?",
+        opcoes: [
+          { texto: "A. Para apoiar os alunos, partilhar experiências e aprender também com eles", correto: true },
+          { texto: "B. Para fazerem tudo pelos alunos", correto: false },
+          { texto: "C. Para decidir todas as respostas sem diálogo", correto: false },
+          { texto: "D. Para substituir completamente os professores", correto: false }
+        ],
+        explicacao: "A presença dos adultos fortalece a partilha, a colaboração e a ligação entre escola, famílias e comunidade[cite: 16]."
+      },
+      {
+        pergunta: "Qual destas frases corresponde ao lema da União Europeia?",
+        opcoes: [
+          { texto: "A. Unida na diversidade", correto: true },
+          { texto: "B. Uma língua para toda a Europa", correto: false },
+          { texto: "C. Um país, uma cultura", correto: false },
+          { texto: "D. Viajar sem aprender", correto: false }
+        ],
+        explicacao: "“Unida na diversidade” valoriza a cooperação entre povos, culturas e línguas diferentes[cite: 16]."
+      },
+      {
+        pergunta: "Que atitude ajuda mais uma equipa durante um jogo intergeracional?",
+        opcoes: [
+          { texto: "A. Ouvir todos, respeitar as ideias e cooperar", correto: true },
+          { texto: "B. Só deixar os adultos responderem", correto: false },
+          { texto: "C. Gozar com quem erra", correto: false },
+          { texto: "D. Ignorar quem pensa de forma diferente", correto: false }
+        ],
+        explicacao: "A cooperação, a escuta e o respeito tornam a aprendizagem mais inclusiva e divertida para todos[cite: 16]."
+      },
+      {
+        pergunta: "O que podemos descobrir através de jogos e vídeos sobre a Europa?",
+        opcoes: [
+          { texto: "A. Países, culturas, valores europeus e oportunidades de cooperação", correto: true },
+          { texto: "B. Apenas os nomes das capitais", correto: false },
+          { texto: "C. Só resultados de futebol", correto: false },
+          { texto: "D. Que todos os países têm a mesma cultura", correto: false }
+        ],
+        explicacao: "Jogos e vídeos podem ajudar a conhecer melhor a diversidade cultural, a cidadania europeia e as oportunidades Erasmus+[cite: 16]."
+      },
+      {
+        pergunta: "Qual destas opções mostra melhor inclusão e diversidade?",
+        opcoes: [
+          { texto: "A. Todos participam, independentemente da idade, origem ou capacidades", correto: true },
+          { texto: "B. Só participa quem sabe tudo sobre a Europa", correto: false },
+          { texto: "C. As equipas devem ter apenas pessoas da mesma idade", correto: false },
+          { texto: "D. Quem erra fica fora do jogo", correto: false }
+        ],
+        explicacao: "A inclusão significa criar condições para que todos participem e se sintam valorizados[cite: 16]."
+      },
+      {
+        pergunta: "Numa atividade Erasmus Days, que podem os alunos ensinar aos adultos?",
+        opcoes: [
+          { texto: "A. Competências digitais, criatividade e novas formas de ver o mundo", correto: true },
+          { texto: "B. Nada, porque só os adultos ensinam", correto: false },
+          { texto: "C. A não trabalhar em equipa", correto: false },
+          { texto: "D. A evitar a participação", correto: false }
+        ],
+        explicacao: "A aprendizagem intergeracional é uma troca: adultos ensinam, mas também aprendem com as crianças e os jovens[cite: 16]."
+      },
+      {
+        pergunta: "Qual é a melhor mensagem para esta semana de atividades?",
+        opcoes: [
+          { texto: "A. Juntos por uma Europa mais próxima, inclusiva e participativa", correto: true },
+          { texto: "B. Cada geração aprende sozinha", correto: false },
+          { texto: "C. A Europa é apenas um mapa", correto: false },
+          { texto: "D. Os jogos não ajudam a aprender", correto: false }
+        ],
+        explicacao: "A semana celebra a participação, a amizade, a partilha entre gerações e o sentimento de pertença à Europa[cite: 16]."
+      }
+    ];
+
+    let indiceAtual = 0;
+
+    function renderCapa() {
+      const app = document.getElementById('app-container');
+      app.innerHTML = `
+        <h1>Erasmus Days 2026</h1>
+        <h2>Quiz Intergeracional</h2>
+        <p>Europa, Erasmus+ e aprendizagem entre gerações. Ideal para equipas mistas: alunos + adultos convidados[cite: 16].</p>
+        
+        <div class="card-regras">
+          <strong>Como jogar:</strong>
+          <ol>
+            <li>Formem equipas com crianças, jovens e adultos[cite: 16].</li>
+            <li>Leiam a pergunta em voz alta e conversem antes de responder[cite: 16].</li>
+            <li>Cliquem na opção escolhida[cite: 16].</li>
+          </ol>
+        </div>
+
+        <button class="btn-acao" onclick="iniciarQuiz()">Começar ▶</button>
+        <div class="footer-escola">Erasmus Days 2026 • Escola B1/PE Covão e Vargem[cite: 16]</div>
+      `;
+    }
+
+    function iniciarQuiz() {
+      indiceAtual = 0;
+      renderPergunta();
+    }
+
+    function renderPergunta() {
+      const q = quizData[indiceAtual];
+      const app = document.getElementById('app-container');
+      
+      let opcoesHtml = '';
+      q.opcoes.forEach((op, index) => {
+        opcoesHtml += `<button class="btn-opcao" id="op-${index}" onclick="verificarResposta(${index})">${op.texto}</button>`;
+      });
+
+      app.innerHTML = `
+        <div class="header-info">
+          <span>Pergunta ${indiceAtual + 1} de ${quizData.length}</span>
+          <button class="btn-inicio" onclick="renderCapa()"><i class="fas fa-home"></i> Início</button>
+        </div>
+        <h2>${q.pergunta}</h2>
+        <div class="opcoes-grid" id="grid-opcoes">
+          ${opcoesHtml}
+        </div>
+        <div id="feedback-card" class="feedback-box"></div>
+        <div class="footer-escola">Erasmus Days 2026 • Escola B1/PE Covão e Vargem[cite: 16]</div>
+      `;
+    }
+
+    function verificarResposta(indexSelecionado) {
+      const q = quizData[indiceAtual];
+      const botoes = document.querySelectorAll('.btn-opcao');
+      
+      // Desativar cliques após responder
+      botoes.forEach(b => b.style.pointerEvents = 'none');
+
+      const feedbackCard = document.getElementById('feedback-card');
+      feedbackCard.style.display = 'block';
+
+      if (q.opcoes[indexSelecionado].correto) {
+        document.getElementById(`op-${indexSelecionado}`).classList.add('correto');
+        feedbackCard.className = 'feedback-box sucesso';
+        feedbackCard.innerHTML = `
+          <strong>✅ Correto!</strong><br>${q.explicacao}<br><br>
+          <button class="btn-acao" style="padding: 10px 20px; font-size: 1rem;" onclick="proximaPergunta()">${indiceAtual === quizData.length - 1 ? 'Ver Resultado Final' : 'Próxima Pergunta ▶'}</button>
+        `;
+      } else {
+        document.getElementById(`op-${indexSelecionado}`).classList.add('errado');
+        // Marcar também a correta para ajudar
+        q.opcoes.forEach((op, i) => { if (op.correto) document.getElementById(`op-${i}`).classList.add('correto'); });
+
+        feedbackCard.className = 'feedback-box erro';
+        feedbackCard.innerHTML = `
+          <strong>🔄 Tenta novamente!</strong><br>Conversem mais um pouco em equipa. Lembrem-se: todos podem ajudar a pensar na resposta[cite: 16].<br><br>
+          <button class="btn-acao" style="padding: 10px 20px; font-size: 1rem; background: #666699; box-shadow: 0 4px 12px rgba(102,102,153,0.3);" onclick="renderPergunta()">Voltar à Pergunta ↩</button>
+        `;
+      }
+    }
+
+    function proximaPergunta() {
+      indiceAtual++;
+      if (indiceAtual < quizData.length) {
+        renderPergunta();
+      } else {
+        renderFim();
+      }
+    }
+
+    function renderFim() {
+      const app = document.getElementById('app-container');
+      app.innerHTML = `
+        <div style="font-size: 3.5rem; color: #8cc63f; margin-bottom: 10px;"><i class="fas fa-trophy"></i></div>
+        <h1>Fim do Quiz!</h1>
+        <p style="font-size: 1.15rem; margin-top: 15px;">Parabéns a todos pela participação. Hoje aprendemos que a Europa se constrói com cooperação, diversidade, inclusão e partilha entre gerações[cite: 16].</p>
+        <p style="font-weight: 900; color: #666699; font-size: 1.2rem; margin-bottom: 25px;">Juntos por uma Europa mais próxima[cite: 16]!</p>
+        <button class="btn-acao" onclick="renderCapa()">Voltar ao Início</button>
+        <div class="footer-escola" style="margin-top: 30px;">Erasmus Days 2026 • Escola B1/PE Covão e Vargem[cite: 16]</div>
+      `;
+    }
+
+    // Inicializar na capa
+    renderCapa();
+  </script>
+</body>
+</html>
