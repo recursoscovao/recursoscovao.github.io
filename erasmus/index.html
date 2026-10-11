@@ -58,7 +58,7 @@
     
     .capa-img {
       width: 100%;
-      max-height: 280px;
+      max-height: 300px;
       object-fit: cover;
       border-radius: 16px;
       margin-bottom: 20px;
@@ -79,10 +79,11 @@
       object-fit: cover;
       border: 3px solid #8cc63f;
       box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      flex-shrink: 0;
     }
 
-    h1 { color: #262638; font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 900; margin-bottom: 8px; }
-    h2 { color: #666699; font-size: clamp(1.1rem, 2vw, 1.4rem); font-weight: 900; margin-bottom: 15px; }
+    h1 { color: #262638; font-size: clamp(1.5rem, 2.5vw, 2rem); font-weight: 900; margin-bottom: 4px; text-align: left; }
+    h2 { color: #666699; font-size: clamp(1rem, 1.8vw, 1.3rem); font-weight: 900; margin-bottom: 0; text-align: left; }
     p { font-size: 1rem; line-height: 1.5; color: #555; margin-bottom: 20px; font-weight: 700; }
     
     .card-regras {
@@ -179,7 +180,7 @@
 <body>
 
   <div class="container" id="app-container">
-    <!-- Conteúdo dinâmico injetado via JavaScript -->
+    <!-- Conteúdo dinâmico -->
   </div>
 
   <script>
@@ -291,11 +292,13 @@
     function renderCapa() {
       const app = document.getElementById('app-container');
       app.innerHTML = `
-        <img src="data:image/png;base64,..." alt="Erasmus Days 2026" class="capa-img" id="img-capa">
+        <!-- ATENÇÃO: Substitui "capa.png" pelo nome exato do ficheiro da imagem principal na tua pasta -->
+        <img src="capa.png" alt="Erasmus Days 2026" class="capa-img" onerror="this.style.display='none'">
         
         <div class="escola-logo-container">
-          <img src="data:image/png;base64,..." alt="Logo Escola" class="escola-logo" id="img-logo">
-          <div style="text-align: left;">
+          <!-- ATENÇÃO: Substitui "logo.png" pelo nome exato do ficheiro do logótipo da escola na tua pasta -->
+          <img src="logo.png" alt="Logo Escola" class="escola-logo" onerror="this.style.display='none'">
+          <div style="text-align: left; min-width: 0;">
             <h1>Quiz Intergeracional</h1>
             <h2>Europa, Erasmus+ e aprendizagem entre gerações</h2>
           </div>
@@ -315,10 +318,6 @@
         <button class="btn-acao" onclick="iniciarQuiz()">Começar ▶</button>
         <div class="footer-escola">Erasmus Days 2026 • Escola B1/PE Covão e Vargem[cite: 16]</div>
       `;
-      
-      // Inserir as imagens a partir do documento original fornecido
-      document.getElementById('img-capa').src = document.querySelectorAll('img')[0].src;
-      document.getElementById('img-logo').src = document.querySelectorAll('img')[1].src;
     }
 
     function iniciarQuiz() {
