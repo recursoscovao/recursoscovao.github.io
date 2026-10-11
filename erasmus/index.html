@@ -12,7 +12,7 @@
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
       font-family: 'Nunito', sans-serif;
-      background: linear-gradient(135deg, #FFF9E6 0%, #E6F4FF 100%);
+      background: linear-gradient(135deg, #E6F4FF 0%, #F0F8FF 100%);
       color: #333;
       min-height: 100vh;
       display: flex;
@@ -23,16 +23,41 @@
     }
     .container {
       width: 100%;
-      max-width: 800px;
+      max-width: 950px;
       background: #FFFFFF;
       border-radius: 28px;
       box-shadow: 0 12px 35px rgba(0,0,0,0.12);
-      padding: 30px;
-      text-align: center;
+      padding: 35px;
       position: relative;
       overflow: hidden;
       border: 4px solid #666699;
     }
+    
+    /* Layout da Capa em 2 Colunas */
+    .capa-layout {
+      display: flex;
+      gap: 35px;
+      align-items: center;
+    }
+    .capa-col-esq {
+      flex: 0 0 42%;
+      max-width: 42%;
+    }
+    .capa-col-esq img {
+      width: 100%;
+      border-radius: 16px;
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      border: 2px solid #E6E6F2;
+      display: block;
+    }
+    .capa-col-dir {
+      flex: 1;
+      text-align: left;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+
     .header-info {
       display: flex;
       justify-content: space-between;
@@ -55,39 +80,10 @@
       transition: transform 0.1s;
     }
     .btn-inicio:active { transform: scale(0.95); }
-    
-    /* Organização Visual das Imagens na Capa */
-    .capa-imagens-topo {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 20px;
-      margin-bottom: 20px;
-      flex-wrap: wrap;
-    }
-    .capa-img-principal {
-      flex: 1;
-      min-width: 250px;
-      max-height: 220px;
-      object-fit: cover;
-      border-radius: 16px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      border: 2px solid #E6E6F2;
-    }
-    .escola-logo {
-      width: 130px;
-      height: 130px;
-      border-radius: 50%;
-      object-fit: cover;
-      border: 4px solid #8cc63f;
-      box-shadow: 0 6px 18px rgba(0,0,0,0.12);
-      flex-shrink: 0;
-      background: #fff;
-    }
 
-    h1 { color: #262638; font-size: clamp(1.6rem, 2.5vw, 2.2rem); font-weight: 900; margin-bottom: 6px; }
-    h2 { color: #666699; font-size: clamp(1.1rem, 1.8vw, 1.4rem); font-weight: 900; margin-bottom: 12px; }
-    p { font-size: 1.05rem; line-height: 1.5; color: #555; margin-bottom: 20px; font-weight: 700; }
+    h1 { color: #1a4b8c; font-size: clamp(1.8rem, 2.2vw, 2.4rem); font-weight: 900; margin-bottom: 8px; }
+    h2 { color: #262638; font-size: clamp(1.05rem, 1.4vw, 1.25rem); font-weight: 800; margin-bottom: 18px; line-height: 1.4; }
+    p { font-size: 1.05rem; line-height: 1.5; color: #555; margin-bottom: 18px; font-weight: 700; }
     
     .card-regras {
       background: #F8F9FA;
@@ -95,28 +91,54 @@
       padding: 15px 20px;
       border-radius: 12px;
       text-align: left;
-      margin-bottom: 25px;
+      margin-bottom: 20px;
     }
     .card-regras ol { padding-left: 20px; font-weight: 700; color: #444; }
-    .card-regras li { margin-bottom: 8px; }
+    .card-regras li { margin-bottom: 6px; }
 
     .btn-acao {
-      background: #8cc63f;
+      background: #27ae60;
       color: white;
       border: none;
-      padding: 14px 32px;
-      border-radius: 30px;
-      font-size: 1.2rem;
+      padding: 14px 36px;
+      border-radius: 12px;
+      font-size: 1.25rem;
       font-weight: 900;
       cursor: pointer;
-      box-shadow: 0 5px 15px rgba(140,198,63,0.4);
+      box-shadow: 0 5px 15px rgba(39, 174, 96, 0.4);
       transition: transform 0.15s, background 0.2s;
       text-transform: uppercase;
-      margin-top: 10px;
+      display: inline-block;
+      text-align: center;
+      width: fit-content;
     }
-    .btn-acao:hover { background: #7ab335; }
+    .btn-acao:hover { background: #219653; }
     .btn-acao:active { transform: scale(0.96); }
 
+    .escola-rodape-capa {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 25px;
+      padding-top: 15px;
+      border-top: 2px solid #eee;
+    }
+    .escola-logo {
+      width: 55px;
+      height: 55px;
+      border-radius: 50%;
+      object-fit: cover;
+      border: 2px solid #8cc63f;
+      flex-shrink: 0;
+    }
+    .escola-nome {
+      font-weight: 800;
+      color: #262638;
+      font-size: 0.95rem;
+      line-height: 1.3;
+    }
+
+    /* Estilos das perguntas */
     .opcoes-grid {
       display: flex;
       flex-direction: column;
@@ -177,6 +199,13 @@
       color: #888;
       border-top: 1px solid #eee;
       padding-top: 12px;
+      text-align: center;
+    }
+
+    /* Responsividade para telemóveis */
+    @media (max-width: 768px) {
+      .capa-layout { flex-direction: column; }
+      .capa-col-esq { flex: 1; max-width: 100%; }
     }
   </style>
 </head>
@@ -295,27 +324,29 @@
     function renderCapa() {
       const app = document.getElementById('app-container');
       app.innerHTML = `
-        <!-- As duas imagens lado a lado na capa -->
-        <div class="capa-imagens-topo">
-          <img src="capa.png" alt="Erasmus Days 2026" class="capa-img-principal" onerror="this.style.display='none'">
-          <img src="logo.png" alt="Logo Escola" class="escola-logo" onerror="this.style.display='none'">
-        </div>
+        <div class="capa-layout">
+          <!-- Coluna Esquerda: Imagem do Cartaz -->
+          <div class="capa-col-esq">
+            <img src="capa.png" alt="Erasmus Days 2026" onerror="this.style.display='none'">
+          </div>
 
-        <h1>Erasmus Days 2026</h1>
-        <h2>Quiz Intergeracional: Europa, Erasmus+ e aprendizagem entre gerações</h2>
-        <p>Ideal para equipas mistas: alunos + adultos convidados.</p>
-        
-        <div class="card-regras">
-          <strong>Como jogar:</strong>
-          <ol>
-            <li>Formem equipas com crianças, jovens e adultos.</li>
-            <li>Leiam a pergunta em voz alta e conversem antes de responder.</li>
-            <li>Cliquem na opção escolhida.</li>
-          </ol>
-        </div>
+          <!-- Coluna Direita: Textos, Botão e Logo da Escola -->
+          <div class="capa-col-dir">
+            <h1>Quiz Intergeracional</h1>
+            <h2>Europa, Erasmus+ e aprendizagem entre gerações</h2>
+            <p>Para jogar com crianças, jovens e adultos durante os Erasmus Days.</p>
+            <p style="font-size: 0.95rem; color: #1a4b8c; margin-bottom: 20px;"><strong>10 perguntas • escolha a resposta clicando nos botões</strong></p>
+            
+            <button class="btn-acao" onclick="iniciarQuiz()">COMEÇAR ▶</button>
+            
+            <p style="font-style: italic; font-size: 0.95rem; margin-top: 20px; color: #666;">Ideal para equipas mistas: alunos + adultos convidados.</p>
 
-        <button class="btn-acao" onclick="iniciarQuiz()">Começar ▶</button>
-        <div class="footer-escola">Erasmus Days 2026 • Escola B1/PE Covão e Vargem</div>
+            <div class="escola-rodape-capa">
+              <img src="logo.png" alt="Logo Escola" class="escola-logo" onerror="this.style.display='none'">
+              <div class="escola-nome">Escola B1/PE<br>Covão e Vargem</div>
+            </div>
+          </div>
+        </div>
       `;
     }
 
@@ -338,7 +369,7 @@
           <span>Pergunta ${indiceAtual + 1} de ${quizData.length}</span>
           <button class="btn-inicio" onclick="renderCapa()"><i class="fas fa-home"></i> Início</button>
         </div>
-        <h2>${q.pergunta}</h2>
+        <h2 style="color: #1a4b8c; font-size: 1.3rem; margin-bottom: 20px;">${q.pergunta}</h2>
         <div class="opcoes-grid" id="grid-opcoes">
           ${opcoesHtml}
         </div>
@@ -361,7 +392,7 @@
         feedbackCard.className = 'feedback-box sucesso';
         feedbackCard.innerHTML = `
           <strong>✅ Correto!</strong><br>${q.explicacao}<br><br>
-          <button class="btn-acao" style="padding: 10px 20px; font-size: 1rem;" onclick="proximaPergunta()">${indiceAtual === quizData.length - 1 ? 'Ver Resultado Final' : 'Próxima Pergunta ▶'}</button>
+          <button class="btn-acao" style="padding: 10px 24px; font-size: 1rem;" onclick="proximaPergunta()">${indiceAtual === quizData.length - 1 ? 'Ver Resultado Final' : 'Próxima Pergunta ▶'}</button>
         `;
       } else {
         document.getElementById(`op-${indexSelecionado}`).classList.add('errado');
@@ -370,7 +401,7 @@
         feedbackCard.className = 'feedback-box erro';
         feedbackCard.innerHTML = `
           <strong>🔄 Tenta novamente!</strong><br>Conversem mais um pouco em equipa. Lembrem-se: todos podem ajudar a pensar na resposta.<br><br>
-          <button class="btn-acao" style="padding: 10px 20px; font-size: 1rem; background: #666699; box-shadow: 0 4px 12px rgba(102,102,153,0.3);" onclick="renderPergunta()">Voltar à Pergunta ↩</button>
+          <button class="btn-acao" style="padding: 10px 24px; font-size: 1rem; background: #666699; box-shadow: 0 4px 12px rgba(102,102,153,0.3);" onclick="renderPergunta()">Voltar à Pergunta ↩</button>
         `;
       }
     }
@@ -387,11 +418,13 @@
     function renderFim() {
       const app = document.getElementById('app-container');
       app.innerHTML = `
-        <div style="font-size: 3.5rem; color: #8cc63f; margin-bottom: 10px;"><i class="fas fa-trophy"></i></div>
-        <h1>Fim do Quiz!</h1>
-        <p style="font-size: 1.15rem; margin-top: 15px;">Parabéns a todos pela participação. Hoje aprendemos que a Europa se constrói com cooperação, diversidade, inclusão e partilha entre gerações.</p>
-        <p style="font-weight: 900; color: #666699; font-size: 1.2rem; margin-bottom: 25px;">Juntos por uma Europa mais próxima!</p>
-        <button class="btn-acao" onclick="renderCapa()">Voltar ao Início</button>
+        <div style="text-align: center; padding: 20px;">
+          <div style="font-size: 3.5rem; color: #8cc63f; margin-bottom: 10px;"><i class="fas fa-trophy"></i></div>
+          <h1 style="color: #1a4b8c; margin-bottom: 15px;">Fim do Quiz!</h1>
+          <p style="font-size: 1.15rem; margin-bottom: 15px;">Parabéns a todos pela participação. Hoje aprendemos que a Europa se constrói com cooperação, diversidade, inclusão e partilha entre gerações.</p>
+          <p style="font-weight: 900; color: #666699; font-size: 1.2rem; margin-bottom: 25px;">Juntos por uma Europa mais próxima!</p>
+          <button class="btn-acao" onclick="renderCapa()">Voltar ao Início</button>
+        </div>
         <div class="footer-escola" style="margin-top: 30px;">Erasmus Days 2026 • Escola B1/PE Covão e Vargem</div>
       `;
     }
